@@ -1,16 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import PlaygroundTerminal from "./components/PlaygroundTerminal";
+import CreativePlayground from "./components/CreativePlayground";
 import PortfolioCaseStudies from "./components/PortfolioCaseStudies";
 import { ArrowDown, ArrowRight, ArrowUpRight, Braces, Check, ChevronDown, Code2, Cpu, ExternalLink, Github, Globe2, Layers3, Menu, MonitorSmartphone, Network, ShieldCheck, Sparkles, TerminalSquare, Palette, X } from "lucide-react";
-
-const projects = [
-  { id: "01", name: "CityFi", type: "WEB3 · CONCEPT & PRODUCT", description: "Een digitale wereld waarin steden unieke verzamelobjecten worden. Een eigen concept op het snijvlak van technologie, community en interactief design.", tags: ["Web3", "Next.js", "Product design"], icon: Globe2, className: "cityfi", monogram: "C/", note: "IN ONTWIKKELING" },
-  { id: "02", name: "10.00", type: "MOBILE APP · GAME DESIGN", description: "Een minimalistische timinggame met een verrassend simpel doel: stop de klok precies op tien seconden. Met challenges, records en een eigen visuele identiteit.", tags: ["React Native", "iOS", "Game design"], icon: MonitorSmartphone, className: "ten", monogram: "10.00", note: "APP PROJECT" },
-  { id: "03", name: "BreakUrge", type: "MOBILE APP · WELLBEING", description: "Een persoonlijke voortgangsapp voor het doorbreken van gewoontes. Gericht op motivatie, inzicht en heldere, bruikbare interfaces.", tags: ["Expo", "React Native", "UX/UI"], icon: Sparkles, className: "breakurge", monogram: "B.", note: "APP PROJECT" },
-  { id: "04", name: "Losch Dental", type: "WEBSITE · DESIGN & DEVELOPMENT", description: "Een elegante, informatieve website voor endodontologische zorg met een rustige uitstraling, verfijnde typografie en een consistente merkbeleving.", tags: ["Next.js", "Webdesign", "Vercel"], icon: Layers3, className: "dental", monogram: "LD", note: "WEBSITE", href: "https://www.loschdental.nl" },
-];
 
 const expertise = [
   { number: "01", name: "Systems & infrastructure", description: "Netwerken, serveromgevingen en de techniek achter betrouwbare digitale systemen.", icon: Network },
@@ -30,11 +23,6 @@ function Reveal({ children, className = "", delay = 0 }: { children: React.React
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState("home");
-  const [mode, setMode] = useState<"design"|"engineer"|"chaos">("design");
-  const [terminal, setTerminal] = useState(false);
-  const [paletteIndex, setPaletteIndex] = useState(0);
-  const [diagnostics, setDiagnostics] = useState(false);
-  const [chaosIndex, setChaosIndex] = useState(0);
   useEffect(() => {
     const observer = new IntersectionObserver(entries => entries.forEach(entry => {
       if (entry.isIntersecting) { entry.target.classList.add("visible"); if (entry.target.id) setActive(entry.target.id); }
@@ -64,21 +52,61 @@ export default function Home() {
         <div className="hero-grid" aria-hidden="true" />
         <div className="container hero-content">
           <div className="hero-left">
-            <div className="hero-eyebrow"><span className="availability-dot"/> FORMER GRAPHIC DESIGNER × CURRENT IT NERD <span className="tiny-star">✳</span> NETHERLANDS</div>
-            <h1>Looks good.<br/><em>Works better.</em><br/>Never boring<span className="accent-period">.</span></h1>
-            <p className="hero-summary">Ik ben <strong>Roger Chin A Foeng</strong> — ooit grafisch designer, nu thuis in IT, web en apps. Ik bouw digitale dingen die slim werken, sterk ogen en soms een beetje teruggrappen.</p>
+            <div className="hero-eyebrow"><span className="availability-dot"/> DESIGN BACKGROUND × ENGINEERING MINDSET <span className="tiny-star">✳</span> NETHERLANDS</div>
+            <h1>Design with intent.<br/><em>Built with precision.</em><br/>Made to matter<span className="accent-period">.</span></h1>
+            <p className="hero-summary">Ik ben <strong>Roger Chin A Foeng</strong>. Met een achtergrond in grafisch design en een focus op IT en development combineer ik visuele kwaliteit met doordachte techniek. Van het grote idee tot het kleinste detail.</p>
             <div className="hero-buttons">
               <a className="button button-primary" href="#work">Ontdek mijn projecten <ArrowUpRight size={17}/></a>
               <a className="button button-quiet" href="#lab">Ontdek de Playground <ArrowDown size={16}/></a>
             </div>
           </div>
-          <div className="hero-art" aria-label="Abstracte technische illustratie met het monogram R">
-            <div className="art-orbit orbit-one"/><div className="art-orbit orbit-two"/><div className="art-orbit orbit-three"/>
-            <span className="art-cross top-left">+</span><span className="art-cross bottom-right">+</span>
-            <div className="art-monogram">R<span>.</span></div>
-            <span className="art-coordinate coord-top">51° 55′ N / 4° 29′ E</span>
-            <span className="art-coordinate coord-bottom">PIXELS × PACKETS</span>
-            <div className="art-status"><span className="art-status-dot"/> ALWAYS EXPLORING</div>
+          <div className="hero-art hero-art-premium" aria-label="Gedetailleerd verguld monogram R met architectonische lijnen en lichtaccenten">
+            <div className="premium-monogram-glow" aria-hidden="true"/>
+            <svg className="premium-monogram-svg" viewBox="0 0 600 600" role="img" aria-label="Gegraveerd gouden R-monogram in een fijn uitgewerkt geometrisch medaillon">
+              <defs>
+                <radialGradient id="pmBackdrop"><stop offset="0%" stopColor="#8a6a3d" stopOpacity=".34"/><stop offset="55%" stopColor="#756047" stopOpacity=".06"/><stop offset="100%" stopColor="#0b0d12" stopOpacity="0"/></radialGradient>
+                <linearGradient id="pmGold" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#796044"/><stop offset="18%" stopColor="#e1c399"/><stop offset="35%" stopColor="#fff3d4"/><stop offset="53%" stopColor="#b89358"/><stop offset="68%" stopColor="#e7cda5"/><stop offset="88%" stopColor="#947044"/><stop offset="100%" stopColor="#e6ccaa"/></linearGradient>
+                <linearGradient id="pmEtch" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#f4dfb7" stopOpacity=".88"/><stop offset="55%" stopColor="#846b4d" stopOpacity=".35"/><stop offset="100%" stopColor="#e4cda1" stopOpacity=".85"/></linearGradient>
+                <filter id="pmShadow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceAlpha" stdDeviation="12"/><feOffset dx="3" dy="17" result="offset"/><feComponentTransfer><feFuncA type="linear" slope=".55"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                <filter id="pmHalo"><feGaussianBlur stdDeviation="4"/></filter>
+              </defs>
+              <circle cx="300" cy="300" r="278" fill="url(#pmBackdrop)"/>
+              <g className="pm-orbit-outer">
+                <circle cx="300" cy="300" r="266" fill="none" stroke="#bca172" strokeOpacity=".16" strokeWidth="1"/>
+                <circle cx="300" cy="300" r="258" fill="none" stroke="#a78a5f" strokeOpacity=".4" strokeWidth="1" strokeDasharray="2 10"/>
+                {Array.from({length:72},(_,i) => <line key={i} x1="300" y1={i%6===0?"41":"47"} x2="300" y2={i%6===0?"62":"55"} transform={`rotate(${i*5} 300 300)`} stroke="#e0c597" strokeOpacity={i%6===0?".67":".27"} strokeWidth={i%6===0?"1.6":".65"}/>)}
+              </g>
+              <g className="pm-orbit-middle">
+                <circle cx="300" cy="300" r="223" fill="none" stroke="url(#pmEtch)" strokeWidth="1.1" strokeOpacity=".63"/>
+                <circle cx="300" cy="300" r="219" fill="none" stroke="#cfb083" strokeOpacity=".2" strokeDasharray="1 7"/>
+                <circle cx="300" cy="300" r="206" fill="none" stroke="#a78961" strokeOpacity=".26" strokeWidth=".8"/>
+                <path d="M300 77 L523 300 L300 523 L77 300 Z" fill="none" stroke="#d8b988" strokeOpacity=".27" strokeWidth=".8"/>
+                <path d="M300 94 L506 300 L300 506 L94 300 Z" fill="none" stroke="#aa8b5d" strokeOpacity=".15"/>
+              </g>
+              <circle cx="300" cy="300" r="177" fill="#10141b" fillOpacity=".58" stroke="url(#pmGold)" strokeOpacity=".65" strokeWidth="1.5"/>
+              <circle cx="300" cy="300" r="171" fill="none" stroke="#f4d8a8" strokeOpacity=".19" strokeWidth=".6"/>
+              <circle cx="300" cy="300" r="162" fill="none" stroke="#d6b589" strokeOpacity=".17" strokeDasharray="3 10"/>
+              <path d="M300 131 L469 300 L300 469 L131 300 Z" fill="none" stroke="#c7a471" strokeOpacity=".19"/>
+              <g stroke="url(#pmEtch)" strokeWidth="1" fill="none" strokeOpacity=".6">
+                <path d="M300 84 V122 M300 478 V516 M84 300 H122 M478 300 H516"/>
+                <path d="M155 155 L181 181 M445 155 L419 181 M155 445 L181 419 M445 445 L419 419"/>
+              </g>
+              <g fill="#eacfa4">
+                <circle cx="300" cy="77" r="4"/><circle cx="523" cy="300" r="4"/><circle cx="300" cy="523" r="4"/><circle cx="77" cy="300" r="4"/>
+                <circle cx="300" cy="77" r="10" fill="none" stroke="#e1c399" strokeOpacity=".4"/>
+              </g>
+              <text x="311" y="412" textAnchor="middle" fontFamily="Georgia, 'Times New Roman', serif" fontWeight="700" fontSize="302" fill="#060910" stroke="#060910" strokeWidth="3" opacity=".78">R</text>
+              <text x="301" y="400" textAnchor="middle" fontFamily="Georgia, 'Times New Roman', serif" fontWeight="700" fontSize="302" fill="url(#pmGold)" stroke="#fde5b9" strokeWidth=".65" filter="url(#pmShadow)">R</text>
+              <path d="M191 410 H410" stroke="#ddc59d" strokeOpacity=".25" strokeWidth="1"/>
+              <g className="pm-glint">
+                <path d="M439 151 V191 M419 171 H459" stroke="#fff0cb" strokeWidth="1.2"/>
+                <circle cx="439" cy="171" r="8" fill="none" stroke="#fff0cb" strokeOpacity=".65" strokeWidth=".8"/>
+              </g>
+            </svg>
+            <div className="premium-monogram-panel premium-panel-top" aria-hidden="true"><span>MONOGRAM / RCA</span><span>EST. 2026</span></div>
+            <div className="premium-monogram-panel premium-panel-bottom" aria-hidden="true"><span>DESIGN × ENGINEERING</span><span>FIG. / 001</span></div>
+            <span className="premium-monogram-datum datum-a" aria-hidden="true">✳</span>
+            <span className="premium-monogram-datum datum-b" aria-hidden="true">+</span>
           </div>
         </div>
         <div className="container hero-bottom">
@@ -141,59 +169,17 @@ export default function Home() {
         <div className="container">
           <Reveal className="lab-heading">
             <div className="eyebrow"><span>04 /</span> BEYOND THE BRIEF</div>
-            <h2>Not everything<br/><em>needs a brief.</em></h2>
-            <p>Werk staat voorop. Maar hier mag je spelen: een Playground en een klein spel dat zich verstopt in dit portfolio.</p>
+            <h2>Where curiosity<br/><em>gets interactive.</em></h2>
+            <p>Een creatieve studio vol experimenten om zelf te bedienen. Ontwerp, debug, zoek, ontdek — en speel daarna het verborgen ROGER_OS-avontuur.</p>
           </Reveal>
-          <Reveal className="lab-panel" delay={90}>
-            <div className="lab-panel-header"><span><TerminalSquare size={17}/> ROGER_OS / INTERACTIVE PLAYGROUND</span><span>EXPERIMENTAL · STABLE-ISH</span></div>
-            <div className="lab-tabs" role="tablist" aria-label="Kies een creatieve modus">
-              <button id="lab-tab-design" type="button" role="tab" aria-controls="lab-mode-panel" aria-selected={mode==="design"} className={mode==="design"?"selected":""} onClick={()=>setMode("design")}><Palette size={17}/> <span>01</span> DESIGNER</button>
-              <button id="lab-tab-engineer" type="button" role="tab" aria-controls="lab-mode-panel" aria-selected={mode==="engineer"} className={mode==="engineer"?"selected":""} onClick={()=>setMode("engineer")}><Cpu size={17}/> <span>02</span> ENGINEER</button>
-              <button id="lab-tab-chaos" type="button" role="tab" aria-controls="lab-mode-panel" aria-selected={mode==="chaos"} className={mode==="chaos"?"selected":""} onClick={()=>setMode("chaos")}><Sparkles size={17}/> <span>03</span> CHAOS</button>
-            </div>
-            <div className="lab-content" id="lab-mode-panel" role="tabpanel" aria-labelledby={`lab-tab-${mode}`}>
-              <div className={`lab-visual lab-${mode}`}>
-                {mode==="design" && <div className={`design-stage palette-${paletteIndex}`}>
-                  <div className="design-stage-top"><span>FIG. 01 — THE ART OF BEING PICKY</span><span>100% ZOOM</span></div>
-                  <div className="design-composition">
-                    <span className="design-outline">a</span><div className="design-type">Aa<span>.</span></div>
-                    <span className="design-circle circle-one"/><span className="design-circle circle-two"/>
-                    <span className="design-cross">✳</span><span className="design-rule"/>
-                  </div>
-                  <div className="design-stage-bottom"><span>TYPE / FORM / FEELING</span><span>GRID: ON · TASTE: SUBJECTIVE</span></div>
-                </div>}
-                {mode==="engineer" && <div className="engineer-stage">
-                  <div className="engineer-top"><span className="engineer-led"/> roger@portfolio:~ <span>bash — 80×24</span></div>
-                  <div className="engineer-code"><p><b>$</b> npm run make-it-awesome</p><p className="engineer-muted">› Compiling pixels and packets...</p><p><span className="engineer-check">✓</span> Design system loaded</p><p><span className="engineer-check">✓</span> Coffee dependency resolved</p><p><span className="engineer-check">✓</span> Sense of humor initialized</p>{diagnostics?<><p><span className="engineer-check">✓</span> Latency: looking good</p><p><span className="engineer-check">✓</span> Vibes: immaculate</p><p><span className="engineer-warn">!</span> Warning: designer spotted 1px offset</p></>:<p className="engineer-muted">› Awaiting diagnostics...</p>}<p className="engineer-prompt"><b>$</b> <span className="engineer-cursor">▌</span></p></div>
-                  <div className="engineer-bars" aria-hidden="true">{[32,63,45,87,59,76,49,95,66,84,52,70,91,58,80].map((h,i)=><span key={i} style={{height:`${h}%`}}/>)}</div>
-                </div>}
-                {mode==="chaos" && <div className={`chaos-stage chaos-style-${chaosIndex%4}`}>
-                  <div className="chaos-sticker sticker-one">CTRL + Z</div><div className="chaos-sticker sticker-two">GOOD<br/>IDEAS?</div><div className="chaos-sticker sticker-three">✳</div>
-                  <div className="chaos-scribble scribble-one"/><div className="chaos-scribble scribble-two"/>
-                  <div className="chaos-center" key={chaosIndex}><div className="chaos-face">{["☺","☻","✳","?!","⌘","★"][chaosIndex%6]}</div><span>{["IT WORKS ON MY MACHINE","JUST ONE MORE PIXEL","PROFESSIONALLY UNSERIOUS","HAVE YOU TRIED RESTARTING?","THIS WAS APPROVED BY NOBODY","DESIGN SYSTEM: MILDLY CONCERNED"][chaosIndex%6]}</span></div>
-                  <span className="chaos-footer">CONTROLLED CHAOS™ / VOL. {String(chaosIndex+1).padStart(2,"0")}</span>
-                </div>}
-              </div>
-              <div className="lab-copy" key={mode}>
-                <span className="lab-kicker">{mode==="design"?"01 / THE AESTHETIC":mode==="engineer"?"02 / THE LOGIC":"03 / THE WILDCARD"}</span>
-                <h3>{mode==="design"?"Obsessed with details.":mode==="engineer"?"It’s not magic. It’s debugging.":"A little weird is good."}</h3>
-                <p>{mode==="design"?"Ik ben ooit begonnen als grafisch designer. Kleuren, vormen en die ene pixel die nét verkeerd staat? Ik zie hem. Altijd.":mode==="engineer"?"Ik hou van begrijpen hoe systemen werken. Netwerken, code en performance. Klik op de knop en laat de onzin-diagnose draaien.":"Serieuze vaardigheden. Niet altijd een serieuze presentatie. Soms moet je gewoon op een knop drukken en kijken wat er gebeurt."}</p>
-                {mode==="design"&&<div className="lab-action-area"><div className="lab-action-label">KIES EEN VISUELE SMAAK</div><div className="palette-options">{["Noir & Gold","Electric","Rose"].map((label,i)=><button key={label} type="button" className={`palette-swatch swatch-${i} ${paletteIndex===i?"active":""}`} aria-pressed={paletteIndex===i} onClick={()=>setPaletteIndex(i)} title={label}><span className="sr-only">{label}</span></button>)}</div><span className="lab-choice-name">{["NOIR / GOLD","ELECTRIC / COBALT","ROSE / INK"][paletteIndex]}</span></div>}
-                {mode==="engineer"&&<button type="button" className="lab-play-button" onClick={()=>setDiagnostics(v=>!v)}><TerminalSquare size={16}/>{diagnostics?"RESET DIAGNOSTICS":"RUN DIAGNOSTICS"} <ArrowUpRight size={16}/></button>}
-                {mode==="chaos"&&<button type="button" className="lab-play-button chaos-play" onClick={()=>setChaosIndex(i=>i+1)}><Sparkles size={16}/> MAKE IT WEIRDER <ArrowUpRight size={16}/></button>}
-                <div className="lab-data"><span>PERSONALITY STATUS</span><strong>{mode==="design"?"AESTHETICALLY OBSESSED":mode==="engineer"?"SYSTEMS ONLINE":"CHAOS, BUT MAKE IT DESIGN"}</strong></div>
-                <button className="terminal-toggle" type="button" aria-expanded={terminal} onClick={()=>setTerminal(!terminal)}><TerminalSquare size={16}/>{terminal?"Close secret terminal":"Open secret terminal"} <ArrowUpRight size={15}/></button>
-              </div>
-            </div>
-            {terminal&&<PlaygroundTerminal onClose={() => setTerminal(false)} />}
-          </Reveal>
+          <CreativePlayground />
 
           <Reveal className="lab-quest-invite" delay={160}>
             <div className="lab-quest-copy">
-              <div className="lab-quest-tag"><span className="lab-quest-dot"/> NEW EXPERIENCE / ACTUALLY PLAYABLE</div>
+              <div className="lab-quest-tag"><span className="lab-quest-dot"/> FEATURED EXPERIENCE / AN ENTIRE GAME</div>
               <div className="lab-quest-index">ROGER_OS · EXPERIMENT NO. 001</div>
               <h3>Some projects are<br/><em>meant to be played.</em></h3>
-              <p>Vier missies. Verborgen fragmenten. Een systeem dat niet helemaal doet wat het moet doen. Een klein spel verstopt in dit portfolio — omdat waarom niet?</p>
+              <p>Vier missies. Verborgen fragmenten. Een systeem dat niet helemaal doet wat het moet doen. Een compleet zelfstandig spel binnen dit portfolio — want nieuwsgierigheid verdient meer dan een knop.</p>
               <a className="lab-quest-cta" href="/play">ENTER THE UNFINISHED PROJECT <ArrowUpRight size={18}/></a>
               <div className="lab-quest-footnote">NO DOWNLOAD. NO ACCOUNT. JUST CURIOSITY.</div>
             </div>
@@ -207,22 +193,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section philosophy-section" aria-label="Mijn aanpak">
-        <div className="container philosophy-grid">
-          <Reveal><div className="eyebrow"><span>05 /</span> THE MINDSET</div><h2>Think boldly.<br/><em>Build thoughtfully.</em></h2></Reveal>
-          <Reveal delay={100}><div className="philosophy-statement">"De beste ideeën beginnen met nieuwsgierigheid — en worden pas echt interessant wanneer je ze gaat bouwen."</div><p>Voor mij gaat technologie niet alleen over tools of code. Het gaat om ontdekken, verbeteren en iets neerzetten waar je trots op kunt zijn.</p><div className="philosophy-decoration"><span>CREATE</span><span>·</span><span>LEARN</span><span>·</span><span>REPEAT</span></div></Reveal>
-        </div>
-      </section>
 
-      <section className="connect-section" id="connect">
-        <div className="container connect-inner">
-          <Reveal><div className="eyebrow light"><span>06 /</span> STAY CONNECTED</div><h2>Let's build<br/>something <em>great.</em></h2><p>Een goed idee, een vraag of nieuwsgierig naar de techniek? Bekijk mijn projecten en code op GitHub.</p></Reveal>
-          <Reveal className="connect-links" delay={100}><a href="https://github.com/RogerCAF" target="_blank" rel="noreferrer"><Github size={23}/><span>GitHub<small>CODE & PROJECTS</small></span><ArrowUpRight size={22}/></a><a href="https://www.loschdental.nl" target="_blank" rel="noreferrer"><Globe2 size={23}/><span>Losch Dental<small>RECENT WEBSITE PROJECT</small></span><ArrowUpRight size={22}/></a></Reveal>
-        </div>
-        <div className="connect-watermark" aria-hidden="true">ORLANDO</div>
-      </section>
+
+
     </main>
 
-    <footer className="footer"><div className="container footer-main"><Brand/><p>Design brain. Engineer hands.<br/>Made with intention.</p><a href="#home" className="back-to-top">BACK TO TOP <ArrowUpRight size={16}/></a></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} ROGER ORLANDO — ROGER CHIN A FOENG</span><span>DESIGNED & BUILT WITH CARE <span className="footer-star">✳</span></span></div></footer>
+    <footer className="footer" id="connect">
+      <div className="container premium-footer-contact"><div><span>LET'S TALK ABOUT WHAT'S NEXT</span><h2>Have something <em>in mind?</em></h2><p>Mijn werk spreekt voor zich. De code staat op GitHub.</p></div><a href="https://github.com/RogerCAF" target="_blank" rel="noopener noreferrer">VIEW MY GITHUB <ArrowUpRight size={18}/></a></div>
+      <div className="container footer-main"><Brand/><p>Design brain. Engineer hands.<br/>Made with intention.</p><a href="#home" className="back-to-top">BACK TO TOP <ArrowUpRight size={16}/></a></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} ROGER ORLANDO — ROGER CHIN A FOENG</span><span>DESIGNED & BUILT WITH CARE <span className="footer-star">✳</span></span></div></footer>
   </div>;
 }
