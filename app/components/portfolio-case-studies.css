@@ -1,0 +1,89 @@
+/* Case Study Atelier — portfolio-first, charcoal and champagne-gold */
+.cs-overline{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:17px 0 23px;border-top:1px solid #4d535b;border-bottom:1px solid #333f48;color:#929ca5;font:700 9px/1.5 "DM Sans",sans-serif;letter-spacing:1.55px}
+.cs-overline span:first-child{color:#dbb991}
+.cs-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:25px}
+.cs-card{min-width:0;overflow:hidden;border:1px solid #323b46;background:#151b23;transition:border-color .35s,box-shadow .35s,transform .35s}
+.cs-card:hover{border-color:#a8906e;box-shadow:0 25px 60px #0005;transform:translateY(-3px)}
+.cs-featured{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr}
+.cs-visual{position:relative;height:320px;overflow:hidden;isolation:isolate}
+.cs-featured .cs-visual{height:auto;min-height:440px}
+.cs-visual-grid{position:absolute;inset:0;z-index:2;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(circle,#0009,transparent 80%);pointer-events:none}
+.cs-topline{position:absolute;z-index:4;top:26px;left:26px;right:26px;display:flex;justify-content:space-between;gap:10px;color:#e5d3b8;font-size:9px;letter-spacing:1.5px;font-weight:800}
+.cs-corner{position:absolute;right:23px;bottom:16px;z-index:4;color:#e2c393;font-size:32px;line-height:1;font-weight:400;transition:transform .4s}
+.cs-card:hover .cs-corner{transform:translate(6px,-6px)}
+.cs-preview{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.cs-card:hover .cs-preview{transform:scale(1.04)}
+.cs-preview-small,.cs-preview-caption{position:absolute;color:#dcc9ad;font:800 9px/1.5 "DM Sans",sans-serif;letter-spacing:1.8px;text-align:center}
+.cs-preview-small{top:24%}.cs-preview-caption{bottom:17%}
+.cs-dental .cs-visual{background:radial-gradient(ellipse at 65% 36%,#506151 0%,#21352e 58%,#152824 100%)}
+.cs-dental .cs-preview{background:radial-gradient(ellipse at 40% 42%,#bcbd9228,transparent 70%)}
+.cs-dental .cs-preview>strong{font:400 clamp(45px,6vw,88px)/1.03 Georgia,serif;letter-spacing:-3px;color:#f0e9d9;text-align:center;text-shadow:0 20px 50px #0005;z-index:3}
+.cs-dental .cs-preview>strong em{color:#d4c39e}
+.cs-cityfi .cs-visual{background:radial-gradient(ellipse at 51% 40%,#2c6470 0%,#142b37 63%,#0e1924 100%)}
+.cs-cityfi .cs-preview{background:radial-gradient(circle at 50% 50%,#86daed10,transparent 60%)}
+.cs-orbit{position:absolute;aspect-ratio:1;border:1px solid #8ad1d67c;border-radius:50%;max-width:360px;width:64%}
+.cs-orbit-a{animation:cs-spin 35s linear infinite}.cs-orbit-a:before{content:"";position:absolute;top:15%;left:17%;width:7px;height:7px;background:#bcebee;border-radius:100%;box-shadow:0 0 18px #b4e9e9}
+.cs-orbit-b{width:78%;max-width:440px;opacity:.36;border-style:dashed;animation:cs-spin 64s linear reverse infinite}
+.cs-city-title{font:800 clamp(70px,9vw,130px)/1 "Manrope",sans-serif;letter-spacing:-9px;color:#dff2f1;position:relative;z-index:2;text-shadow:0 15px 40px #0b222980}
+.cs-city-title span{color:#8cdbe6}
+.cs-ten .cs-visual{background:radial-gradient(ellipse at 50% 40%,#62343b,#311d27 70%,#1c161b 100%)}
+.cs-ten .cs-preview>strong{font:800 clamp(70px,9vw,130px)/1 "Manrope",sans-serif;letter-spacing:-12px;color:#fce8e4;z-index:2;text-shadow:0 18px 36px #1b000066}
+.cs-ten .cs-preview>strong span{color:#df8394}
+.cs-timer-dial{position:absolute;width:64%;max-width:310px;aspect-ratio:1;border-radius:100%;border:12px solid #ce6d8250;box-shadow:0 0 0 1px #da8e9e77,inset 0 0 60px #c35c6b20;transform:rotate(-30deg)}
+.cs-breakurge .cs-visual{background:radial-gradient(ellipse at 50% 40%,#2e6254 0%,#162f2a 62%,#101d1b 100%)}
+.cs-breakurge .cs-preview>strong{font:800 clamp(140px,17vw,200px)/1 "Manrope",sans-serif;letter-spacing:-22px;color:#dcf4e6;transform:translateX(-11px)}
+.cs-breakurge .cs-preview>strong span{color:#8ed8b3}
+.cs-progress-dots{display:flex;gap:9px;position:absolute;bottom:27%}
+.cs-progress-dots i{width:28px;height:5px;border-radius:3px;background:#85d0aa}
+.cs-progress-dots i:nth-child(n+4){background:#679e8580}
+.cs-info{padding:31px 32px 30px}
+.cs-featured .cs-info{padding:clamp(32px,5vw,65px);display:flex;flex-direction:column;justify-content:center}
+.cs-category{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.cs-category>span:first-child{font:800 9px/1.5 "DM Sans",sans-serif;letter-spacing:1.4px;color:#d6b68f}
+.cs-status{display:inline-flex;align-items:center;gap:7px;color:#b2b9b8;font-size:9px;letter-spacing:1px;font-weight:700}
+.cs-status i{width:6px;height:6px;background:#92bc9f;border-radius:50%}
+.cs-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:16px 0}
+.cs-title-row h3{font:800 clamp(28px,2.8vw,43px)/1.14 "Manrope",sans-serif;letter-spacing:-1.65px;margin:0}
+.cs-title-row h3 span{color:#d6b589}
+.cs-round-link{display:grid;place-items:center;flex-shrink:0;width:43px;height:43px;background:transparent;border:1px solid #78808a;border-radius:50%;color:#e4c9a0;cursor:pointer;transition:background .25s,color .25s,transform .25s}
+.cs-round-link:hover{background:#d6b589;color:#11191f;transform:rotate(45deg)}
+.cs-description{color:#afb5bd;font:400 13px/1.9 "DM Sans",sans-serif;margin:0 0 25px;max-width:590px}
+.cs-facts{border-top:1px solid #39434e;border-bottom:1px solid #39434e;padding:17px 0;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.cs-facts>div{display:flex;flex-direction:column;gap:7px;min-width:0}
+.cs-facts small{color:#9c9182;font:800 9px/1.5 "DM Sans",sans-serif;letter-spacing:1.4px}
+.cs-facts strong{color:#e0e0dc;font:600 11px/1.5 "DM Sans",sans-serif}
+.cs-actions{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:24px}
+.cs-actions button,.cs-actions a{display:flex;align-items:center;gap:7px;font:800 10px/1.5 "DM Sans",sans-serif;letter-spacing:.8px}
+.cs-actions button{cursor:pointer;padding:0;border:0;background:none;color:#e3c39a}
+.cs-actions a{color:#b9d0bc}
+.cs-actions button:hover,.cs-actions a:hover{color:#fff}
+.cs-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+.cs-tags>span{border:1px solid #404956;padding:7px 10px;color:#9fa7b1;font-size:9px;font-weight:700;letter-spacing:.7px}
+@keyframes cs-spin{to{transform:rotate(360deg)}}
+.cs-dialog{position:fixed;inset:0;margin:auto;width:min(900px,calc(100vw - 32px));max-height:min(88vh,960px);border:1px solid #9a8363;background:#121820;color:#f1eee6;padding:0;box-shadow:0 40px 130px #000c;overflow:auto}
+.cs-dialog::backdrop{background:#05070bdc;backdrop-filter:blur(8px)}
+.cs-dialog-inside{min-width:0}
+.cs-dialog-toolbar{padding:17px 29px;border-bottom:1px solid #3f454e;display:flex;align-items:center;justify-content:space-between;gap:14px;color:#d7bd95;font:800 10px/1.5 "DM Sans",sans-serif;letter-spacing:1.5px}
+.cs-dialog-toolbar button{background:transparent;border:1px solid #56606b;color:#e6e6e4;display:grid;place-items:center;width:35px;height:35px;cursor:pointer}
+.cs-dialog-hero{padding:49px 51px 44px;background:radial-gradient(ellipse at 95% 10%,#39332a,transparent 62%)}
+.cs-dialog-hero>span,.cs-dialog-articles section>span{color:#d9b887;font-size:10px;font-weight:800;letter-spacing:1.55px}
+.cs-dialog-hero h2{font:800 clamp(46px,7vw,84px)/1.04 "Manrope",sans-serif;letter-spacing:-4px;margin:16px 0}
+.cs-dialog-hero h2 i{color:#d6b589;font-style:normal}
+.cs-dialog-hero p{max-width:600px;color:#afb4bc;font-size:14px;line-height:1.9;margin:0}
+.cs-dialog-facts{padding:21px 51px;background:#1c242d;display:grid;grid-template-columns:repeat(3,1fr);gap:25px;border-top:1px solid #3e454e;border-bottom:1px solid #3e454e}
+.cs-dialog-facts div{display:flex;flex-direction:column;gap:8px}
+.cs-dialog-facts small{font-size:9px;font-weight:800;letter-spacing:1.2px;color:#bd9f78}
+.cs-dialog-facts strong{font-size:12px;line-height:1.6;color:#eeece4}
+.cs-dialog-articles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:27px;padding:44px 51px}
+.cs-dialog-articles section{min-width:0}
+.cs-dialog-articles h3{font:800 22px/1.2 "Manrope",sans-serif;letter-spacing:-.6px;margin:15px 0}
+.cs-dialog-articles p{font-size:12px;line-height:1.85;color:#abb4bc;margin:0}
+.cs-dialog-footer{padding:24px 51px;border-top:1px solid #3d4550;display:flex;justify-content:space-between;align-items:center;gap:14px;background:#1b222c}
+.cs-dialog-footer>span:first-child{color:#b7aaa0;font-style:italic;font-size:12px}
+.cs-dialog-footer a,.cs-no-demo{display:flex;align-items:center;gap:7px;color:#edcda1;font-size:10px;font-weight:800;letter-spacing:.7px}
+.cs-no-demo{color:#98a6a9}
+.cs-dialog button:focus-visible,.cs-dialog a:focus-visible,.cs-actions button:focus-visible,.cs-actions a:focus-visible,.cs-round-link:focus-visible{outline:2px solid #dfba83;outline-offset:4px}
+@media(max-width:1050px){.cs-featured .cs-visual{min-height:400px}.cs-featured .cs-info{padding:31px}.cs-info{padding:25px}}
+@media(max-width:780px){.cs-featured{grid-template-columns:1fr}.cs-featured .cs-visual{min-height:345px}.cs-grid{gap:17px}.cs-info{padding:23px}.cs-dialog-articles{grid-template-columns:1fr;gap:26px}.cs-dialog-articles,.cs-dialog-hero,.cs-dialog-facts,.cs-dialog-footer{padding-left:27px;padding-right:27px}}
+@media(max-width:650px){.cs-overline{font-size:8px}.cs-overline span:last-child{display:none}.cs-grid{grid-template-columns:1fr}.cs-featured{display:block;grid-column:auto}.cs-featured .cs-visual,.cs-visual{height:280px;min-height:280px}.cs-info,.cs-featured .cs-info{padding:25px 21px}.cs-title-row h3{font-size:32px}.cs-dialog{width:calc(100vw - 16px);max-height:90vh}.cs-dialog-toolbar{padding:12px 18px;font-size:9px}.cs-dialog-hero{padding:33px 23px}.cs-dialog-hero h2{font-size:49px;letter-spacing:-2px}.cs-dialog-facts{grid-template-columns:1fr;gap:12px;padding:20px 23px}.cs-dialog-articles{padding:30px 23px}.cs-dialog-footer{padding:22px 23px;align-items:flex-start;flex-direction:column}.cs-dental .cs-preview>strong{font-size:52px}.cs-city-title{font-size:88px}.cs-ten .cs-preview>strong{font-size:82px}.cs-breakurge .cs-preview>strong{font-size:156px}}
+@media(prefers-reduced-motion:reduce){.cs-card,.cs-preview,.cs-orbit,.cs-corner,.cs-round-link{animation:none!important;transition:none!important}}
