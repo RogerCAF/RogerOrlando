@@ -87,3 +87,86 @@
 @media(max-width:780px){.cs-featured{grid-template-columns:1fr}.cs-featured .cs-visual{min-height:345px}.cs-grid{gap:17px}.cs-info{padding:23px}.cs-dialog-articles{grid-template-columns:1fr;gap:26px}.cs-dialog-articles,.cs-dialog-hero,.cs-dialog-facts,.cs-dialog-footer{padding-left:27px;padding-right:27px}}
 @media(max-width:650px){.cs-overline{font-size:8px}.cs-overline span:last-child{display:none}.cs-grid{grid-template-columns:1fr}.cs-featured{display:block;grid-column:auto}.cs-featured .cs-visual,.cs-visual{height:280px;min-height:280px}.cs-info,.cs-featured .cs-info{padding:25px 21px}.cs-title-row h3{font-size:32px}.cs-dialog{width:calc(100vw - 16px);max-height:90vh}.cs-dialog-toolbar{padding:12px 18px;font-size:9px}.cs-dialog-hero{padding:33px 23px}.cs-dialog-hero h2{font-size:49px;letter-spacing:-2px}.cs-dialog-facts{grid-template-columns:1fr;gap:12px;padding:20px 23px}.cs-dialog-articles{padding:30px 23px}.cs-dialog-footer{padding:22px 23px;align-items:flex-start;flex-direction:column}.cs-dental .cs-preview>strong{font-size:52px}.cs-city-title{font-size:88px}.cs-ten .cs-preview>strong{font-size:82px}.cs-breakurge .cs-preview>strong{font-size:156px}}
 @media(prefers-reduced-motion:reduce){.cs-card,.cs-preview,.cs-orbit,.cs-corner,.cs-round-link{animation:none!important;transition:none!important}}
+
+
+/* Side-scroll project reel: editorial case studies, no extra tabs */
+.cs-slider-toolbar{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:22px 0 13px}
+.cs-slider-label{display:flex;flex-direction:column;gap:8px}
+.cs-slider-counter{font:800 10px/1.4 "DM Sans",sans-serif;letter-spacing:1.9px;color:#e2c396}
+.cs-slider-counter i{color:#7e8790;font-style:normal}
+.cs-slider-label p{margin:0;color:#e5e7e5;font:700 clamp(15px,1.7vw,21px)/1.3 "Manrope",sans-serif;letter-spacing:-.4px}
+.cs-slider-label p span{color:#828b92;font:700 9px/1.5 "DM Sans",sans-serif;letter-spacing:1.2px;margin-left:8px}
+.cs-slider-buttons{display:flex;gap:9px;align-items:center}
+.cs-slider-buttons button{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;cursor:pointer;border:1px solid #79674f;border-radius:50%;background:#24272a;color:#e8c9a0;transition:background .2s,color .2s,border-color .2s,transform .2s}
+.cs-slider-buttons button:hover:not(:disabled){background:#d6b589;color:#141a21;border-color:#d6b589;transform:translateY(-2px)}
+.cs-slider-buttons button:disabled{opacity:.3;cursor:default;border-color:#58606b;color:#a2a7aa}
+.cs-slider-buttons button:focus-visible,.cs-scroller:focus-visible{outline:2px solid #eccb9d;outline-offset:4px}
+.cs-slider-track{height:2px;background:#353d47;margin:0 0 12px;overflow:hidden}
+.cs-slider-track span{display:block;height:100%;background:#d6b589;transition:width .35s ease}
+.cs-scroller{
+ --cs-slide-width:min(680px,82%);
+ display:flex;
+ grid-template-columns:none;
+ gap:22px;
+ overflow-x:auto;
+ overscroll-behavior-inline:contain;
+ scroll-snap-type:x mandatory;
+ scroll-padding-inline:0;
+ -webkit-overflow-scrolling:touch;
+ scrollbar-width:none;
+ padding:12px 0 28px;
+ margin:0;
+ align-items:stretch;
+}
+.cs-scroller::-webkit-scrollbar{display:none}
+.cs-scroller:after{content:"";flex:0 0 max(0px,calc(100% - var(--cs-slide-width) - 22px));pointer-events:none}
+.cs-scroller .cs-card,.cs-scroller .cs-card.cs-featured{
+ display:flex;
+ flex:0 0 var(--cs-slide-width);
+ flex-direction:column;
+ grid-column:auto;
+ width:auto;
+ min-width:0;
+ height:auto;
+ scroll-snap-align:start;
+ scroll-snap-stop:always;
+}
+.cs-scroller .cs-card .cs-visual,.cs-scroller .cs-featured .cs-visual{
+ flex:0 0 335px;
+ height:335px;
+ min-height:0;
+}
+.cs-scroller .cs-card .cs-info,.cs-scroller .cs-featured .cs-info{
+ padding:30px 32px 32px;
+ display:flex;
+ flex-direction:column;
+ flex:1;
+}
+.cs-scroller .cs-actions{margin-top:auto;padding-top:22px}
+.cs-scroller .cs-description{min-height:52px}
+.cs-scroller .cs-facts{margin-top:5px}
+.cs-scroller .cs-preview>strong{max-width:100%}
+@media(max-width:900px){
+ .cs-scroller{--cs-slide-width:min(560px,84%);gap:17px}
+ .cs-scroller:after{flex-basis:max(0px,calc(100% - var(--cs-slide-width) - 17px))}
+ .cs-slider-label p span{display:none}
+}
+@media(max-width:650px){
+ .cs-slider-toolbar{padding-top:16px}
+ .cs-slider-buttons button{width:43px;height:43px;flex-basis:43px}
+ .cs-scroller{--cs-slide-width:87%;gap:13px;padding-bottom:20px}
+ .cs-scroller:after{flex-basis:max(0px,calc(100% - var(--cs-slide-width) - 13px))}
+ .cs-scroller .cs-card .cs-visual,.cs-scroller .cs-featured .cs-visual{height:235px;min-height:0;flex-basis:235px}
+ .cs-scroller .cs-card .cs-info,.cs-scroller .cs-featured .cs-info{padding:20px}
+ .cs-scroller .cs-title-row h3{font-size:27px}
+ .cs-scroller .cs-category{align-items:flex-start;gap:7px}
+ .cs-scroller .cs-description{font-size:12px;min-height:0}
+ .cs-scroller .cs-facts{gap:9px}
+ .cs-scroller .cs-tags{margin-top:14px}
+ .cs-scroller .cs-actions{gap:12px}
+ .cs-scroller .cs-actions button,.cs-scroller .cs-actions a{font-size:9px}
+ .cs-scroller .cs-preview-small,.cs-scroller .cs-preview-caption{font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){
+ .cs-slider-track span,.cs-slider-buttons button{transition:none}
+}
