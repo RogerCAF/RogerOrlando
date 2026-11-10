@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import PlaygroundTerminal from "./components/PlaygroundTerminal";
 import { ArrowDown, ArrowRight, ArrowUpRight, Braces, Check, ChevronDown, Code2, Cpu, ExternalLink, Github, Globe2, Layers3, Menu, MonitorSmartphone, Network, ShieldCheck, Sparkles, TerminalSquare, Palette, X } from "lucide-react";
 
 const projects = [
@@ -108,8 +109,8 @@ export default function Home() {
         <div className="container">
           <Reveal className="lab-heading">
             <div className="eyebrow"><span>02 /</span> THE CREATIVE LAB</div>
-            <h2>Pick a personality.<br/><em>All three are me.</em></h2>
-            <p>Drie kanten van hetzelfde brein. Geen saaie klik-en-lees-tabs, maar drie kleine interactieve experimenten. Ga je gang.</p>
+            <h2>Three modes.<br/><em>Zero boring buttons.</em></h2>
+            <p>Design, techniek en een beetje gecontroleerde chaos. Klik rond, test dingen en ontdek wat er gebeurt.</p>
           </Reveal>
           <Reveal className="lab-panel" delay={90}>
             <div className="lab-panel-header"><span><TerminalSquare size={17}/> ROGER_OS / INTERACTIVE PLAYGROUND</span><span>EXPERIMENTAL · STABLE-ISH</span></div>
@@ -134,10 +135,10 @@ export default function Home() {
                   <div className="engineer-code"><p><b>$</b> npm run make-it-awesome</p><p className="engineer-muted">› Compiling pixels and packets...</p><p><span className="engineer-check">✓</span> Design system loaded</p><p><span className="engineer-check">✓</span> Coffee dependency resolved</p><p><span className="engineer-check">✓</span> Sense of humor initialized</p>{diagnostics?<><p><span className="engineer-check">✓</span> Latency: looking good</p><p><span className="engineer-check">✓</span> Vibes: immaculate</p><p><span className="engineer-warn">!</span> Warning: designer spotted 1px offset</p></>:<p className="engineer-muted">› Awaiting diagnostics...</p>}<p className="engineer-prompt"><b>$</b> <span className="engineer-cursor">▌</span></p></div>
                   <div className="engineer-bars" aria-hidden="true">{[32,63,45,87,59,76,49,95,66,84,52,70,91,58,80].map((h,i)=><span key={i} style={{height:`${h}%`}}/>)}</div>
                 </div>}
-                {mode==="chaos" && <div className="chaos-stage">
+                {mode==="chaos" && <div className={`chaos-stage chaos-style-${chaosIndex%4}`}>
                   <div className="chaos-sticker sticker-one">CTRL + Z</div><div className="chaos-sticker sticker-two">GOOD<br/>IDEAS?</div><div className="chaos-sticker sticker-three">✳</div>
                   <div className="chaos-scribble scribble-one"/><div className="chaos-scribble scribble-two"/>
-                  <div className="chaos-center" key={chaosIndex}><div className="chaos-face">{["☺","☻","✳","?!"][chaosIndex%4]}</div><span>{["IT WORKS ON MY MACHINE","JUST ONE MORE PIXEL","PROFESSIONALLY UNSERIOUS","HAVE YOU TRIED RESTARTING?"][chaosIndex%4]}</span></div>
+                  <div className="chaos-center" key={chaosIndex}><div className="chaos-face">{["☺","☻","✳","?!","⌘","★"][chaosIndex%6]}</div><span>{["IT WORKS ON MY MACHINE","JUST ONE MORE PIXEL","PROFESSIONALLY UNSERIOUS","HAVE YOU TRIED RESTARTING?","THIS WAS APPROVED BY NOBODY","DESIGN SYSTEM: MILDLY CONCERNED"][chaosIndex%6]}</span></div>
                   <span className="chaos-footer">CONTROLLED CHAOS™ / VOL. {String(chaosIndex+1).padStart(2,"0")}</span>
                 </div>}
               </div>
@@ -147,12 +148,12 @@ export default function Home() {
                 <p>{mode==="design"?"Ik ben ooit begonnen als grafisch designer. Kleuren, vormen en die ene pixel die nét verkeerd staat? Ik zie hem. Altijd.":mode==="engineer"?"Ik hou van begrijpen hoe systemen werken. Netwerken, code en performance. Klik op de knop en laat de onzin-diagnose draaien.":"Serieuze vaardigheden. Niet altijd een serieuze presentatie. Soms moet je gewoon op een knop drukken en kijken wat er gebeurt."}</p>
                 {mode==="design"&&<div className="lab-action-area"><div className="lab-action-label">KIES EEN VISUELE SMAAK</div><div className="palette-options">{["Noir & Gold","Electric","Rose"].map((label,i)=><button key={label} type="button" className={`palette-swatch swatch-${i} ${paletteIndex===i?"active":""}`} aria-pressed={paletteIndex===i} onClick={()=>setPaletteIndex(i)} title={label}><span className="sr-only">{label}</span></button>)}</div><span className="lab-choice-name">{["NOIR / GOLD","ELECTRIC / COBALT","ROSE / INK"][paletteIndex]}</span></div>}
                 {mode==="engineer"&&<button type="button" className="lab-play-button" onClick={()=>setDiagnostics(v=>!v)}><TerminalSquare size={16}/>{diagnostics?"RESET DIAGNOSTICS":"RUN DIAGNOSTICS"} <ArrowUpRight size={16}/></button>}
-                {mode==="chaos"&&<button type="button" className="lab-play-button chaos-play" onClick={()=>setChaosIndex(i=>i+1)}><Sparkles size={16}/> MORE CHAOS PLEASE <ArrowUpRight size={16}/></button>}
+                {mode==="chaos"&&<button type="button" className="lab-play-button chaos-play" onClick={()=>setChaosIndex(i=>i+1)}><Sparkles size={16}/> MAKE IT WEIRDER <ArrowUpRight size={16}/></button>}
                 <div className="lab-data"><span>PERSONALITY STATUS</span><strong>{mode==="design"?"AESTHETICALLY OBSESSED":mode==="engineer"?"SYSTEMS ONLINE":"CHAOS, BUT MAKE IT DESIGN"}</strong></div>
-                <button className="terminal-toggle" type="button" aria-expanded={terminal} onClick={()=>setTerminal(!terminal)}><TerminalSquare size={16}/>{terminal?"Close secret terminal":"Psst... secret terminal"} <ArrowUpRight size={15}/></button>
+                <button className="terminal-toggle" type="button" aria-expanded={terminal} onClick={()=>setTerminal(!terminal)}><TerminalSquare size={16}/>{terminal?"Close secret terminal":"Open secret terminal"} <ArrowUpRight size={15}/></button>
               </div>
             </div>
-            {terminal&&<div className="secret-terminal" aria-label="Humoristische terminal"><p><span>roger@orlando</span>:~$ whoami</p><p>Roger Chin A Foeng. Ex-designer. IT'er. Fulltime overthinker van details.</p><p><span>roger@orlando</span>:~$ sudo make-it-perfect</p><p className="terminal-error">Error 418: I'm a teapot. But a well-designed one.</p><p><span>roger@orlando</span>:~$ <span className="terminal-cursor">▋</span></p></div>}
+            {terminal&&<PlaygroundTerminal onClose={() => setTerminal(false)} />}
           </Reveal>
         </div>
       </section>
