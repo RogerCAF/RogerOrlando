@@ -30,6 +30,9 @@ export default function Home() {
   const [active, setActive] = useState("home");
   const [mode, setMode] = useState<"design"|"engineer"|"chaos">("design");
   const [terminal, setTerminal] = useState(false);
+  const [paletteIndex, setPaletteIndex] = useState(0);
+  const [diagnostics, setDiagnostics] = useState(false);
+  const [chaosIndex, setChaosIndex] = useState(0);
   useEffect(() => {
     const observer = new IntersectionObserver(entries => entries.forEach(entry => {
       if (entry.isIntersecting) { entry.target.classList.add("visible"); if (entry.target.id) setActive(entry.target.id); }
@@ -93,7 +96,7 @@ export default function Home() {
           </Reveal>
           <Reveal className="about-copy" delay={100}>
             <div className="about-overline"><span className="crosshair">✳</span> THE PERSON BEHIND THE PROJECTS</div>
-            <p className="about-lead">Mijn naam is <strong>Roger Chjin A Foeng</strong>, maar online gebruik ik graag <strong>Roger Orlando</strong>.</p>
+            <p className="about-lead">Mijn naam is <strong>Roger Chin A Foeng</strong>, maar online gebruik ik graag <strong>Roger Orlando</strong>.</p>
             <p>Mijn carrière begon in grafisch design. Daardoor zie ik meteen als iets drie pixels scheef staat. Nu verdiep ik me in systemen, netwerken, websites en apps — en alles achter de interface.</p>
             <p>Die combinatie is mijn favoriete speelveld: iets moet mooi ontworpen zijn, maar achter de schermen ook logisch, snel en degelijk werken. En ja, af en toe mag er best een grap in.</p>
             <div className="about-points"><span><Check size={15}/> Design-achtergrond</span><span><Check size={15}/> Engineering mindset</span><span><Check size={15}/> Altijd aan het leren</span></div>
@@ -105,32 +108,51 @@ export default function Home() {
         <div className="container">
           <Reveal className="lab-heading">
             <div className="eyebrow"><span>02 /</span> THE CREATIVE LAB</div>
-            <h2>Two sides.<br/><em>One brain.</em></h2>
-            <p>Ik begon met pixels en eindigde bij subnetmaskers. Klik maar. Dit is geen saaie cv-site.</p>
+            <h2>Pick a personality.<br/><em>All three are me.</em></h2>
+            <p>Drie kanten van hetzelfde brein. Geen saaie klik-en-lees-tabs, maar drie kleine interactieve experimenten. Ga je gang.</p>
           </Reveal>
           <Reveal className="lab-panel" delay={90}>
-            <div className="lab-panel-header"><span><TerminalSquare size={17}/> ROGER_OS // PERSONALITY ENGINE</span><span>v1.0 · MOSTLY STABLE</span></div>
-            <div className="lab-tabs" role="tablist" aria-label="Kies een modus">
-              <button role="tab" aria-selected={mode==="design"} className={mode==="design"?"selected":""} onClick={()=>setMode("design")}><Palette size={17}/> DESIGNER</button>
-              <button role="tab" aria-selected={mode==="engineer"} className={mode==="engineer"?"selected":""} onClick={()=>setMode("engineer")}><Cpu size={17}/> ENGINEER</button>
-              <button role="tab" aria-selected={mode==="chaos"} className={mode==="chaos"?"selected":""} onClick={()=>setMode("chaos")}><Sparkles size={17}/> CHAOS</button>
+            <div className="lab-panel-header"><span><TerminalSquare size={17}/> ROGER_OS / INTERACTIVE PLAYGROUND</span><span>EXPERIMENTAL · STABLE-ISH</span></div>
+            <div className="lab-tabs" role="tablist" aria-label="Kies een creatieve modus">
+              <button id="lab-tab-design" type="button" role="tab" aria-controls="lab-mode-panel" aria-selected={mode==="design"} className={mode==="design"?"selected":""} onClick={()=>setMode("design")}><Palette size={17}/> <span>01</span> DESIGNER</button>
+              <button id="lab-tab-engineer" type="button" role="tab" aria-controls="lab-mode-panel" aria-selected={mode==="engineer"} className={mode==="engineer"?"selected":""} onClick={()=>setMode("engineer")}><Cpu size={17}/> <span>02</span> ENGINEER</button>
+              <button id="lab-tab-chaos" type="button" role="tab" aria-controls="lab-mode-panel" aria-selected={mode==="chaos"} className={mode==="chaos"?"selected":""} onClick={()=>setMode("chaos")}><Sparkles size={17}/> <span>03</span> CHAOS</button>
             </div>
-            <div className="lab-content" role="tabpanel" aria-live="polite">
+            <div className="lab-content" id="lab-mode-panel" role="tabpanel" aria-labelledby={`lab-tab-${mode}`}>
               <div className={`lab-visual lab-${mode}`}>
-                <div className="lab-visual-grid"/>
-                <span className="lab-orb lab-orb-one"/><span className="lab-orb lab-orb-two"/>
-                <span className="lab-big">{mode==="design"?"Aa.":mode==="engineer"?"</>":":)"}</span>
-                <span className="lab-visual-label">{mode==="design"?"KERNING IS A LOVE LANGUAGE":mode==="engineer"?"200 OK · PROBABLY":"IT WORKS ON MY MACHINE™"}</span>
+                {mode==="design" && <div className={`design-stage palette-${paletteIndex}`}>
+                  <div className="design-stage-top"><span>FIG. 01 — THE ART OF BEING PICKY</span><span>100% ZOOM</span></div>
+                  <div className="design-composition">
+                    <span className="design-outline">a</span><div className="design-type">Aa<span>.</span></div>
+                    <span className="design-circle circle-one"/><span className="design-circle circle-two"/>
+                    <span className="design-cross">✳</span><span className="design-rule"/>
+                  </div>
+                  <div className="design-stage-bottom"><span>TYPE / FORM / FEELING</span><span>GRID: ON · TASTE: SUBJECTIVE</span></div>
+                </div>}
+                {mode==="engineer" && <div className="engineer-stage">
+                  <div className="engineer-top"><span className="engineer-led"/> roger@portfolio:~ <span>bash — 80×24</span></div>
+                  <div className="engineer-code"><p><b>$</b> npm run make-it-awesome</p><p className="engineer-muted">› Compiling pixels and packets...</p><p><span className="engineer-check">✓</span> Design system loaded</p><p><span className="engineer-check">✓</span> Coffee dependency resolved</p><p><span className="engineer-check">✓</span> Sense of humor initialized</p>{diagnostics?<><p><span className="engineer-check">✓</span> Latency: looking good</p><p><span className="engineer-check">✓</span> Vibes: immaculate</p><p><span className="engineer-warn">!</span> Warning: designer spotted 1px offset</p></>:<p className="engineer-muted">› Awaiting diagnostics...</p>}<p className="engineer-prompt"><b>$</b> <span className="engineer-cursor">▌</span></p></div>
+                  <div className="engineer-bars" aria-hidden="true">{[32,63,45,87,59,76,49,95,66,84,52,70,91,58,80].map((h,i)=><span key={i} style={{height:`${h}%`}}/>)}</div>
+                </div>}
+                {mode==="chaos" && <div className="chaos-stage">
+                  <div className="chaos-sticker sticker-one">CTRL + Z</div><div className="chaos-sticker sticker-two">GOOD<br/>IDEAS?</div><div className="chaos-sticker sticker-three">✳</div>
+                  <div className="chaos-scribble scribble-one"/><div className="chaos-scribble scribble-two"/>
+                  <div className="chaos-center" key={chaosIndex}><div className="chaos-face">{["☺","☻","✳","?!"][chaosIndex%4]}</div><span>{["IT WORKS ON MY MACHINE","JUST ONE MORE PIXEL","PROFESSIONALLY UNSERIOUS","HAVE YOU TRIED RESTARTING?"][chaosIndex%4]}</span></div>
+                  <span className="chaos-footer">CONTROLLED CHAOS™ / VOL. {String(chaosIndex+1).padStart(2,"0")}</span>
+                </div>}
               </div>
-              <div className="lab-copy">
-                <span className="lab-kicker">{mode==="design"?"01 / THE CREATIVE":mode==="engineer"?"02 / THE TECHNICAL":"03 / THE PERSONAL"}</span>
-                <h3>{mode==="design"?"Make it beautiful.":mode==="engineer"?"Make it work.":"Make it fun."}</h3>
-                <p>{mode==="design"?"Een grafische achtergrond laat sporen na: ik hou van typografie, detail, balans en een ontwerp dat precies goed aanvoelt.":mode==="engineer"?"Onder de motorkap moet het ook kloppen. Netwerken, infrastructuur, code en snelheid zijn minstens zo interessant.":"Ik vind het leuk wanneer technologie een beetje karakter heeft. Mijn werk neem ik serieus, mezelf wat minder."}</p>
-                <div className="lab-data"><span>STATUS</span><strong>{mode==="design"?"PIXEL OBSESSED":mode==="engineer"?"SYSTEMS ONLINE":"CHAOS CONTROLLED"}</strong></div>
-                <button className="terminal-toggle" type="button" aria-expanded={terminal} onClick={()=>setTerminal(!terminal)}><TerminalSquare size={16}/>{terminal?"Close terminal":"Open secret terminal"} <ArrowUpRight size={15}/></button>
+              <div className="lab-copy" key={mode}>
+                <span className="lab-kicker">{mode==="design"?"01 / THE AESTHETIC":mode==="engineer"?"02 / THE LOGIC":"03 / THE WILDCARD"}</span>
+                <h3>{mode==="design"?"Obsessed with details.":mode==="engineer"?"It’s not magic. It’s debugging.":"A little weird is good."}</h3>
+                <p>{mode==="design"?"Ik ben ooit begonnen als grafisch designer. Kleuren, vormen en die ene pixel die nét verkeerd staat? Ik zie hem. Altijd.":mode==="engineer"?"Ik hou van begrijpen hoe systemen werken. Netwerken, code en performance. Klik op de knop en laat de onzin-diagnose draaien.":"Serieuze vaardigheden. Niet altijd een serieuze presentatie. Soms moet je gewoon op een knop drukken en kijken wat er gebeurt."}</p>
+                {mode==="design"&&<div className="lab-action-area"><div className="lab-action-label">KIES EEN VISUELE SMAAK</div><div className="palette-options">{["Noir & Gold","Electric","Rose"].map((label,i)=><button key={label} type="button" className={`palette-swatch swatch-${i} ${paletteIndex===i?"active":""}`} aria-pressed={paletteIndex===i} onClick={()=>setPaletteIndex(i)} title={label}><span className="sr-only">{label}</span></button>)}</div><span className="lab-choice-name">{["NOIR / GOLD","ELECTRIC / COBALT","ROSE / INK"][paletteIndex]}</span></div>}
+                {mode==="engineer"&&<button type="button" className="lab-play-button" onClick={()=>setDiagnostics(v=>!v)}><TerminalSquare size={16}/>{diagnostics?"RESET DIAGNOSTICS":"RUN DIAGNOSTICS"} <ArrowUpRight size={16}/></button>}
+                {mode==="chaos"&&<button type="button" className="lab-play-button chaos-play" onClick={()=>setChaosIndex(i=>i+1)}><Sparkles size={16}/> MORE CHAOS PLEASE <ArrowUpRight size={16}/></button>}
+                <div className="lab-data"><span>PERSONALITY STATUS</span><strong>{mode==="design"?"AESTHETICALLY OBSESSED":mode==="engineer"?"SYSTEMS ONLINE":"CHAOS, BUT MAKE IT DESIGN"}</strong></div>
+                <button className="terminal-toggle" type="button" aria-expanded={terminal} onClick={()=>setTerminal(!terminal)}><TerminalSquare size={16}/>{terminal?"Close secret terminal":"Psst... secret terminal"} <ArrowUpRight size={15}/></button>
               </div>
             </div>
-            {terminal&&<div className="secret-terminal" aria-label="Humoristische terminal"><p><span>roger@orlando</span>:~$ whoami</p><p>Graphic designer turned IT guy. Professional pixel counter.</p><p><span>roger@orlando</span>:~$ sudo make-it-perfect</p><p className="terminal-error">Error 418: I'm a teapot. But a well-designed one.</p><p><span>roger@orlando</span>:~$ <span className="terminal-cursor">▋</span></p></div>}
+            {terminal&&<div className="secret-terminal" aria-label="Humoristische terminal"><p><span>roger@orlando</span>:~$ whoami</p><p>Roger Chin A Foeng. Ex-designer. IT'er. Fulltime overthinker van details.</p><p><span>roger@orlando</span>:~$ sudo make-it-perfect</p><p className="terminal-error">Error 418: I'm a teapot. But a well-designed one.</p><p><span>roger@orlando</span>:~$ <span className="terminal-cursor">▋</span></p></div>}
           </Reveal>
         </div>
       </section>
@@ -181,6 +203,6 @@ export default function Home() {
       </section>
     </main>
 
-    <footer className="footer"><div className="container footer-main"><Brand/><p>Design brain. Engineer hands.<br/>Made with intention.</p><a href="#home" className="back-to-top">BACK TO TOP <ArrowUpRight size={16}/></a></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} ROGER ORLANDO — ROGER CHJIN A FOENG</span><span>DESIGNED & BUILT WITH CARE <span className="footer-star">✳</span></span></div></footer>
+    <footer className="footer"><div className="container footer-main"><Brand/><p>Design brain. Engineer hands.<br/>Made with intention.</p><a href="#home" className="back-to-top">BACK TO TOP <ArrowUpRight size={16}/></a></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} ROGER ORLANDO — ROGER CHIN A FOENG</span><span>DESIGNED & BUILT WITH CARE <span className="footer-star">✳</span></span></div></footer>
   </div>;
 }
