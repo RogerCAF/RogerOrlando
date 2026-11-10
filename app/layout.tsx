@@ -4,11 +4,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://rogerorlando.nl"),
   title: {
-    default: "Roger Orlando — System Engineer & Digital Creator",
+    default: "Roger Orlando — Designer-turned-Engineer",
     template: "%s | Roger Orlando",
   },
-  description: "De persoonlijke website van Roger Chjin A Foeng (Roger Orlando). System engineering, development, design en digitale projecten.",
-  keywords: ["Roger Orlando", "Roger Chjin A Foeng", "System Engineer", "Developer", "Portfolio", "Technology", "Nederland"],
+  description: "De persoonlijke website van Roger Chin A Foeng (Roger Orlando). Van grafisch design naar IT: engineering, development, speelse interactieve ervaringen en digitale projecten.",
+  keywords: ["Roger Orlando", "Roger Chin A Foeng", "System Engineer", "Developer", "Portfolio", "Technology", "Nederland"],
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
