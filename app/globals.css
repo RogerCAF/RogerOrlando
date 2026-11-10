@@ -206,3 +206,33 @@
 .lab-copy .lab-play-button.chaos-play{background:#422a36;border-color:#a37d83;color:#ead3c8}
 .lab-copy .lab-play-button.chaos-play:hover{background:#62404d}
 @media(max-width:600px){.ro-terminal-bar{padding:10px 16px}.ro-terminal-intro{padding:16px 16px 9px}.ro-terminal-log{padding:0 16px}.ro-terminal-form{padding:14px 16px 18px}}
+
+
+/* A premium, cinematic gateway to the hidden interactive experience */
+.lab-quest-invite{display:grid;grid-template-columns:1.04fr .96fr;margin-top:29px;min-height:475px;border:1px solid #554b3e;background:radial-gradient(circle at 84% 30%,#332d27 0%,#171b22 60%);color:#f3efe9;overflow:hidden;position:relative;box-shadow:0 24px 70px #0005}
+.lab-quest-copy{padding:clamp(30px,4.3vw,65px);display:flex;flex-direction:column;align-items:flex-start;justify-content:center;position:relative;z-index:2}
+.lab-quest-tag{display:flex;align-items:center;gap:10px;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#dfc5a0;margin-bottom:29px}
+.lab-quest-dot{width:7px;height:7px;background:#a9e0bf;box-shadow:0 0 0 4px #a9e0bf18;border-radius:50%}
+.lab-quest-index{font-size:9px;letter-spacing:1.7px;color:#8f9496;font-weight:700;margin-bottom:12px}
+.lab-quest-copy h3{font:800 clamp(31px,3.3vw,48px)/1.2 "Manrope",sans-serif;letter-spacing:-2.2px;margin:0 0 21px}
+.lab-quest-copy h3 em{font:500 1em/1.1 "Playfair Display",Georgia,serif;color:#d6b589;letter-spacing:-1.6px}
+.lab-quest-copy>p{font-size:12px;line-height:2;color:#aeb3b9;max-width:450px;margin:0 0 26px}
+.lab-quest-cta{display:flex;align-items:center;justify-content:center;gap:18px;padding:16px 20px;background:#d6b589;color:#151a20;font-size:10px;letter-spacing:1px;font-weight:800;transition:transform .2s,background .2s}
+.lab-quest-cta:hover{transform:translateY(-3px);background:#f2d2a6}
+.lab-quest-cta:focus-visible{outline:2px solid #f4d2a4;outline-offset:4px}
+.lab-quest-footnote{color:#7d848d;font-size:8px;font-weight:800;letter-spacing:1.3px;margin-top:19px}
+.lab-quest-preview{margin:24px 24px 24px 0;border:1px solid #56544e;background:linear-gradient(145deg,#181e26,#26211e);position:relative;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.lab-quest-preview:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(transparent 50%,#00000006 50%);background-size:100% 5px}
+.lab-quest-window{height:45px;padding:0 19px;border-bottom:1px solid #ffffff20;display:flex;align-items:center;justify-content:space-between;gap:10px;font:800 9px/1.2 "DM Sans",sans-serif;letter-spacing:1.2px;color:#c6b69f}
+.lab-quest-orbit{position:relative;flex:1;min-height:200px;display:grid;place-items:center;background:radial-gradient(circle at 50% 50%,#987b4e18,transparent 50%)}
+.lab-quest-orbit:before,.lab-quest-orbit:after{content:"";position:absolute;border:1px solid #cfb3824d;border-radius:50%;aspect-ratio:1}
+.lab-quest-orbit:before{width:205px;border-style:dashed;animation:spin-own 38s linear infinite}
+.lab-quest-orbit:after{width:155px}
+.lab-quest-r{font:800 100px/1 "Manrope",sans-serif;letter-spacing:-12px;background:linear-gradient(145deg,#fff4df,#997348);background-clip:text;color:transparent;z-index:1}
+.lab-quest-small{position:absolute;left:16px;bottom:12px;font-size:8px;color:#a59e92;letter-spacing:1.4px;z-index:2}
+.lab-quest-steps{padding:14px 18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;font-size:8px;letter-spacing:1px;color:#bcae95;font-weight:800;border-top:1px solid #ffffff1b}
+.lab-quest-meter{height:3px;background:#282e30}
+.lab-quest-meter span{display:block;height:100%;width:25%;background:#d6b589}
+@media(max-width:1000px){.lab-quest-copy{padding:35px}.lab-quest-preview{margin:17px 17px 17px 0}}
+@media(max-width:710px){.lab-quest-invite{grid-template-columns:1fr}.lab-quest-copy{padding:33px 26px}.lab-quest-preview{margin:0 20px 20px;min-height:300px}.lab-quest-orbit{min-height:190px}.lab-quest-copy h3{font-size:35px}}
+@media(prefers-reduced-motion:reduce){.lab-quest-orbit:before{animation:none}.lab-quest-cta{transition:none}}
