@@ -187,27 +187,19 @@ export default function Home() {
           <Reveal className="lab-heading">
             <div className="eyebrow"><span>04 /</span> BEYOND THE BRIEF</div>
             <h2>Where curiosity<br/><em>gets interactive.</em></h2>
-            <p>Een creatieve studio vol experimenten om zelf te bedienen. Ontwerp, debug, zoek, ontdek — en speel daarna het verborgen ROGER_OS-avontuur.</p>
+            <p>Drie interactieve werelden, één overzichtelijke Playground. Wissel tussen design, engineering en gecontroleerde chaos.</p>
           </Reveal>
           <CreativePlayground />
 
-          <Reveal className="lab-quest-invite" delay={160}>
-            <div className="lab-quest-copy">
-              <div className="lab-quest-tag"><span className="lab-quest-dot"/> FEATURED EXPERIENCE / AN ENTIRE GAME</div>
-              <div className="lab-quest-index">ROGER_OS · EXPERIMENT NO. 001</div>
-              <h3>Some projects are<br/><em>meant to be played.</em></h3>
-              <p>Vier missies. Verborgen fragmenten. Een systeem dat niet helemaal doet wat het moet doen. Een compleet zelfstandig spel binnen dit portfolio — want nieuwsgierigheid verdient meer dan een knop.</p>
-              <a className="lab-quest-cta" href="/play">ENTER THE UNFINISHED PROJECT <ArrowUpRight size={18}/></a>
-              <div className="lab-quest-footnote">NO DOWNLOAD. NO ACCOUNT. JUST CURIOSITY.</div>
+          <Reveal className="lab-game-feature" delay={140}>
+            <div className="lab-game-feature-mark" aria-hidden="true"><span>R<span>.</span></span></div>
+            <div className="lab-game-feature-copy">
+              <span>FEATURED EXPERIMENT / ROGER_OS</span>
+              <h3>Done experimenting? <em>Enter the game.</em></h3>
+              <p>Vier missies, verborgen codes en een systeem met net iets te veel persoonlijkheid.</p>
             </div>
-            <div className="lab-quest-preview" aria-hidden="true">
-              <div className="lab-quest-window"><span>✳ ROGER_OS / ARCHIVE</span><span>01 — 04</span></div>
-              <div className="lab-quest-orbit"><span className="lab-quest-r">R.</span><span className="lab-quest-small">SYSTEM STATUS / UNKNOWN</span></div>
-              <div className="lab-quest-steps"><span>01 PIXEL PROTOCOL</span><span>02 GHOST NETWORK</span><span>03 THE CIPHER</span><span>04 FINAL PROTOCOL</span></div>
-              <div className="lab-quest-meter"><span/></div>
-            </div>
-          </Reveal>
-        </div>
+            <a href="/play" className="lab-game-feature-link">PLAY THE UNFINISHED PROJECT <ArrowUpRight size={17}/></a>
+          </Reveal>       </div>
       </section>
 
 
