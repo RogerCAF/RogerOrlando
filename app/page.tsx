@@ -155,6 +155,23 @@ export default function Home() {
             </div>
             {terminal&&<PlaygroundTerminal onClose={() => setTerminal(false)} />}
           </Reveal>
+
+          <Reveal className="lab-quest-invite" delay={160}>
+            <div className="lab-quest-copy">
+              <div className="lab-quest-tag"><span className="lab-quest-dot"/> NEW EXPERIENCE / ACTUALLY PLAYABLE</div>
+              <div className="lab-quest-index">ROGER_OS · EXPERIMENT NO. 001</div>
+              <h3>Some projects are<br/><em>meant to be played.</em></h3>
+              <p>Vier missies. Verborgen fragmenten. Een systeem dat niet helemaal doet wat het moet doen. Een klein spel verstopt in dit portfolio — omdat waarom niet?</p>
+              <a className="lab-quest-cta" href="/play">ENTER THE UNFINISHED PROJECT <ArrowUpRight size={18}/></a>
+              <div className="lab-quest-footnote">NO DOWNLOAD. NO ACCOUNT. JUST CURIOSITY.</div>
+            </div>
+            <div className="lab-quest-preview" aria-hidden="true">
+              <div className="lab-quest-window"><span>✳ ROGER_OS / ARCHIVE</span><span>01 — 04</span></div>
+              <div className="lab-quest-orbit"><span className="lab-quest-r">R.</span><span className="lab-quest-small">SYSTEM STATUS / UNKNOWN</span></div>
+              <div className="lab-quest-steps"><span>01 PIXEL PROTOCOL</span><span>02 GHOST NETWORK</span><span>03 THE CIPHER</span><span>04 FINAL PROTOCOL</span></div>
+              <div className="lab-quest-meter"><span/></div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
