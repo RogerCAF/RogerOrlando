@@ -95,6 +95,23 @@ export default function Home() {
                 <circle cx="300" cy="77" r="4"/><circle cx="523" cy="300" r="4"/><circle cx="300" cy="523" r="4"/><circle cx="77" cy="300" r="4"/>
                 <circle cx="300" cy="77" r="10" fill="none" stroke="#e1c399" strokeOpacity=".4"/>
               </g>
+              <g className="pm-crown" role="presentation" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M233 143 L253 174 Q300 184 347 174 L367 143 L330 156 L300 115 L270 156 Z"
+                  fill="#1b1a19" fillOpacity=".26" stroke="#423322" strokeWidth="4.5" strokeLinejoin="round"/>
+                <path d="M233 143 L253 174 Q300 184 347 174 L367 143 L330 156 L300 115 L270 156 Z"
+                  fill="none" stroke="url(#pmGold)" strokeWidth="2.2"/>
+                <path d="M249 181 Q300 190 351 181 M252 187 Q300 195 348 187"
+                  stroke="url(#pmEtch)" strokeWidth="1.25" fill="none"/>
+                <path d="M270 156 L278 173 M330 156 L322 173 M300 125 V171"
+                  stroke="#f1d7ab" strokeOpacity=".45" strokeWidth=".8" fill="none"/>
+                <path d="M300 143 L306 152 L300 161 L294 152 Z"
+                  stroke="#f8e3be" strokeWidth="1.15" fill="#d4b07b" fillOpacity=".13"/>
+                <circle cx="233" cy="141" r="4.3" fill="#f6d6a2" stroke="#8c673b" strokeWidth="1"/>
+                <circle cx="367" cy="141" r="4.3" fill="#f6d6a2" stroke="#8c673b" strokeWidth="1"/>
+                <circle cx="300" cy="112" r="5" fill="#ffe9c4" stroke="#9f7948" strokeWidth="1"/>
+                <path d="M300 100 V106 M290 112 H294 M306 112 H310"
+                  fill="none" stroke="#e3c18f" strokeWidth=".9" strokeOpacity=".75"/>
+              </g>
               <text x="311" y="412" textAnchor="middle" fontFamily="Georgia, 'Times New Roman', serif" fontWeight="700" fontSize="302" fill="#060910" stroke="#060910" strokeWidth="3" opacity=".78">R</text>
               <text x="301" y="400" textAnchor="middle" fontFamily="Georgia, 'Times New Roman', serif" fontWeight="700" fontSize="302" fill="url(#pmGold)" stroke="#fde5b9" strokeWidth=".65" filter="url(#pmShadow)">R</text>
               <path d="M191 410 H410" stroke="#ddc59d" strokeOpacity=".25" strokeWidth="1"/>
