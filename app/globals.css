@@ -89,3 +89,93 @@
 @media(max-width:900px){.hero h1{font-size:clamp(54px,8vw,78px)}.lab-section{padding:95px 0}}
 @media(max-width:600px){.hero h1{font-size:clamp(45px,10vw,60px)}.lab-section{padding:80px 0}.lab-panel-header{padding:0 15px;font-size:8px}.lab-panel-header>span:last-child{display:none}.lab-tabs{padding:15px 12px 0;gap:6px}.lab-tabs button{padding:12px 10px;font-size:9px;gap:6px;flex:1;justify-content:center}.lab-tabs button svg{width:14px}.lab-content{grid-template-columns:1fr}.lab-visual{min-height:255px}.lab-copy{padding:32px 24px 38px}.lab-big{font-size:105px}.lab-orb{width:200px;height:200px}.lab-orb-two{width:245px;height:245px}}
 @media(prefers-reduced-motion:reduce){.terminal-cursor{animation:none}.lab-big{transition:none}}
+
+/* Creative Lab 2.0 — custom interactive experiences */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.lab-section{background:radial-gradient(ellipse at 84% 32%,#1a2135,#0d1118 60%);overflow:hidden}
+.lab-heading h2{font-size:clamp(50px,5vw,78px)}
+.lab-heading>p{max-width:580px}
+.lab-panel{border-radius:18px;background:#121722;border:1px solid #394251;box-shadow:0 35px 100px #0007,0 0 0 1px #ffffff07}
+.lab-panel-header{background:#1a202c;border-bottom-color:#394452}
+.lab-tabs{padding:18px 24px 0;gap:12px}
+.lab-tabs button{position:relative;gap:10px;border-radius:10px 10px 0 0;letter-spacing:1.1px;padding:17px 24px;background:#181f2b}
+.lab-tabs button span{font-size:9px;opacity:.55;margin-right:7px}
+.lab-tabs button.selected{background:#d7bd99;border-color:#d7bd99;color:#161921}
+.lab-tabs button:focus-visible,.lab-play-button:focus-visible,.palette-swatch:focus-visible,.terminal-toggle:focus-visible{outline:3px solid #f4d5a5;outline-offset:3px}
+.lab-content{min-height:440px;grid-template-columns:1.16fr 1fr}
+.lab-visual{min-height:440px;border-right:1px solid #38414d;background:#1b1d29}
+.lab-copy{padding:45px clamp(25px,3.5vw,58px);animation:lab-enter .35s ease both}
+.lab-copy h3{font-size:clamp(30px,2.75vw,42px);margin:23px 0 17px}
+.lab-copy p{font-size:13px;line-height:1.95;margin-bottom:25px}
+.lab-data{margin-top:auto}
+.lab-kicker{font-size:10px}
+.design-stage,.engineer-stage,.chaos-stage{width:100%;height:100%;min-height:440px;position:absolute;inset:0;overflow:hidden}
+.design-stage{background:#1e2429;color:#ddbb8b;transition:background .4s,color .4s}
+.design-stage.palette-1{background:#10234f;color:#77c6ff}
+.design-stage.palette-2{background:#431d36;color:#ffb8cd}
+.design-stage:before{content:"";position:absolute;inset:0;background-image:linear-gradient(#ffffff0d 1px,transparent 1px),linear-gradient(90deg,#ffffff0d 1px,transparent 1px);background-size:35px 35px;mask-image:linear-gradient(90deg,#0009,transparent)}
+.design-stage-top,.design-stage-bottom{position:absolute;left:28px;right:28px;z-index:5;display:flex;justify-content:space-between;gap:15px;font:700 9px/1.4 "DM Sans",sans-serif;letter-spacing:1.5px}
+.design-stage-top{top:25px}.design-stage-bottom{bottom:24px;color:#ffffff9c}
+.design-composition{position:absolute;inset:40px;display:grid;place-items:center}
+.design-outline{font:800 370px/1 "Manrope",sans-serif;color:transparent;-webkit-text-stroke:1px currentColor;position:absolute;opacity:.15;transform:translate(-50px,-15px) rotate(-12deg);user-select:none}
+.design-type{font:800 clamp(128px,15vw,210px)/1 "Manrope",sans-serif;letter-spacing:-26px;position:relative;z-index:2;text-shadow:0 25px 42px #0005;transform:rotate(-9deg);animation:type-float 5s ease-in-out infinite}
+.design-type span{font-family:Georgia,serif}
+.design-circle{position:absolute;border:1px solid currentColor;border-radius:50%;width:290px;height:290px;opacity:.45;transform:rotate(24deg)}
+.design-circle.circle-two{width:340px;height:170px;border-radius:50%;transform:rotate(-30deg);opacity:.28}
+.design-cross{position:absolute;right:12%;top:18%;font-size:68px;animation:spin-own 16s linear infinite}
+.design-rule{position:absolute;width:70%;height:2px;bottom:22%;background:currentColor;opacity:.35;transform:rotate(-17deg)}
+.lab-engineer{background:#071b21}
+.engineer-stage{background:radial-gradient(circle at 30% 45%,#13383c,#06171e 80%);padding:30px 28px;display:flex;flex-direction:column;font:12px/1.8 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.engineer-stage:before{content:"";position:absolute;inset:0;background:linear-gradient(transparent 50%,#0002 50%);background-size:100% 5px;pointer-events:none}
+.engineer-top{display:flex;gap:10px;align-items:center;color:#b3e8d7;border-bottom:1px solid #9cd8be35;padding-bottom:17px;font-size:11px;position:relative;z-index:1}
+.engineer-top>span:last-child{margin-left:auto;color:#87aaad;font-size:9px}
+.engineer-led{display:inline-block;background:#62e4af;width:8px;height:8px;border-radius:50%;box-shadow:0 0 12px #62e4af}
+.engineer-code{position:relative;z-index:1;padding-top:27px}
+.engineer-code p{margin:0 0 8px;color:#d0e4dc;font:12px/1.9 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.engineer-code b{color:#61dda5}
+.engineer-code .engineer-muted{color:#648b91}
+.engineer-check{color:#67e3ad;font-weight:800}
+.engineer-warn{color:#ffd28b;font-weight:800}
+.engineer-prompt{margin-top:16px!important}
+.engineer-cursor{color:#7de8af;animation:blink 1s step-end infinite}
+.engineer-bars{position:absolute;right:30px;bottom:30px;height:42px;display:flex;gap:5px;align-items:end;opacity:.4}
+.engineer-bars span{width:5px;background:#60dbb0;border-radius:3px 3px 0 0;animation:bars-jump 2.2s ease-in-out infinite alternate}
+.engineer-bars span:nth-child(2n){animation-delay:.4s}
+.engineer-bars span:nth-child(3n){animation-delay:.9s}
+.lab-chaos{background:#381825}
+.chaos-stage{background:radial-gradient(circle at 50% 45%,#a45162 0%,#48223c 55%,#201b35 100%)}
+.chaos-stage:before{content:"";position:absolute;inset:0;background-image:radial-gradient(#ffffff1b 1px,transparent 1px);background-size:21px 21px;transform:rotate(9deg) scale(1.2)}
+.chaos-sticker{position:absolute;z-index:4;font:800 15px/1.1 "Manrope",sans-serif;box-shadow:7px 13px 0 #1a0d1833}
+.sticker-one{top:55px;left:35px;padding:13px 19px;background:#c0f56c;color:#232324;transform:rotate(-14deg)}
+.sticker-two{top:60px;right:32px;padding:17px 20px;border-radius:100%;background:#d1a5ff;color:#1c1431;transform:rotate(15deg);text-align:center;font-size:12px}
+.sticker-three{bottom:55px;right:48px;font-size:64px;color:#f8cb4e;box-shadow:none;animation:spin-own 12s linear infinite}
+.chaos-scribble{position:absolute;border:12px solid #e2bdff6f;width:270px;height:180px;border-radius:55% 45% 30% 60%;transform:rotate(-30deg);top:25%;left:22%;filter:blur(.5px)}
+.scribble-two{border-color:#f6cf4f6b;transform:rotate(36deg);left:36%;top:34%;height:200px;width:260px}
+.chaos-center{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;z-index:3;animation:chaos-pop .45s cubic-bezier(.2,1.5,.4,1) both}
+.chaos-face{font:800 190px/1 "Manrope",sans-serif;color:#ffe8bd;text-shadow:10px 17px 0 #31172c81;transform:rotate(-13deg)}
+.chaos-center>span{padding:10px 13px;background:#101722;color:#ffdc8e;font:800 10px/1.4 "DM Sans",sans-serif;letter-spacing:1.4px;transform:rotate(3deg);text-align:center;max-width:90%}
+.chaos-footer{position:absolute;left:25px;bottom:25px;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#ffe8cfbf}
+.lab-action-area{display:flex;align-items:center;gap:15px;flex-wrap:wrap;margin:3px 0 28px}
+.lab-action-label{width:100%;font-size:9px;font-weight:800;letter-spacing:1.8px;color:#b5beca}
+.palette-options{display:flex;gap:9px}
+.palette-swatch{border:2px solid #ffffff55;width:32px;height:32px;border-radius:50%;cursor:pointer;transition:transform .2s,border-color .2s}
+.palette-swatch:hover{transform:translateY(-3px)}
+.palette-swatch.active{outline:2px solid #e7d8be;outline-offset:3px;border-color:#ffffff}
+.swatch-0{background:linear-gradient(135deg,#21262c 50%,#d8b98d 50%)}
+.swatch-1{background:linear-gradient(135deg,#142656 50%,#83c8ff 50%)}
+.swatch-2{background:linear-gradient(135deg,#48203d 50%,#ffc0dc 50%)}
+.lab-choice-name{font-size:9px;letter-spacing:1px;font-weight:800;color:#e5ca9f}
+.lab-play-button{border:1px solid #7fb5aa;background:#11352f;color:#bcf7e1;padding:14px 17px;display:flex;align-items:center;gap:12px;font-size:10px;font-weight:800;letter-spacing:1px;margin:6px 0 27px;cursor:pointer;transition:background .2s,transform .2s}
+.lab-play-button:hover{background:#1b594d;transform:translateY(-2px)}
+.chaos-play{border-color:#d8a3ba;background:#5b2a49;color:#ffdaed}
+.chaos-play:hover{background:#703457}
+.lab-data{padding:15px 0}
+.lab-data strong{text-align:right}
+@keyframes type-float{0%,100%{transform:rotate(-9deg) translateY(0)}50%{transform:rotate(-6deg) translateY(-12px)}}
+@keyframes spin-own{to{transform:rotate(360deg)}}
+@keyframes bars-jump{to{height:30%;opacity:.4}}
+@keyframes chaos-pop{0%{opacity:0;transform:scale(.65) rotate(-18deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes lab-enter{from{opacity:.3;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:920px){.lab-content{grid-template-columns:1fr 1fr}.lab-copy{padding:38px 28px}.lab-visual,.design-stage,.engineer-stage,.chaos-stage{min-height:440px}.engineer-stage{padding:25px 16px}.engineer-code p{font-size:10px}.design-stage-bottom,.design-stage-top{font-size:8px;left:17px;right:17px}}
+@media(max-width:650px){.lab-content{grid-template-columns:1fr}.lab-visual,.design-stage,.engineer-stage,.chaos-stage{min-height:325px}.lab-copy{padding:32px 24px 35px}.lab-tabs{padding:13px 12px 0;gap:5px}.lab-tabs button{padding:13px 8px;font-size:9px;gap:5px}.lab-tabs button span{display:none}.design-type{font-size:150px}.design-circle{width:210px;height:210px}.design-circle.circle-two{width:240px;height:135px}.design-outline{font-size:240px}.design-stage-top,.design-stage-bottom{font-size:7px}.chaos-face{font-size:160px}.chaos-sticker{font-size:12px}.sticker-one{top:32px;left:17px}.sticker-two{top:26px;right:18px}.sticker-three{bottom:27px;right:22px;font-size:45px}.engineer-stage{padding:25px}.engineer-code p{font-size:11px}.lab-panel-header{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.design-type,.design-cross,.sticker-three,.engineer-bars span,.chaos-center,.lab-copy,.engineer-cursor{animation:none!important}}
