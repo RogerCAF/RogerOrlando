@@ -143,9 +143,20 @@ export default function Play() {
       history: [...previous.history, "[VAULT] Protocol selected: " + ending.toUpperCase() + ". Ending unlocked."].slice(-9)
     }));
   };
-  const reset = () => {
-    setGame(INITIAL); setStage(0); setDial(38); setCipher(""); setFeedback("");
-    setShowHint(false); setResetAsk(false);
+  // A new playthrough must clear both the saved ending and every in-memory puzzle state.
+  // Remove the old save immediately so a page refresh cannot revive the previous run.
+  const startNewGame = () => {
+    try { window.localStorage.removeItem("rogeros-game-v1"); }
+    catch { /* Replay still works when storage is unavailable. */ }
+    setGame({ ...INITIAL, completed: [...INITIAL.completed], history: [...INITIAL.history] });
+    setStage(0);
+    setDial(38);
+    setCipher("");
+    setFeedback("");
+    setShowHint(false);
+    setShowGuide(false);
+    setResetAsk(false);
+    document.getElementById("mission-control")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
   const current = MISSIONS[stage];
 
@@ -216,7 +227,7 @@ export default function Play() {
                 </button>
               ))}
               <div className="rg-sidebar-note"><ShieldCheck size={17}/><span>No real systems are accessed. Just puzzles, pixels and poor decisions.</span></div>
-              <button className="rg-reset-link" type="button" onClick={() => setResetAsk(true)}><RotateCcw size={14}/> RESET EXPERIENCE</button>
+              <button className="rg-reset-link" type="button" onClick={() => setResetAsk(true)}><RotateCcw size={14}/> NIEUWE RONDE STARTEN</button>
             </aside>
 
             <main className="rg-stage" aria-live="polite">
@@ -300,7 +311,8 @@ export default function Play() {
                   <h3>{endings[game.ending].name}<span>.</span></h3>
                   <p>{endings[game.ending].text}</p>
                   <div className="rg-ending-foot"><Check size={16}/> EXPERIENCE COMPLETE · {game.xp} XP</div>
-                  <button type="button" className="rg-soft" onClick={() => setResetAsk(true)}><RotateCcw size={15}/> PLAY AGAIN</button>
+                  <button type="button" className="rg-commit rg-play-again" onClick={startNewGame}><RotateCcw size={18}/> SPEEL OPNIEUW — VANAF MISSIE 1</button>
+                  <span className="rg-replay-hint">Nieuwe ronde, zelfde regels. Andere afloop mogelijk. Geen bevestiging nodig.</span>
                 </div> : <div className="rg-final">
                   <div className="rg-final-symbol"><Sparkles size={66} strokeWidth={1}/></div>
                   <h3>The system is yours now.</h3>
@@ -344,7 +356,7 @@ export default function Play() {
         </section>
         <footer className="rg-footer"><span>ROGER CHIN A FOENG © {new Date().getFullYear()}</span><span>DESIGNED FOR THE CURIOUS. BUILT FOR THE BORED.</span><Link href="/">BACK TO REALITY <ArrowLeft size={14}/></Link></footer>
       </div>
-      {resetAsk && <div className="rg-modal-backdrop" role="presentation" onClick={() => setResetAsk(false)}><div className="rg-modal" role="dialog" aria-modal="true" aria-labelledby="rg-reset-title" onClick={e => e.stopPropagation()}><h2 id="rg-reset-title">Start from zero?</h2><p>Je XP, gevonden fragmenten en einde worden gewist. Klaar voor een nieuwe ronde?</p><div><button className="rg-soft" type="button" onClick={() => setResetAsk(false)}>CANCEL</button><button className="rg-commit" type="button" onClick={reset}>RESET EXPERIENCE <RotateCcw size={15}/></button></div></div></div>}
+      {resetAsk && <div className="rg-modal-backdrop" role="presentation" onClick={() => setResetAsk(false)}><div className="rg-modal" role="dialog" aria-modal="true" aria-labelledby="rg-reset-title" onClick={e => e.stopPropagation()}><h2 id="rg-reset-title">Start from zero?</h2><p>Je begint opnieuw bij missie 1. Je vorige XP, fragmenten en einde worden gereset. Klaar om het systeem nóg een keer te redden?</p><div><button className="rg-soft" type="button" onClick={() => setResetAsk(false)}>CANCEL</button><button className="rg-commit" type="button" onClick={startNewGame}>JA, START OPNIEUW <RotateCcw size={15}/></button></div></div></div>}
     </div>
   );
 }
