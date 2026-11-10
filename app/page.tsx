@@ -43,7 +43,7 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
   useEffect(() => { document.body.classList.toggle("menu-open", menuOpen); return () => document.body.classList.remove("menu-open"); }, [menuOpen]);
-  const links = [["Over mij", "#about"], ["Projecten", "#work"], ["Playground", "#lab"]];
+  const links = [["Over mij", "#about"], ["Projecten", "#work"]];
   return <div className="site">
     <div className="noise" aria-hidden="true" />
     <header className="header">
