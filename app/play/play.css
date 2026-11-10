@@ -242,3 +242,11 @@
 @keyframes rg-reward-in{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:650px){.rg-collected{padding:14px;gap:7px}.rg-collected-heading{width:100%;margin-bottom:4px}.rg-collected-info{width:100%;margin-left:0}.rg-reward-reveal{padding:18px;gap:12px}.rg-reward-icon{width:39px;height:39px}.rg-reward-copy>span{font-size:8px}.rg-reward-secret{font-size:27px}}
 @media(prefers-reduced-motion:reduce){.rg-reward-reveal{animation:none}}
+
+
+/* Replay — a prominent, accessible one-click action on the completed ending */
+.rg-ending .rg-play-again{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:56px;margin-top:25px;padding:16px 25px;font-weight:800!important;font-size:11px!important;letter-spacing:1px;max-width:100%;white-space:normal;text-align:center}
+.rg-replay-hint{display:block;max-width:340px;color:#aeb7b3;font-size:11px;line-height:1.7}
+.rg-reset-link{border:1px solid #796d56;background:#2b2822;padding:12px 13px;margin:7px 0;color:#edd2aa}
+.rg-reset-link:hover{background:#3c3428;color:#fff}
+@media(max-width:650px){.rg-ending .rg-play-again{width:100%;min-height:58px;font-size:10px!important;padding:15px 12px}.rg-replay-hint{font-size:10px}}
