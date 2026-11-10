@@ -43,7 +43,7 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
   useEffect(() => { document.body.classList.toggle("menu-open", menuOpen); return () => document.body.classList.remove("menu-open"); }, [menuOpen]);
-  const links = [["Over mij", "#about"], ["Expertise", "#expertise"], ["Projecten", "#work"], ["Playground", "#lab"], ["Contact", "#connect"]];
+  const links = [["Over mij", "#about"], ["Projecten", "#work"], ["Playground", "#lab"]];
   return <div className="site">
     <div className="noise" aria-hidden="true" />
     <header className="header">
@@ -55,7 +55,7 @@ export default function Home() {
         <a className="nav-action" href="#connect">LET'S CONNECT <ArrowUpRight size={15}/></a>
         <button className="menu-toggle" type="button" aria-label={menuOpen ? "Sluit menu" : "Open menu"} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={23}/> : <Menu size={23}/>}</button>
       </div>
-      <nav className={`mobile-nav ${menuOpen ? "open" : ""}`} aria-label="Mobiele navigatie">{links.map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}<ArrowUpRight size={19}/></a>)}</nav>
+      <nav className={`mobile-nav ${menuOpen ? "open" : ""}`} aria-label="Mobiele navigatie">{links.map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}<ArrowUpRight size={19}/></a>)}<a className="mobile-contact-cta" href="#connect" onClick={() => setMenuOpen(false)}>CONTACT <ArrowUpRight size={19}/></a></nav>
     </header>
 
     <main>
