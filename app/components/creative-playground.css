@@ -183,3 +183,74 @@
  .cp-mood-grid button{font-size:7px!important}
 }
 @media(prefers-reduced-motion:reduce){.cp-chaos-orbit,.cp-chaos-symbol,.cp-console-cursor span{animation:none}.cp-tab,.cp-action-primary,.cp-design-grid,.cp-progress-track span{transition:none}}
+
+
+/* Calm, compact playground by default; rich controls remain available on expansion */
+.cp{margin-top:23px;border-color:#424850;box-shadow:0 16px 40px #0003}
+.cp-topline{min-height:42px;padding:10px 17px;background:#1b2028}
+.cp-topline span{font-size:8px}
+.cp-expand{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:transparent;border:1px solid #726449;color:#e2c49a;padding:7px 11px;min-height:30px;font-size:9px!important;font-weight:800!important;letter-spacing:.8px;cursor:pointer;transition:border-color .2s,color .2s,background .2s}
+.cp-expand:hover{background:#332b22;border-color:#d6b589;color:#fff1d6}
+.cp-workbench{height:348px;min-height:0;transition:height .3s ease;grid-template-columns:minmax(0,1.17fr) minmax(300px,.83fr)}
+.cp.cp-expanded .cp-workbench{height:525px}
+.cp-topline .cp-expand:focus-visible{outline:2px solid #e4be80;outline-offset:3px}
+.cp-stage-visual{min-height:0}
+.cp-controls{padding:19px 22px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#907452 #202832}
+.cp-controls:focus-visible{outline:2px solid #b99c70;outline-offset:-4px}
+.cp-tabs .cp-tab{padding:11px 17px;min-height:53px;gap:10px}
+.cp-tab-name strong{font-size:11px}
+.cp-tab-name small{font-size:9px}
+.cp-tab>svg{width:17px;height:17px}
+.cp-panel-heading{padding-bottom:13px;margin-bottom:12px}
+.cp-panel-heading h3{font-size:25px;margin:6px 0}
+.cp-panel-heading p{font-size:10px;line-height:1.65}
+.cp-field-label{margin:11px 0 6px}
+.cp-controls textarea{min-height:55px;padding:9px 10px}
+.cp-mood-grid button{min-height:33px}
+.cp-segmented button{min-height:31px}
+.cp-slider-label{margin:10px 0 4px}
+.cp-panel-actions{margin-top:12px}
+.cp-action-primary,.cp-action-quiet{min-height:37px;padding:8px 12px}
+.cp-action-quiet{width:39px}
+.cp-footer{min-height:44px;padding:11px 16px}
+.cp-footer button{font-size:9px!important}
+.cp-design-preview{padding:18px}
+.cp-preview-corner,.cp-preview-bottom{font-size:8px}
+.cp-design-orbit{width:min(48%,245px)}
+.cp-design-spark{font-size:29px}
+.cp-chaos-symbol{font-size:clamp(86px,9vw,123px)}
+.cp-chaos-wordmark strong{font-size:clamp(22px,2.6vw,30px)}
+.cp-chaos-wordmark span{font-size:10px}
+.cp-chaos-orbit{height:205px;width:205px}
+.cp-chaos-scribble{font-size:8px;padding:7px}
+.cp-chaos-index{font-size:8px}
+.cp-console-heading{height:40px;flex-basis:40px}
+.cp-console-output{padding:16px 20px;font-size:11px;line-height:1.65}
+.cp-console-result{margin:13px 0!important}
+.cp-console-footer{padding:11px 16px;font-size:8px}
+@media(max-width:800px){
+ .cp-workbench,.cp.cp-expanded .cp-workbench{height:auto;display:flex;flex-direction:column}
+ .cp-stage-visual{height:230px;min-height:230px;flex:0 0 230px}
+ .cp-controls{height:auto;max-height:235px;overflow-y:auto;padding:17px 23px}
+ .cp.cp-expanded .cp-stage-visual{height:305px;min-height:305px;flex-basis:305px}
+ .cp.cp-expanded .cp-controls{max-height:560px}
+ .cp-tab-name small{display:none}
+}
+@media(max-width:560px){
+ .cp-topline{padding:10px 12px}
+ .cp-expand{padding:6px 8px;min-height:28px;font-size:8px!important}
+ .cp-tabs .cp-tab{padding:8px 6px;min-height:48px}
+ .cp-stage-visual{height:205px;min-height:205px;flex-basis:205px}
+ .cp.cp-expanded .cp-stage-visual{height:250px;min-height:250px;flex-basis:250px}
+ .cp-controls{max-height:200px;padding:15px}
+ .cp.cp-expanded .cp-controls{max-height:520px}
+ .cp-chaos-symbol{font-size:80px}
+ .cp-chaos-wordmark strong{font-size:21px}
+ .cp-chaos-orbit{height:150px;width:150px}
+ .cp-chaos-wordmark span{font-size:9px}
+ .cp-chaos-scribble{font-size:6px;padding:5px}
+ .cp-design-preview{padding:12px}
+ .cp-preview-corner,.cp-preview-bottom{font-size:6px}
+ .cp-footer{min-height:46px;padding:11px 12px}
+}
+@media(prefers-reduced-motion:reduce){.cp-workbench,.cp-expand{transition:none}}
