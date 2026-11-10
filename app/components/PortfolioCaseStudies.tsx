@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Check, ChevronRight, Layers3, MonitorSmartphone, Sparkles, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, ChevronRight, X } from "lucide-react";
+import type { KeyboardEvent } from "react";
 import "./portfolio-case-studies.css";
 
 type Study = {
@@ -80,7 +81,40 @@ function Preview({ item }: { item: Study }) {
 export default function PortfolioCaseStudies() {
   const [openedId, setOpenedId] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [activeSlide, setActiveSlide] = useState(0);
   const opened = studies.find(project => project.id === openedId);
+
+  const goToSlide = (requested: number) => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    const next = Math.max(0, Math.min(studies.length - 1, requested));
+    const child = scroller.children.item(next) as HTMLElement | null;
+    if (!child) return;
+    const targetLeft = scroller.scrollLeft + child.getBoundingClientRect().left - scroller.getBoundingClientRect().left;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    scroller.scrollTo({ left: targetLeft, behavior: reduceMotion ? "instant" : "smooth" });
+    setActiveSlide(next);
+  };
+
+  const onSlideScroll = () => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    const left = scroller.getBoundingClientRect().left;
+    let selected = 0;
+    let nearest = Infinity;
+    Array.from(scroller.children).forEach((card, index) => {
+      const distance = Math.abs(card.getBoundingClientRect().left - left);
+      if (distance < nearest) { nearest = distance; selected = index; }
+    });
+    setActiveSlide(selected);
+  };
+
+  const onSlideKeys = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.target !== event.currentTarget) return;
+    if (event.key === "ArrowRight") { event.preventDefault(); goToSlide(activeSlide + 1); }
+    if (event.key === "ArrowLeft") { event.preventDefault(); goToSlide(activeSlide - 1); }
+  };
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -90,8 +124,19 @@ export default function PortfolioCaseStudies() {
   }, [openedId]);
 
   return <>
-    <div className="cs-overline"><span>THE INDEX / SELECTED WORK</span><span>HOVER TO EXPLORE — CLICK FOR THE STORY</span></div>
-    <div className="cs-grid">
+    <div className="cs-overline"><span>THE INDEX / SELECTED WORK</span><span>SWIPE OR USE THE ARROWS TO EXPLORE</span></div>
+    <div className="cs-slider-toolbar">
+      <div className="cs-slider-label">
+        <span className="cs-slider-counter">PROJECT {String(activeSlide + 1).padStart(2, "0")} <i>/ {String(studies.length).padStart(2, "0")}</i></span>
+        <p>{studies[activeSlide].name} <span>— DISCOVER THE DETAILS</span></p>
+      </div>
+      <div className="cs-slider-buttons" aria-label="Projectnavigatie">
+        <button type="button" aria-label="Vorig project" disabled={activeSlide === 0} onClick={() => goToSlide(activeSlide - 1)}><ArrowLeft size={20}/></button>
+        <button type="button" aria-label="Volgend project" disabled={activeSlide === studies.length - 1} onClick={() => goToSlide(activeSlide + 1)}><ArrowRight size={20}/></button>
+      </div>
+    </div>
+    <div className="cs-slider-track" aria-hidden="true"><span style={{width: ((activeSlide + 1) / studies.length * 100) + "%"}}/></div>
+    <div className="cs-grid cs-scroller" ref={scrollerRef} onScroll={onSlideScroll} onKeyDown={onSlideKeys} tabIndex={0} role="region" aria-roledescription="carousel" aria-label="Projecten, horizontaal scrollbaar">
       {studies.map((item,index) => <article className={"cs-card cs-" + item.className + (index===0 ? " cs-featured" : "")} key={item.id}>
         <div className="cs-visual">
           <div className="cs-visual-grid"/>
