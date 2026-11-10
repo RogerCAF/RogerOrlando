@@ -179,3 +179,30 @@
 @media(max-width:920px){.lab-content{grid-template-columns:1fr 1fr}.lab-copy{padding:38px 28px}.lab-visual,.design-stage,.engineer-stage,.chaos-stage{min-height:440px}.engineer-stage{padding:25px 16px}.engineer-code p{font-size:10px}.design-stage-bottom,.design-stage-top{font-size:8px;left:17px;right:17px}}
 @media(max-width:650px){.lab-content{grid-template-columns:1fr}.lab-visual,.design-stage,.engineer-stage,.chaos-stage{min-height:325px}.lab-copy{padding:32px 24px 35px}.lab-tabs{padding:13px 12px 0;gap:5px}.lab-tabs button{padding:13px 8px;font-size:9px;gap:5px}.lab-tabs button span{display:none}.design-type{font-size:150px}.design-circle{width:210px;height:210px}.design-circle.circle-two{width:240px;height:135px}.design-outline{font-size:240px}.design-stage-top,.design-stage-bottom{font-size:7px}.chaos-face{font-size:160px}.chaos-sticker{font-size:12px}.sticker-one{top:32px;left:17px}.sticker-two{top:26px;right:18px}.sticker-three{bottom:27px;right:22px;font-size:45px}.engineer-stage{padding:25px}.engineer-code p{font-size:11px}.lab-panel-header{font-size:8px}}
 @media(prefers-reduced-motion:reduce){.design-type,.design-cross,.sticker-three,.engineer-bars span,.chaos-center,.lab-copy,.engineer-cursor{animation:none!important}}
+
+
+/* Creative Lab — premium interactive guest terminal. Original site palette preserved. */
+.ro-terminal{background:#0d1418;color:#c9d9ce;border-top:1px solid #404b51;padding:0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.ro-terminal-bar{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px 27px;border-bottom:1px solid #35454c;background:#172026;color:#d8be95;font-size:10px;letter-spacing:1px;font-weight:800}
+.ro-terminal-bar>span{display:flex;gap:10px;align-items:center}
+.ro-terminal-bar button{border:1px solid #4b5860;background:transparent;color:#d7dce0;border-radius:5px;width:30px;height:30px;display:grid;place-items:center;cursor:pointer}
+.ro-terminal-intro{padding:20px 27px 9px;color:#b0bbb8;font-size:12px;line-height:1.8;margin:0}
+.ro-terminal-intro b{color:#e6c59b}
+.ro-terminal-log{max-height:230px;overflow-y:auto;padding:0 27px;scrollbar-color:#596660 transparent}
+.ro-terminal-line{margin:0 0 12px;overflow-wrap:anywhere}
+.ro-terminal-line p{margin:0 0 3px}
+.ro-terminal-line p span,.ro-terminal-form label span{color:#8dd8ad}
+.ro-terminal-line .ro-terminal-output{color:#f0c993;white-space:pre-wrap}
+.ro-terminal-form{display:flex;align-items:center;gap:9px;border-top:1px solid #35454c;padding:14px 27px 22px}
+.ro-terminal-form label{white-space:nowrap;font-size:11px}
+.ro-terminal-form input{min-width:0;flex:1;background:transparent;border:0;outline:none;color:#f0eee6;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;caret-color:#d9be91}
+.ro-terminal-form input::placeholder{color:#818b8c}
+.ro-terminal-form button{border:1px solid #6a6050;background:#332e27;color:#e6c99b;display:grid;place-items:center;padding:7px;border-radius:5px;cursor:pointer}
+.ro-terminal button:hover{border-color:#d8b789}
+.ro-terminal button:focus-visible,.ro-terminal input:focus-visible{outline:2px solid #ddba86;outline-offset:3px}
+.chaos-stage.chaos-style-1{background:radial-gradient(circle at 40% 44%,#5d4354 0%,#292136 72%)}
+.chaos-stage.chaos-style-2{background:radial-gradient(circle at 40% 44%,#62513a 0%,#282323 72%)}
+.chaos-stage.chaos-style-3{background:radial-gradient(circle at 40% 44%,#394858 0%,#211c32 72%)}
+.lab-copy .lab-play-button.chaos-play{background:#422a36;border-color:#a37d83;color:#ead3c8}
+.lab-copy .lab-play-button.chaos-play:hover{background:#62404d}
+@media(max-width:600px){.ro-terminal-bar{padding:10px 16px}.ro-terminal-intro{padding:16px 16px 9px}.ro-terminal-log{padding:0 16px}.ro-terminal-form{padding:14px 16px 18px}}
