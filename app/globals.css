@@ -236,3 +236,6 @@
 @media(max-width:1000px){.lab-quest-copy{padding:35px}.lab-quest-preview{margin:17px 17px 17px 0}}
 @media(max-width:710px){.lab-quest-invite{grid-template-columns:1fr}.lab-quest-copy{padding:33px 26px}.lab-quest-preview{margin:0 20px 20px;min-height:300px}.lab-quest-orbit{min-height:190px}.lab-quest-copy h3{font-size:35px}}
 @media(prefers-reduced-motion:reduce){.lab-quest-orbit:before{animation:none}.lab-quest-cta{transition:none}}
+
+/* A concise navigation with a distinct mobile contact action */
+@media(max-width:900px){.mobile-nav .mobile-contact-cta{margin-top:16px;padding:15px 18px;background:#d6b589;color:#14191e;font-size:11px;font-weight:800;letter-spacing:1.2px;border:0}.mobile-nav .mobile-contact-cta:hover{background:#edcfa5}}
