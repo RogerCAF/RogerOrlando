@@ -103,11 +103,10 @@ export default function Play() {
     }));
     setFeedback("");
     setShowHint(false);
-    if (id < 3) setStage(id + 1);
   };
   const calibrate = () => {
-    if (Math.abs(dial - 73) <= 2) complete(0, "[DESIGN] Geometry locked at 73. Fragment 73 recovered.");
-    else error("De twee signalen liggen nog niet op één lijn. Kijk naar de coördinaten in het logboek.");
+    if (Math.abs(dial - 73) <= 4) complete(0, "[DESIGN] Geometry locked at 73. Fragment 73 recovered.");
+    else error("Bijna! Verschuif het symbool over de gouden stippellijn. Je hoeft niet exact op de pixel te zitten.");
   };
   const network = (choice: string) => {
     if (isDone(1)) return;
@@ -129,7 +128,7 @@ export default function Play() {
   const decrypt = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (cipher.trim().toUpperCase().replace(/\s/g, "") === "EMBER73") complete(2, "[CIPHER] EMBER73 accepted. Vault access granted.");
-    else error("ACCESS DENIED. De code bestaat uit twee fragmenten uit je vorige missies.");
+    else error("Nog niet helemaal. Kijk naar je verzamelde fragmenten, combineer eerst het woord en daarna het getal, en probeer opnieuw.");
   };
   const finish = (ending: Exclude<Ending, null>) => {
     if (!isDone(2) || game.ending) return;
@@ -190,6 +189,12 @@ export default function Play() {
             <div><small>SYSTEM INTEGRITY</small><strong>{progress}<span> %</span></strong></div>
             <div className="rg-progress-rail"><div style={{ width: progress + "%" }}/></div>
           </div>
+          <div className="rg-collected" aria-label="Gevonden codefragmenten">
+            <span className="rg-collected-heading"><KeyRound size={15}/> GEVONDEN FRAGMENTEN</span>
+            <span className={"rg-collected-chip " + (isDone(0) ? "is-found" : "")}>{isDone(0) ? "73" : "??? · MISSIE 01"}</span>
+            <span className={"rg-collected-chip " + (isDone(1) ? "is-found" : "")}>{isDone(1) ? "EMBER" : "??? · MISSIE 02"}</span>
+            <span className="rg-collected-info">Je bewaart ze hier. Niets onthouden nodig.</span>
+          </div>
 
           <div className="rg-game-grid">
             <aside className="rg-sidebar">
@@ -226,7 +231,7 @@ export default function Play() {
                   <span className="rg-cal-bottom">OFFSET: {dial.toString().padStart(2, "0")} / 100</span>
                 </div>
                 <div className="rg-puzzle-bottom">
-                  <div><h3>Find the perfect alignment.</h3><p>De interface is verschoven. Verschuif het signaal naar de referentielijn. In het systeemlog staat een bruikbaar coördinaat.</p></div>
+                  <div><h3>Find the perfect alignment.</h3><p>De interface is verschoven. Verschuif het symbool naar de gouden stippellijn en klik op Lock Coordinates. Je mag een paar punten afwijken.</p></div>
                   <label className="rg-slider-label" htmlFor="rg-dial"><span>HORIZONTAL OFFSET</span><strong>{dial}</strong></label>
                   <input id="rg-dial" type="range" min="0" max="100" value={dial} onChange={e => setDial(Number(e.target.value))} disabled={isDone(0)} aria-label="Verschuif het kalibratiesignaal"/>
                   {isDone(0) ? <div className="rg-success"><Check size={18}/> SIGNAL RESTORED · FRAGMENT 73 ACQUIRED</div> : <button className="rg-commit" type="button" onClick={calibrate}>LOCK COORDINATES <ArrowRight size={16}/></button>}
@@ -243,7 +248,7 @@ export default function Play() {
                 </div>
                 <div className="rg-puzzle-bottom">
                   <h3>{game.networkPhase === 0 ? "The archive is unreachable." : game.networkPhase === 1 ? "IP connection established. Still no website." : "DNS timeout detected. What next?"}</h3>
-                  <p>{game.networkPhase === 0 ? "De netwerkkabel lijkt goed. Begin met een test die de internetverbinding zonder DNS controleert." : game.networkPhase === 1 ? "Je kunt een extern IP-adres bereiken. Welke test controleert de omzetting van een domeinnaam?" : "Je hebt de fout gelokaliseerd. Kies een gerichte oplossing in deze fictieve omgeving."}</p>
+                  <p>{game.networkPhase === 0 ? "De netwerkkabel lijkt goed. Kies een test voor de internetverbinding zonder domeinnaam. Tip: ping gebruikt hier een IP-adres." : game.networkPhase === 1 ? "Je kunt een extern IP-adres bereiken. Welke test controleert de omzetting van een domeinnaam?" : "Je hebt de fout gelokaliseerd. Kies een gerichte oplossing in deze fictieve omgeving."}</p>
                   {isDone(1) ? <div className="rg-success"><Check size={18}/> RESOLVER REPAIRED · KEY FRAGMENT EMBER ACQUIRED</div> : <div className="rg-choices">
                     {(game.networkPhase === 0 ? [
                       { id: "ping", label: "ping 1.1.1.1", detail: "Test een extern IP-adres" },
@@ -270,7 +275,7 @@ export default function Play() {
                 </div>
                 <div className="rg-puzzle-bottom">
                   <h3>Two fragments. One password.</h3>
-                  <p>Je hebt in je vorige missies twee fragmenten gevonden: een codewoord en een getal. Voeg ze in die volgorde samen om de kluis te openen.</p>
+                  <p>Je gevonden fragmenten staan bovenaan. Typ eerst het WOORD uit missie 2 en direct daarna het GETAL uit missie 1. Zonder spaties. Je voert de code zelf in.</p>
                   {isDone(2) ? <div className="rg-success"><Check size={18}/> ACCESS GRANTED · VAULT OPEN</div> :
                     <form className="rg-cipher-form" onSubmit={decrypt}>
                       <label htmlFor="rg-cipher">ENTER ACCESS KEY</label>
@@ -298,6 +303,18 @@ export default function Play() {
                 </div>}
               </div>}
 
+              {isDone(stage) && stage < 3 && <div className="rg-reward-reveal" role="status">
+                <div className="rg-reward-icon"><Trophy size={25}/></div>
+                <div className="rg-reward-copy">
+                  <span>MISSIE {current.number} VOLTOOID · +{current.reward} XP</span>
+                  <h3>{stage === 0 ? "Fragment gevonden!" : stage === 1 ? "Geheim fragment ontgrendeld!" : "Kluis geopend!"}</h3>
+                  {stage < 2 ? <>
+                    <p>Dit is jouw verdiende codefragment. Het blijft ook bovenaan zichtbaar.</p>
+                    <div className="rg-reward-secret">{stage === 0 ? "73" : "EMBER"}</div>
+                  </> : <p>Je hebt de code zelf ingevoerd en het archief geopend. Nu bepaal jij de afloop.</p>}
+                </div>
+                <button className="rg-commit rg-next-mission" type="button" onClick={() => chooseStage(stage + 1)}>VOLGENDE MISSIE <ArrowRight size={16}/></button>
+              </div>}
               {feedback && !isDone(stage) && <div className="rg-feedback" role="status"><Zap size={16}/>{feedback}</div>}
               {!isDone(stage) && stage !== 3 && <div className="rg-stage-footer">
                 <button type="button" onClick={() => setShowHint(v => !v)}><CircleHelp size={15}/> {showHint ? "HIDE HINT" : "NEED A HINT?"}</button>
