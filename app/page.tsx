@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import PlaygroundTerminal from "./components/PlaygroundTerminal";
+import PortfolioCaseStudies from "./components/PortfolioCaseStudies";
 import { ArrowDown, ArrowRight, ArrowUpRight, Braces, Check, ChevronDown, Code2, Cpu, ExternalLink, Github, Globe2, Layers3, Menu, MonitorSmartphone, Network, ShieldCheck, Sparkles, TerminalSquare, Palette, X } from "lucide-react";
 
 const projects = [
@@ -99,22 +100,7 @@ export default function Home() {
       <section className="section work-section" id="work">
         <div className="container">
           <Reveal className="section-head work-heading"><div><div className="eyebrow"><span>01 /</span> SELECTED WORK</div><h2>Proof over<br/><em>promises.</em></h2></div><p>Van websites tot appconcepten. Vier projecten, vier verschillende uitdagingen en een eigen verhaal achter elk ontwerp.</p></Reveal>
-          <div className="project-grid">
-            {projects.map((p,i) => <Reveal className={`project-card ${p.className}`} key={p.id} delay={(i%2)*100}>
-              <div className="project-art">
-                <div className="project-art-grid"/>
-                <div className="project-art-glow"/>
-                <span className="project-art-number">{p.id} / 04</span>
-                <div className="project-symbol">{p.monogram}</div>
-                <span className="project-art-note">{p.note}</span>
-              </div>
-              <div className="project-body">
-                <div className="project-meta">{p.type}</div>
-                <div className="project-title-row"><h3>{p.name}</h3>{p.href ? <a aria-label={`Bekijk website van ${p.name}`} href={p.href} target="_blank" rel="noreferrer" className="project-arrow"><ArrowUpRight size={22}/></a> : <span className="project-arrow decorative"><ArrowUpRight size={22}/></span>}</div>
-                <p>{p.description}</p><div className="project-tags">{p.tags.map(t => <span key={t}>{t}</span>)}</div>
-              </div>
-            </Reveal>)}
-          </div>
+          <PortfolioCaseStudies />
           <Reveal className="work-footer"><div className="work-footer-mark">✳</div><p>Always building. Always learning.<br/><span>En er is nog veel meer onderweg.</span></p><a href="https://github.com/RogerCAF" target="_blank" rel="noreferrer">Meer op GitHub <ArrowUpRight size={17}/></a></Reveal>
         </div>
       </section>
