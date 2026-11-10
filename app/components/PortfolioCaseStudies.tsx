@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Check, ChevronRight, Layers3, MonitorSmartphone, Sparkles, X } from "lucide-react";
+import "./portfolio-case-studies.css";
 
 type Study = {
   id: string; name: string; category: string; description: string; stage: string; className: string;
