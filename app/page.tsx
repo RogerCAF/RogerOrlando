@@ -161,7 +161,7 @@ export default function Home() {
               </div>
             </Reveal>)}
           </div>
-          <Reveal className="work-footer"><div className="work-footer-mark">✳</div><p>Always building. Always learning.<br/><span>En er is nog veel meer onderweg.</span></p><a href="https://github.com/ItsYaBoyKing030" target="_blank" rel="noreferrer">Meer op GitHub <ArrowUpRight size={17}/></a></Reveal>
+          <Reveal className="work-footer"><div className="work-footer-mark">✳</div><p>Always building. Always learning.<br/><span>En er is nog veel meer onderweg.</span></p><a href="https://github.com/RogerCAF" target="_blank" rel="noreferrer">Meer op GitHub <ArrowUpRight size={17}/></a></Reveal>
         </div>
       </section>
 
@@ -175,7 +175,7 @@ export default function Home() {
       <section className="connect-section" id="connect">
         <div className="container connect-inner">
           <Reveal><div className="eyebrow light"><span>06 /</span> STAY CONNECTED</div><h2>Let's build<br/>something <em>great.</em></h2><p>Bekijk mijn werk, volg nieuwe projecten of ontdek waar ik mee bezig ben.</p></Reveal>
-          <Reveal className="connect-links" delay={100}><a href="https://github.com/ItsYaBoyKing030" target="_blank" rel="noreferrer"><Github size={23}/><span>GitHub<small>CODE & PROJECTS</small></span><ArrowUpRight size={22}/></a><a href="https://www.loschdental.nl" target="_blank" rel="noreferrer"><Globe2 size={23}/><span>Losch Dental<small>RECENT WEBSITE PROJECT</small></span><ArrowUpRight size={22}/></a></Reveal>
+          <Reveal className="connect-links" delay={100}><a href="https://github.com/RogerCAF" target="_blank" rel="noreferrer"><Github size={23}/><span>GitHub<small>CODE & PROJECTS</small></span><ArrowUpRight size={22}/></a><a href="https://www.loschdental.nl" target="_blank" rel="noreferrer"><Globe2 size={23}/><span>Losch Dental<small>RECENT WEBSITE PROJECT</small></span><ArrowUpRight size={22}/></a></Reveal>
         </div>
         <div className="connect-watermark" aria-hidden="true">ORLANDO</div>
       </section>
