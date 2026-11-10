@@ -148,9 +148,8 @@ export default function PortfolioCaseStudies() {
           <div className="cs-category"><span>{item.category}</span><span className="cs-status"><i/> {item.stage}</span></div>
           <div className="cs-title-row"><h3>{item.name}<span>.</span></h3><button type="button" aria-label={"Bekijk projectverhaal van " + item.name} onClick={()=>setOpenedId(item.id)} className="cs-round-link"><ArrowUpRight size={22}/></button></div>
           <p className="cs-description">{item.description}</p>
-          <div className="cs-facts"><div><small>ROL</small><strong>{item.role}</strong></div><div><small>FOCUS</small><strong>{item.focus}</strong></div></div>
-          <div className="cs-actions"><button type="button" onClick={()=>setOpenedId(item.id)}>BEKIJK PROJECTVERHAAL <ChevronRight size={15}/></button>{item.href && <a href={item.href} target="_blank" rel="noopener noreferrer">BEKIJK LIVE WEBSITE <ArrowUpRight size={14}/></a>}</div>
-          <div className="cs-tags">{item.tags.map(tag=><span key={tag}>{tag}</span>)}</div>
+          <div className="cs-tags">{item.tags.slice(0,2).map(tag=><span key={tag}>{tag}</span>)}</div>
+          <div className="cs-actions"><button type="button" onClick={()=>setOpenedId(item.id)}>BEKIJK PROJECT <ChevronRight size={15}/></button>{item.href && <a href={item.href} target="_blank" rel="noopener noreferrer" aria-label={"Open de website van "+item.name}>LIVE SITE <ArrowUpRight size={14}/></a>}</div>
         </div>
       </article>)}
     </div>
