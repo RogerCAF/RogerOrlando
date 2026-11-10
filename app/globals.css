@@ -286,3 +286,33 @@
  .premium-footer-contact h2{font-size:clamp(35px,8vw,47px)}
 }
 @media(prefers-reduced-motion:reduce){.pm-orbit-outer,.pm-orbit-middle{animation:none}.pm-crown{transition:none}}
+
+
+/* Portfolio lab, not a stack of separate apps */
+.lab-section{padding:92px 0 105px}
+.lab-heading{max-width:900px}
+.lab-heading p{max-width:690px}
+.lab-game-feature{display:flex;align-items:center;gap:24px;padding:23px 25px;margin-top:22px;background:linear-gradient(115deg,#25231f,#161b23 70%);border:1px solid #61543f;box-shadow:0 14px 45px #0003;min-width:0}
+.lab-game-feature-mark{display:grid;place-items:center;flex:0 0 82px;height:82px;border:1px solid #9c825d;border-radius:50%;background:radial-gradient(circle at 42% 35%,#4a3925,#171920 75%);box-shadow:inset 0 0 20px #d5b58912,0 0 0 5px #d5b5890b;color:#e4c69a}
+.lab-game-feature-mark>span{font:800 45px/1 "Manrope",sans-serif;letter-spacing:-7px;transform:translateX(-4px)}
+.lab-game-feature-mark>span span{color:#edcd94}
+.lab-game-feature-copy{flex:1;min-width:0}
+.lab-game-feature-copy>span{display:block;font-size:9px;font-weight:800;letter-spacing:1.6px;color:#d6b589;margin-bottom:8px}
+.lab-game-feature h3{font:800 clamp(18px,2.1vw,28px)/1.3 "Manrope",sans-serif;letter-spacing:-.7px;margin:0 0 6px;color:#f4eee4}
+.lab-game-feature h3 em{font:500 1em/1.2 "Playfair Display",Georgia,serif;color:#d6b589}
+.lab-game-feature p{font-size:11px;line-height:1.7;color:#abb3bb;margin:0}
+.lab-game-feature-link{display:flex;align-items:center;justify-content:center;gap:12px;border:1px solid #cfaf81;background:transparent;color:#edcf9c;padding:15px 18px;min-height:47px;text-align:center;font-size:9px;font-weight:800;letter-spacing:1px;white-space:nowrap;transition:background .2s,color .2s}
+.lab-game-feature-link:hover{background:#d6b589;color:#141a1f}
+.lab-game-feature-link:focus-visible{outline:2px solid #f3d4a8;outline-offset:4px}
+@media(max-width:1000px){.lab-game-feature{flex-wrap:wrap}.lab-game-feature-link{margin-left:auto}}
+@media(max-width:700px){
+ .lab-section{padding:76px 0 85px}
+ .lab-game-feature{padding:18px;gap:15px}
+ .lab-game-feature-mark{flex-basis:58px;height:58px}
+ .lab-game-feature-mark>span{font-size:34px;letter-spacing:-5px}
+ .lab-game-feature-copy{flex-basis:calc(100% - 73px)}
+ .lab-game-feature h3{font-size:20px}
+ .lab-game-feature p{font-size:10px}
+ .lab-game-feature-link{width:100%;margin-left:0;white-space:normal}
+}
+@media(prefers-reduced-motion:reduce){.lab-game-feature-link{transition:none}}
