@@ -46,6 +46,7 @@ const prompts = [
 
 export default function CreativePlayground() {
   const [mode, setMode] = useState<Mode>("design");
+  const [expanded, setExpanded] = useState(false);
   const [copy, setCopy] = useState("MAKE IT\nMATTER.");
   const [tone, setTone] = useState<Tone>("gold");
   const [typeStyle, setTypeStyle] = useState<TypeStyle>("sans");
@@ -107,10 +108,12 @@ export default function CreativePlayground() {
     document.getElementById("cp-tab-"+modes[next].id)?.focus();
   };
   return (
-    <div className="cp">
+    <div className={expanded ? "cp cp-expanded" : "cp"}>
       <div className="cp-topline">
         <span><i/> ROGER LAB / INTERACTIVE EDITION</span>
-        <span>THREE MODES · ONE CREATIVE MIND</span>
+        <button type="button" className="cp-expand" aria-expanded={expanded} aria-controls="cp-stage" onClick={()=>setExpanded(v=>!v)}>
+          {expanded ? "COMPACT VIEW" : "OPEN FULL WORKSPACE"} <ArrowUpRight size={15}/>
+        </button>
       </div>
       <div className="cp-tabs" role="tablist" aria-label="Playground-modus" onKeyDown={onModeKeys}>
         {modes.map((m,index) => <button type="button" role="tab" id={"cp-tab-"+m.id} key={m.id}
@@ -169,7 +172,7 @@ export default function CreativePlayground() {
           }
         </div>
 
-        <div className="cp-controls">
+        <div className="cp-controls" aria-label="Instellingen, scroll voor meer mogelijkheden" tabIndex={0}>
           {mode==="design"&&<>
             <div className="cp-panel-heading"><span>01 / VISUAL STUDIO</span><h3>Make it <em>yours.</em></h3><p>Stuur een mini-designstudio aan. Iedere aanpassing zie je direct links.</p></div>
             <label className="cp-field-label" htmlFor="cp-message">THE MESSAGE <span>MAX 40</span></label>
