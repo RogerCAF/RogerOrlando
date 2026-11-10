@@ -93,7 +93,7 @@ export default function PortfolioCaseStudies() {
     if (!child) return;
     const targetLeft = scroller.scrollLeft + child.getBoundingClientRect().left - scroller.getBoundingClientRect().left;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    scroller.scrollTo({ left: targetLeft, behavior: reduceMotion ? "instant" : "smooth" });
+    scroller.scrollTo({ left: targetLeft, behavior: reduceMotion ? "auto" : "smooth" });
     setActiveSlide(next);
   };
 
