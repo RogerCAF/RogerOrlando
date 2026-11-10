@@ -43,7 +43,7 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
   useEffect(() => { document.body.classList.toggle("menu-open", menuOpen); return () => document.body.classList.remove("menu-open"); }, [menuOpen]);
-  const links = [["Projecten", "#work"], ["Expertise", "#expertise"], ["Playground", "#lab"], ["Over mij", "#about"], ["Connect", "#connect"]];
+  const links = [["Over mij", "#about"], ["Expertise", "#expertise"], ["Projecten", "#work"], ["Playground", "#lab"], ["Contact", "#connect"]];
   return <div className="site">
     <div className="noise" aria-hidden="true" />
     <header className="header">
@@ -97,11 +97,28 @@ export default function Home() {
 
 
 
-      <section className="section work-section" id="work">
-        <div className="container">
-          <Reveal className="section-head work-heading"><div><div className="eyebrow"><span>01 /</span> SELECTED WORK</div><h2>Proof over<br/><em>promises.</em></h2></div><p>Van websites tot appconcepten. Vier projecten, vier verschillende uitdagingen en een eigen verhaal achter elk ontwerp.</p></Reveal>
-          <PortfolioCaseStudies />
-          <Reveal className="work-footer"><div className="work-footer-mark">✳</div><p>Always building. Always learning.<br/><span>En er is nog veel meer onderweg.</span></p><a href="https://github.com/RogerCAF" target="_blank" rel="noreferrer">Meer op GitHub <ArrowUpRight size={17}/></a></Reveal>
+
+
+
+
+
+
+
+
+      <section className="section about-section" id="about">
+        <div className="container about-grid">
+          <Reveal className="about-heading">
+            <div className="eyebrow"><span>01 /</span> ABOUT, BRIEFLY</div>
+            <h2>Short story.<br/><em>Big curiosity.</em></h2>
+            <div className="signature">R<span>.</span></div>
+          </Reveal>
+          <Reveal className="about-copy" delay={100}>
+            <div className="about-overline"><span className="crosshair">✳</span> THE PERSON BEHIND THE PROJECTS</div>
+            <p className="about-lead"><strong>Roger Chin A Foeng.</strong> Designer roots. Engineer mindset.</p>
+            <p>Van grafisch design naar IT: ik combineer visuele ideeën met techniek, zodat dingen niet alleen mooi zijn, maar ook goed werken.</p>
+            <p>Mijn zwakte? Die ene pixel die nét niet goed staat. Mijn oplossing? Nog een kop koffie en opnieuw proberen.</p>
+            <div className="about-points"><span><Check size={15}/> Design-achtergrond</span><span><Check size={15}/> Engineering mindset</span><span><Check size={15}/> Altijd aan het leren</span></div>
+          </Reveal>
         </div>
       </section>
 
@@ -112,10 +129,18 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="section work-section" id="work">
+        <div className="container">
+          <Reveal className="section-head work-heading"><div><div className="eyebrow"><span>03 /</span> SELECTED WORK</div><h2>Proof over<br/><em>promises.</em></h2></div><p>Van websites tot appconcepten. Vier projecten, vier verschillende uitdagingen en een eigen verhaal achter elk ontwerp.</p></Reveal>
+          <PortfolioCaseStudies />
+          <Reveal className="work-footer"><div className="work-footer-mark">✳</div><p>Always building. Always learning.<br/><span>En er is nog veel meer onderweg.</span></p><a href="https://github.com/RogerCAF" target="_blank" rel="noreferrer">Meer op GitHub <ArrowUpRight size={17}/></a></Reveal>
+        </div>
+      </section>
+
       <section className="section lab-section" id="lab">
         <div className="container">
           <Reveal className="lab-heading">
-            <div className="eyebrow"><span>03 /</span> BEYOND THE BRIEF</div>
+            <div className="eyebrow"><span>04 /</span> BEYOND THE BRIEF</div>
             <h2>Not everything<br/><em>needs a brief.</em></h2>
             <p>Werk staat voorop. Maar hier mag je spelen: een Playground en een klein spel dat zich verstopt in dit portfolio.</p>
           </Reveal>
@@ -178,23 +203,6 @@ export default function Home() {
               <div className="lab-quest-steps"><span>01 PIXEL PROTOCOL</span><span>02 GHOST NETWORK</span><span>03 THE CIPHER</span><span>04 FINAL PROTOCOL</span></div>
               <div className="lab-quest-meter"><span/></div>
             </div>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="section about-section" id="about">
-        <div className="container about-grid">
-          <Reveal className="about-heading">
-            <div className="eyebrow"><span>04 /</span> ABOUT, BRIEFLY</div>
-            <h2>Short story.<br/><em>Big curiosity.</em></h2>
-            <div className="signature">R<span>.</span></div>
-          </Reveal>
-          <Reveal className="about-copy" delay={100}>
-            <div className="about-overline"><span className="crosshair">✳</span> THE PERSON BEHIND THE PROJECTS</div>
-            <p className="about-lead"><strong>Roger Chin A Foeng.</strong> Designer roots. Engineer mindset.</p>
-            <p>Van grafisch design naar IT: ik combineer visuele ideeën met techniek, zodat dingen niet alleen mooi zijn, maar ook goed werken.</p>
-            <p>Mijn zwakte? Die ene pixel die nét niet goed staat. Mijn oplossing? Nog een kop koffie en opnieuw proberen.</p>
-            <div className="about-points"><span><Check size={15}/> Design-achtergrond</span><span><Check size={15}/> Engineering mindset</span><span><Check size={15}/> Altijd aan het leren</span></div>
           </Reveal>
         </div>
       </section>
