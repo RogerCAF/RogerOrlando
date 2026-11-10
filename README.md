@@ -1,6 +1,6 @@
 # Roger Orlando — Personal website
 
-Premium dark-mode portfolio van Roger Chjin A Foeng. De website combineert grafisch design en IT met een interactieve playground en een verborgen terminal.
+Premium dark-mode portfolio van Roger Chin A Foeng. De website combineert grafisch design en IT met een interactieve playground en een verborgen terminal.
 
 ## Stack
 Next.js App Router · React 19 · TypeScript · CSS · Lucide icons
