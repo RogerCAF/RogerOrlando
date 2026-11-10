@@ -59,7 +59,7 @@ export default function Play() {
           completed: [...new Set(safeCompleted)],
           xp: typeof saved.xp === "number" && Number.isFinite(saved.xp) ? saved.xp : 0,
           mistakes: typeof saved.mistakes === "number" && Number.isFinite(saved.mistakes) ? saved.mistakes : 0,
-          networkPhase: typeof saved.networkPhase === "number" && saved.networkPhase >= 0 && saved.networkPhase <= 2 ? saved.networkPhase : 0,
+          networkPhase: typeof saved.networkPhase === "number" && saved.networkPhase >= 0 && saved.networkPhase <= 3 ? saved.networkPhase : 0,
           ending: ["archive", "broadcast", "chaos"].includes(String(saved.ending)) ? saved.ending as Ending : null,
           history: Array.isArray(saved.history) ? saved.history.filter(x => typeof x === "string").slice(-9) : INITIAL.history
         };
@@ -90,7 +90,8 @@ export default function Play() {
     resetTransient();
   };
   const error = (message: string) => {
-    setFeedback(message);
+    const quips = ["SYSTEM NOTE: Zelfs de beste engineers klikken weleens verkeerd.", "WARNING: De denkbeeldige printer lacht je uit.", "ROGER_OS: Nog één poging. Koffie optioneel, nadenken verplicht."];
+    setFeedback(message + " " + quips[game.mistakes % quips.length]);
     setGame(previous => ({ ...previous, mistakes: previous.mistakes + 1 }));
   };
   const complete = (id: number, entry: string) => {
@@ -112,17 +113,22 @@ export default function Play() {
     if (isDone(1)) return;
     if (game.networkPhase === 0) {
       if (choice === "ping") {
-        setGame(previous => ({ ...previous, networkPhase: 1, history: [...previous.history, "[NET] ping 1.1.1.1 — 4 replies. External IP reachable."].slice(-9) }));
-        setFeedback("Verbinding met een extern IP werkt. Maar de archief-URL blijft onbereikbaar.");
-      } else error("Dat verandert het systeem zonder de oorzaak te testen. Probeer eerst bereikbaarheid te controleren.");
+        setGame(previous => ({ ...previous, networkPhase: 1, history: [...previous.history, "[NET] ping 1.1.1.1 — four replies. Internet connection alive."].slice(-9) }));
+        setFeedback("PING SUCCEEDED. De verbinding leeft! De website doet alleen alsof hij je niet kent.");
+      } else error("Daarmee gok je op een reparatie. Doe eerst een test: werkt een extern IP-adres?");
     } else if (game.networkPhase === 1) {
       if (choice === "dns") {
-        setGame(previous => ({ ...previous, networkPhase: 2, history: [...previous.history, "[NET] nslookup vault.example — DNS request timed out."].slice(-9) }));
-        setFeedback("Bingo: de DNS-aanvraag loopt vast. Welke gerichte reparatie kies je?");
-      } else error("De IP-verbinding werkte. Onderzoek nu waarom een hostnaam niet wordt gevonden.");
+        setGame(previous => ({ ...previous, networkPhase: 2, history: [...previous.history, "[NET] nslookup vault.example — DNS timed out. Suspicious silence."].slice(-9) }));
+        setFeedback("AHA! DNS is stil. Zelfs de DNS-server ghost je. Zoek de gerichte oplossing.");
+      } else error("Het externe IP reageert al. Kijk nu waarom de domeinnaam niet wordt gevonden.");
+    } else if (game.networkPhase === 2) {
+      if (choice === "resolver") {
+        setGame(previous => ({ ...previous, networkPhase: 3, history: [...previous.history, "[NET] DNS restored. Two addresses found: 10.20.0.18 and 10.20.0.81. Archive hint: BAY 18."].slice(-9) }));
+        setFeedback("DNS werkt! Maar er zijn twee servers. Het archief fluistert: 'BAY 18'. Welke kies jij?");
+      } else error("Je weet dat DNS het probleem is. De kabel vervangen is nu vooral cardio voor je IT-afdeling.");
     } else {
-      if (choice === "resolver") complete(1, "[NET] Resolver restored. Key fragment recovered: EMBER.");
-      else error("Je hebt een DNS-probleem vastgesteld. Kies de oplossing die bij die diagnose hoort.");
+      if (choice === "vault18") complete(1, "[NET] BAY 18 connected. Ghost Network complete. Key fragment recovered: EMBER.");
+      else error("Verkeerde server. De aanwijzing is BAY 18. De andere server draait waarschijnlijk alleen memes.");
     }
   };
   const decrypt = (event: FormEvent<HTMLFormElement>) => {
@@ -157,7 +163,7 @@ export default function Play() {
           <div className="rg-hero-copy">
             <p className="rg-kicker"><span>EXPERIENCE 001</span> // AN UNFINISHED STORY</p>
             <h1>THE <em>UNFINISHED</em><br/>PROJECT<span className="rg-stop">.</span></h1>
-            <p className="rg-intro">Er is iets mis met een geheim digitaal archief. Vier protocollen. Eén verborgen verhaal. Jij hebt de toegang — als je slim genoeg bent.</p>
+            <p className="rg-intro">Een mysterieus digitaal archief is gecrasht. Vier missies, verborgen codes en een systeem met een discutabel gevoel voor humor. Jij bent de operator. Succes. Je krijgt geen IT-helpdesk.</p>
             <div className="rg-hero-actions">
               <a className="rg-primary" href="#mission-control">ENTER THE SYSTEM <ArrowRight size={17}/></a>
               <button className="rg-soft" onClick={() => setShowGuide(v => !v)} type="button"><CircleHelp size={16}/> {showGuide ? "SLUIT UITLEG" : "HOE WERKT HET?"}</button>
@@ -231,7 +237,7 @@ export default function Play() {
                   <span className="rg-cal-bottom">OFFSET: {dial.toString().padStart(2, "0")} / 100</span>
                 </div>
                 <div className="rg-puzzle-bottom">
-                  <div><h3>Find the perfect alignment.</h3><p>De interface is verschoven. Verschuif het symbool naar de gouden stippellijn en klik op Lock Coordinates. Je mag een paar punten afwijken.</p></div>
+                  <div><h3>Find the perfect alignment.</h3><p>Een designer heeft per ongeluk aan één pixel gezeten. Klassiek. Verschuif het symbool naar de gouden referentielijn en vergrendel je keuze.</p></div>
                   <label className="rg-slider-label" htmlFor="rg-dial"><span>HORIZONTAL OFFSET</span><strong>{dial}</strong></label>
                   <input id="rg-dial" type="range" min="0" max="100" value={dial} onChange={e => setDial(Number(e.target.value))} disabled={isDone(0)} aria-label="Verschuif het kalibratiesignaal"/>
                   {isDone(0) ? <div className="rg-success"><Check size={18}/> SIGNAL RESTORED · FRAGMENT 73 ACQUIRED</div> : <button className="rg-commit" type="button" onClick={calibrate}>LOCK COORDINATES <ArrowRight size={16}/></button>}
@@ -247,21 +253,25 @@ export default function Play() {
                   <div className="rg-net-node rg-net-vault"><LockKeyhole size={25}/><strong>ARCHIVE</strong><small>vault.example</small></div>
                 </div>
                 <div className="rg-puzzle-bottom">
-                  <h3>{game.networkPhase === 0 ? "The archive is unreachable." : game.networkPhase === 1 ? "IP connection established. Still no website." : "DNS timeout detected. What next?"}</h3>
-                  <p>{game.networkPhase === 0 ? "De netwerkkabel lijkt goed. Kies een test voor de internetverbinding zonder domeinnaam. Tip: ping gebruikt hier een IP-adres." : game.networkPhase === 1 ? "Je kunt een extern IP-adres bereiken. Welke test controleert de omzetting van een domeinnaam?" : "Je hebt de fout gelokaliseerd. Kies een gerichte oplossing in deze fictieve omgeving."}</p>
+                  <h3>{game.networkPhase === 0 ? "The archive is unreachable." : game.networkPhase === 1 ? "Connected. But still ghosted." : game.networkPhase === 2 ? "DNS timed out. Find the culprit." : "Two servers. One secret."}</h3>
+                  <p>{game.networkPhase === 0 ? "De netwerkkabel lijkt goed. Onderzoek eerst of een extern IP-adres bereikbaar is, voordat je zomaar iets uitzet." : game.networkPhase === 1 ? "Je bereikt een IP-adres, maar geen domeinnaam. Welke test kan onderzoeken waar de naamomzetting misgaat?" : game.networkPhase === 2 ? "De naamserver reageert niet. Herstel gericht wat stuk is; geen complete netwerkpaniek nodig." : "DNS is hersteld. Het archief gaf een aanwijzing: BAY 18. Twee IP-adressen zijn gevonden. Welk adres hoort bij de juiste bay?"}</p>
                   {isDone(1) ? <div className="rg-success"><Check size={18}/> RESOLVER REPAIRED · KEY FRAGMENT EMBER ACQUIRED</div> : <div className="rg-choices">
                     {(game.networkPhase === 0 ? [
-                      { id: "ping", label: "ping 1.1.1.1", detail: "Test een extern IP-adres" },
-                      { id: "restart", label: "Restart all servers", detail: "Alles tegelijk opnieuw starten" },
-                      { id: "firewall", label: "Disable firewall", detail: "Beveiliging zomaar uitschakelen" }
+                      { id: "restart", label: "Reboot everything", detail: "Een klassieker. Maar weet je al wat stuk is?" },
+                      { id: "ping", label: "ping 1.1.1.1", detail: "Check eerst of een extern IP-adres reageert" },
+                      { id: "firewall", label: "Disable firewall", detail: "Beveiliging blind uitschakelen" }
                     ] : game.networkPhase === 1 ? [
-                      { id: "dns", label: "nslookup vault.example", detail: "Controleer naamomzetting" },
-                      { id: "cable", label: "Replace network cable", detail: "Vervang de kabel" },
-                      { id: "restart", label: "Reinstall the browser", detail: "Verwijder je browser" }
+                      { id: "cable", label: "New ethernet cable", detail: "Altijd leuk om te bestellen" },
+                      { id: "dns", label: "nslookup vault.example", detail: "Onderzoek de DNS-naamomzetting" },
+                      { id: "restart", label: "Reinstall browser", detail: "Hopelijk werkte je bladwijzer nog" }
+                    ] : game.networkPhase === 2 ? [
+                      { id: "cable", label: "Replace network cable", detail: "De IP-verbinding werkte al" },
+                      { id: "restart", label: "Reboot the whole city", detail: "Dramatisch, maar niet gericht" },
+                      { id: "resolver", label: "Repair DNS resolver", detail: "Herstel de kapotte naamserverinstelling" }
                     ] : [
-                      { id: "resolver", label: "Repair DNS resolver", detail: "Herstel de naamserverinstelling" },
-                      { id: "cable", label: "Replace network cable", detail: "Vervang de kabel" },
-                      { id: "restart", label: "Restart entire network", detail: "Onderbreek alle verbindingen" }
+                      { id: "vault81", label: "10.20.0.81", detail: "Node: BAY 81" },
+                      { id: "vault18", label: "10.20.0.18", detail: "Node: BAY 18" },
+                      { id: "restart", label: "Unplug the server room", detail: "Dramatisch, maar absoluut niet nodig" }
                     ]).map(option => <button key={option.id} type="button" onClick={() => network(option.id)}><span><strong>{option.label}</strong><small>{option.detail}</small></span><ArrowRight size={16}/></button>)}
                   </div>}
                 </div>
@@ -275,7 +285,7 @@ export default function Play() {
                 </div>
                 <div className="rg-puzzle-bottom">
                   <h3>Two fragments. One password.</h3>
-                  <p>Je gevonden fragmenten staan bovenaan. Typ eerst het WOORD uit missie 2 en direct daarna het GETAL uit missie 1. Zonder spaties. Je voert de code zelf in.</p>
+                  <p>De fragmenten die je écht hebt verdiend staan bovenaan. Combineer het woord uit missie 2 met het getal uit missie 1 en typ de code zelf in. Geen automatische ontgrendeling.</p>
                   {isDone(2) ? <div className="rg-success"><Check size={18}/> ACCESS GRANTED · VAULT OPEN</div> :
                     <form className="rg-cipher-form" onSubmit={decrypt}>
                       <label htmlFor="rg-cipher">ENTER ACCESS KEY</label>
@@ -311,14 +321,14 @@ export default function Play() {
                   {stage < 2 ? <>
                     <p>Dit is jouw verdiende codefragment. Het blijft ook bovenaan zichtbaar.</p>
                     <div className="rg-reward-secret">{stage === 0 ? "73" : "EMBER"}</div>
-                  </> : <p>Je hebt de code zelf ingevoerd en het archief geopend. Nu bepaal jij de afloop.</p>}
+                  </> : <p>De kluis is open! Geen wachtwoordmanager nodig. Kies zelf het einde van deze nogal verdachte missie.</p>}
                 </div>
                 <button className="rg-commit rg-next-mission" type="button" onClick={() => chooseStage(stage + 1)}>VOLGENDE MISSIE <ArrowRight size={16}/></button>
               </div>}
               {feedback && !isDone(stage) && <div className="rg-feedback" role="status"><Zap size={16}/>{feedback}</div>}
               {!isDone(stage) && stage !== 3 && <div className="rg-stage-footer">
                 <button type="button" onClick={() => setShowHint(v => !v)}><CircleHelp size={15}/> {showHint ? "HIDE HINT" : "NEED A HINT?"}</button>
-                {showHint && <p>{stage === 0 ? "Het logboek noemt de stabiele positie: X = 73." : stage === 1 ? "IP-bereikbaarheid en DNS-naamomzetting zijn twee verschillende dingen." : "Eerst de letters van Ghost Network, daarna het nummer van Pixel Protocol."}</p>}
+                {showHint && <p>{stage === 0 ? "De stippellijn is de referentie; mik op de plek waar het bewegende symbool de lijn raakt." : stage === 1 ? game.networkPhase === 0 ? "Test eerst een IP-adres, niet een domeinnaam." : game.networkPhase === 1 ? "Een DNS-tool begint met ns..." : game.networkPhase === 2 ? "Je hebt DNS als probleem gevonden. Herstel de resolver." : "Het woord BAY betekent dat het bay-nummer overeenkomt met de laatste cijfers van het IP." : "Je gevonden fragmenten staan hierboven. Eerst het woord, daarna het getal. Je typt de code zelf."}</p>}
               </div>}
             </main>
           </div>
