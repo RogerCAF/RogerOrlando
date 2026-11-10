@@ -316,3 +316,37 @@
  .lab-game-feature-link{width:100%;margin-left:0;white-space:normal}
 }
 @media(prefers-reduced-motion:reduce){.lab-game-feature-link{transition:none}}
+
+
+/* Portfolio overview pass: editorial density, reduced visual dominance */
+.work-section{padding-top:82px;padding-bottom:76px}
+.work-section .section-head{margin-bottom:22px}
+.work-section .section-head h2{font-size:clamp(36px,4.6vw,58px);line-height:1.14}
+.work-section .section-head p{font-size:12px;line-height:1.75;max-width:350px}
+.work-section .work-footer{margin-top:19px;padding-top:18px;gap:16px}
+.work-section .work-footer p{font-size:14px;line-height:1.4}
+.work-section .work-footer a{font-size:10px}
+.lab-section{padding-top:77px;padding-bottom:85px}
+.lab-section .lab-heading h2{font-size:clamp(36px,4.6vw,59px);line-height:1.14}
+.lab-section .lab-heading p{font-size:12px;line-height:1.75;max-width:580px}
+.lab-section .lab-heading{max-width:760px}
+.lab-game-feature{min-height:93px;padding:14px 18px;gap:15px;margin-top:16px;box-shadow:0 9px 27px #0002}
+.lab-game-feature-mark{flex-basis:57px;height:57px}
+.lab-game-feature-mark>span{font-size:32px;letter-spacing:-4px}
+.lab-game-feature-copy>span{font-size:8px;margin-bottom:4px}
+.lab-game-feature h3{font-size:clamp(17px,1.75vw,23px);margin-bottom:4px}
+.lab-game-feature p{font-size:10px}
+.lab-game-feature-link{min-height:39px;padding:10px 13px;font-size:9px}
+@media(max-width:700px){
+ .work-section{padding-top:67px;padding-bottom:61px}
+ .work-section .section-head{margin-bottom:18px}
+ .work-section .section-head h2{font-size:clamp(34px,8vw,43px)}
+ .lab-section{padding-top:64px;padding-bottom:68px}
+ .lab-section .lab-heading h2{font-size:clamp(34px,8vw,43px)}
+ .lab-game-feature{padding:13px;gap:11px}
+ .lab-game-feature-mark{flex-basis:45px;height:45px}
+ .lab-game-feature-mark>span{font-size:26px}
+ .lab-game-feature-copy{flex-basis:calc(100% - 56px)}
+ .lab-game-feature-link{width:100%;min-height:37px}
+ .work-section .work-footer{margin-top:12px}
+}
