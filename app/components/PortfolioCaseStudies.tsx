@@ -59,20 +59,17 @@ function Preview({ item }: { item: Study }) {
     <img src="https://raw.githubusercontent.com/RogerCAF/Losch-Dental/main/public/images/hero-losch-dental.jpg" alt="Echte projectfotografie van de Losch Dental website" loading="lazy" />
     <span className="cs-authentic-label">LOSCH DENTAL / LIVE PROJECT</span>
   </div>;
-  if (item.className === "cityfi") return <div className="cs-preview cs-cityfi">
-    <div className="cs-orbit cs-orbit-a"/><div className="cs-orbit cs-orbit-b"/>
-    <span className="cs-city-title">CITY<span>FI.</span></span>
-    <span className="cs-preview-caption">THE WORLD IS COLLECTIBLE</span>
+  if (item.className === "cityfi") return <div className="cs-preview cs-cityfi cs-authentic-preview">
+    <img className="cs-cityfi-logo" src="/projects/cityfi.svg" alt="Origineel CityFi-logo met drie blauwe gebouwen binnen een zilveren ring" loading="lazy"/>
   </div>;
-  if (item.className === "ten") return <div className="cs-preview cs-ten">
-    <div className="cs-timer-dial"/>
-    <strong>10<span>.</span>00</strong>
-    <span className="cs-preview-caption">PRECISION IS EVERYTHING</span>
+  if (item.className === "ten") return <div className="cs-preview cs-ten cs-red-button-preview">
+    <div className="cs-red-button" aria-label="Grote rode knop voor de 10.00 timinggame"><span>10.00</span></div>
+    <span className="cs-preview-caption">PRESS · HOLD · RELEASE</span>
   </div>;
   return <div className="cs-preview cs-breakurge">
     <span className="cs-preview-small">DAY BY DAY / PROGRESS</span>
-    <strong>B<span>.</span></strong>
-    <div className="cs-progress-dots"><i/><i/><i/><i/><i/></div>
+    <img className="cs-breakurge-icon" src="https://raw.githubusercontent.com/RogerCAF/StopRoken/main/assets/icon.png" alt="Origineel BreakUrge app-icoon" loading="lazy"/>
+    <span className="cs-breakurge-wordmark">BreakUrge</span>
     <span className="cs-preview-caption">PROGRESS, NOT PERFECTION</span>
   </div>;
 }
