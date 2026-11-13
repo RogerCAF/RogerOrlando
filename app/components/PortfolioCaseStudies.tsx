@@ -68,7 +68,7 @@ function Preview({ item }: { item: Study }) {
   </div>;
   return <div className="cs-preview cs-breakurge">
     <span className="cs-preview-small">DAY BY DAY / PROGRESS</span>
-    <img className="cs-breakurge-icon" src="https://raw.githubusercontent.com/RogerCAF/StopRoken/main/assets/icon.png" alt="Origineel BreakUrge app-icoon" loading="lazy"/>
+    <img className="cs-breakurge-icon" src="/projects/breakurge.svg" alt="Origineel BreakUrge app-icoon" loading="lazy"/>
     <span className="cs-breakurge-wordmark">BreakUrge</span>
     <span className="cs-preview-caption">PROGRESS, NOT PERFECTION</span>
   </div>;
