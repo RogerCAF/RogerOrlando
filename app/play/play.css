@@ -353,3 +353,28 @@
 @keyframes rg-final-reveal{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(max-width:650px){.rg-final-selection{grid-template-columns:1fr}.rg-final-selection>button{flex-direction:row;align-items:center;padding:14px}.rg-final-selection>button>span:nth-child(2){gap:4px}.rg-final-terminal-top{font-size:8px;padding:12px}.rg-final-terminal-body{padding:28px 14px}.rg-final-stats{gap:4px}.rg-final-stats small{font-size:7px}.rg-final-stats strong{font-size:12px}.rg-ending-premium{padding:30px 15px}}
 @media(prefers-reduced-motion:reduce){.rg-final-glitch,.rg-finale-active .rg-final-terminal-icon,.rg-finale-chaos .rg-final-terminal,.rg-execution-dot,.rg-ending-premium,.rg-final-reveal-mark{animation:none!important}.rg-final-progress span{transition:none}}
+
+/* Chaos lockdown — 20 seconds of unclickable, evasive UI */
+.rg-chaos-lockdown{position:fixed;inset:0;z-index:99999;background:radial-gradient(ellipse at 50% 40%,#3b1823 0%,#1b111b 48%,#080b11 100%);color:#f8f0e9;overflow:hidden;cursor:crosshair;isolation:isolate;touch-action:none;outline:none}
+.rg-chaos-lockdown:before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,#0000 0 4px,#ffffff08 5px 6px);opacity:.35}
+.rg-chaos-scan{position:absolute;inset:-30%;pointer-events:none;background:linear-gradient(transparent 44%,#ed5e7221 50%,transparent 56%);animation:rg-chaos-scan 3s linear infinite}
+.rg-chaos-top{position:absolute;left:clamp(18px,4vw,64px);right:clamp(18px,4vw,64px);top:clamp(20px,4vh,45px);display:flex;justify-content:space-between;gap:18px;color:#ff9eaa;font:800 10px/1.5 "DM Sans",sans-serif;letter-spacing:1.8px;z-index:4}
+.rg-chaos-top>span:first-child{display:flex;align-items:center;gap:12px}
+.rg-chaos-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(650px,calc(100% - 42px));display:flex;flex-direction:column;align-items:center;text-align:center;z-index:3;pointer-events:none}
+.rg-chaos-warning{width:84px;height:84px;display:grid;place-items:center;border:1px solid #fc6f7b;border-radius:50%;color:#ff919a;background:#ff5d6b16;box-shadow:0 0 0 15px #ff8a9507,0 0 85px #f9334730;animation:rg-chaos-glow .9s ease infinite alternate}
+.rg-chaos-center>p:first-of-type{margin:35px 0 10px;color:#ff939c;font-size:10px;font-weight:800;letter-spacing:2.5px}
+.rg-chaos-center h2{margin:0;font:900 clamp(42px,8vw,94px)/1.08 "Manrope",sans-serif;letter-spacing:-4px}
+.rg-chaos-center h2 span{color:#fa596a}
+.rg-chaos-count{font:800 clamp(65px,11vw,130px)/1 "Manrope",sans-serif;letter-spacing:-6px;color:#fff2ef;margin:28px 0 15px;font-variant-numeric:tabular-nums;text-shadow:0 0 44px #f65b6940}
+.rg-chaos-count small{font:800 15px "DM Sans",sans-serif;letter-spacing:1px;color:#f6a6a9}
+.rg-chaos-caption{font-size:13px;color:#c6aab0;line-height:1.8;max-width:410px}
+.rg-chaos-rail{width:min(310px,85%);height:4px;background:#6a343d;overflow:hidden;margin:22px 0 15px}
+.rg-chaos-rail span{display:block;background:#fb7b85;height:100%;transition:width .08s linear}
+.rg-chaos-sub{font-size:9px;letter-spacing:1.5px;font-weight:800;color:#f2989e}
+.rg-chaos-evaders{position:absolute;inset:0;pointer-events:none;z-index:2}
+.rg-chaos-evader{position:absolute;display:flex;align-items:center;justify-content:center;gap:8px;min-width:92px;padding:12px 15px;border:1px solid #bc6974;background:#2b1e2b;color:#e5b9bc;letter-spacing:1px;font-size:10px;font-weight:800;white-space:nowrap;box-shadow:0 15px 30px #0006;will-change:transform}
+.rg-chaos-bottom{position:absolute;bottom:28px;left:0;right:0;text-align:center;color:#c17c89;letter-spacing:2px;font-size:9px;font-weight:800;z-index:4}
+@keyframes rg-chaos-scan{from{transform:translateY(-45%)}to{transform:translateY(45%)}}
+@keyframes rg-chaos-glow{from{box-shadow:0 0 0 12px #ff8a9506,0 0 30px #f9334719}to{box-shadow:0 0 0 19px #ff8a9513,0 0 90px #f9334770}}
+@media(max-width:650px){.rg-chaos-top{font-size:8px;letter-spacing:1px}.rg-chaos-center h2{letter-spacing:-2px}.rg-chaos-warning{width:63px;height:63px}.rg-chaos-count{margin-top:18px}.rg-chaos-evader{min-width:65px;padding:9px;font-size:8px}.rg-chaos-bottom{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.rg-chaos-scan,.rg-chaos-warning{animation:none}.rg-chaos-evader{transition:none!important}}
