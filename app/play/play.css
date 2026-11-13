@@ -290,3 +290,66 @@
 @media(max-width:780px){.rg-ten-layout{grid-template-columns:1fr}.rg-ten-scores{border-left:0;border-top:1px solid #394450}.rg-ten-head{padding:27px 25px}.rg-ten-edition{display:none}}
 @media(max-width:550px){.rg-ten-section{margin-top:54px}.rg-ten-head h2{font-size:32px}.rg-ten-play{padding:25px 15px 30px}.rg-ten-scores{padding:27px 24px}}
 @media(prefers-reduced-motion:reduce){.rg-ten-button{transition:none}}
+
+/* Final Protocol — selectable endings, animated reveal */
+.rg-final-interactive{max-width:760px;margin:auto}
+.rg-final-terminal{position:relative;overflow:hidden;border:1px solid #70644e;background:radial-gradient(circle at 50% 10%,#302d28,#0b121a 70%)}
+.rg-final-terminal-top{display:flex;justify-content:space-between;gap:12px;padding:15px 19px;border-bottom:1px solid #ffffff22;color:#d5b78f;font-size:9px;letter-spacing:1.1px;font-weight:800}
+.rg-final-terminal-top span:first-child{display:flex;align-items:center;gap:9px}
+.rg-final-terminal-top span:last-child{color:#9ba7af}
+.rg-final-terminal-body{display:flex;flex-direction:column;align-items:center;text-align:center;padding:34px 22px 28px;min-height:265px}
+.rg-final-terminal-icon{display:grid;place-items:center;width:74px;height:74px;border:1px solid #b99d73;border-radius:50%;color:#d5b78f;background:#d6b58912;box-shadow:0 0 0 12px #d6b58908;margin:11px 0 21px}
+.rg-final-terminal h3{font:800 clamp(24px,3vw,36px)/1.18 "Manrope",sans-serif;letter-spacing:-1.2px;margin:10px 0}
+.rg-final-terminal-body>p{max-width:490px;margin:9px 0 23px;color:#aab8bd;font-size:12px;line-height:1.8}
+.rg-final-progress{height:4px;max-width:340px;width:100%;background:#37434a;overflow:hidden}
+.rg-final-progress span{display:block;height:100%;background:linear-gradient(90deg,#836c4e,#ecd0a6);transition:width .6s ease}
+.rg-final-status{font-size:9px;letter-spacing:1.6px;color:#b9aa92;font-weight:800;margin-top:15px}
+.rg-final-intro{font-size:12px;line-height:1.8;color:#aab6bf;margin:25px 0 16px;text-align:left}
+.rg-final-selection{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.rg-final-selection>button{min-width:0;position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:13px;text-align:left;background:#1d2631;border:1px solid #43515b;color:#d8e0dd;padding:18px 15px;cursor:pointer;transition:border-color .25s,background .25s,transform .25s}
+.rg-final-selection>button:hover{transform:translateY(-3px);border-color:#c6aa82}
+.rg-final-selection>button.selected{background:#363028;border-color:#d1af7e}
+.rg-final-selection>button>svg{color:#d3b58a}
+.rg-final-selection>button>span:nth-child(2){display:flex;flex-direction:column;gap:9px}
+.rg-final-selection strong{font:800 10px/1.5 "DM Sans",sans-serif;letter-spacing:.65px}
+.rg-final-selection small{font:400 10px/1.6 "DM Sans",sans-serif;color:#a7b1b7}
+.rg-final-selection .rg-chaos-selection.selected{background:#421d26;border-color:#e65f64}
+.rg-final-selection .rg-chaos-selection.selected svg{color:#ff989a}
+.rg-choice-dot{width:10px;height:10px;border:1px solid #7c8b96;border-radius:50%;position:absolute;right:13px;top:18px}
+.rg-final-selection .selected .rg-choice-dot{background:#e7c292;border-color:#e7c292;box-shadow:0 0 0 3px #c5a6772b}
+.rg-final-selection .rg-chaos-selection.selected .rg-choice-dot{background:#f07076;border-color:#f07076}
+.rg-emergency-zone{margin:22px 0 0;padding:23px 14px 28px;display:flex;flex-direction:column;align-items:center;gap:15px;border:1px solid #773b41;background:radial-gradient(circle at center,#472129,#1c161e 75%)}
+.rg-emergency-zone>span,.rg-emergency-zone>small{font:800 9px/1.5 "DM Sans",sans-serif;letter-spacing:1.7px;color:#f1a5a1}
+.rg-emergency-button{width:154px;height:154px;border-radius:50%;border:9px solid #24222a;background:radial-gradient(circle at 34% 25%,#ff8680,#fa3447 34%,#ae0a27 78%,#720011);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#fff;cursor:pointer;box-shadow:0 0 0 3px #997b7c,0 10px 0 3px #0d1018,0 24px 50px #0009,inset 0 7px 12px #ffffff5e,inset 0 -12px 17px #510013;transition:transform .15s,box-shadow .15s}
+.rg-emergency-button strong{font:800 12px "Manrope",sans-serif;letter-spacing:1.6px}
+.rg-emergency-button:hover{filter:brightness(1.1)}
+.rg-emergency-button:active{transform:translateY(8px);box-shadow:0 0 0 3px #997b7c,0 2px 0 3px #0d1018,0 12px 25px #0009,inset 0 7px 12px #ffffff5e,inset 0 -12px 17px #510013}
+.rg-final-activate{margin-top:23px;width:100%;min-height:52px}
+.rg-final-executing{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:18px;padding:19px;background:#20232c;color:#e7ccb0;letter-spacing:1.1px;font-size:10px;font-weight:800}
+.rg-execution-dot{width:9px;height:9px;border-radius:50%;background:#d8ad7d;animation:rg-final-pulse .8s ease infinite alternate}
+.rg-finale-active .rg-final-terminal-icon{animation:rg-final-pulse .75s ease infinite alternate}
+.rg-finale-chaos .rg-final-terminal{border-color:#d66d70;background:radial-gradient(circle at 50% 30%,#501f2d,#160e17 72%);animation:rg-final-shudder .24s linear 2}
+.rg-finale-chaos .rg-final-terminal-icon{color:#fa8f91;border-color:#e75e65;box-shadow:0 0 0 12px #a5293120,0 0 45px #d92d3e55}
+.rg-finale-chaos .rg-final-progress span{background:linear-gradient(90deg,#8c0d24,#ff6b6f)}
+.rg-final-glitch{pointer-events:none;position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(transparent 0 13px,#ed6c6e0b 14px 15px);opacity:.28;animation:rg-final-flicker .18s steps(2) infinite}
+.rg-final-glitch span{font:800 clamp(23px,5vw,42px) "Manrope",sans-serif;letter-spacing:3px;color:#faac9b;opacity:.2;transform:rotate(-7deg)}
+.rg-finale-archive .rg-final-terminal{border-color:#9dc8a8;background:radial-gradient(circle at top,#244535,#101b23 75%)}
+.rg-finale-broadcast .rg-final-terminal{border-color:#8acada;background:radial-gradient(circle at top,#1c4655,#101b23 75%)}
+.rg-ending-premium{max-width:760px;margin:auto;border:1px solid #6b624f;padding:40px 25px 35px;background:radial-gradient(circle at 50% 0%,#342b22,#111923 65%);animation:rg-final-reveal .55s both}
+.rg-ending-premium.rg-ending-chaos{background:radial-gradient(circle at 50% 0%,#4c2028,#15131c 70%);border-color:#b56a70}
+.rg-ending-premium.rg-ending-archive{background:radial-gradient(circle at 50% 0%,#234435,#121b22 70%);border-color:#749885}
+.rg-ending-premium.rg-ending-broadcast{background:radial-gradient(circle at 50% 0%,#194354,#121b22 70%);border-color:#6193a3}
+.rg-final-reveal-mark{width:95px;height:95px;margin:0 auto 23px;display:grid;place-items:center;border:1px solid currentColor;border-radius:50%;color:#ddc19b;background:#ffffff07;box-shadow:0 0 0 14px #ffffff05;animation:rg-final-reveal .6s both}
+.rg-ending-chaos .rg-final-reveal-mark{color:#f58d91}
+.rg-ending-archive .rg-final-reveal-mark{color:#9fcfb1}
+.rg-ending-broadcast .rg-final-reveal-mark{color:#96d6e5}
+.rg-final-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:28px 0;padding:19px 0;border-top:1px solid #ffffff22;border-bottom:1px solid #ffffff22}
+.rg-final-stats div{display:flex;flex-direction:column;gap:7px}
+.rg-final-stats small{font:800 9px/1.4 "DM Sans",sans-serif;color:#a4aeb7;letter-spacing:1px}
+.rg-final-stats strong{font:800 16px/1.4 "Manrope",sans-serif;color:#f3dfba}
+@keyframes rg-final-pulse{from{opacity:.5;transform:scale(.92)}to{opacity:1;transform:scale(1.05)}}
+@keyframes rg-final-shudder{0%,100%{transform:translateX(0)}25%{transform:translateX(3px)}75%{transform:translateX(-3px)}}
+@keyframes rg-final-flicker{0%{opacity:.06}50%{opacity:.38}100%{opacity:.16}}
+@keyframes rg-final-reveal{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:650px){.rg-final-selection{grid-template-columns:1fr}.rg-final-selection>button{flex-direction:row;align-items:center;padding:14px}.rg-final-selection>button>span:nth-child(2){gap:4px}.rg-final-terminal-top{font-size:8px;padding:12px}.rg-final-terminal-body{padding:28px 14px}.rg-final-stats{gap:4px}.rg-final-stats small{font-size:7px}.rg-final-stats strong{font-size:12px}.rg-ending-premium{padding:30px 15px}}
+@media(prefers-reduced-motion:reduce){.rg-final-glitch,.rg-finale-active .rg-final-terminal-icon,.rg-finale-chaos .rg-final-terminal,.rg-execution-dot,.rg-ending-premium,.rg-final-reveal-mark{animation:none!important}.rg-final-progress span{transition:none}}
