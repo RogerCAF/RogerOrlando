@@ -9,6 +9,7 @@ import {
   ScanLine, ShieldCheck, Sparkles, Terminal, Trophy, Zap
 } from "lucide-react";
 import "./play.css";
+import TenSecondChallenge from "./TenSecondChallenge";
 
 type Ending = "archive" | "broadcast" | "chaos" | null;
 type Game = {
@@ -349,6 +350,8 @@ export default function Play() {
             <div className="rg-log-lines">{game.history.slice(-5).map((entry, id) => <p key={id}><span>↳</span> {entry}</p>)}</div>
           </div>
         </section>
+
+        <TenSecondChallenge />
 
         <section className="rg-after">
           <div><span>NOT EVERYTHING NEEDS A PURPOSE.</span><h2>Some things just need<br/><em>to be explored.</em></h2></div>
