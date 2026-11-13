@@ -41,7 +41,7 @@ export default function Play() {
   const [game, setGame] = useState<Game>(INITIAL);
   const [ready, setReady] = useState(false);
   const [stage, setStage] = useState(0);
-  const [dial, setDial] = useState(38);
+  const [dial, setDial] = useState(380);
   const [cipher, setCipher] = useState("");
   const [feedback, setFeedback] = useState("");
   const [showHint, setShowHint] = useState(false);
@@ -110,8 +110,8 @@ export default function Play() {
     setShowHint(false);
   };
   const calibrate = () => {
-    if (Math.abs(dial - 30) <= 4) complete(0, "[DESIGN] Geometry locked at 030. Fragment 030 recovered.");
-    else error("Bijna! Verschuif het symbool over de gouden stippellijn. Je hoeft niet exact op de pixel te zitten.");
+    if (Math.abs(dial - 300) <= 5) complete(0, "[DESIGN] Geometry locked at 030. Fragment 030 recovered.");
+    else error("Nog niet precies genoeg. Je mag maximaal 0,5% afwijken van de gouden referentielijn.");
   };
   const network = (choice: string) => {
     if (isDone(1)) return;
@@ -174,7 +174,7 @@ export default function Play() {
     catch { /* Replay still works when storage is unavailable. */ }
     setGame({ ...INITIAL, completed: [...INITIAL.completed], history: [...INITIAL.history] });
     setStage(0);
-    setDial(38);
+    setDial(380);
     setCipher("");
     setFeedback("");
     setShowHint(false);
@@ -271,13 +271,13 @@ export default function Play() {
                 <div className="rg-calibration">
                   <div className="rg-cal-grid"/>
                   <span className="rg-cal-note">SIGNAL CALIBRATOR / V.07</span>
-                  <div className="rg-cal-track"><div className="rg-target" style={{ left: "30%" }}><span>REFERENCE</span></div><div className="rg-moving" style={{ left: dial + "%" }}><Crosshair size={44} strokeWidth={1.2}/></div></div>
-                  <span className="rg-cal-bottom">OFFSET: {dial.toString().padStart(2, "0")} / 100</span>
+                  <div className="rg-cal-track"><div className="rg-target" style={{ left: "30%" }}><span>REFERENCE</span></div><div className="rg-moving" style={{ left: (dial / 10) + "%" }}><Crosshair size={44} strokeWidth={1.2}/></div></div>
+                  <span className="rg-cal-bottom">OFFSET: {(dial / 10).toFixed(1)} / 100</span>
                 </div>
                 <div className="rg-puzzle-bottom">
-                  <div><h3>Find the perfect alignment.</h3><p>Een designer heeft per ongeluk aan één pixel gezeten. Klassiek. Verschuif het symbool naar de gouden referentielijn en vergrendel je keuze.</p></div>
-                  <label className="rg-slider-label" htmlFor="rg-dial"><span>HORIZONTAL OFFSET</span><strong>{dial}</strong></label>
-                  <input id="rg-dial" type="range" min="0" max="100" value={dial} onChange={e => setDial(Number(e.target.value))} disabled={isDone(0)} aria-label="Verschuif het kalibratiesignaal"/>
+                  <div><h3>Find the perfect alignment.</h3><p>Een designer heeft het signaal verschoven. Breng het symbool zo nauwkeurig mogelijk naar de gouden referentielijn. De toegestane afwijking is slechts 0,5%.</p></div>
+                  <label className="rg-slider-label" htmlFor="rg-dial"><span>HORIZONTAL OFFSET</span><strong>{(dial / 10).toFixed(1)}%</strong></label>
+                  <input id="rg-dial" type="range" min="0" max="1000" step="1" value={dial} onChange={e => setDial(Number(e.target.value))} disabled={isDone(0)} aria-label="Verschuif het kalibratiesignaal"/>
                   {isDone(0) ? <div className="rg-success"><Check size={18}/> SIGNAL RESTORED · FRAGMENT 030 ACQUIRED</div> : <button className="rg-commit" type="button" onClick={calibrate}>LOCK COORDINATES <ArrowRight size={16}/></button>}
                 </div>
               </div>}
@@ -382,7 +382,7 @@ export default function Play() {
               {feedback && !isDone(stage) && <div className="rg-feedback" role="status"><Zap size={16}/>{feedback}</div>}
               {!isDone(stage) && stage !== 3 && <div className="rg-stage-footer">
                 <button type="button" onClick={() => setShowHint(v => !v)}><CircleHelp size={15}/> {showHint ? "HIDE HINT" : "NEED A HINT?"}</button>
-                {showHint && <p>{stage === 0 ? "De stippellijn is de referentie; mik op de plek waar het bewegende symbool de lijn raakt." : stage === 1 ? game.networkPhase === 0 ? "Test eerst een IP-adres, niet een domeinnaam." : game.networkPhase === 1 ? "Een DNS-tool begint met ns..." : game.networkPhase === 2 ? "Je hebt DNS als probleem gevonden. Herstel de resolver." : "Het woord BAY betekent dat het bay-nummer overeenkomt met de laatste cijfers van het IP." : "Je gevonden fragmenten staan hierboven. Eerst het woord, daarna het getal. Je typt de code zelf."}</p>}
+                {showHint && <p>{stage === 0 ? "Mik op 30,0%. Gebruik de pijltjestoetsen voor stapjes van 0,1%. De marge is slechts 0,5%." : stage === 1 ? game.networkPhase === 0 ? "Test eerst een IP-adres, niet een domeinnaam." : game.networkPhase === 1 ? "Een DNS-tool begint met ns..." : game.networkPhase === 2 ? "Je hebt DNS als probleem gevonden. Herstel de resolver." : "Het woord BAY betekent dat het bay-nummer overeenkomt met de laatste cijfers van het IP." : "Je gevonden fragmenten staan hierboven. Eerst het woord, daarna het getal. Je typt de code zelf."}</p>}
               </div>}
             </main>
           </div>
