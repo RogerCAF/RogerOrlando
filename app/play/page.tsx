@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import "./play.css";
 import TenSecondChallenge from "./TenSecondChallenge";
+import ChaosLockdown from "./ChaosLockdown";
 
 type Ending = "archive" | "broadcast" | "chaos" | null;
 type Game = {
@@ -50,6 +51,7 @@ export default function Play() {
   const [finalChoice, setFinalChoice] = useState<Exclude<Ending, null>>("chaos");
   const [finalPhase, setFinalPhase] = useState<"select" | "sequence">("select");
   const [sequenceStep, setSequenceStep] = useState(0);
+  const [chaosLocked, setChaosLocked] = useState(false);
 
   useEffect(() => {
     try {
@@ -156,17 +158,22 @@ export default function Play() {
   }, [finalPhase, sequenceStep, finalChoice, game.ending, stage]);
 
   const beginFinale = () => {
-    if (!isDone(2) || game.ending || finalPhase === "sequence") return;
-    setSequenceStep(0);
-    setFinalPhase("sequence");
+    if (!isDone(2) || game.ending || finalPhase === "sequence" || chaosLocked) return;
+    if (finalChoice === "chaos") {
+      setChaosLocked(true);
+    } else {
+      setSequenceStep(0);
+      setFinalPhase("sequence");
+    }
   };
-
-    if (!isDone(2) || game.ending) return;
-    setGame(previous => ({
-      ...previous, ending, completed: [...previous.completed, 3], xp: previous.xp + 100,
-      history: [...previous.history, "[VAULT] Protocol selected: " + ending.toUpperCase() + ". Ending unlocked."].slice(-9)
+  const completeChaos = () => {
+    setChaosLocked(false);
+    setGame(previous => previous.ending || !previous.completed.includes(2) ? previous : ({
+      ...previous, ending: "chaos", completed: [...previous.completed, 3], xp: previous.xp + 100,
+      history: [...previous.history, "[VAULT] CHAOS protocol completed after 20 seconds. Ending unlocked."].slice(-9)
     }));
   };
+
   // A new playthrough must clear both the saved ending and every in-memory puzzle state.
   // Remove the old save immediately so a page refresh cannot revive the previous run.
   const startNewGame = () => {
@@ -183,6 +190,7 @@ export default function Play() {
     setFinalChoice("chaos");
     setFinalPhase("select");
     setSequenceStep(0);
+    setChaosLocked(false);
     document.getElementById("mission-control")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
   const current = MISSIONS[stage];
@@ -400,6 +408,7 @@ export default function Play() {
         </section>
         <footer className="rg-footer"><span>ROGER CHIN A FOENG © {new Date().getFullYear()}</span><span>DESIGNED FOR THE CURIOUS. BUILT FOR THE BORED.</span><Link href="/">BACK TO REALITY <ArrowLeft size={14}/></Link></footer>
       </div>
+      {chaosLocked && <ChaosLockdown onComplete={completeChaos}/>}
       {resetAsk && <div className="rg-modal-backdrop" role="presentation" onClick={() => setResetAsk(false)}><div className="rg-modal" role="dialog" aria-modal="true" aria-labelledby="rg-reset-title" onClick={e => e.stopPropagation()}><h2 id="rg-reset-title">Start from zero?</h2><p>Je begint opnieuw bij missie 1. Je vorige XP, fragmenten en einde worden gereset. Klaar om het systeem nóg een keer te redden?</p><div><button className="rg-soft" type="button" onClick={() => setResetAsk(false)}>CANCEL</button><button className="rg-commit" type="button" onClick={startNewGame}>JA, START OPNIEUW <RotateCcw size={15}/></button></div></div></div>}
     </div>
   );
