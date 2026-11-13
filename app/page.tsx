@@ -208,7 +208,6 @@ export default function Home() {
     </main>
 
     <footer className="footer" id="connect">
-      <div className="container premium-footer-contact"><div><span>LET'S TALK ABOUT WHAT'S NEXT</span><h2>Have something <em>in mind?</em></h2><p>Mijn werk spreekt voor zich. De code staat op GitHub.</p></div><a href="https://github.com/RogerCAF" target="_blank" rel="noopener noreferrer">VIEW MY GITHUB <ArrowUpRight size={18}/></a></div>
       <div className="container footer-main"><Brand/><p>Design brain. Engineer hands.<br/>Made with intention.</p><a href="#home" className="back-to-top">BACK TO TOP <ArrowUpRight size={16}/></a></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} ROGER ORLANDO — ROGER CHIN A FOENG</span><span>DESIGNED & BUILT WITH CARE <span className="footer-star">✳</span></span></div></footer>
   </div>;
 }
