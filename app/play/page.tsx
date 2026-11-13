@@ -11,6 +11,7 @@ import {
 import "./play.css";
 import TenSecondChallenge from "./TenSecondChallenge";
 import ChaosLockdown from "./ChaosLockdown";
+import FinalProtocolInteraction from "./FinalProtocolInteraction";
 
 type Ending = "archive" | "broadcast" | "chaos" | null;
 type Game = {
@@ -50,7 +51,6 @@ export default function Play() {
   const [resetAsk, setResetAsk] = useState(false);
   const [finalChoice, setFinalChoice] = useState<Exclude<Ending, null>>("chaos");
   const [finalPhase, setFinalPhase] = useState<"select" | "sequence">("select");
-  const [sequenceStep, setSequenceStep] = useState(0);
   const [chaosLocked, setChaosLocked] = useState(false);
 
   useEffect(() => {
@@ -142,29 +142,21 @@ export default function Play() {
     if (cipher.trim().toUpperCase().replace(/\s/g, "") === "UTRECHT030") complete(2, "[CIPHER] UTRECHT030 accepted. Vault access granted.");
     else error("Nog niet helemaal. Kijk naar je verzamelde fragmenten, combineer eerst het woord en daarna het getal, en probeer opnieuw.");
   };
-  // A deliberate, cancellable sequence; the chosen ending is saved only after the reveal.
-  useEffect(() => {
-    if (finalPhase !== "sequence" || game.ending || stage !== 3) return;
-    if (sequenceStep >= 3) {
-      setGame(previous => previous.ending || !previous.completed.includes(2) ? previous : ({
-        ...previous, ending: finalChoice, completed: [...previous.completed, 3], xp: previous.xp + 100,
-        history: [...previous.history, "[VAULT] " + finalChoice.toUpperCase() + " protocol completed. Ending unlocked."].slice(-9)
-      }));
-      setFinalPhase("select");
-      return;
-    }
-    const timer = window.setTimeout(() => setSequenceStep(step => step + 1), sequenceStep === 0 ? 700 : 1000);
-    return () => window.clearTimeout(timer);
-  }, [finalPhase, sequenceStep, finalChoice, game.ending, stage]);
-
   const beginFinale = () => {
     if (!isDone(2) || game.ending || finalPhase === "sequence" || chaosLocked) return;
     if (finalChoice === "chaos") {
       setChaosLocked(true);
     } else {
-      setSequenceStep(0);
       setFinalPhase("sequence");
     }
+  };
+  const completeOtherEnding = () => {
+    const ending = finalChoice;
+    setGame(previous => previous.ending || !previous.completed.includes(2) ? previous : ({
+      ...previous, ending, completed: [...previous.completed, 3], xp: previous.xp + 100,
+      history: [...previous.history, "[VAULT] " + ending.toUpperCase() + " protocol completed. Ending unlocked."].slice(-9)
+    }));
+    setFinalPhase("select");
   };
   const completeChaos = () => {
     setChaosLocked(false);
@@ -189,7 +181,6 @@ export default function Play() {
     setResetAsk(false);
     setFinalChoice("chaos");
     setFinalPhase("select");
-    setSequenceStep(0);
     setChaosLocked(false);
     document.getElementById("mission-control")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -350,15 +341,15 @@ export default function Play() {
                   <div className="rg-ending-foot"><Check size={16}/> EXPERIENCE COMPLETE · ENDING UNLOCKED</div>
                   <button type="button" className="rg-commit rg-play-again" onClick={startNewGame}><RotateCcw size={18}/> SPEEL OPNIEUW — VANAF MISSIE 1</button>
                   <span className="rg-replay-hint">Speel opnieuw en ontdek de andere eindes.</span>
-                </div> : <div className={`rg-final-interactive ${finalPhase === "sequence" ? "rg-finale-active rg-finale-" + finalChoice : ""}`}>
+                </div> : finalPhase === "sequence" && finalChoice !== "chaos" ? <FinalProtocolInteraction protocol={finalChoice} onComplete={completeOtherEnding} onBack={() => setFinalPhase("select")}/> : <div className={`rg-final-interactive ${finalPhase === "sequence" ? "rg-finale-active rg-finale-" + finalChoice : ""}`}>
                   <div className="rg-final-terminal">
                     <div className="rg-final-terminal-top"><span><Terminal size={15}/> ROGER_OS / FINAL ACCESS</span><span>{finalPhase === "sequence" ? "EXECUTING" : "AWAITING INPUT"}</span></div>
                     <div className="rg-final-terminal-body">
                       <span className="rg-final-terminal-icon">{finalChoice === "chaos" ? <Zap size={38}/> : finalChoice === "archive" ? <ShieldCheck size={38}/> : <Network size={38}/>}</span>
-                      <h3>{finalPhase === "sequence" ? (sequenceStep === 0 ? "PROTOCOL INITIATED" : sequenceStep === 1 ? (finalChoice === "chaos" ? "SYSTEM OVERRIDE" : finalChoice === "broadcast" ? "TRANSMITTING SIGNAL" : "SEALING ARCHIVE") : "FINALIZING...") : "ACCESS GRANTED."}</h3>
-                      <p>{finalPhase === "sequence" ? (sequenceStep === 0 ? "Authenticating operator / Utrecht030" : sequenceStep === 1 ? (finalChoice === "chaos" ? "WARNING: UNAUTHORIZED REWRITE DETECTED" : finalChoice === "broadcast" ? "Opening public network channels..." : "Encrypting archive and closing access...") : "Protocol complete. Preparing the final report.") : "Utrecht030 accepted. Je hebt toegang tot het archief. Wat wil je ermee doen?"}</p>
-                      <div className="rg-final-progress" aria-label="Protocolvoortgang"><span style={{width: finalPhase === "sequence" ? ((sequenceStep + 1) / 3 * 100) + "%" : "100%"}}/></div>
-                      <span className="rg-final-status">{finalPhase === "sequence" ? `EXECUTION / 0${Math.min(sequenceStep+1,3)} OF 03` : "ARCHIVE ONLINE / OPERATOR VERIFIED"}</span>
+                      <h3>{finalPhase === "sequence" ? (false ? "PROTOCOL INITIATED" : false ? (finalChoice === "chaos" ? "SYSTEM OVERRIDE" : finalChoice === "broadcast" ? "TRANSMITTING SIGNAL" : "SEALING ARCHIVE") : "FINALIZING...") : "ACCESS GRANTED."}</h3>
+                      <p>{finalPhase === "sequence" ? (false ? "Authenticating operator / Utrecht030" : false ? (finalChoice === "chaos" ? "WARNING: UNAUTHORIZED REWRITE DETECTED" : finalChoice === "broadcast" ? "Opening public network channels..." : "Encrypting archive and closing access...") : "Protocol complete. Preparing the final report.") : "Utrecht030 accepted. Je hebt toegang tot het archief. Wat wil je ermee doen?"}</p>
+                      <div className="rg-final-progress" aria-label="Protocolvoortgang"><span style={{width: finalPhase === "sequence" ? 100 + "%" : "100%"}}/></div>
+                      <span className="rg-final-status">{finalPhase === "sequence" ? `EXECUTION / 0${3} OF 03` : "ARCHIVE ONLINE / OPERATOR VERIFIED"}</span>
                     </div>
                     {finalPhase === "sequence" && <div className="rg-final-glitch" aria-hidden="true"><span>ROGER_OS // {finalChoice === "chaos" ? "ERROR_030" : "PROTOCOL_ACTIVE"}</span></div>}
                   </div>
