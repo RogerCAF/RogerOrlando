@@ -55,10 +55,9 @@ const studies: Study[] = [
 ];
 
 function Preview({ item }: { item: Study }) {
-  if (item.className === "dental") return <div className="cs-preview cs-dental">
-    <span className="cs-preview-small">LOSCH / DENTAL</span>
-    <strong>Care,<br/><em>considered.</em></strong>
-    <span className="cs-preview-caption">CALM · PRECISE · HUMAN</span>
+  if (item.className === "dental") return <div className="cs-preview cs-dental cs-authentic-preview">
+    <img src="https://raw.githubusercontent.com/RogerCAF/Losch-Dental/main/public/images/hero-losch-dental.jpg" alt="Echte projectfotografie van de Losch Dental website" loading="lazy" />
+    <span className="cs-authentic-label">LOSCH DENTAL / LIVE PROJECT</span>
   </div>;
   if (item.className === "cityfi") return <div className="cs-preview cs-cityfi">
     <div className="cs-orbit cs-orbit-a"/><div className="cs-orbit cs-orbit-b"/>
