@@ -35,7 +35,7 @@ const MISSIONS = [
 
 const endings = {
   archive: { name: "THE KEEPER", text: "Je hebt het archief veiliggesteld. Niemand weet dat het bestaat — behalve jij. Soms is stilte de ultieme vorm van controle.", status: "ARCHIVE SEALED" },
-  broadcast: { name: "THE SIGNAL", text: "Het archief staat open voor iedereen. Geen geheimen, geen poortwachters. Je hebt iets vrijgelaten dat niet meer terug kan.", status: "SIGNAL LIVE" },
+  broadcast: { name: "THE BREACH", text: "De uitzending leek geslaagd, maar zodra de gegevens openbaar werden, nam een onbekende indringer het systeem over. Je toegang is ingetrokken. Het archief is uit jouw handen. Gelukkig is dit allemaal onderdeel van het spel.", status: "SYSTEM COMPROMISED" },
   chaos: { name: "THE WILDCARD", text: "Je drukt op de knop die je niet mocht indrukken. Natuurlijk. Het archief herschrijft zichzelf. Op het scherm verschijnt slechts: 'I knew you'd do that.'", status: "CONTROLLED CHAOS" }
 };
 
