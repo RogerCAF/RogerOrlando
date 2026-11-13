@@ -246,3 +246,11 @@
 .cs-breakurge-wordmark{position:relative;z-index:2;margin-top:16px;color:#e6f5ef;font:800 clamp(18px,2.5vw,28px)/1.2 "Manrope",sans-serif;letter-spacing:-1px}
 .cs-breakurge .cs-preview-caption{bottom:8%}
 @media(max-width:650px){.cs-red-button{width:190px}.cs-cityfi-logo{width:230px!important}}
+
+/* BreakUrge — centered branding with deliberate breathing room */
+.cs-breakurge .cs-preview{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:0;padding:40px 24px 30px;background:radial-gradient(ellipse at 50% 43%,#23564c 0%,#142a27 57%,#0a1519 100%)}
+.cs-breakurge .cs-preview-small{position:static;margin:0 0 20px;color:#9bc7b7;font-size:8px;line-height:1.4;letter-spacing:1.5px}
+.cs-breakurge .cs-breakurge-icon{position:static!important;inset:auto!important;display:block!important;flex:0 0 auto;width:clamp(98px,35%,150px)!important;max-width:150px!important;height:auto!important;aspect-ratio:1!important;object-fit:contain!important;border-radius:26%;box-shadow:0 12px 34px #0006,0 0 0 1px #b5f9d024;transform:none!important}
+.cs-breakurge .cs-breakurge-wordmark{position:static;display:block;margin:15px 0 0;color:#e8f6f0;line-height:1.2;text-align:center}
+.cs-breakurge .cs-preview-caption{position:static;margin-top:10px;font-size:8px;letter-spacing:1.5px;line-height:1.4;color:#a1c8b9}
+@media(max-width:650px){.cs-breakurge .cs-preview{padding:20px 22px}.cs-breakurge .cs-preview-small{margin-bottom:12px}.cs-breakurge .cs-breakurge-icon{width:110px!important}.cs-breakurge .cs-breakurge-wordmark{margin-top:10px}.cs-breakurge .cs-preview-caption{margin-top:6px}}
