@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import CreativePlayground from "./components/CreativePlayground";
+import InfiniteZoom from "./components/InfiniteZoom";
 import PortfolioCaseStudies from "./components/PortfolioCaseStudies";
 import { ArrowDown, ArrowRight, ArrowUpRight, Braces, Check, ChevronDown, Code2, Cpu, ExternalLink, Github, Globe2, Layers3, Menu, MonitorSmartphone, Network, ShieldCheck, Sparkles, TerminalSquare, Palette, X } from "lucide-react";
 
@@ -186,10 +186,8 @@ export default function Home() {
           <Reveal className="lab-heading">
             <div className="eyebrow"><span>04 /</span> BEYOND THE BRIEF</div>
             <h2>Where curiosity<br/><em>gets interactive.</em></h2>
-            <p>Drie interactieve werelden, één overzichtelijke Playground. Wissel tussen design, engineering en gecontroleerde chaos.</p>
+            <p>Twee interactieve ervaringen die je zelf ontdekt. Duik in het spel of zoom eindeloos door nieuwe werelden.</p>
           </Reveal>
-          <CreativePlayground />
-
           <Reveal className="lab-game-feature" delay={140}>
             <div className="lab-game-feature-mark" aria-hidden="true"><span>R<span>.</span></span></div>
             <div className="lab-game-feature-copy">
@@ -198,7 +196,9 @@ export default function Home() {
               <p>Vier missies, verborgen codes en een systeem met net iets te veel persoonlijkheid.</p>
             </div>
             <a href="/play" className="lab-game-feature-link">PLAY THE UNFINISHED PROJECT <ArrowUpRight size={17}/></a>
-          </Reveal>       </div>
+          </Reveal>
+          <InfiniteZoom />
+        </div>
       </section>
 
 
