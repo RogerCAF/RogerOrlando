@@ -169,7 +169,7 @@ export default function Home() {
 
       <section className="section expertise-section" id="expertise">
         <div className="container">
-          <Reveal className="section-head"><div><div className="eyebrow"><span>02 /</span> WHAT I DO</div><h2>Where technology<br/>meets <em>curiosity.</em></h2></div><p>Een voormalig grafisch designer met een engineer-brein. De ene dag pixels, de andere dag packets.</p></Reveal>
+          <Reveal className="section-head"><div><div className="eyebrow"><span>02 /</span> WHAT I DO</div><h2 className="expertise-heading-title">Where technology<br/>meets <em>curiosity.</em></h2></div><p>Een voormalig grafisch designer met een engineer-brein. De ene dag pixels, de andere dag packets.</p></Reveal>
           <div className="expertise-grid">{expertise.map((item,i) => <Reveal className="expertise-card" key={item.number} delay={i*70}><div className="expertise-top"><span>{item.number} / 04</span><item.icon size={27} strokeWidth={1.35}/></div><h3>{item.name}</h3><p>{item.description}</p><span className="card-line"/></Reveal>)}</div>
         </div>
       </section>
