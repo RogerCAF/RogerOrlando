@@ -107,7 +107,7 @@ export default function Play() {
     setShowHint(false);
   };
   const calibrate = () => {
-    if (Math.abs(dial - 73) <= 4) complete(0, "[DESIGN] Geometry locked at 73. Fragment 73 recovered.");
+    if (Math.abs(dial - 30) <= 4) complete(0, "[DESIGN] Geometry locked at 030. Fragment 030 recovered.");
     else error("Bijna! Verschuif het symbool over de gouden stippellijn. Je hoeft niet exact op de pixel te zitten.");
   };
   const network = (choice: string) => {
@@ -128,13 +128,13 @@ export default function Play() {
         setFeedback("DNS werkt! Maar er zijn twee servers. Het archief fluistert: 'BAY 18'. Welke kies jij?");
       } else error("Je weet dat DNS het probleem is. De kabel vervangen is nu vooral cardio voor je IT-afdeling.");
     } else {
-      if (choice === "vault18") complete(1, "[NET] BAY 18 connected. Ghost Network complete. Key fragment recovered: EMBER.");
+      if (choice === "vault18") complete(1, "[NET] BAY 18 connected. Ghost Network complete. Key fragment recovered: UTRECHT.");
       else error("Verkeerde server. De aanwijzing is BAY 18. De andere server draait waarschijnlijk alleen memes.");
     }
   };
   const decrypt = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (cipher.trim().toUpperCase().replace(/\s/g, "") === "EMBER73") complete(2, "[CIPHER] EMBER73 accepted. Vault access granted.");
+    if (cipher.trim().toUpperCase().replace(/\s/g, "") === "UTRECHT030") complete(2, "[CIPHER] UTRECHT030 accepted. Vault access granted.");
     else error("Nog niet helemaal. Kijk naar je verzamelde fragmenten, combineer eerst het woord en daarna het getal, en probeer opnieuw.");
   };
   const finish = (ending: Exclude<Ending, null>) => {
@@ -209,8 +209,8 @@ export default function Play() {
           </div>
           <div className="rg-collected" aria-label="Gevonden codefragmenten">
             <span className="rg-collected-heading"><KeyRound size={15}/> GEVONDEN FRAGMENTEN</span>
-            <span className={"rg-collected-chip " + (isDone(0) ? "is-found" : "")}>{isDone(0) ? "73" : "??? · MISSIE 01"}</span>
-            <span className={"rg-collected-chip " + (isDone(1) ? "is-found" : "")}>{isDone(1) ? "EMBER" : "??? · MISSIE 02"}</span>
+            <span className={"rg-collected-chip " + (isDone(0) ? "is-found" : "")}>{isDone(0) ? "030" : "??? · MISSIE 01"}</span>
+            <span className={"rg-collected-chip " + (isDone(1) ? "is-found" : "")}>{isDone(1) ? "UTRECHT" : "??? · MISSIE 02"}</span>
             <span className="rg-collected-info">Je bewaart ze hier. Niets onthouden nodig.</span>
           </div>
 
@@ -245,14 +245,14 @@ export default function Play() {
                 <div className="rg-calibration">
                   <div className="rg-cal-grid"/>
                   <span className="rg-cal-note">SIGNAL CALIBRATOR / V.07</span>
-                  <div className="rg-cal-track"><div className="rg-target" style={{ left: "73%" }}><span>REFERENCE</span></div><div className="rg-moving" style={{ left: dial + "%" }}><Crosshair size={44} strokeWidth={1.2}/></div></div>
+                  <div className="rg-cal-track"><div className="rg-target" style={{ left: "30%" }}><span>REFERENCE</span></div><div className="rg-moving" style={{ left: dial + "%" }}><Crosshair size={44} strokeWidth={1.2}/></div></div>
                   <span className="rg-cal-bottom">OFFSET: {dial.toString().padStart(2, "0")} / 100</span>
                 </div>
                 <div className="rg-puzzle-bottom">
                   <div><h3>Find the perfect alignment.</h3><p>Een designer heeft per ongeluk aan één pixel gezeten. Klassiek. Verschuif het symbool naar de gouden referentielijn en vergrendel je keuze.</p></div>
                   <label className="rg-slider-label" htmlFor="rg-dial"><span>HORIZONTAL OFFSET</span><strong>{dial}</strong></label>
                   <input id="rg-dial" type="range" min="0" max="100" value={dial} onChange={e => setDial(Number(e.target.value))} disabled={isDone(0)} aria-label="Verschuif het kalibratiesignaal"/>
-                  {isDone(0) ? <div className="rg-success"><Check size={18}/> SIGNAL RESTORED · FRAGMENT 73 ACQUIRED</div> : <button className="rg-commit" type="button" onClick={calibrate}>LOCK COORDINATES <ArrowRight size={16}/></button>}
+                  {isDone(0) ? <div className="rg-success"><Check size={18}/> SIGNAL RESTORED · FRAGMENT 030 ACQUIRED</div> : <button className="rg-commit" type="button" onClick={calibrate}>LOCK COORDINATES <ArrowRight size={16}/></button>}
                 </div>
               </div>}
 
@@ -267,7 +267,7 @@ export default function Play() {
                 <div className="rg-puzzle-bottom">
                   <h3>{game.networkPhase === 0 ? "The archive is unreachable." : game.networkPhase === 1 ? "Connected. But still ghosted." : game.networkPhase === 2 ? "DNS timed out. Find the culprit." : "Two servers. One secret."}</h3>
                   <p>{game.networkPhase === 0 ? "De netwerkkabel lijkt goed. Onderzoek eerst of een extern IP-adres bereikbaar is, voordat je zomaar iets uitzet." : game.networkPhase === 1 ? "Je bereikt een IP-adres, maar geen domeinnaam. Welke test kan onderzoeken waar de naamomzetting misgaat?" : game.networkPhase === 2 ? "De naamserver reageert niet. Herstel gericht wat stuk is; geen complete netwerkpaniek nodig." : "DNS is hersteld. Het archief gaf een aanwijzing: BAY 18. Twee IP-adressen zijn gevonden. Welk adres hoort bij de juiste bay?"}</p>
-                  {isDone(1) ? <div className="rg-success"><Check size={18}/> RESOLVER REPAIRED · KEY FRAGMENT EMBER ACQUIRED</div> : <div className="rg-choices">
+                  {isDone(1) ? <div className="rg-success"><Check size={18}/> RESOLVER REPAIRED · KEY FRAGMENT UTRECHT ACQUIRED</div> : <div className="rg-choices">
                     {(game.networkPhase === 0 ? [
                       { id: "restart", label: "Reboot everything", detail: "Een klassieker. Maar weet je al wat stuk is?" },
                       { id: "ping", label: "ping 1.1.1.1", detail: "Check eerst of een extern IP-adres reageert" },
@@ -333,7 +333,7 @@ export default function Play() {
                   <h3>{stage === 0 ? "Fragment gevonden!" : stage === 1 ? "Geheim fragment ontgrendeld!" : "Kluis geopend!"}</h3>
                   {stage < 2 ? <>
                     <p>Dit is jouw verdiende codefragment. Het blijft ook bovenaan zichtbaar.</p>
-                    <div className="rg-reward-secret">{stage === 0 ? "73" : "EMBER"}</div>
+                    <div className="rg-reward-secret">{stage === 0 ? "030" : "UTRECHT"}</div>
                   </> : <p>De kluis is open! Geen wachtwoordmanager nodig. Kies zelf het einde van deze nogal verdachte missie.</p>}
                 </div>
                 <button className="rg-commit rg-next-mission" type="button" onClick={() => chooseStage(stage + 1)}>VOLGENDE MISSIE <ArrowRight size={16}/></button>
