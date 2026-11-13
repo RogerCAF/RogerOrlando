@@ -227,3 +227,8 @@
  .cs-slider-label p{font-size:14px}
  .cs-slider-buttons button{width:35px;height:35px;flex-basis:35px}
 }
+
+/* Authentic project imagery, preserving the compact horizontal reel */
+.cs-authentic-preview img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;filter:saturate(.9)}
+.cs-authentic-preview:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#07110f88 0%,transparent 28%,transparent 65%,#08110dc7 100%);pointer-events:none}
+.cs-authentic-label{position:absolute;z-index:3;bottom:22px;left:24px;color:#f5f1e8;font:800 10px/1.5 "DM Sans",sans-serif;letter-spacing:1.6px;text-shadow:0 2px 8px #0009}
