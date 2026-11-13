@@ -15,7 +15,6 @@ export default function TenSecondChallenge() {
   const started = useRef<number | null>(null);
   const frame = useRef<number | null>(null);
   const phaseRef = useRef<"ready" | "running" | "result">("ready");
-  const keyboardHeld = useRef(false);
   const attemptsRef = useRef<Attempt[]>([]);
   const displayRef = useRef(true);
 
@@ -56,7 +55,6 @@ export default function TenSecondChallenge() {
     started.current = null;
     if (frame.current !== null) cancelAnimationFrame(frame.current);
     frame.current = null;
-    keyboardHeld.current = false;
     phaseRef.current = "result";
     setPhase("result");
     setElapsed(actual);
@@ -75,7 +73,7 @@ export default function TenSecondChallenge() {
   return <section className="rg-ten-section" aria-label="Speel 10.00 seconden timinggame">
     <div className="rg-ten-head">
       <div><span className="rg-ten-kicker">BONUS EXPERIMENT / 10.00</span><h2>Ten seconds. <em>One shot.</em></h2>
-      <p>Druk de rode knop in, houd hem vast en laat precies bij 10.00 seconden los. Je beste score en laatste pogingen blijven op dit apparaat bewaard.</p></div>
+      <p>Klik op START om de timer te starten en op STOP wanneer je denkt dat precies 10.00 seconden voorbij zijn. Je beste score en laatste pogingen blijven op dit apparaat bewaard.</p></div>
       <span className="rg-ten-edition">ARCADE / 002</span>
     </div>
     <div className="rg-ten-layout">
@@ -85,15 +83,10 @@ export default function TenSecondChallenge() {
           <span className="rg-ten-delta">{phase === "result" && deviation !== null ? (deviation < 5 ? "PERFECT 10.00!" : `${format(deviation)}s ${latest.time > TARGET ? "too late" : "too early"}`) : "TARGET / 10.00 SEC"}</span>
         </div>
         <button type="button" className={`rg-ten-button ${phase === "running" ? "is-running" : ""}`}
-          aria-label={phase === "running" ? "Laat los om de tijd te stoppen" : "Houd ingedrukt om de timer te starten"}
-          onPointerDown={e => { if(e.pointerType === "mouse" && e.button !== 0) return; e.preventDefault(); e.currentTarget.setPointerCapture(e.pointerId); start(); }}
-          onPointerUp={e => { e.preventDefault(); stop(); }}
-          onPointerCancel={() => { if (phaseRef.current === "running") stop(); }}
-          onKeyDown={e => { if(e.key === " " || e.key === "Enter") { e.preventDefault(); if (!keyboardHeld.current) { keyboardHeld.current = true; start(); } } }}
-          onKeyUp={e => { if(e.key === " " || e.key === "Enter") { e.preventDefault(); stop(); } }}
-          onBlur={() => { if (phaseRef.current === "running") stop(); }}
-        ><span>{phase === "running" ? "RELEASE" : "HOLD"}</span></button>
-        <p className="rg-ten-instruction">{phase === "running" ? "Laat los wanneer jij denkt dat 10 seconden voorbij zijn." : "Houd de knop ingedrukt — laat los om te stoppen."}</p>
+          aria-label={phase === "running" ? "Stop de timer" : "Start de timer"}
+          onClick={() => { if (phaseRef.current === "running") stop(); else start(); }}
+        ><span>{phase === "running" ? "STOP" : "START"}</span></button>
+        <p className="rg-ten-instruction">{phase === "running" ? "Klik op STOP wanneer je denkt dat 10 seconden voorbij zijn." : phase === "result" ? "Nog een poging? Klik opnieuw op START." : "Klik op START om de timer te starten."}</p>
         <label className="rg-ten-toggle"><input type="checkbox" checked={!showTime} onChange={e => { const visible = !e.target.checked; setShowTime(visible); displayRef.current=visible; }}/> BLIND MODE <small>/ verberg timer tijdens spelen</small></label>
       </div>
       <aside className="rg-ten-scores">
