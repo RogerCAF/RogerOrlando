@@ -53,8 +53,8 @@ export default function Home() {
         <div className="container hero-content">
           <div className="hero-left">
             <div className="hero-eyebrow"><span className="availability-dot"/> DESIGN BACKGROUND × ENGINEERING MINDSET <span className="tiny-star">✳</span> UTRECHT, NL</div>
-            <h1>Design meets technology.<br/><em>Ideas take shape.</em><br/>Always learning<span className="accent-period">.</span></h1>
-            <p className="hero-summary">Ik ben <strong>Roger Chin A Foeng</strong>. Ik woon in Utrecht en heb een achtergrond in grafisch design. Inmiddels richt ik me op IT en development. Ik vind het leuk om techniek en ontwerp samen te brengen in projecten waar ik zelf graag aan werk.</p>
+            <h1>Design with intent.<br/><em>Built with precision.</em><br/>Made to matter<span className="accent-period">.</span></h1>
+            <p className="hero-summary">Ik ben <strong>Roger Chin A Foeng</strong>. Met een achtergrond in grafisch design en een focus op IT en development combineer ik visuele kwaliteit met doordachte techniek. Van het grote idee tot het kleinste detail.</p>
             <div className="hero-buttons">
               <a className="button button-primary" href="#work">Ontdek mijn projecten <ArrowUpRight size={17}/></a>
               <a className="button button-quiet" href="#lab">Ontdek de Playground <ArrowDown size={16}/></a>
@@ -160,7 +160,7 @@ export default function Home() {
           <Reveal className="about-copy" delay={100}>
             <div className="about-overline"><span className="crosshair">✳</span> THE PERSON BEHIND THE PROJECTS</div>
             <p className="about-lead"><strong>Roger Chin A Foeng.</strong> Designer roots. Engineer mindset.</p>
-            <p>Van grafisch design naar IT: ik hou me graag bezig met zowel de visuele als de technische kant van een project.</p>
+            <p>Van grafisch design naar IT: ik combineer visuele ideeën met techniek, zodat dingen niet alleen mooi zijn, maar ook goed werken.</p>
             <p>Mijn zwakte? Die ene pixel die nét niet goed staat. Mijn oplossing? Nog een kop koffie en opnieuw proberen.</p>
             <div className="about-points"><span><Check size={15}/> Design-achtergrond</span><span><Check size={15}/> Engineering mindset</span><span><Check size={15}/> Altijd aan het leren</span></div>
           </Reveal>
@@ -176,7 +176,7 @@ export default function Home() {
 
       <section className="section work-section" id="work">
         <div className="container">
-          <Reveal className="section-head work-heading"><div><div className="eyebrow"><span>03 /</span> SELECTED WORK</div><h2>A few things<br/><em>I've made.</em></h2></div><p>Een selectie van websites, apps en ideeën waar ik aan werk of aan heb gewerkt.</p></Reveal>
+          <Reveal className="section-head work-heading"><div><div className="eyebrow"><span>03 /</span> SELECTED WORK</div><h2>Proof over<br/><em>promises.</em></h2></div><p>Van websites tot appconcepten. Vier projecten, vier verschillende uitdagingen en een eigen verhaal achter elk ontwerp.</p></Reveal>
           <PortfolioCaseStudies />
           <Reveal className="work-footer"><div className="work-footer-mark">✳</div><p>Always building. Always learning.<br/><span>En er is nog veel meer onderweg.</span></p><a href="https://github.com/RogerCAF" target="_blank" rel="noreferrer">Meer op GitHub <ArrowUpRight size={17}/></a></Reveal>
         </div>
