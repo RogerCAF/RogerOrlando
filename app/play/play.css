@@ -378,3 +378,68 @@
 @keyframes rg-chaos-glow{from{box-shadow:0 0 0 12px #ff8a9506,0 0 30px #f9334719}to{box-shadow:0 0 0 19px #ff8a9513,0 0 90px #f9334770}}
 @media(max-width:650px){.rg-chaos-top{font-size:8px;letter-spacing:1px}.rg-chaos-center h2{letter-spacing:-2px}.rg-chaos-warning{width:63px;height:63px}.rg-chaos-count{margin-top:18px}.rg-chaos-evader{min-width:65px;padding:9px;font-size:8px}.rg-chaos-bottom{font-size:8px}}
 @media(prefers-reduced-motion:reduce){.rg-chaos-scan,.rg-chaos-warning{animation:none}.rg-chaos-evader{transition:none!important}}
+
+/* Mission 4: archive sealing and public broadcast — interactive operations */
+.rg-ritual{--ritual-color:#a7d7b8;--ritual-glow:#73d4a84f;--ritual-deep:#284837;max-width:760px;margin:0 auto;border:1px solid #4d665e;background:#14212a;overflow:hidden;animation:rg-final-reveal .35s ease both}
+.rg-ritual-broadcast{--ritual-color:#9cdaea;--ritual-glow:#57bfe059;--ritual-deep:#204358}
+.rg-ritual-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 21px;border-bottom:1px solid #ffffff24;color:var(--ritual-color);font:800 9px/1.6 "DM Sans",sans-serif;letter-spacing:1.2px}
+.rg-ritual-meta>span:last-child{color:#8796a4}
+.rg-ritual-visual{height:235px;display:grid;place-items:center;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 50%,var(--ritual-deep),#101923 69%);border-bottom:1px solid #ffffff18}
+.rg-ritual-visual:before{content:"";position:absolute;inset:0;background-image:linear-gradient(#ffffff09 1px,transparent 1px),linear-gradient(90deg,#ffffff09 1px,transparent 1px);background-size:27px 27px;mask-image:radial-gradient(ellipse,#000 18%,transparent 82%)}
+.rg-ritual-vault{position:relative;width:205px;height:205px;display:grid;place-items:center}
+.rg-ritual-vault-ring{position:absolute;border-radius:50%;border:1px solid var(--ritual-color);box-shadow:0 0 24px var(--ritual-glow),inset 0 0 22px var(--ritual-glow)}
+.rg-ritual-vault-ring.ring-outer{width:196px;height:196px;border-style:dashed;animation:rg-spin 13s linear infinite}
+.rg-ritual-vault-ring.ring-inner{width:142px;height:142px;border-width:2px;animation:rg-spin 9s linear infinite reverse}
+.rg-ritual-vault-center{width:100px;height:100px;border-radius:50%;display:grid;place-items:center;color:var(--ritual-color);border:1px solid var(--ritual-color);background:#0f201d;box-shadow:0 0 42px var(--ritual-glow)}
+.rg-ritual-vault>span{position:absolute;bottom:0;font:800 8px "DM Sans",sans-serif;color:var(--ritual-color);letter-spacing:1.1px;white-space:nowrap}
+.rg-ritual-vault.is-sealing .ring-outer,.rg-ritual-vault.is-sealing .ring-inner{animation-duration:1.3s}
+.rg-ritual-network{width:min(94%,490px);display:flex;align-items:center;justify-content:space-between;position:relative}
+.rg-ritual-network-path{position:absolute;height:2px;left:11%;right:11%;top:33px;background:linear-gradient(90deg,var(--ritual-color),#577989,var(--ritual-color));opacity:.68}
+.rg-ritual-network.is-transmitting .rg-ritual-network-path{background:repeating-linear-gradient(90deg,var(--ritual-color) 0 23px,#1b4553 23px 34px);background-size:70px 100%;animation:rg-ritual-flow .7s linear infinite}
+.rg-ritual-network-node{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:12px;width:84px;color:#8597a4;text-align:center}
+.rg-ritual-network-node>span{width:66px;height:66px;display:grid;place-items:center;background:#16232d;border:1px solid #587180;border-radius:50%;transition:background .25s,border-color .25s,box-shadow .25s}
+.rg-ritual-network-node.is-connected{color:var(--ritual-color)}
+.rg-ritual-network-node.is-connected>span{background:#204451;border-color:var(--ritual-color);box-shadow:0 0 24px var(--ritual-glow)}
+.rg-ritual-network-node>small{font:800 9px/1.5 "DM Sans",sans-serif;letter-spacing:.7px}
+.rg-ritual-network-pulse{display:none}
+.rg-ritual-network.is-transmitting .rg-ritual-network-pulse{display:block;position:absolute;z-index:3;top:27px;left:11%;width:14px;height:14px;border-radius:50%;background:#cbf8ff;box-shadow:0 0 35px #b7effd;animation:rg-ritual-signal 1.3s ease-in-out infinite}
+.rg-ritual-copy{text-align:center;padding:26px 22px 17px}
+.rg-ritual-copy>span{font:800 9px "DM Sans",sans-serif;letter-spacing:1.7px;color:var(--ritual-color)}
+.rg-ritual-copy h3{font:800 clamp(25px,3vw,35px)/1.2 "Manrope",sans-serif;letter-spacing:-1.5px;margin:12px 0}
+.rg-ritual-copy p{font-size:12px;line-height:1.8;color:#a4b2bb;max-width:490px;margin:0 auto}
+.rg-ritual-checks{display:grid;gap:9px;padding:15px 23px}
+.rg-ritual-check{display:flex;align-items:center;text-align:left;gap:14px;padding:13px 16px;min-height:66px;border:1px solid #3b525b;background:#192730;color:#f1eee5;cursor:pointer;transition:border-color .2s,background .2s}
+.rg-ritual-check:hover:enabled{border-color:var(--ritual-color)}
+.rg-ritual-check.is-checked{border-color:var(--ritual-color);background:#234038}
+.rg-ritual-broadcast .rg-ritual-check.is-checked{background:#1c3948}
+.rg-ritual-check:disabled{opacity:.42;cursor:not-allowed}
+.rg-ritual-check-icon{width:36px;height:36px;flex:0 0 36px;display:grid;place-items:center;border:1px solid #61757d;color:var(--ritual-color)}
+.rg-ritual-check>span:nth-child(2){display:flex;flex-direction:column;gap:5px;min-width:0;flex:1}
+.rg-ritual-check strong{font:800 11px/1.3 "DM Sans",sans-serif;letter-spacing:.9px}
+.rg-ritual-check small{color:#95a8af;font-size:10px}
+.rg-ritual-check-status{font:800 9px "DM Sans",sans-serif;color:var(--ritual-color);letter-spacing:1px}
+.rg-ritual-actions{display:flex;justify-content:space-between;gap:13px;align-items:center;padding:20px 23px 25px}
+.rg-ritual-actions button{display:flex;align-items:center;justify-content:center;gap:10px;min-height:46px;padding:13px 15px;font:800 10px "DM Sans",sans-serif;letter-spacing:.8px;cursor:pointer}
+.rg-ritual-back{background:transparent;border:1px solid #6c7880;color:#b9c8cc}
+.rg-ritual-confirm{background:var(--ritual-color);border:1px solid var(--ritual-color);color:#102122}
+.rg-ritual-confirm:disabled{opacity:.3;cursor:not-allowed}
+.rg-ritual-execution{padding:26px 23px 32px}
+.rg-ritual-execution-top,.rg-ritual-execution-log{display:flex;justify-content:space-between;gap:14px;align-items:center;color:var(--ritual-color);font-size:10px;letter-spacing:.7px;font-weight:800}
+.rg-ritual-execution-bar{margin:15px 0 17px;height:6px;background:#2d4148;overflow:hidden}
+.rg-ritual-execution-bar>span{display:block;height:100%;background:var(--ritual-color);transition:width .1s linear;box-shadow:0 0 18px var(--ritual-glow)}
+.rg-ritual-execution-log{color:#a7b7bf;font-size:9px;font-weight:500;line-height:1.7}
+.rg-ritual-execution-log>span:last-child{white-space:nowrap;color:var(--ritual-color);font-weight:800}
+.rg-ritual-hacked{--ritual-color:#ff8791;--ritual-glow:#f128485e;--ritual-deep:#481d2b;border-color:#d45168;animation:rg-final-flicker .2s steps(2) 3}
+.rg-ritual-hacked .rg-ritual-visual{background:radial-gradient(circle,#51202e,#130d1a 74%)}
+.rg-ritual-hacked .rg-ritual-network-node>span{border-color:#fb8893;color:#fa8c94;box-shadow:0 0 20px #e337495b}
+.rg-ritual-hacked .rg-ritual-network-path{background:repeating-linear-gradient(90deg,#f24b61 0 13px,transparent 13px 22px);animation:rg-ritual-flow .25s linear infinite}
+.rg-ritual-hack-banner{position:absolute;z-index:6;left:50%;top:50%;width:min(360px,92%);transform:translate(-50%,-50%);padding:18px 22px;background:#2a101bed;border:1px solid #ff697b;box-shadow:0 0 65px #ef3d4d77;display:flex;flex-direction:column;gap:9px;text-align:center;animation:rg-final-shudder .25s 4}
+.rg-ritual-hack-banner>span{color:#ffb0b8;font-size:9px;letter-spacing:1.5px;font-weight:800}
+.rg-ritual-hack-banner>strong{font:800 clamp(20px,4vw,30px)/1.1 "Manrope",sans-serif;color:#fff2ed}
+.rg-ritual-hack-banner>small{font-size:9px;color:#eeadb2;letter-spacing:1.3px}
+.rg-ending-premium.rg-ending-broadcast{background:radial-gradient(circle at top,#50202c,#15131c 70%);border-color:#b96570}
+.rg-ending-broadcast .rg-final-reveal-mark{color:#ff8d98}
+@keyframes rg-ritual-flow{to{background-position:70px 0}}
+@keyframes rg-ritual-signal{from{left:11%;opacity:0}20%{opacity:1}to{left:85%;opacity:0}}
+@media(max-width:650px){.rg-ritual-meta{padding:12px;font-size:8px}.rg-ritual-visual{height:205px}.rg-ritual-actions{padding:14px;flex-wrap:wrap}.rg-ritual-actions button{flex:1 1 150px}.rg-ritual-checks{padding:12px}.rg-ritual-check{padding:10px}.rg-ritual-execution{padding:19px 15px}.rg-ritual-execution-log{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.rg-ritual,.rg-ritual-vault-ring,.rg-ritual-network-path,.rg-ritual-network-pulse,.rg-ritual-hacked,.rg-ritual-hack-banner{animation:none!important}}
