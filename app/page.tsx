@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import InfiniteZoom from "./components/InfiniteZoom";
+import InfiniteWorldsPreview from "./components/InfiniteWorldsPreview";
 import PortfolioCaseStudies from "./components/PortfolioCaseStudies";
 import { ArrowDown, ArrowRight, ArrowUpRight, Braces, Check, ChevronDown, Code2, Cpu, ExternalLink, Github, Globe2, Layers3, Menu, MonitorSmartphone, Network, ShieldCheck, Sparkles, TerminalSquare, Palette, X } from "lucide-react";
 
@@ -197,7 +197,7 @@ export default function Home() {
             </div>
             <a href="/play" className="lab-game-feature-link">PLAY THE UNFINISHED PROJECT <ArrowUpRight size={17}/></a>
           </Reveal>
-          <InfiniteZoom />
+          <InfiniteWorldsPreview />
         </div>
       </section>
 
