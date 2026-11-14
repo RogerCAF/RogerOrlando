@@ -198,8 +198,7 @@ export function apertureFor(index:number):Aperture {
  return "circle";
 }
 export function sceneSvg(index:number){
- const p=PALETTES[index<8?index:8+(Math.floor((index-8)/3)%1) % PALETTES.length] ?? PALETTES[8];
- const palette=index<=8?p:PALETTES[2+((index-8)%7)];
+ const palette=PALETTES[index<=8?index:2+((index-8)%7)];
  const graphic=index===0?scene0(palette):index===1?scene1(palette):index===2?scene2(palette):index===3?scene3(palette):index===4?scene4(palette):index===5?scene5(palette):index===6?scene6(palette):index===7?scene7(palette):openWorld(palette,index-7);
  // Fine linework, watercolor light and restrained paper grain give the worlds a cohesive illustrated feel.
  return '<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000">'+
