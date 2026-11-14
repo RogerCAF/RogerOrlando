@@ -10,7 +10,7 @@ import "./infinite-zoom.css";
  * Nine curated illustrated scenes, followed by a procedural open world.
  * Nested openings are actual canvas clips, not hard cuts or unrelated slideshow frames.
  */
-const DEPTH_RATIO = 5.5;
+const DEPTH_RATIO = 4.5;
 const MAX_CACHED_SCENES = 16;
 const START_DEPTH = 0.04;
 const CAPTIONS = [
