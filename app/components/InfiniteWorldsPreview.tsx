@@ -10,7 +10,7 @@ export default function InfiniteWorldsPreview() {
   return (
     <div className="iw-preview">
       <div className="iw-preview-toolbar">
-        <span>WERELD 01—02 · SCROLL OMHOOG OF KNIJP</span>
+        <span>WERELD 01—05 · SCROLL OMHOOG OF KNIJP</span>
         <a href="/infinite-worlds.html" target="_blank" rel="noopener noreferrer">
           VOLLEDIG SCHERM <ArrowUpRight size={15} />
         </a>
@@ -19,7 +19,7 @@ export default function InfiniteWorldsPreview() {
         <iframe
           src="/infinite-worlds.html"
           loading="lazy"
-          title="The Bureau of Impossible Things — wereld 1 en 2"
+          title="The Bureau of Impossible Things — werelden 1 t/m 5"
           allowFullScreen
         />
       </div>
