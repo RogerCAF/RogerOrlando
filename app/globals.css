@@ -375,3 +375,7 @@
 
 /* Keep the separate game directly beneath the zoom, without a second section-sized gap. */
 .lab-section{padding-bottom:24px}
+
+/* World one is presented as a calm vertical work, never cropped on desktop or mobile. */
+.iw-preview-frame{width:100%;max-width:770px;margin-inline:auto;height:min(84dvh,1000px);min-height:610px;background:#e9ddd8;border-color:rgba(215,188,158,.38);box-shadow:0 28px 70px rgba(0,0,0,.16)}
+@media(max-width:650px){.iw-preview-frame{height:clamp(530px,79svh,795px);min-height:530px;border-radius:9px}}
