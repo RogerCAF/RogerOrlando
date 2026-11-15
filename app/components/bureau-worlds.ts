@@ -37,15 +37,15 @@ function mouse(x:number,y:number,z=1,look=1,withCheese=false){
  if(withCheese)s+=path("M65 12 L100 5 L91 34 Z",p.ochre,p.ink,2)+circ(83,19,4,p.paper,p.ochre,1);
  return g("translate("+x+" "+y+") scale("+(z*look)+" "+z+")",s);
 }
-function note(x:number,y,s:string,w=190,tilt=0){return g("translate("+x+" "+y+") rotate("+tilt+")",rect(-w/2,-27,w,52,p.white,p.ink,5,2)+txt(0,3,s,Math.min(16,430/s.length),p.ink));}
+function note(x:number,y:number,s:string,w=190,tilt=0){return g("translate("+x+" "+y+") rotate("+tilt+")",rect(-w/2,-27,w,52,p.white,p.ink,5,2)+txt(0,3,s,Math.min(16,430/s.length),p.ink));}
 function dots(seed=4,n=85){let s="";for(let i=0;i<n;i++){const x=Math.round(rand(seed+i*5.4)*960)+20,y=Math.round(rand(seed+i*8.2)*960)+20;s+=circ(x,y,i%14===0?2:1,p.ink+"34","none",0);}return s;}
-function plant(x:number,y,scale=1){
+function plant(x:number,y:number,scale=1){
  let s=path("M0 0 Q-19 -52 -7 -112 M-10 -39 Q30 -78 45 -74 M-7 -74 Q-44 -104 -47 -92","none",p.ink,3);
  for(let i=0;i<5;i++){const yy=-20-i*21,xx=i%2?12:-16;s+=ellipse(xx,yy,21,8,p.accent,p.ink,2);}
  return g("translate("+x+" "+y+") scale("+scale+")",s);
 }
-function lamp(x:number,y){return g("translate("+x+" "+y+")",line(0,-140,0,-26,p.ink,3)+path("M-39 -25 Q0 -94 39 -25 Z",p.ochre,p.ink,3)+ellipse(0,-23,33,8,p.white,p.ochre,2));}
-function book(x:number,y,w:number,h:number,fill:string){return g("translate("+x+" "+y+")",rect(0,0,w,h,fill,p.ink,2,2)+line(5,6,5,h-7,p.white,2)+line(10,h*.35,w-5,h*.35,p.white,1));}
+function lamp(x:number,y:number){return g("translate("+x+" "+y+")",line(0,-140,0,-26,p.ink,3)+path("M-39 -25 Q0 -94 39 -25 Z",p.ochre,p.ink,3)+ellipse(0,-23,33,8,p.white,p.ochre,2));}
+function book(x:number,y:number,w:number,h:number,fill:string){return g("translate("+x+" "+y+")",rect(0,0,w,h,fill,p.ink,2,2)+line(5,6,5,h-7,p.white,2)+line(10,h*.35,w-5,h*.35,p.white,1));}
 function floorLines(vanishY=480){let s=path("M0 "+vanishY+" L0 1000 H1000 L1000 "+vanishY+" Z",p.paper,p.ink,2);for(let i=-4;i<=12;i++)s+=line(500,vanishY,i*105,1000,p.shadow+"88",1.4);for(let i=0;i<7;i++){const yy=vanishY+Math.pow(i/6,1.55)*(1000-vanishY);s+=line(0,yy,1000,yy,p.shadow+"65",1.4);}return s;}
 function edge(){return '<rect width="990" height="990" x="5" y="5" fill="none" stroke="'+p.ink+'" opacity=".12" stroke-width="10"/>';}
 function portalFrame(type:Portal){
