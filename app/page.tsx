@@ -187,7 +187,7 @@ export default function Home() {
           <Reveal className="lab-heading">
             <div className="eyebrow"><span>04 /</span> INTERACTIVE EXPERIMENT</div>
             <h2>Infinite <em>Worlds.</em></h2>
-            <p>Twee verbonden werelden. Zoom door het sleutelgat naar de open zeegalerij.</p>
+            <p>Van je scherm door een sleutelgat en een kijklens naar verborgen werelden. Alleen zoomen.</p>
           </Reveal>
           <InfiniteWorldsPreview />
         </div>
