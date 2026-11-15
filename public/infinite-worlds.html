@@ -34,7 +34,7 @@
 </head>
 <body>
   <main class="world">
-    <canvas id="drawing" tabindex="0" role="application" aria-label="The Bureau of Impossible Things. Scroll omhoog om in te zoomen, omlaag om uit te zoomen, of gebruik twee vingers. Sleep om rond te kijken. Door het kleine sleutelgat en de enkele telescooplens zie je de volgende wereld al van veraf; Random kiest alleen een einde."></canvas>
+    <canvas id="drawing" tabindex="0" role="application" aria-label="The Bureau of Impossible Things. Scroll omhoog om in te zoomen, omlaag om uit te zoomen, of gebruik twee vingers. Sleep om rond te kijken. Zoom door het sleutelgat, de telescoop, het ronde serverraam, de vitrine en een kleine planeet. Random kiest alleen een einde."></canvas>
     <aside id="startDock" class="start-dock" aria-label="Kies een willekeurig einde">
       <button id="random" class="power" type="button" title="Kies een willekeurig einde" aria-label="Kies een willekeurig einde">
         <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.7"><path d="M12 2.5v9"/><path d="M6.5 5.6a9 9 0 1 0 11 0"/></svg>
@@ -61,11 +61,13 @@
       door:'/bureau-door-faithful.webp',
       two:'/bureau-world-two.webp',
       server:'/bureau-server-corridor.webp',
+      archive:'/bureau-world-four-archive.webp',
+      observatory:'/bureau-world-five-observatory.svg',
       puffer:'/bureau-ending-puffer.webp',
       shrimp:'/bureau-ending-shrimp.webp'
     };
     const st={log:0,target:0,panX:0,panY:0,width:0,height:0,dpr:1,frame:0,lastFrame:0,dirty:true,lastPinch:0,ending:0,toastTimer:0,pointers:new Map()};
-    const MAX_LOG=14.65;
+    const MAX_LOG=19.5;
     const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
     const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
     const smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
@@ -86,6 +88,9 @@
     const door={x:459,y:675,w:44,h:58};
     const lens={x:541,y:766,r:33.5};
     const serverExit={x:512,y:816,r:10.25};
+    // An observatory is already visible inside the archive glass; a final world lives in its planet.
+    const archivePortal={x:530,y:836,r:45};
+    const skyPortal={x:543,y:765,r:34};
     // Exact registration: this small, ordinary escutcheon uses the SAME path in the SVG and canvas.
     // The glimpse beyond the door therefore has no independent position or rescaling.
     const aperture={x:604,y:900,w:32,h:47};
@@ -162,10 +167,11 @@
     function clipKeyhole(g){
       // At very deep zoom the camera and viewport are fully inside the tiny
       // top section of the keyhole. Skipping the huge off-screen clip is exact.
-      const centerX=g.ox+620*g.sx,centerY=g.oy+915*g.sy;
-      const safeX=3.1*g.sx,safeY=6*g.sy;
-      if(centerX-safeX<=0&&centerX+safeX>=st.width&&
-         centerY-safeY<=0&&centerY+safeY>=st.height)return;
+      // The actual optical axis passes through the NARROW neck, around (620,925).
+      // Only skip the clip if every screen corner lies inside an inscribed rectangle.
+      const localLeft=(0-g.ox)/g.sx,localRight=(st.width-g.ox)/g.sx;
+      const localTop=(0-g.oy)/g.sy,localBottom=(st.height-g.oy)/g.sy;
+      if(localLeft>=617&&localRight<=623&&localTop>=922&&localBottom<=927)return;
       ctx.setTransform(st.dpr*g.sx,0,0,st.dpr*g.sy,st.dpr*g.ox,st.dpr*g.oy);
       ctx.clip(keyholePath);
     }
@@ -194,12 +200,25 @@
       // Exact cumulative coordinates; no image-to-image motion or scale jumps.
       const lensX=door.x+door.w/900*(aperture.x+aperture.w/1086*lens.x);
       const lensY=door.y+door.h/1200*(aperture.y+aperture.h/1448*lens.y);
-      const endX=lensX+(serverExit.x-512)*door.w/900*aperture.w/1086*serverScale;
-      const endY=lensY+(serverExit.y-768)*door.h/1200*aperture.h/1448*serverScale;
+      // Every focal point is computed from the same nested affine registrations.
+      // At high zoom even a subpixel mistake in an earlier world becomes visible.
+      const archiveScale=(serverExit.r*2)/1086;
+      const observatoryScale=(archivePortal.r*2)/1086;
+      const endingScale=(skyPortal.r*2)/1086;
+      const serverExitX=lensX+(serverExit.x-512)*door.w/900*aperture.w/1086*serverScale;
+      const serverExitY=lensY+(serverExit.y-768)*door.h/1200*aperture.h/1448*serverScale;
+      const archiveFocusX=serverExitX+(archivePortal.x-543)*door.w/900*aperture.w/1086*serverScale*archiveScale;
+      const archiveFocusY=serverExitY+(archivePortal.y-724)*door.h/1200*aperture.h/1448*serverScale*archiveScale;
+      const skyFocusX=archiveFocusX+(skyPortal.x-543)*door.w/900*aperture.w/1086*serverScale*archiveScale*observatoryScale;
+      const skyFocusY=archiveFocusY+(skyPortal.y-724)*door.h/1200*aperture.h/1448*serverScale*archiveScale*observatoryScale;
       const approach=smooth(st.log/3.7);
-      const deep=smooth((st.log-6.5)/3.3);
-      const focusX=480+(lensX-480)*approach+(endX-lensX)*deep;
-      const focusY=685+(lensY-685)*approach+(endY-lensY)*deep;
+      const deep=smooth((st.log-6.4)/3.3);
+      const further=smooth((st.log-10.1)/3.0);
+      const celestial=smooth((st.log-13.3)/3.0);
+      const focusX=480+(lensX-480)*approach+(serverExitX-lensX)*deep+
+        (archiveFocusX-serverExitX)*further+(skyFocusX-archiveFocusX)*celestial;
+      const focusY=685+(lensY-685)*approach+(serverExitY-lensY)*deep+
+        (archiveFocusY-serverExitY)*further+(skyFocusY-archiveFocusY)*celestial;
       const base={ox:vw/2+st.panX-focusX*fit*z,
                   oy:vh/2+st.panY-focusY*fit*z,sx:fit*z,sy:fit*z};
       // High-resolution, feathered detail crop of the *same approved artwork*.
@@ -217,12 +236,18 @@
       const serverGeo={ox:twoGeo.ox+(lens.x-512*serverScale)*twoGeo.sx,
                        oy:twoGeo.oy+(lens.y-768*serverScale)*twoGeo.sy,
                        sx:twoGeo.sx*serverScale,sy:twoGeo.sy*serverScale};
-      // The endpoint is the BLUE GLASS ONLY, not the surrounding gold porthole ring.
-      // Register the ending image in the exact center of that small glass aperture.
-      const endingScale=(serverExit.r*2)/1086;
-      const endingGeo={ox:serverGeo.ox+(serverExit.x-543*endingScale)*serverGeo.sx,
-                       oy:serverGeo.oy+(serverExit.y-721*endingScale)*serverGeo.sy,
-                       sx:serverGeo.sx*endingScale,sy:serverGeo.sy*endingScale};
+      // World 4 is already visible through the BLUE GLASS inside the server door.
+      const archiveGeo={ox:serverGeo.ox+(serverExit.x-543*archiveScale)*serverGeo.sx,
+                        oy:serverGeo.oy+(serverExit.y-724*archiveScale)*serverGeo.sy,
+                        sx:serverGeo.sx*archiveScale,sy:serverGeo.sy*archiveScale};
+      // World 5 lives in a small glass observatory within the underwater archive.
+      const observatoryGeo={ox:archiveGeo.ox+(archivePortal.x-543*observatoryScale)*archiveGeo.sx,
+                            oy:archiveGeo.oy+(archivePortal.y-724*observatoryScale)*archiveGeo.sy,
+                            sx:archiveGeo.sx*observatoryScale,sy:archiveGeo.sy*observatoryScale};
+      // A small planet in the observatory contains whichever ending Random selected.
+      const endingGeo={ox:observatoryGeo.ox+(skyPortal.x-543*endingScale)*observatoryGeo.sx,
+                       oy:observatoryGeo.oy+(skyPortal.y-721*endingScale)*observatoryGeo.sy,
+                       sx:observatoryGeo.sx*endingScale,sy:observatoryGeo.sy*endingScale};
       startDock.hidden=st.log>.55||!ready('one');
       ctx.setTransform(dpr,0,0,dpr,0,0);
       // Favor smooth high-quality downsampling when the viewport is between worlds.
@@ -262,9 +287,25 @@
       clipCircle(twoGeo,lens.x,lens.y,lens.r);
       imageRegion('server',serverGeo);
       ctx.restore();
+      // Underwater archive: one miniature world, precisely inset in the glass at the far end.
       ctx.save();clipRect(doorGeo,900,1200);clipKeyhole(doorGeo);
       clipCircle(twoGeo,lens.x,lens.y,lens.r);
       clipCircle(serverGeo,serverExit.x,serverExit.y,serverExit.r);
+      imageRegion('archive',archiveGeo);
+      ctx.restore();
+      // Celestial observatory: miniature view through the archive's central vitrine.
+      ctx.save();clipRect(doorGeo,900,1200);clipKeyhole(doorGeo);
+      clipCircle(twoGeo,lens.x,lens.y,lens.r);
+      clipCircle(serverGeo,serverExit.x,serverExit.y,serverExit.r);
+      clipCircle(archiveGeo,archivePortal.x,archivePortal.y,archivePortal.r);
+      imageRegion('observatory',observatoryGeo);
+      ctx.restore();
+      // The hidden ending is visible from far away inside the small central planet.
+      ctx.save();clipRect(doorGeo,900,1200);clipKeyhole(doorGeo);
+      clipCircle(twoGeo,lens.x,lens.y,lens.r);
+      clipCircle(serverGeo,serverExit.x,serverExit.y,serverExit.r);
+      clipCircle(archiveGeo,archivePortal.x,archivePortal.y,archivePortal.r);
+      clipCircle(observatoryGeo,skyPortal.x,skyPortal.y,skyPortal.r);
       imageRegion(endKeys[st.ending],endingGeo);
       ctx.restore();
       st.dirty=false;
