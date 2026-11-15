@@ -2,27 +2,27 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Maximize2, Minus, Plus, RotateCcw, X } from "lucide-react";
-import { apertureFor, sceneSvg, sceneTitle } from "./infinite-world-art";
-import type { Aperture } from "./infinite-world-art";
+import { portalAt, portalRatio, worldSvg, worldTitle } from "./bureau-worlds";
+import type { Portal } from "./bureau-worlds";
 import "./infinite-zoom.css";
 
 /**
  * Nine curated illustrated scenes, followed by a procedural open world.
  * Nested openings are actual canvas clips, not hard cuts or unrelated slideshow frames.
  */
-const DEPTH_RATIO = 4.5;
 const MAX_CACHED_SCENES = 16;
-const START_DEPTH = 0.04;
+const START_DEPTH = 0.015;
 const CAPTIONS = [
-  "Iedere deur heeft een verhaal. Deze heeft er een paar te veel.",
-  "Je bent nog op tijd om terug te gaan. Zeggen ze.",
-  "Waarschuwing: bruggen zijn niet gekeurd voor draken.",
-  "Niet zo staren. Hij kijkt terug.",
-  "Ssst. Hij heeft morgen een vergadering.",
-  "Technische storing. Het universum wordt opnieuw opgestart.",
-  "Een stad waar zelfs de tijd verdwaalt.",
-  "Ergens hier ligt de handleiding voor de uitgang.",
-  "Geen eindscherm. Geen haast. Alleen nog meer werelden."
+  "Sommige ideeën beginnen bij een scherm. Deze bleef maar doorgaan.",
+  "Ssst... achter dat sleutelgat is iemand nog aan het werk.",
+  "De draak is hier voor zijn parkeervergunning. Al 400 jaar.",
+  "Niet roeren. Er wonen mensen in.",
+  "De garantie van de maan verliep gisteren.",
+  "Rustige buurt. Soms beweegt de grond.",
+  "Nieuwe schepping: vrijdag. Mits goedgekeurd door HR.",
+  "Hier kun je zelfs verloren minuten kopen.",
+  "De gebruiksaanwijzing voor de uitgang is uitgeleend.",
+  "Geen laatste kamer. Alleen meer dingen om te ontdekken."
 ];
 
 type XY = { x: number; y: number };
@@ -49,32 +49,34 @@ function createState(): RendererState {
   };
 }
 
-function opening(ctx: CanvasRenderingContext2D, type: Aperture) {
+function opening(ctx: CanvasRenderingContext2D, type: Portal) {
   ctx.beginPath();
-  if (type === "keyhole") {
-    ctx.moveTo(500,408);
-    ctx.bezierCurveTo(454,408,439,445,439,478);
-    ctx.bezierCurveTo(439,513,468,536,478,543);
-    ctx.lineTo(465,610);
-    ctx.quadraticCurveTo(500,620,535,610);
-    ctx.lineTo(522,543);
-    ctx.bezierCurveTo(540,526,562,510,562,478);
-    ctx.bezierCurveTo(562,441,539,408,500,408);
-    ctx.closePath();
-  } else if (type === "window") {
-    ctx.moveTo(434,595); ctx.lineTo(434,463);
-    ctx.bezierCurveTo(434,394,566,394,566,463);
-    ctx.lineTo(566,595); ctx.closePath();
-  } else if (type === "eye") {
-    ctx.ellipse(500,500,77,69,0,0,Math.PI*2);
-  } else if (type === "book") {
-    ctx.moveTo(414,421);ctx.quadraticCurveTo(466,391,500,426);
-    ctx.quadraticCurveTo(549,386,586,421);
-    ctx.lineTo(586,590);
-    ctx.quadraticCurveTo(546,580,500,604);
-    ctx.quadraticCurveTo(456,581,414,590);ctx.closePath();
-  } else {
-    ctx.arc(500,500,type==="clock"?89:94,0,Math.PI*2);
+  switch(type){
+    case "screen":
+      ctx.rect(371,390,258,181);break;
+    case "keyhole":
+      ctx.moveTo(500,448);
+      ctx.bezierCurveTo(465,448,458,470,458,487);
+      ctx.quadraticCurveTo(458,507,473,519);
+      ctx.lineTo(463,552);ctx.quadraticCurveTo(500,562,537,552);
+      ctx.lineTo(527,519);ctx.quadraticCurveTo(542,506,542,487);
+      ctx.bezierCurveTo(542,462,523,448,500,448);ctx.closePath();break;
+    case "coffee":
+      ctx.ellipse(500,500,109,38,0,0,Math.PI*2);break;
+    case "window":
+      ctx.moveTo(436,581);ctx.lineTo(436,463);
+      ctx.quadraticCurveTo(436,401,500,401);
+      ctx.quadraticCurveTo(564,401,564,463);
+      ctx.lineTo(564,581);ctx.closePath();break;
+    case "moon":ctx.arc(500,500,103,0,Math.PI*2);break;
+    case "watch":ctx.arc(500,500,93,0,Math.PI*2);break;
+    case "globe":ctx.arc(500,500,105,0,Math.PI*2);break;
+    case "book":
+      ctx.moveTo(375,397);ctx.quadraticCurveTo(449,375,500,413);
+      ctx.quadraticCurveTo(559,369,625,397);
+      ctx.lineTo(625,603);ctx.quadraticCurveTo(556,580,500,627);
+      ctx.quadraticCurveTo(452,583,375,604);ctx.closePath();break;
+    default:ctx.rect(403,403,194,194);
   }
 }
 
@@ -86,7 +88,7 @@ function acquire(state: RendererState, index: number) {
   state.cache.set(index, entry);
   img.onload = () => { entry.ready = true; state.needsPaint = true; };
   img.onerror = () => { entry.ready = false; };
-  img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(sceneSvg(index));
+  img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(worldSvg(index));
   if (state.cache.size > MAX_CACHED_SCENES) {
     const current = Math.floor(state.level);
     for (const old of [...state.cache.keys()]) {
@@ -97,50 +99,43 @@ function acquire(state: RendererState, index: number) {
 }
 
 function render(canvas: HTMLCanvasElement, state: RendererState, width: number, height: number) {
-  if (width < 1 || height < 1) return;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
-  const pixelRatio = Math.min(2, window.devicePixelRatio || 1);
-  const cw = Math.max(1, Math.round(width * pixelRatio));
-  const ch = Math.max(1, Math.round(height * pixelRatio));
-  if (canvas.width !== cw || canvas.height !== ch) {
-    canvas.width = cw; canvas.height = ch;
-  }
+  if(width<1||height<1)return;
+  const ctx=canvas.getContext("2d");
+  if(!ctx)return;
+  const pixelRatio=Math.min(2,window.devicePixelRatio||1);
+  const cw=Math.max(1,Math.round(width*pixelRatio));
+  const ch=Math.max(1,Math.round(height*pixelRatio));
+  if(canvas.width!==cw||canvas.height!==ch){canvas.width=cw;canvas.height=ch;}
   ctx.setTransform(pixelRatio,0,0,pixelRatio,0,0);
   ctx.clearRect(0,0,width,height);
-  ctx.fillStyle = "#111d28";
-  ctx.fillRect(0,0,width,height);
+  ctx.fillStyle="#e5ebe4";ctx.fillRect(0,0,width,height);
 
-  const sceneSize = Math.max(width,height) * 1.13;
-  const cx = width/2 + state.x;
-  const cy = height/2 + state.y;
-  const outerIndex = Math.max(0, Math.floor(state.level)-1);
-  const deepestIndex = Math.max(outerIndex+2,Math.ceil(state.level)+5);
+  // Draw each original illustration through an aperture with precisely aligned geometry.
+  // Every scene stays present, and the scale changes continuously; no crossfade or cut.
+  const base=Math.max(width,height)*1.07;
+  const cx=width/2+state.x;
+  const cy=height/2+state.y;
+  const current=Math.max(0,Math.floor(state.level));
+  const start=Math.max(0,current-1);
+  const fractional=state.level-current;
+  let dimension=base*Math.pow(1/portalRatio(current),fractional);
+  if(start<current) dimension/=portalRatio(start);
+  const stop=current+7;
   ctx.save();
-  for(let i=outerIndex;i<=deepestIndex;i++){
-    const dimension = sceneSize*Math.pow(DEPTH_RATIO,state.level-i);
-    if (dimension > 1e8) continue;
-    if (dimension < 0.4) break;
-    const art = acquire(state,i);
+  for(let i=start;i<=stop;i++){
+    if(dimension>1e9){dimension*=portalRatio(i);continue;}
+    if(dimension<.7)break;
     const scale=dimension/1000;
-    // The clip from the previous world remains active when a new transform is set.
     ctx.setTransform(pixelRatio*scale,0,0,pixelRatio*scale,
-      pixelRatio*(cx - 500*scale),pixelRatio*(cy - 500*scale));
-    if(art.ready){
-      ctx.drawImage(art.img,0,0,1000,1000);
-    }else{
-      ctx.fillStyle = i%2===0?"#233445":"#34495b";
-      ctx.fillRect(0,0,1000,1000);
-    }
-    opening(ctx,apertureFor(i));
+      pixelRatio*(cx-500*scale),pixelRatio*(cy-500*scale));
+    const art=acquire(state,i);
+    if(art.ready)ctx.drawImage(art.img,0,0,1000,1000);
+    else{ctx.fillStyle=i%2?"#e5ebe4":"#f5f1e8";ctx.fillRect(0,0,1000,1000);}
+    opening(ctx,portalAt(i));
     ctx.clip();
+    dimension*=portalRatio(i);
   }
   ctx.restore();
-  ctx.setTransform(pixelRatio,0,0,pixelRatio,0,0);
-  const fade=ctx.createRadialGradient(width/2,height/2,Math.min(width,height)*.1,width/2,height/2,Math.max(width,height)*.86);
-  fade.addColorStop(0,"rgba(5,9,15,0)");
-  fade.addColorStop(1,"rgba(5,9,15,.34)");
-  ctx.fillStyle=fade;ctx.fillRect(0,0,width,height);
 }
 
 function pointerDistance(items: Map<number, Pointer>) {
@@ -159,12 +154,12 @@ export default function InfiniteZoom() {
 
   const step=useCallback((amount:number,focus?:XY)=>{
     const s=state.current;
-    const next=Math.max(-.45,Math.min(100000,s.target+amount));
+    const next=Math.max(0,Math.min(10000,s.target+amount));
     const change=next-s.target;
     if(focus && stageRef.current){
       const r=stageRef.current.getBoundingClientRect();
       const dx=focus.x-r.left-r.width/2,dy=focus.y-r.top-r.height/2;
-      const factor=Math.pow(DEPTH_RATIO,change);
+      const factor=Math.pow(1/portalRatio(Math.max(0,Math.floor(s.target))),change);
       s.tx=dx+(s.tx-dx)*factor;
       s.ty=dy+(s.ty-dy)*factor;
     }
@@ -217,7 +212,7 @@ export default function InfiniteZoom() {
           render(canvas!,s,width||stage!.clientWidth,height||stage!.clientHeight);
           s.needsPaint=false;
         }
-        const levelIndex=Math.max(0,Math.floor(s.level+.18));
+        const levelIndex=Math.max(0,Math.floor(s.level+.07));
         if(levelIndex!==lastIndex){lastIndex=levelIndex;setScene(levelIndex);}
       }
       frame=requestAnimationFrame(tick);
@@ -269,7 +264,7 @@ export default function InfiniteZoom() {
       const newDistance=pointerDistance(s.pointers);
       if(newDistance && s.lastPinch && newDistance>5 && s.lastPinch>5){
         const points=[...s.pointers.values()];
-        step(Math.log(newDistance/s.lastPinch)/Math.log(DEPTH_RATIO),
+        step(Math.log(newDistance/s.lastPinch)/Math.log(1/portalRatio(Math.max(0,Math.floor(s.target)))),
           {x:(points[0].x+points[1].x)/2,y:(points[0].y+points[1].y)/2});
       }
       s.lastPinch=newDistance;
@@ -283,12 +278,12 @@ export default function InfiniteZoom() {
   };
 
   const number=String(scene+1).padStart(2,"0");
-  const description=scene<CAPTIONS.length?CAPTIONS[scene]:CAPTIONS[8];
+  const description=CAPTIONS[scene]??CAPTIONS[9];
 
   return (
-    <section className={expanded?"iw iw-expanded":"iw"} aria-label="Infinite Worlds interactieve zoomwereld">
+    <section className={expanded?"iw iw-expanded":"iw"} aria-label="Interactieve wereld: The Bureau of Impossible Things">
       <div className="iw-header">
-        <div className="iw-identity"><span className="iw-lit"/><span>ROGER / INFINITE WORLDS</span><span className="iw-light-text">EXPERIMENT 002</span></div>
+        <div className="iw-identity"><span className="iw-lit"/><span>THE BUREAU OF IMPOSSIBLE THINGS</span><span className="iw-light-text">ZOOM EXPERIMENT</span></div>
         <button className="iw-expand" type="button" onClick={()=>setExpanded(v=>!v)}>
           {expanded?<X size={16}/>:<Maximize2 size={16}/>}
           <span>{expanded?"SLUIT":"OPEN FULLSCREEN"}</span>
@@ -297,7 +292,7 @@ export default function InfiniteZoom() {
       <div className="iw-stage" ref={stageRef}>
         <canvas
           className="iw-canvas" ref={canvasRef}
-          aria-label="Verken een reeks geïllustreerde werelden via sleutelgaten, portalen en verborgen doorgangen"
+          aria-label="Zoom door een geïllustreerde wereld via een scherm, sleutelgat, koffiekopje en andere doorgangen"
           onWheel={event=>{
             if(!expanded)return;
             event.preventDefault();
@@ -311,41 +306,22 @@ export default function InfiniteZoom() {
           onDoubleClick={event=>{if(expanded)step(.33,{x:event.clientX,y:event.clientY});}}
         />
         <div className="iw-grain" aria-hidden="true"/>
-        <div className="iw-corner iw-corner-left">
-          <span className="iw-orbit">✳</span>
-          <span>AN ENDLESS LITTLE ADVENTURE</span>
-        </div>
-        <div className="iw-corner iw-corner-right">WERELD {number} <span>/ ∞</span></div>
-
-        {!expanded&&(
-          <div className="iw-invite">
-            <span className="iw-eyebrow">EEN DEUR. GEEN EINDE.</span>
-            <h3>One world<br/>inside <em>another.</em></h3>
-            <p>Van een geheim sleutelgat naar een wereld die nooit ophoudt. Vol onverwachte plekken, vreemde wezens en kleine grapjes.</p>
-            <button type="button" onClick={()=>setExpanded(true)}>
-              BEGIN MET ONTDEKKEN <ArrowUpRight size={16}/>
-            </button>
-          </div>
-        )}
-        {expanded&&(
-          <div className="iw-world-info" aria-live="polite">
-            <small>JE BENT IN WERELD {number}</small>
-            <h3>{sceneTitle(scene)}</h3>
-            <p>{description}</p>
-          </div>
-        )}
-        {expanded&&<div className="iw-instructions">SCROLL OM IN TE ZOOMEN <span>·</span> SLEEP OM ROND TE KIJKEN <span>·</span> PINCH OP MOBIEL</div>}
+        {expanded&&<div className="iw-world-dot" aria-live="polite">WERELD {number} / ∞</div>}
         <div className="iw-controls" aria-label="Zoombediening">
           <button type="button" title="Inzoomen" aria-label="Inzoomen" onClick={()=>step(.3)}><Plus size={18}/></button>
           <button type="button" title="Uitzoomen" aria-label="Uitzoomen" onClick={()=>step(-.3)}><Minus size={18}/></button>
           <i aria-hidden="true"/>
           <button type="button" className={auto?"iw-active":""} title={auto?"Automatisch zoomen pauzeren":"Automatisch zoomen"} aria-label={auto?"Automatisch zoomen pauzeren":"Automatisch inzoomen"} onClick={toggleAuto}>{auto?"Ⅱ":"▶"}</button>
-          <button type="button" title="Terug naar het sleutelgat" aria-label="Terug naar het sleutelgat" onClick={reset}><RotateCcw size={17}/></button>
+          <button type="button" title="Terug naar het begin" aria-label="Terug naar het begin" onClick={reset}><RotateCcw size={17}/></button>
         </div>
       </div>
       <div className="iw-footer">
-        <div><strong>INFINITE WORLDS</strong><span>Een tekening. Duizend verhalen. Geen laatste deur.</span></div>
-        <div className="iw-footer-right"><span className="iw-lit"/> FREE TO EXPLORE</div>
+        <div className="iw-footer-copy">
+          <strong>THE BUREAU OF IMPOSSIBLE THINGS</strong>
+          <span>{expanded?worldTitle(scene)+" · "+description:"Zoom het verhaal binnen. Verborgen deuren, muisjes en kleine grapjes."}</span>
+        </div>
+        {!expanded&&<button type="button" className="iw-start" onClick={()=>setExpanded(true)}>ONTDEK DE WERELD <ArrowUpRight size={16}/></button>}
+        {expanded&&<span className="iw-footer-help">SCROLL · SLEEP · PINCH <span aria-hidden="true">/</span> ESC</span>}
       </div>
     </section>
   );
