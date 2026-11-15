@@ -11,22 +11,36 @@
     .world{position:relative;width:100%;height:100%;overflow:hidden;isolation:isolate}
     canvas{display:block;width:100%;height:100%;touch-action:none;cursor:zoom-in;outline:none;user-select:none;-webkit-user-select:none}
     canvas:active{cursor:grabbing}canvas:focus-visible{outline:2px solid #af8b63;outline-offset:-4px}
-    .power{position:absolute;display:flex;align-items:center;gap:7px;z-index:5;padding:4px 8px 4px 4px;border:1px solid #a98566a8;border-radius:25px;color:#e9d3b6;background:rgba(28,30,32,.96);font-size:8px;letter-spacing:1px;font-weight:700;white-space:nowrap;cursor:pointer;box-shadow:0 3px 13px #0004;transform:translate(-50%,-50%);transition:opacity .16s,background .15s}
-    .power:hover,.power:focus-visible{background:#2c3437;outline:1px solid #deba87}
-    .power svg{width:19px;height:19px;flex:none}
-    .power[hidden]{display:none!important}
+    /* A small instrument dock beside the monitor, rather than a button floating over its stand. */
+    .start-dock{position:absolute;z-index:6;right:clamp(10px,2.3vw,30px);top:38%;display:flex;align-items:center;gap:9px;
+      padding:8px 11px 8px 7px;max-width:220px;color:#eedfce;background:rgba(24,29,33,.94);border:1px solid #ad876788;
+      border-radius:9px;box-shadow:0 5px 24px #110f0e33;transition:opacity .24s,transform .24s}
+    .start-dock[hidden]{display:none!important}
+    .power{display:grid;place-items:center;flex:none;width:35px;height:35px;padding:0;border:1px solid #be9365;
+      border-radius:50%;background:#1e2529;color:#e9c99d;cursor:pointer;box-shadow:inset 0 0 0 3px #3c3028}
+    .power:hover,.power:focus-visible{background:#374044;outline:2px solid #e0b785;outline-offset:2px}
+    .power svg{width:21px;height:21px}
+    .dock-copy{display:flex;flex-direction:column;gap:3px;line-height:1.3;text-align:left}
+    .dock-copy strong{font-size:9px;letter-spacing:1.1px;font-weight:700}
+    .dock-copy small{font-size:9px;color:#d3c3b3;max-width:151px}
+    @media(max-width:630px){.start-dock{right:8px;top:32%;max-width:154px;gap:6px;padding:6px 7px 6px 5px;border-radius:7px}
+      .power{width:30px;height:30px}.power svg{width:18px;height:18px}
+      .dock-copy strong{font-size:7px;letter-spacing:.55px}.dock-copy small{font-size:7px;line-height:1.25;max-width:101px}}
     .message{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);max-width:min(90%,480px);border:1px solid #cab39488;border-radius:5px;padding:9px 12px;background:#f9f4edeb;color:#4a4540;font-size:11px;line-height:1.35;letter-spacing:.03em;text-align:center;box-shadow:0 5px 26px #33221123;opacity:0;pointer-events:none;transition:opacity .25s}
     .message.show{opacity:1}
     .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-    @media(max-width:630px){.power{font-size:7px;letter-spacing:.55px;padding:3px 6px 3px 3px}.power svg{width:17px;height:17px}.message{font-size:10px;bottom:9px}}
+    @media(max-width:630px){.message{font-size:10px;bottom:9px}}
   </style>
 </head>
 <body>
   <main class="world">
     <canvas id="drawing" tabindex="0" role="application" aria-label="The Bureau of Impossible Things. Scroll omhoog om in te zoomen, omlaag om uit te zoomen, of gebruik twee vingers. Sleep om rond te kijken. Door het kleine sleutelgat en de enkele telescooplens zie je de volgende wereld al van veraf; Random kiest alleen een einde."></canvas>
-    <button id="random" class="power" type="button" title="Random: kies een willekeurig einde. Je komt er alleen door zelf te zoomen." aria-label="Kies een willekeurig einde; zoom verder om het te ontdekken">
-      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.7"><path d="M12 2.5v9"/><path d="M6.5 5.6a9 9 0 1 0 11 0"/></svg><span>RANDOM EINDE</span>
-    </button>
+    <aside id="startDock" class="start-dock" aria-label="Kies een willekeurig einde">
+      <button id="random" class="power" type="button" title="Kies een willekeurig einde" aria-label="Kies een willekeurig einde">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.7"><path d="M12 2.5v9"/><path d="M6.5 5.6a9 9 0 1 0 11 0"/></svg>
+      </button>
+      <span class="dock-copy"><strong>RANDOM EINDE</strong><small>Druk hier en zoom zelf verder om je einde te vinden.</small></span>
+    </aside>
     <div id="message" class="message" role="status" aria-live="polite"></div>
     <div id="aria-status" class="sr" aria-live="polite"></div>
   </main>
@@ -36,6 +50,7 @@
     const canvas=document.getElementById('drawing');
     const ctx=canvas.getContext('2d',{alpha:false,desynchronized:true});
     const power=document.getElementById('random');
+    const startDock=document.getElementById('startDock');
     const msg=document.getElementById('message');
     const aria=document.getElementById('aria-status');
     if(!ctx)return;
@@ -43,13 +58,13 @@
     const sources={
       one:'/bureau-world-one.webp',
       hall:'/bureau-hallway-detail.webp',
-      door:'/bureau-door-detail.svg',
+      door:'/bureau-door-faithful.webp',
       two:'/bureau-world-two.webp',
       server:'/bureau-server-corridor.webp',
       puffer:'/bureau-ending-puffer.webp',
       shrimp:'/bureau-ending-shrimp.webp'
     };
-    const st={log:0,target:0,panX:0,panY:0,width:0,height:0,dpr:1,frame:0,dirty:true,lastPinch:0,ending:0,toastTimer:0,pointers:new Map()};
+    const st={log:0,target:0,panX:0,panY:0,width:0,height:0,dpr:1,frame:0,lastFrame:0,dirty:true,lastPinch:0,ending:0,toastTimer:0,pointers:new Map()};
     const MAX_LOG=14.65;
     const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
     const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
@@ -73,20 +88,50 @@
     const serverExit={x:512,y:816,r:10.25};
     // Exact registration: this small, ordinary escutcheon uses the SAME path in the SVG and canvas.
     // The glimpse beyond the door therefore has no independent position or rescaling.
-    const aperture={x:472,y:680,w:32,h:47};
-    const keyholePath=new Path2D('M488 680 C477 680 472 687 472 694 Q472 702 482 708 L478 722 Q488 727 498 722 L494 708 Q504 701 504 694 C504 686 499 680 488 680Z');
+    const aperture={x:604,y:900,w:32,h:47};
+    const keyholePath=new Path2D('M620 900 C609 900 604 907 604 914 Q604 922 614 928 L610 942 Q620 947 630 942 L626 928 Q636 921 636 914 C636 906 631 900 620 900Z');
     function keyhole(){ctx.clip(keyholePath);}
-    // Four small framed monitor displays, to replace only the most visible paintings.
-    function paintScreens(){
-      const screens=[{x:343,y:667,w:16,h:61},{x:601,y:667,w:16,h:61},{x:379,y:684,w:9,h:40},{x:574,y:684,w:9,h:40}];
-      for(const r of screens){
-        ctx.save();ctx.fillStyle='#e8ddcf';ctx.fillRect(r.x-2,r.y-2,r.w+4,r.h+4);
-        ctx.fillStyle='#967c59';ctx.fillRect(r.x-.7,r.y-.7,r.w+1.4,r.h+1.4);
-        ctx.fillStyle='#202e36';ctx.fillRect(r.x+.6,r.y+.6,r.w-1.2,r.h-1.2);
-        ctx.strokeStyle='#6f9da4';ctx.lineWidth=.8;ctx.beginPath();
-        ctx.moveTo(r.x+2,r.y+r.h*.65);ctx.lineTo(r.x+r.w*.42,r.y+r.h*.48);ctx.lineTo(r.x+r.w*.62,r.y+r.h*.6);ctx.lineTo(r.x+r.w-2,r.y+r.h*.26);ctx.stroke();
-        ctx.fillStyle='#b2cfd2';ctx.fillRect(r.x+2,r.y+r.h*.14,r.w*.4,.85);ctx.restore();
+    // Every artwork is replaced by one screen of exactly the same footprint.
+    // All coordinates are expressed in the high-resolution hallway's 1680x2020
+    // local reference, so they remain fixed in perspective at every zoom level.
+    const wallPanels=[
+      [[274,1398],[385,1453],[386,1708],[271,1711]],
+      [[444,1484],[502,1515],[503,1701],[444,1701]],
+      [[561,1535],[616,1553],[617,1697],[562,1698]],
+      [[666,1578],[700,1594],[700,1695],[667,1697]],
+      [[727,1602],[749,1618],[750,1693],[727,1695]]
+    ];
+    function paintScreens(geo){
+      if(!ready('hall'))return;
+      ctx.save();ctx.setTransform(st.dpr*geo.sx,0,0,st.dpr*geo.sy,st.dpr*geo.ox,st.dpr*geo.oy);
+      const project=(p,u,v)=>[
+        p[0][0]*(1-u)*(1-v)+p[1][0]*u*(1-v)+p[2][0]*u*v+p[3][0]*(1-u)*v,
+        p[0][1]*(1-u)*(1-v)+p[1][1]*u*(1-v)+p[2][1]*u*v+p[3][1]*(1-u)*v];
+      const segment=(p,points,color,width)=>{
+        ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();
+        points.forEach(([u,v],i)=>{const [x,y]=project(p,u,v);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();};
+      for(const left of wallPanels){
+        for(let side=0;side<2;side++){
+          const p=side?left.map(([x,y])=>[1680-x,y]):left;
+          ctx.beginPath();p.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();
+          ctx.fillStyle='#1a252b';ctx.fill();ctx.lineJoin='round';ctx.strokeStyle='#3e4e53';ctx.lineWidth=3;ctx.stroke();
+          segment(p,[[.08,.06],[.92,.06]],'#445b63',1.4);
+          segment(p,[[.12,.18],[.66,.18]],'#648694',1.6);
+          segment(p,[[.12,.25],[.78,.25]],'#354b55',1.25);
+          segment(p,[[.12,.36],[.61,.36]],'#354b55',1.25);
+          segment(p,[[.12,.70],[.28,.61],[.49,.68],[.64,.43],[.86,.53]],'#77c2d1',2.1);
+          segment(p,[[.13,.79],[.83,.79]],'#435f69',1.4);
+          const [lx,ly]=project(p,.13,.10);ctx.fillStyle='#a4d0aa';ctx.beginPath();ctx.arc(lx,ly,2.2,0,Math.PI*2);ctx.fill();
+        }
       }
+      ctx.restore();
+    }
+    function paintKeyholeFrame(geo){
+      const d=st.dpr;
+      ctx.save();ctx.setTransform(d*geo.sx,0,0,d*geo.sy,d*geo.ox,d*geo.oy);
+      ctx.lineJoin='round';ctx.lineWidth=6;ctx.strokeStyle='#322317';ctx.stroke(keyholePath);
+      ctx.lineWidth=3.5;ctx.strokeStyle='#cda56b';ctx.stroke(keyholePath);
+      ctx.restore();
     }
     const endKeys=['puffer','shrimp'];
     // Each world has one fixed affine registration with its parent. The single
@@ -117,7 +162,7 @@
     function clipKeyhole(g){
       // At very deep zoom the camera and viewport are fully inside the tiny
       // top section of the keyhole. Skipping the huge off-screen clip is exact.
-      const centerX=g.ox+488*g.sx,centerY=g.oy+700*g.sy;
+      const centerX=g.ox+620*g.sx,centerY=g.oy+915*g.sy;
       const safeX=3.1*g.sx,safeY=6*g.sy;
       if(centerX-safeX<=0&&centerX+safeX>=st.width&&
          centerY-safeY<=0&&centerY+safeY>=st.height)return;
@@ -133,12 +178,15 @@
       ctx.setTransform(st.dpr,0,0,st.dpr,0,0);
       ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.clip();
     }
-    function render(){
+    function render(now){
       st.frame=0;
       const {width:vw,height:vh,dpr}=st;if(vw<=0||vh<=0)return;
       const delta=st.target-st.log;
-      st.log+=delta*(reduced?1:.19);
-      if(Math.abs(delta)<.00015)st.log=st.target;else request();
+      // Time-based camera easing: same zoom behavior on 60 Hz and 120 Hz screens.
+      const dt=st.lastFrame?clamp(now-st.lastFrame,1,80):16.67;
+      st.lastFrame=now;
+      st.log+=delta*(reduced?1:1-Math.exp(-dt/105));
+      if(Math.abs(delta)<.00015){st.log=st.target;st.lastFrame=0;}else request();
       const z=Math.exp(st.log);
       const fit=Math.min(vw/960,vh/1370);
       const telescopeDiameter=lens.r*2;
@@ -160,6 +208,8 @@
                      sx:base.sx*420/1680,sy:base.sy*505/2020};
       const doorGeo={ox:base.ox+door.x*base.sx,oy:base.oy+door.y*base.sy,
                      sx:base.sx*door.w/900,sy:base.sy*door.h/1200};
+      // The photographic close-up has twice the raster resolution of door-local coordinates.
+      const doorImgGeo={ox:doorGeo.ox,oy:doorGeo.oy,sx:doorGeo.sx/2,sy:doorGeo.sy/2};
       const twoGeo={ox:doorGeo.ox+aperture.x*doorGeo.sx,
                     oy:doorGeo.oy+aperture.y*doorGeo.sy,
                     sx:doorGeo.sx*aperture.w/1086,
@@ -173,10 +223,7 @@
       const endingGeo={ox:serverGeo.ox+(serverExit.x-543*endingScale)*serverGeo.sx,
                        oy:serverGeo.oy+(serverExit.y-721*endingScale)*serverGeo.sy,
                        sx:serverGeo.sx*endingScale,sy:serverGeo.sy*endingScale};
-      const px=base.ox+480*base.sx;
-      const py=base.oy+882*base.sy;
-      power.hidden=st.log>.38||!ready('one');
-      if(!power.hidden){power.style.left=px+'px';power.style.top=py+'px';}
+      startDock.hidden=st.log>.55||!ready('one');
       ctx.setTransform(dpr,0,0,dpr,0,0);
       // Favor smooth high-quality downsampling when the viewport is between worlds.
       ctx.imageSmoothingEnabled=true;
@@ -194,15 +241,17 @@
         if(ready('hall')&&hallAlpha>.001){
           ctx.save();ctx.globalAlpha=hallAlpha;imageRegion('hall',hallGeo);ctx.restore();
         }
-        ctx.save();ctx.setTransform(dpr*base.sx,0,0,dpr*base.sy,dpr*base.ox,dpr*base.oy);
-        paintScreens();ctx.restore();}
+        // Screens sit exactly on top of the original picture positions,
+        // not as floating UI decorations elsewhere in the gallery.
+        paintScreens(hallGeo);}
       // Detailed door blends into the original as its small painted door approaches.
       ctx.save();clipRect(base,960,1370);clipRect(doorGeo,900,1200);
       // Let the sharp illustrated door take over while it is still small,
       // avoiding a long double-image blend once handles and panels are visible.
-      const detailAlpha=smooth((st.log-1.12)/.89);
-      if(ready('door')&&z<3500){ctx.globalAlpha=detailAlpha;imageRegion('door',doorGeo);}
+      const detailAlpha=smooth((st.log-.80)/.80);
+      if(ready('door')&&z<3500){ctx.globalAlpha=detailAlpha;imageRegion('door',doorImgGeo);}
       ctx.globalAlpha=1;
+      if(detailAlpha>.02)paintKeyholeFrame(doorGeo);
       ctx.restore();
       // Each subsequent drawing is independently clipped to its physical
       // portal and uses a source crop, so deep zoom never overflows the GPU.
@@ -240,7 +289,7 @@
       e.preventDefault();
       const d=e.deltaMode===1?e.deltaY*14:e.deltaMode===2?e.deltaY*360:e.deltaY;
       // Requested reversed wheel direction: scroll UP enters, scroll DOWN returns.
-      zoomBy(Math.exp(clamp(-d,-200,200)*.00335));
+      zoomBy(Math.exp(clamp(-d,-160,160)*.0029));
     },{passive:false});
     const distance=()=>{const a=[...st.pointers.values()];return a.length===2?Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y):0;};
     canvas.addEventListener('pointerdown',e=>{
@@ -253,7 +302,7 @@
       if(!st.pointers.has(e.pointerId))return;
       const before=st.pointers.get(e.pointerId);
       st.pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
-      if(st.pointers.size===2){const next=distance();if(st.lastPinch>5&&next>5)zoomBy(next/st.lastPinch);st.lastPinch=next;}
+      if(st.pointers.size===2){const next=distance();if(st.lastPinch>5&&next>5)zoomBy(Math.pow(next/st.lastPinch,.87));st.lastPinch=next;}
       else if(st.pointers.size===1&&st.log>.08){
         const maxX=st.width*.55,maxY=st.height*.55;
         st.panX=clamp(st.panX+(e.clientX-before.x),-maxX,maxX);
