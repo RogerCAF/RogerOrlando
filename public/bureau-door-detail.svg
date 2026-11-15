@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200">
+<defs>
+ <linearGradient id="stone" x2="1" y2="0"><stop stop-color="#dfc4a3"/><stop offset=".2" stop-color="#f8ead6"/><stop offset=".66" stop-color="#e9d8c1"/><stop offset="1" stop-color="#bda58b"/></linearGradient>
+ <linearGradient id="wood" x2="1" y2="0"><stop stop-color="#2f211d"/><stop offset=".18" stop-color="#624034"/><stop offset=".45" stop-color="#54392e"/><stop offset=".66" stop-color="#362621"/><stop offset=".9" stop-color="#69493a"/><stop offset="1" stop-color="#2d1f1a"/></linearGradient>
+ <linearGradient id="panel" x2="1" y2="1"><stop stop-color="#684535"/><stop offset=".55" stop-color="#422b26"/><stop offset="1" stop-color="#7b5140"/></linearGradient>
+ <linearGradient id="brass" x2="1" y2="0"><stop stop-color="#7e5326"/><stop offset=".17" stop-color="#e5bb67"/><stop offset=".5" stop-color="#f6dda3"/><stop offset=".82" stop-color="#b17a32"/><stop offset="1" stop-color="#755025"/></linearGradient>
+ <radialGradient id="void"><stop stop-color="#548c9a"/><stop offset=".8" stop-color="#183746"/><stop offset="1" stop-color="#09131a"/></radialGradient>
+ <pattern id="grain" width="44" height="190" patternUnits="userSpaceOnUse"><path d="M3 0 C12 45 0 71 6 113 S10 179 5 190 M16 0 C28 63 15 77 18 130 S21 171 23 190 M34 0 C26 36 39 71 32 109 S36 172 30 190" stroke="#bc9270" stroke-width="1.9" stroke-opacity=".17" fill="none"/></pattern>
+</defs>
+<!-- The shape inherits the cream arch and dark walnut double doors of the approved first world. -->
+<path d="M12 1180 V220 Q12 18 244 18 H656 Q888 18 888 220 V1180Z" fill="url(#stone)" stroke="#7e6658" stroke-width="16"/>
+<path d="M80 1180 V192 Q80 86 226 86 H674 Q820 86 820 192 V1180Z" fill="#98806c" stroke="#604639" stroke-width="12"/>
+<path d="M106 1184 V197 Q106 116 223 116 H677 Q794 116 794 197 V1184Z" fill="url(#wood)" stroke="#201917" stroke-width="14"/>
+<path d="M111 190 Q111 131 228 131 H672 Q789 131 789 190" stroke="#b58e6c" stroke-width="5" fill="none"/>
+<rect x="111" y="152" width="678" height="1030" fill="url(#grain)" opacity=".85"/>
+<path d="M450 147 V1182" stroke="#170e0d" stroke-width="13"/>
+<path d="M450 149 V1181" stroke="#c89967" stroke-opacity=".3" stroke-width="2"/>
+<!-- Quiet architectural inset panels on each leaf, deliberately well aligned. -->
+<g stroke-linejoin="round">
+ <rect x="141" y="213" width="270" height="290" rx="8" fill="#2e201d" stroke="#b18a63" stroke-width="11"/>
+ <rect x="157" y="228" width="238" height="258" rx="5" fill="url(#panel)" stroke="#251a17" stroke-width="7"/>
+ <rect x="489" y="213" width="270" height="290" rx="8" fill="#2e201d" stroke="#b18a63" stroke-width="11"/>
+ <rect x="505" y="228" width="238" height="258" rx="5" fill="url(#panel)" stroke="#251a17" stroke-width="7"/>
+ <rect x="141" y="553" width="270" height="549" rx="8" fill="#2e201d" stroke="#b18a63" stroke-width="11"/>
+ <rect x="157" y="570" width="238" height="515" rx="5" fill="url(#panel)" stroke="#251a17" stroke-width="7"/>
+ <rect x="489" y="553" width="270" height="549" rx="8" fill="#2e201d" stroke="#b18a63" stroke-width="11"/>
+ <rect x="505" y="570" width="238" height="515" rx="5" fill="url(#panel)" stroke="#251a17" stroke-width="7"/>
+</g>
+<g fill="none" stroke="#bd9672" stroke-opacity=".28" stroke-width="3">
+ <path d="M187 259 Q180 320 186 419 M216 246 Q228 340 214 462 M345 237 Q320 326 348 470 M535 259 Q520 345 536 432 M703 242 Q690 334 710 474"/>
+ <path d="M182 606 Q212 801 181 1066 M352 596 Q331 801 352 1060 M554 598 Q532 796 551 1070 M717 607 Q696 780 718 1062"/>
+</g>
+<!-- Two ordinary door handles, on tasteful plain backplates. -->
+<g fill="url(#brass)" stroke="#5b421f" stroke-width="5">
+ <rect x="401" y="515" width="26" height="128" rx="9"/>
+ <rect x="473" y="515" width="26" height="128" rx="9"/>
+ <circle cx="414" cy="558" r="13"/><circle cx="486" cy="558" r="13"/>
+ <path d="M413 554 L360 554 Q350 554 350 565 L351 579 Q354 587 366 580 L415 567Z"/>
+ <path d="M487 554 L540 554 Q550 554 550 565 L549 579 Q546 587 534 580 L485 567Z"/>
+</g>
+<!-- Small visible keyhole, with a fine brass escutcheon and real window into the next world. -->
+<path d="M450 566 C405 566 377 599 380 636 Q380 673 413 701 L394 769 Q449 790 505 769 L488 701 Q522 672 520 636 C521 595 492 566 450 566Z" fill="url(#void)" stroke="#1f1b19" stroke-width="21" stroke-linejoin="round"/>
+<path d="M450 566 C405 566 377 599 380 636 Q380 673 413 701 L394 769 Q449 790 505 769 L488 701 Q522 672 520 636 C521 595 492 566 450 566Z" fill="url(#void)" stroke="url(#brass)" stroke-width="9" stroke-linejoin="round"/>
+<path d="M434 583 C403 591 394 616 400 644" stroke="#ffebbf" stroke-opacity=".6" stroke-width="3" fill="none" stroke-linecap="round"/>
+<g fill="#e3b87c" stroke="#443428" stroke-width="3"><circle cx="55" cy="884" r="9"/><circle cx="844" cy="884" r="9"/><circle cx="55" cy="252" r="9"/><circle cx="844" cy="252" r="9"/></g>
+</svg>
