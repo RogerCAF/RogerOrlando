@@ -64,7 +64,7 @@
       puffer:'/bureau-ending-puffer.webp',
       shrimp:'/bureau-ending-shrimp.webp'
     };
-    const st={log:0,target:0,panX:0,panY:0,width:0,height:0,dpr:1,frame:0,dirty:true,lastPinch:0,ending:0,toastTimer:0,pointers:new Map()};
+    const st={log:0,target:0,panX:0,panY:0,width:0,height:0,dpr:1,frame:0,lastFrame:0,dirty:true,lastPinch:0,ending:0,toastTimer:0,pointers:new Map()};
     const MAX_LOG=14.65;
     const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
     const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
@@ -178,12 +178,15 @@
       ctx.setTransform(st.dpr,0,0,st.dpr,0,0);
       ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.clip();
     }
-    function render(){
+    function render(now){
       st.frame=0;
       const {width:vw,height:vh,dpr}=st;if(vw<=0||vh<=0)return;
       const delta=st.target-st.log;
-      st.log+=delta*(reduced?1:.155);
-      if(Math.abs(delta)<.00015)st.log=st.target;else request();
+      // Time-based camera easing: same zoom behavior on 60 Hz and 120 Hz screens.
+      const dt=st.lastFrame?clamp(now-st.lastFrame,1,80):16.67;
+      st.lastFrame=now;
+      st.log+=delta*(reduced?1:1-Math.exp(-dt/105));
+      if(Math.abs(delta)<.00015){st.log=st.target;st.lastFrame=0;}else request();
       const z=Math.exp(st.log);
       const fit=Math.min(vw/960,vh/1370);
       const telescopeDiameter=lens.r*2;
@@ -299,7 +302,7 @@
       if(!st.pointers.has(e.pointerId))return;
       const before=st.pointers.get(e.pointerId);
       st.pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
-      if(st.pointers.size===2){const next=distance();if(st.lastPinch>5&&next>5)zoomBy(next/st.lastPinch);st.lastPinch=next;}
+      if(st.pointers.size===2){const next=distance();if(st.lastPinch>5&&next>5)zoomBy(Math.pow(next/st.lastPinch,.87));st.lastPinch=next;}
       else if(st.pointers.size===1&&st.log>.08){
         const maxX=st.width*.55,maxY=st.height*.55;
         st.panX=clamp(st.panX+(e.clientX-before.x),-maxX,maxX);
