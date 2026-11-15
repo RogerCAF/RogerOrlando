@@ -49,7 +49,7 @@
       shrimp:'/bureau-ending-shrimp.webp'
     };
     const st={log:0,target:0,panX:0,panY:0,width:0,height:0,dpr:1,frame:0,dirty:true,lastPinch:0,ending:0,toastTimer:0,pointers:new Map()};
-    const MAX_LOG=14.2;
+    const MAX_LOG=14.65;
     const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
     const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
     const smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
@@ -69,7 +69,7 @@
     };
     const door={x:459,y:675,w:44,h:58};
     const lens={x:541,y:766,r:33.5};
-    const serverExit={x:512,y:820,r:17};
+    const serverExit={x:512,y:816,r:10.25};
     // Exact registration: this small, ordinary escutcheon uses the SAME path in the SVG and canvas.
     // The glimpse beyond the door therefore has no independent position or rescaling.
     const aperture={x:472,y:680,w:32,h:47};
@@ -162,7 +162,9 @@
       const serverGeo={ox:twoGeo.ox+(lens.x-512*serverScale)*twoGeo.sx,
                        oy:twoGeo.oy+(lens.y-768*serverScale)*twoGeo.sy,
                        sx:twoGeo.sx*serverScale,sy:twoGeo.sy*serverScale};
-      const endingScale=36/1086;
+      // Match the blue glass aperture exactly without covering its gold rim.
+      // The ending is a true miniature already visible through the glass.
+      const endingScale=(serverExit.r*2)/1086;
       const endingGeo={ox:serverGeo.ox+(serverExit.x-543*endingScale)*serverGeo.sx,
                        oy:serverGeo.oy+(serverExit.y-721*endingScale)*serverGeo.sy,
                        sx:serverGeo.sx*endingScale,sy:serverGeo.sy*endingScale};
