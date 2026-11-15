@@ -70,15 +70,11 @@
     const door={x:459,y:675,w:44,h:58};
     const lens={x:541,y:766,r:43};
     const serverExit={x:512,y:820,r:17};
-    // Keyhole drawn within the 900 × 1200 close-up artwork.
-    function keyhole(){
-      ctx.beginPath();ctx.moveTo(450,566);
-      ctx.bezierCurveTo(405,566,377,599,380,636);
-      ctx.quadraticCurveTo(380,673,413,701);
-      ctx.lineTo(394,769);ctx.quadraticCurveTo(449,790,505,769);
-      ctx.lineTo(488,701);ctx.quadraticCurveTo(522,672,520,636);
-      ctx.bezierCurveTo(521,595,492,566,450,566);ctx.closePath();
-    }
+    // Exact registration: this small, ordinary escutcheon uses the SAME path in the SVG and canvas.
+    // The glimpse beyond the door therefore has no independent position or rescaling.
+    const aperture={x:472,y:680,w:32,h:47};
+    const keyholePath=new Path2D('M488 680 C477 680 472 687 472 694 Q472 702 482 708 L478 722 Q488 727 498 722 L494 708 Q504 701 504 694 C504 686 499 680 488 680Z');
+    function keyhole(){ctx.clip(keyholePath);}
     // Four small framed monitor displays, to replace only the most visible paintings.
     function paintScreens(){
       const screens=[{x:343,y:667,w:16,h:61},{x:601,y:667,w:16,h:61},{x:379,y:684,w:9,h:40},{x:574,y:684,w:9,h:40}];
@@ -101,10 +97,10 @@
       const fit=Math.min(vw/960,vh/1370);
       // Registered camera anchors: follow the EXACT same physical aperture,
       // including the tiny offset to the exit in the server hallway.
-      const lensX=door.x+door.w/900*(380+140/1086*lens.x);
-      const lensY=door.y+door.h/1200*(566+216/1448*lens.y);
-      const endX=lensX+(serverExit.x-512)*door.w/900*140/1086*64/1024;
-      const endY=lensY+(serverExit.y-768)*door.h/1200*216/1448*64/1024;
+      const lensX=door.x+door.w/900*(aperture.x+aperture.w/1086*lens.x);
+      const lensY=door.y+door.h/1200*(aperture.y+aperture.h/1448*lens.y);
+      const endX=lensX+(serverExit.x-512)*door.w/900*aperture.w/1086*86/1024;
+      const endY=lensY+(serverExit.y-768)*door.h/1200*aperture.h/1448*86/1024;
       const approach=smooth(st.log/3.7);
       const deep=smooth((st.log-6.5)/3.3);
       const focusX=480+(lensX-480)*approach+(endX-lensX)*deep;
@@ -125,9 +121,13 @@
       // Door in the original photo stays exactly at the same place on every zoom level.
       ctx.save();ctx.beginPath();ctx.rect(door.x,door.y,door.w,door.h);ctx.clip();
       ctx.translate(door.x,door.y);ctx.scale(door.w/900,door.h/1200);
-      if(ready('door')&&z<700)ctx.drawImage(assets.door,0,0,900,1200);
-      ctx.save();keyhole();ctx.clip();
-      ctx.translate(380,566);ctx.scale(140/1086,216/1448);
+      // Long-distance view is EXACTLY the approved opening art. Only when its distant door
+      // comes close enough does the registered vector detail smoothly take over.
+      const detailAlpha=smooth((st.log-1.95)/1.32);
+      ctx.globalAlpha=detailAlpha;
+      if(ready('door')&&z<3500)ctx.drawImage(assets.door,0,0,900,1200);
+      ctx.save();keyhole();
+      ctx.translate(aperture.x,aperture.y);ctx.scale(aperture.w/1086,aperture.h/1448);
       if(ready('two'))ctx.drawImage(assets.two,0,0,1086,1448);
       // The only destination beyond the terrace is already visible inside its brass viewing lens.
       ctx.save();ctx.beginPath();ctx.arc(lens.x,lens.y,lens.r,0,Math.PI*2);ctx.clip();
