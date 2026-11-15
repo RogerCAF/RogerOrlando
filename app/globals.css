@@ -372,3 +372,6 @@
 .game-section{position:relative;background:#0d1118;padding:0 0 100px}
 .game-section .lab-game-feature{margin-top:0}
 @media(max-width:650px){.lab-heading>p{margin:14px 0 24px}.iw-preview-toolbar{font-size:9px;letter-spacing:.5px}.iw-preview-toolbar a{padding:9px 11px}.game-section{padding-bottom:70px}}
+
+/* Keep the separate game directly beneath the zoom, without a second section-sized gap. */
+.lab-section{padding-bottom:24px}
