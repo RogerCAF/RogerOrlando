@@ -49,7 +49,7 @@
       shrimp:'/bureau-ending-shrimp.webp'
     };
     const st={log:0,target:0,panX:0,panY:0,width:0,height:0,dpr:1,frame:0,dirty:true,lastPinch:0,ending:0,toastTimer:0,pointers:new Map()};
-    const MAX_LOG=Math.log(180000);
+    const MAX_LOG=14.2;
     const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
     const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
     const smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
@@ -68,7 +68,7 @@
       request();
     };
     const door={x:459,y:675,w:44,h:58};
-    const lens={x:541,y:766,r:43};
+    const lens={x:541,y:766,r:33.5};
     const serverExit={x:512,y:820,r:17};
     // Exact registration: this small, ordinary escutcheon uses the SAME path in the SVG and canvas.
     // The glimpse beyond the door therefore has no independent position or rescaling.
@@ -88,58 +88,118 @@
       }
     }
     const endKeys=['puffer','shrimp'];
+    // Each world has one fixed affine registration with its parent. The single
+    // round telescope aperture is inset INSIDE the painted brass rim, not over it.
+    // At extreme zoom we paint only the visible image pixels, preventing the
+    // enormous off-screen transforms that made the last world disappear on iOS.
+    function imageRegion(key,geo){
+      if(!ready(key)||geo.sx<=0||geo.sy<=0)return;
+      const img=assets[key];
+      const left=clamp((-geo.ox-2)/geo.sx,0,img.naturalWidth);
+      const top=clamp((-geo.oy-2)/geo.sy,0,img.naturalHeight);
+      const right=clamp((st.width-geo.ox+2)/geo.sx,0,img.naturalWidth);
+      const bottom=clamp((st.height-geo.oy+2)/geo.sy,0,img.naturalHeight);
+      if(right<=left||bottom<=top)return;
+      ctx.setTransform(st.dpr,0,0,st.dpr,0,0);
+      ctx.drawImage(img,left,top,right-left,bottom-top,
+        geo.ox+left*geo.sx,geo.oy+top*geo.sy,
+        (right-left)*geo.sx,(bottom-top)*geo.sy);
+    }
+    function boxCoversView(g,w,h){
+      return g.ox<=0&&g.oy<=0&&g.ox+w*g.sx>=st.width&&g.oy+h*g.sy>=st.height;
+    }
+    function clipRect(g,w,h){
+      if(boxCoversView(g,w,h))return;
+      ctx.setTransform(st.dpr,0,0,st.dpr,0,0);
+      ctx.beginPath();ctx.rect(g.ox,g.oy,w*g.sx,h*g.sy);ctx.clip();
+    }
+    function clipKeyhole(g){
+      // At very deep zoom the camera and viewport are fully inside the tiny
+      // top section of the keyhole. Skipping the huge off-screen clip is exact.
+      const centerX=g.ox+488*g.sx,centerY=g.oy+700*g.sy;
+      const safeX=3.1*g.sx,safeY=6*g.sy;
+      if(centerX-safeX<=0&&centerX+safeX>=st.width&&
+         centerY-safeY<=0&&centerY+safeY>=st.height)return;
+      ctx.setTransform(st.dpr*g.sx,0,0,st.dpr*g.sy,st.dpr*g.ox,st.dpr*g.oy);
+      ctx.clip(keyholePath);
+    }
+    function clipCircle(g,cx,cy,rad){
+      const x=g.ox+g.sx*cx,y=g.oy+g.sy*cy;
+      const rx=rad*g.sx,ry=rad*g.sy;
+      const maxDX=Math.max(Math.abs(x),Math.abs(st.width-x))/rx;
+      const maxDY=Math.max(Math.abs(y),Math.abs(st.height-y))/ry;
+      if(maxDX*maxDX+maxDY*maxDY<.998)return;
+      ctx.setTransform(st.dpr,0,0,st.dpr,0,0);
+      ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.clip();
+    }
     function render(){
-      st.frame=0;const {width:vw,height:vh,dpr}=st;if(vw<=0||vh<=0)return;
+      st.frame=0;
+      const {width:vw,height:vh,dpr}=st;if(vw<=0||vh<=0)return;
       const delta=st.target-st.log;
       st.log+=delta*(reduced?1:.19);
       if(Math.abs(delta)<.00015)st.log=st.target;else request();
       const z=Math.exp(st.log);
       const fit=Math.min(vw/960,vh/1370);
-      // Registered camera anchors: follow the EXACT same physical aperture,
-      // including the tiny offset to the exit in the server hallway.
+      const telescopeDiameter=lens.r*2;
+      const serverScale=telescopeDiameter/1024;
+      // Exact cumulative coordinates; no image-to-image motion or scale jumps.
       const lensX=door.x+door.w/900*(aperture.x+aperture.w/1086*lens.x);
       const lensY=door.y+door.h/1200*(aperture.y+aperture.h/1448*lens.y);
-      const endX=lensX+(serverExit.x-512)*door.w/900*aperture.w/1086*86/1024;
-      const endY=lensY+(serverExit.y-768)*door.h/1200*aperture.h/1448*86/1024;
+      const endX=lensX+(serverExit.x-512)*door.w/900*aperture.w/1086*serverScale;
+      const endY=lensY+(serverExit.y-768)*door.h/1200*aperture.h/1448*serverScale;
       const approach=smooth(st.log/3.7);
       const deep=smooth((st.log-6.5)/3.3);
       const focusX=480+(lensX-480)*approach+(endX-lensX)*deep;
       const focusY=685+(lensY-685)*approach+(endY-lensY)*deep;
-      const originX=vw/2+st.panX-focusX*fit*z;
-      const originY=vh/2+st.panY-focusY*fit*z;
-      const px=originX+480*fit*z;
-      const py=originY+882*fit*z;
-      // A real, small power switch embedded at the monitor bezel is the sole random selector.
-      power.hidden=st.log>.38 || !ready('one');
+      const base={ox:vw/2+st.panX-focusX*fit*z,
+                  oy:vh/2+st.panY-focusY*fit*z,sx:fit*z,sy:fit*z};
+      const doorGeo={ox:base.ox+door.x*base.sx,oy:base.oy+door.y*base.sy,
+                     sx:base.sx*door.w/900,sy:base.sy*door.h/1200};
+      const twoGeo={ox:doorGeo.ox+aperture.x*doorGeo.sx,
+                    oy:doorGeo.oy+aperture.y*doorGeo.sy,
+                    sx:doorGeo.sx*aperture.w/1086,
+                    sy:doorGeo.sy*aperture.h/1448};
+      const serverGeo={ox:twoGeo.ox+(lens.x-512*serverScale)*twoGeo.sx,
+                       oy:twoGeo.oy+(lens.y-768*serverScale)*twoGeo.sy,
+                       sx:twoGeo.sx*serverScale,sy:twoGeo.sy*serverScale};
+      const endingScale=36/1086;
+      const endingGeo={ox:serverGeo.ox+(serverExit.x-543*endingScale)*serverGeo.sx,
+                       oy:serverGeo.oy+(serverExit.y-721*endingScale)*serverGeo.sy,
+                       sx:serverGeo.sx*endingScale,sy:serverGeo.sy*endingScale};
+      const px=base.ox+480*base.sx;
+      const py=base.oy+882*base.sy;
+      power.hidden=st.log>.38||!ready('one');
       if(!power.hidden){power.style.left=px+'px';power.style.top=py+'px';}
       ctx.setTransform(dpr,0,0,dpr,0,0);
       ctx.fillStyle='#e9ddd8';ctx.fillRect(0,0,vw,vh);
-      if(!ready('one')){ctx.fillStyle='#574b44';ctx.font='13px Arial';ctx.textAlign='center';ctx.fillText('De wereld wordt geladen…',vw/2,vh/2);return;}
-      ctx.save();ctx.translate(vw/2+st.panX,vh/2+st.panY);
-      ctx.scale(fit*z,fit*z);ctx.translate(-focusX,-focusY);
-      if(z<80){ctx.drawImage(assets.one,0,0,960,1370);paintScreens();}
-      // Door in the original photo stays exactly at the same place on every zoom level.
-      ctx.save();ctx.beginPath();ctx.rect(door.x,door.y,door.w,door.h);ctx.clip();
-      ctx.translate(door.x,door.y);ctx.scale(door.w/900,door.h/1200);
-      // Long-distance view is EXACTLY the approved opening art. Only when its distant door
-      // comes close enough does the registered vector detail smoothly take over.
+      if(!ready('one')){
+        ctx.fillStyle='#574b44';ctx.font='13px Arial';ctx.textAlign='center';
+        ctx.fillText('De wereld wordt geladen…',vw/2,vh/2);return;
+      }
+      // World 1: preserve approved artwork exactly until it fills the entrance.
+      if(z<80){imageRegion('one',base);
+        ctx.save();ctx.setTransform(dpr*base.sx,0,0,dpr*base.sy,dpr*base.ox,dpr*base.oy);
+        paintScreens();ctx.restore();}
+      // Detailed door blends into the original as its small painted door approaches.
+      ctx.save();clipRect(base,960,1370);clipRect(doorGeo,900,1200);
       const detailAlpha=smooth((st.log-1.95)/1.32);
-      ctx.globalAlpha=detailAlpha;
-      if(ready('door')&&z<3500)ctx.drawImage(assets.door,0,0,900,1200);
-      ctx.save();keyhole();
-      ctx.translate(aperture.x,aperture.y);ctx.scale(aperture.w/1086,aperture.h/1448);
-      if(ready('two'))ctx.drawImage(assets.two,0,0,1086,1448);
-      // The only destination beyond the terrace is already visible inside its brass viewing lens.
-      ctx.save();ctx.beginPath();ctx.arc(lens.x,lens.y,lens.r,0,Math.PI*2);ctx.clip();
-      // The server corridor is already a true miniature painting within the one eyepiece.
-      // No cuts: every zoom frame has exactly the same registered coordinates.
-      ctx.translate(lens.x,lens.y);ctx.scale(86/1024,86/1024);ctx.translate(-512,-768);
-      if(ready('server'))ctx.drawImage(assets.server,0,0,1024,1536);
-      ctx.save();ctx.beginPath();ctx.arc(serverExit.x,serverExit.y,serverExit.r,0,Math.PI*2);ctx.clip();
-      const endKey=endKeys[st.ending];
-      ctx.translate(serverExit.x,serverExit.y);ctx.scale(37/1086,37/1086);ctx.translate(-543,-721);
-      if(ready(endKey))ctx.drawImage(assets[endKey],0,0,1086,1448);
-      ctx.restore();ctx.restore();ctx.restore();ctx.restore();ctx.restore();
+      if(ready('door')&&z<3500){ctx.globalAlpha=detailAlpha;imageRegion('door',doorGeo);}
+      ctx.globalAlpha=1;
+      ctx.restore();
+      // Each subsequent drawing is independently clipped to its physical
+      // portal and uses a source crop, so deep zoom never overflows the GPU.
+      ctx.save();clipRect(doorGeo,900,1200);clipKeyhole(doorGeo);
+      imageRegion('two',twoGeo);
+      ctx.restore();
+      ctx.save();clipRect(doorGeo,900,1200);clipKeyhole(doorGeo);
+      clipCircle(twoGeo,lens.x,lens.y,lens.r);
+      imageRegion('server',serverGeo);
+      ctx.restore();
+      ctx.save();clipRect(doorGeo,900,1200);clipKeyhole(doorGeo);
+      clipCircle(twoGeo,lens.x,lens.y,lens.r);
+      clipCircle(serverGeo,serverExit.x,serverExit.y,serverExit.r);
+      imageRegion(endKeys[st.ending],endingGeo);
+      ctx.restore();
       st.dirty=false;
     }
     function zoomBy(factor){
