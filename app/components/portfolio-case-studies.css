@@ -258,5 +258,5 @@
 /* Bier Koerier Utrecht — authentic supplied artwork, no invented logo */
 .cs-bierkoerier .cs-visual{background:#100906}
 .cs-bierkoerier-preview{background:#100906}
-.cs-bierkoerier-art{display:block;width:100%;height:100%;object-fit:cover;object-position:center 55%;filter:none}
+.cs-bierkoerier-art{display:block;width:100%;height:100%;object-fit:cover;object-position:center 72%;filter:none}
 .cs-bierkoerier-preview:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#080504a8,transparent 23%,transparent 75%,#0805046b);}
