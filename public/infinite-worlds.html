@@ -42,6 +42,7 @@
     const assets={};
     const sources={
       one:'/bureau-world-one.webp',
+      hall:'/bureau-hallway-detail.webp',
       door:'/bureau-door-detail.svg',
       two:'/bureau-world-two.webp',
       server:'/bureau-server-corridor.webp',
@@ -153,6 +154,10 @@
       const focusY=685+(lensY-685)*approach+(endY-lensY)*deep;
       const base={ox:vw/2+st.panX-focusX*fit*z,
                   oy:vh/2+st.panY-focusY*fit*z,sx:fit*z,sy:fit*z};
+      // High-resolution, feathered detail crop of the *same approved artwork*.
+      // No new hall composition: every edge stays at the original coordinates.
+      const hallGeo={ox:base.ox+270*base.sx,oy:base.oy+285*base.sy,
+                     sx:base.sx*420/1680,sy:base.sy*505/2020};
       const doorGeo={ox:base.ox+door.x*base.sx,oy:base.oy+door.y*base.sy,
                      sx:base.sx*door.w/900,sy:base.sy*door.h/1200};
       const twoGeo={ox:doorGeo.ox+aperture.x*doorGeo.sx,
@@ -162,8 +167,8 @@
       const serverGeo={ox:twoGeo.ox+(lens.x-512*serverScale)*twoGeo.sx,
                        oy:twoGeo.oy+(lens.y-768*serverScale)*twoGeo.sy,
                        sx:twoGeo.sx*serverScale,sy:twoGeo.sy*serverScale};
-      // Match the blue glass aperture exactly without covering its gold rim.
-      // The ending is a true miniature already visible through the glass.
+      // The endpoint is the BLUE GLASS ONLY, not the surrounding gold porthole ring.
+      // Register the ending image in the exact center of that small glass aperture.
       const endingScale=(serverExit.r*2)/1086;
       const endingGeo={ox:serverGeo.ox+(serverExit.x-543*endingScale)*serverGeo.sx,
                        oy:serverGeo.oy+(serverExit.y-721*endingScale)*serverGeo.sy,
@@ -173,6 +178,9 @@
       power.hidden=st.log>.38||!ready('one');
       if(!power.hidden){power.style.left=px+'px';power.style.top=py+'px';}
       ctx.setTransform(dpr,0,0,dpr,0,0);
+      // Favor smooth high-quality downsampling when the viewport is between worlds.
+      ctx.imageSmoothingEnabled=true;
+      ctx.imageSmoothingQuality='high';
       ctx.fillStyle='#e9ddd8';ctx.fillRect(0,0,vw,vh);
       if(!ready('one')){
         ctx.fillStyle='#574b44';ctx.font='13px Arial';ctx.textAlign='center';
@@ -180,11 +188,19 @@
       }
       // World 1: preserve approved artwork exactly until it fills the entrance.
       if(z<80){imageRegion('one',base);
+        // A high-resolution inset for the long gallery softens no edges and
+        // only appears on approach. The tapered alpha hides the crop boundary.
+        const hallAlpha=smooth((st.log-.6)/1.25);
+        if(ready('hall')&&hallAlpha>.001){
+          ctx.save();ctx.globalAlpha=hallAlpha;imageRegion('hall',hallGeo);ctx.restore();
+        }
         ctx.save();ctx.setTransform(dpr*base.sx,0,0,dpr*base.sy,dpr*base.ox,dpr*base.oy);
         paintScreens();ctx.restore();}
       // Detailed door blends into the original as its small painted door approaches.
       ctx.save();clipRect(base,960,1370);clipRect(doorGeo,900,1200);
-      const detailAlpha=smooth((st.log-1.95)/1.32);
+      // Let the sharp illustrated door take over while it is still small,
+      // avoiding a long double-image blend once handles and panels are visible.
+      const detailAlpha=smooth((st.log-1.12)/.89);
       if(ready('door')&&z<3500){ctx.globalAlpha=detailAlpha;imageRegion('door',doorGeo);}
       ctx.globalAlpha=1;
       ctx.restore();
