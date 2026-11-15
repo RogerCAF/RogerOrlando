@@ -51,6 +51,16 @@ const studies: Study[] = [
     approach: "Door timer, mijlpalen en check-ins overzichtelijk samen te brengen. Iedere keuze draait om een rustigere, begrijpelijkere gebruikerservaring.",
     thought: "Goed design maakt ruimte voor wat belangrijk is.",
     wink: "Less noise. More progress."
+  },
+  {
+    id: "05", name: "Bier Koerier Utrecht", category: "BRANDING / VISUAL IDENTITY",
+    description: "Een opvallende zwart-oranje identiteit waarin de Utrechtse skyline en de Domtoren centraal staan.",
+    stage: "DESIGN PROJECT", className: "bierkoerier", tags: ["BRANDING", "GRAPHIC DESIGN", "UTRECHT"],
+    role: "Visueel ontwerp", focus: "Identiteit · Typografie · Utrecht",
+    question: "Hoe vertaal je het karakter van Utrecht naar een herkenbare en eigenzinnige uitstraling?",
+    approach: "Met een krachtig typografisch logo, de Domtoren als herkenningspunt en een uitgesproken oranje-zwart kleurpalet.",
+    thought: "Een lokale identiteit herken je ook zonder de plaatsnaam te lezen.",
+    wink: "Utrecht, maar dan met extra karakter."
   }
 ];
 
@@ -65,6 +75,9 @@ function Preview({ item }: { item: Study }) {
   if (item.className === "ten") return <div className="cs-preview cs-ten cs-red-button-preview">
     <div className="cs-red-button" aria-label="Grote rode knop voor de 10.00 timinggame"><span>10.00</span></div>
     <span className="cs-preview-caption">PRESS · HOLD · RELEASE</span>
+  </div>;
+  if (item.className === "bierkoerier") return <div className="cs-preview cs-bierkoerier-preview">
+    <img className="cs-bierkoerier-art" src="/projects/bierkoerier.svg" alt="Originele zwart-oranje Bier Koerier Utrecht-afbeelding met Domtoren en skyline" loading="lazy"/>
   </div>;
   return <div className="cs-preview cs-breakurge">
     <span className="cs-preview-small">DAY BY DAY / PROGRESS</span>

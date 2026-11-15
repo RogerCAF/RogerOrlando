@@ -161,8 +161,9 @@ export default function Home() {
             <div className="about-overline"><span className="crosshair">✳</span> THE PERSON BEHIND THE PROJECTS</div>
             <p className="about-lead"><strong>Roger Chin A Foeng.</strong> Designer roots. Engineer mindset.</p>
             <p>Van grafisch design naar IT: ik combineer visuele ideeën met techniek, zodat dingen niet alleen mooi zijn, maar ook goed werken.</p>
+            <p>Ook blockchain en Web3 vind ik fascinerend. Ik volg de ontwikkelingen graag en ontdek wat je ermee kunt bouwen.</p>
             <p>Mijn zwakte? Die ene pixel die nét niet goed staat. Mijn oplossing? Nog een kop koffie en opnieuw proberen.</p>
-            <div className="about-points"><span><Check size={15}/> Design-achtergrond</span><span><Check size={15}/> Engineering mindset</span><span><Check size={15}/> Altijd aan het leren</span></div>
+            <div className="about-points"><span><Check size={15}/> Design-achtergrond</span><span><Check size={15}/> Engineering mindset</span><span><Check size={15}/> Blockchain &amp; Web3</span><span><Check size={15}/> Altijd aan het leren</span></div>
           </Reveal>
         </div>
       </section>
@@ -176,7 +177,7 @@ export default function Home() {
 
       <section className="section work-section" id="work">
         <div className="container">
-          <Reveal className="section-head work-heading"><div><div className="eyebrow"><span>03 /</span> SELECTED WORK</div><h2>Proof over<br/><em>promises.</em></h2></div><p>Van websites tot appconcepten. Vier projecten, vier verschillende uitdagingen en een eigen verhaal achter elk ontwerp.</p></Reveal>
+          <Reveal className="section-head work-heading"><div><div className="eyebrow"><span>03 /</span> SELECTED WORK</div><h2>Proof over<br/><em>promises.</em></h2></div><p>Van websites tot appconcepten. Vijf projecten, vijf verschillende uitdagingen en een eigen verhaal achter elk ontwerp.</p></Reveal>
           <PortfolioCaseStudies />
         </div>
       </section>
@@ -188,6 +189,7 @@ export default function Home() {
             <h2>Where curiosity<br/><em>gets interactive.</em></h2>
             <p>Twee interactieve ervaringen die je zelf ontdekt. Duik in het spel of zoom eindeloos door nieuwe werelden.</p>
           </Reveal>
+          <InfiniteWorldsPreview />
           <Reveal className="lab-game-feature" delay={140}>
             <div className="lab-game-feature-mark" aria-hidden="true"><span>R<span>.</span></span></div>
             <div className="lab-game-feature-copy">
@@ -197,7 +199,6 @@ export default function Home() {
             </div>
             <a href="/play" className="lab-game-feature-link">PLAY THE UNFINISHED PROJECT <ArrowUpRight size={17}/></a>
           </Reveal>
-          <InfiniteWorldsPreview />
         </div>
       </section>
 
