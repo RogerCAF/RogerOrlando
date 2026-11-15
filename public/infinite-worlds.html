@@ -1,116 +1,102 @@
 <!doctype html>
 <html lang="nl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#e9ddd8" />
-  <title>The Bureau of Impossible Things — Wereld 1</title>
-  <style>
-    *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#e9ddd8}
-    body{background:radial-gradient(ellipse at 50% 40%,#f7efe9 0%,#e9ddd8 78%);font-family:Arial,sans-serif}
-    #drawing{width:100%;height:100%;display:block;touch-action:none;cursor:zoom-in;outline:none;user-select:none;-webkit-user-select:none}
-    #drawing:active{cursor:grabbing}#drawing:focus-visible{outline:2px solid #876e5c;outline-offset:-5px}
-    #aria-status{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#e9ddd8"><title>The Bureau of Impossible Things — Infinite Worlds</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#e9ddd8}
+body{font-family:ui-sans-serif,system-ui,-apple-system,Arial,sans-serif;background:radial-gradient(ellipse at center,#f6eee6,#e9ddd8 88%)}
+#world{display:block;width:100%;height:100%;touch-action:none;outline:none;user-select:none;-webkit-user-select:none;cursor:grab}#world:active{cursor:grabbing}#world:focus-visible{outline:2px solid #876e5c;outline-offset:-4px}
+#hint{position:fixed;bottom:max(15px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);padding:9px 13px;background:rgba(252,246,239,.93);color:#544840;border:1px solid rgba(80,62,46,.16);border-radius:7px;font-size:10px;font-weight:600;letter-spacing:.055em;white-space:nowrap;pointer-events:none;transition:opacity 1.2s ease;box-shadow:0 3px 17px rgba(64,44,30,.09);opacity:0}
+#hint.show{opacity:1}#hint.hide{opacity:0}
+#status{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+</style>
 </head>
 <body>
-  <canvas id="drawing" tabindex="0" role="img" aria-label="Wereld 1. Zoom met muiswiel of twee vingers in op het computerscherm en de gang; zoom weer uit om terug te gaan. Sleep om rond te kijken."></canvas>
-  <div id="aria-status" aria-live="polite"></div>
-  <script>
-    (() => {
-      'use strict';
-      const canvas = document.getElementById('drawing');
-      const ctx = canvas.getContext('2d', {alpha:false});
-      const status = document.getElementById('aria-status');
-      const illustration = new Image();
-      illustration.src = '/bureau-world-one.webp';
-      const pointers = new Map();
-      const state = {zoom:1, target:1, panX:0, panY:0, dpr:1, width:0, height:0, lastPinch:0, frame:0, dirty:true};
-      const MAX_ZOOM = 4.5; // stop at the small doorway; unfinished world 2 is deliberately not published
-      const ease = matchMedia('(prefers-reduced-motion:reduce)').matches ? 1 : .22;
-      const clamp = (v,lo,hi) => Math.min(hi,Math.max(lo,v));
-      const viewport = () => {
-        const b = canvas.getBoundingClientRect();
-        state.width=b.width;state.height=b.height;
-        state.dpr=Math.min(window.devicePixelRatio||1,2);
-        canvas.width=Math.max(1,Math.round(b.width*state.dpr));
-        canvas.height=Math.max(1,Math.round(b.height*state.dpr));
-        state.dirty=true;
-      };
-      const zoomBy = factor => {
-        state.target=clamp(state.target*factor,1,MAX_ZOOM);
-        state.dirty=true;
-        if(state.target>1.02)status.textContent='Je zoomt de gang binnen.';
-      };
-      const bounds = () => {
-        if(!illustration.complete || !illustration.naturalWidth)return {x:0,y:0};
-        const fit=Math.min(state.width/illustration.naturalWidth,state.height/illustration.naturalHeight);
-        const visibleW=illustration.naturalWidth*fit*state.zoom;
-        const visibleH=illustration.naturalHeight*fit*state.zoom;
-        return {x:Math.max(0,(visibleW-state.width)/2),y:Math.max(0,(visibleH-state.height)/2)};
-      };
-      function draw() {
-        state.frame=0;
-        if(!state.width || !state.height)return;
-        if(Math.abs(state.zoom-state.target)>0.0003){
-          state.zoom+=(state.target-state.zoom)*ease;
-          state.dirty=true;
-        }else state.zoom=state.target;
-        const bound=bounds();
-        state.panX=clamp(state.panX,-bound.x,bound.x);
-        state.panY=clamp(state.panY,-bound.y,bound.y);
-        ctx.setTransform(state.dpr,0,0,state.dpr,0,0);
-        ctx.fillStyle='#e9ddd8';ctx.fillRect(0,0,state.width,state.height);
-        if(illustration.complete && illustration.naturalWidth){
-          const iw=illustration.naturalWidth,ih=illustration.naturalHeight;
-          const fit=Math.min(state.width/iw,state.height/ih);
-          const s=fit*state.zoom;
-          // The original illustration remains uncut and exact: this is a camera move, not a scene swap.
-          const focusMix=clamp((state.zoom-1)/2.5,0,1);
-          const focusX=iw*.5,focusY=ih*(.5-.025*focusMix);
-          const x=state.width/2-focusX*s+state.panX;
-          const y=state.height/2-focusY*s+state.panY;
-          ctx.imageSmoothingEnabled=true;
-          ctx.imageSmoothingQuality='high';
-          ctx.drawImage(illustration,x,y,iw*s,ih*s);
-        }
-        state.dirty=false;
-        if(Math.abs(state.zoom-state.target)>0.0003)request();
-      }
-      const request = () => {if(!state.frame)state.frame=requestAnimationFrame(draw);};
-      illustration.onload=()=>{viewport();request();};
-      illustration.onerror=()=>{status.textContent='Illustratie kon niet worden geladen.';};
-      const resize=new ResizeObserver(()=>{viewport();request();});resize.observe(canvas);
-      canvas.addEventListener('wheel',e=>{
-        e.preventDefault();
-        const delta=e.deltaMode===1?e.deltaY*14:e.deltaMode===2?e.deltaY*400:e.deltaY;
-        zoomBy(Math.exp(clamp(delta,-140,140)*.0014));request();
-      },{passive:false});
-      const pinchDistance=()=>{const a=[...pointers.values()];return a.length===2?Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y):0;};
-      canvas.addEventListener('pointerdown',e=>{
-        if(e.pointerType==='mouse'&&e.button!==0)return;
-        canvas.setPointerCapture(e.pointerId);
-        pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
-        state.lastPinch=pinchDistance();
-        if(e.pointerType==='mouse')canvas.style.cursor='grabbing';
-      });
-      canvas.addEventListener('pointermove',e=>{
-        if(!pointers.has(e.pointerId))return;
-        const old=pointers.get(e.pointerId);
-        pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
-        if(pointers.size===1){state.panX+=e.clientX-old.x;state.panY+=e.clientY-old.y;}
-        else if(pointers.size===2){const next=pinchDistance();if(state.lastPinch>2&&next>2)zoomBy(next/state.lastPinch);state.lastPinch=next;}
-        request();
-      });
-      const release=e=>{pointers.delete(e.pointerId);state.lastPinch=pinchDistance();canvas.style.cursor='zoom-in';};
-      canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);
-      canvas.addEventListener('keydown',e=>{
-        if(['+','=','ArrowDown'].includes(e.key)){zoomBy(1.19);e.preventDefault();request();}
-        if(['-','ArrowUp'].includes(e.key)){zoomBy(1/1.19);e.preventDefault();request();}
-        if(e.key==='Home'){state.target=1;state.panX=state.panY=0;e.preventDefault();request();}
-      });
-      viewport();request();
-    })();
-  </script>
+<canvas id="world" tabindex="0" role="img" aria-label="Zoom met het muiswiel omhoog of knijp twee vingers uit om via de deur naar de zonnige tweede wereld te reizen. Zoom terug om naar het begin te gaan. Klikken is niet nodig."></canvas>
+<div id="hint" class="show" aria-hidden="true">SCROLL OMHOOG · PINCH OM IN TE ZOOMEN</div><div id="status" aria-live="polite"></div>
+<script>
+(()=>{'use strict';
+const canvas=document.getElementById('world'),ctx=canvas.getContext('2d',{alpha:false}),status=document.getElementById('status'),hint=document.getElementById('hint');
+const cover=new Image(),terrace=new Image();cover.src='/bureau-world-one.webp';terrace.src='/bureau-world-two.webp';
+const images=[cover,terrace];let loaded=0;for(const im of images){im.onload=()=>{loaded++;request()};im.onerror=()=>{status.textContent='Een illustratie kon niet worden geladen.'}};
+const DOOR={x:480.2,y:704.5},LENS={x:543,y:736};const LIMIT=3.05;
+const S={depth:0,target:0,w:1,h:1,dpr:1,panX:0,panY:0,tx:0,ty:0,frame:0,lastDist:0,ptr:new Map(),lastWorld:-1};
+const ease=matchMedia('(prefers-reduced-motion:reduce)').matches?.95:.17;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));const smooth=(v)=>{v=clamp(v,0,1);return v*v*(3-2*v)};
+function fit(im,mode){return mode==='contain'?Math.min(S.w/im.naturalWidth,S.h/im.naturalHeight):Math.max(S.w/im.naturalWidth,S.h/im.naturalHeight)}
+function resize(){const r=canvas.getBoundingClientRect();S.w=Math.max(1,r.width);S.h=Math.max(1,r.height);S.dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(S.w*S.dpr);canvas.height=Math.round(S.h*S.dpr);request()}
+function paintImage(im,scale,focusX,focusY,offsetX=0,offsetY=0){if(!im.complete||!im.naturalWidth)return;const iw=im.naturalWidth,ih=im.naturalHeight;ctx.drawImage(im,S.w*.5-focusX*scale+offsetX,S.h*.5-focusY*scale+offsetY,iw*scale,ih*scale)}
+function keyhole(x,y,r){ // A single legible doorway aperture, expanding during zoom; no scene cuts.
+ ctx.beginPath();ctx.moveTo(x,y-r*.53);
+ ctx.bezierCurveTo(x-r*.83,y-r*.95,x-r*1.08,y-r*.18,x-r*.64,y+r*.13);
+ ctx.lineTo(x-r*.69,y+r*1.03);ctx.quadraticCurveTo(x,y+r*1.28,x+r*.69,y+r*1.03);
+ ctx.lineTo(x+r*.64,y+r*.13);ctx.bezierCurveTo(x+r*1.08,y-r*.18,x+r*.83,y-r*.95,x,y-r*.53);ctx.closePath();
+}
+function paintDoor(scale,focusX,focusY,d){
+ const opacity=smooth((d-.60)/.31)*(1-smooth((d-1.48)/.36));if(opacity<.004)return;
+ const ox=S.w*.5-focusX*scale,oy=S.h*.5-focusY*scale;
+ ctx.save();ctx.globalAlpha=opacity;ctx.translate(ox,oy);ctx.scale(scale,scale);
+ // Detail is drawn in the same coordinates and geometry as the original distant double door.
+ const trim=ctx.createLinearGradient(458,678,501,733);trim.addColorStop(0,'#71513a');trim.addColorStop(.45,'#3d291e');trim.addColorStop(1,'#1f1713');
+ ctx.fillStyle='#39261b';ctx.fillRect(457.8,674.8,45,61.3);
+ ctx.fillStyle=trim;ctx.fillRect(459.5,676.5,41,57);
+ ctx.strokeStyle='#a67c50';ctx.lineWidth=.65;ctx.strokeRect(459.8,676.8,40.4,56.4);
+ ctx.strokeStyle='#21140f';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(480,677);ctx.lineTo(480,733);ctx.stroke();
+ for(const side of [0,1]){
+  const xx=462.3+side*20;
+  const gg=ctx.createLinearGradient(xx,683,xx+17,712);gg.addColorStop(0,'#56392a');gg.addColorStop(.5,'#694633');gg.addColorStop(1,'#352419');
+  ctx.fillStyle=gg;ctx.fillRect(xx,681.3,16.6,50);
+  ctx.strokeStyle='#2d1e17';ctx.lineWidth=.82;
+  for(const yy of [685,707]){ctx.fillStyle='#4c3022';ctx.fillRect(xx+1.9,yy,12.8,17.5);ctx.strokeRect(xx+1.9,yy,12.8,17.5);
+   ctx.strokeStyle='#8e6440';ctx.lineWidth=.35;ctx.strokeRect(xx+3.1,yy+1.5,10.4,14.4);ctx.strokeStyle='#2d1e17';ctx.lineWidth=.82;}
+  // fine etched wood grain, visible only after approaching.
+  ctx.strokeStyle='rgba(197,139,91,.36)';ctx.lineWidth=.14;
+  for(let k=0;k<9;k++){const x=xx+2.4+(k*1.3)%12;ctx.beginPath();ctx.moveTo(x,681.5);ctx.bezierCurveTo(x+.9,690,x-.4,710,x+.6,731);ctx.stroke();}
+ }
+ ctx.strokeStyle='#9c733f';ctx.lineWidth=.7;ctx.strokeRect(458.8,676,42.4,58.5);
+ ctx.fillStyle='#dbac55';ctx.fillRect(476.15,705,2.4,8.4);ctx.fillRect(482.2,705,2.4,8.4);
+ ctx.fillStyle='#f0cb79';ctx.fillRect(476.45,705.5,1,6.2);ctx.fillRect(482.5,705.5,1,6.2);
+ // A modest brass keyhole, not an oversized fantasy symbol.
+ ctx.fillStyle='#b98f53';ctx.beginPath();ctx.ellipse(480.3,700.6,1.64,2.2,0,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle='#17120d';ctx.beginPath();ctx.arc(480.3,700.1,.62,0,Math.PI*2);ctx.lineTo(481,701.8);ctx.lineTo(479.6,701.8);ctx.closePath();ctx.fill();
+ ctx.restore();
+}
+function paint(){S.frame=0;let delta=S.target-S.depth;if(Math.abs(delta)>0.0002){S.depth+=delta*ease;request()}else S.depth=S.target;
+ const d=S.depth;ctx.setTransform(S.dpr,0,0,S.dpr,0,0);ctx.fillStyle='#eaded5';ctx.fillRect(0,0,S.w,S.h);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+ if(!cover.naturalWidth)return;
+ // Stage one: completely unchanged approved artwork, with the camera approaching its existing tiny door.
+ const approach=clamp(d,0,1.01),s1=fit(cover,'contain')*Math.exp(Math.log(13)*approach);
+ const fx=480+(DOOR.x-480)*smooth(approach),fy=685+(DOOR.y-685)*smooth(approach);
+ paintImage(cover,s1,fx,fy);paintDoor(s1,fx,fy,d);
+ // Last few metres: a small keyhole is drawn on the old door, with the next illustration ALREADY inside.
+ if(d>.89&&terrace.naturalWidth){const q=smooth((d-.89)/.89),tiny=clamp((d-.89)/.16,0,1);
+   const radius=12*Math.pow(Math.max(S.w,S.h)*.22, q); // begins a real, modest keyhole; fills the viewport
+   const px=S.w*.5-S.panX*.08,py=S.h*.5-S.panY*.08;
+   ctx.save();keyhole(px,py,radius);ctx.clip();
+   const world2scale=fit(terrace,'cover')*Math.pow(.024,1-q);
+   paintImage(terrace,world2scale,terrace.naturalWidth*.5,terrace.naturalHeight*.5,0,0);
+   ctx.restore();
+   if(q<.97){ctx.save();ctx.globalAlpha=Math.min(.9,tiny*(1-q)*1.3);ctx.strokeStyle='#a57a45';ctx.lineWidth=Math.max(1.5,2.3+q*2);keyhole(px,py,radius);ctx.stroke();ctx.restore()}
+ }
+ if(d>=2&&terrace.naturalWidth){
+    // Stage two: the same illustration continues to grow toward the little brass viewing lens.
+    const z=clamp(d-2,0,1.05),scale=fit(terrace,'cover')*Math.exp(Math.log(6.5)*z);
+    const mix=smooth(z),focusX=terrace.naturalWidth*(.5*(1-mix))+LENS.x*mix;
+    const focusY=terrace.naturalHeight*(.5*(1-mix))+LENS.y*mix;
+    ctx.save();ctx.globalAlpha=smooth((d-1.93)/.12);paintImage(terrace,scale,focusX,focusY,S.panX,S.panY);ctx.restore();
+ }
+ const scene=d>=1.95?2:1;if(scene!==S.lastWorld){S.lastWorld=scene;status.textContent=scene===2?'Tweede wereld: de open zeegalerij, met een kijklens als volgend zoompunt.':'Eerste wereld: de gang achter het computerscherm.'}
+}
+function request(){if(!S.frame)S.frame=requestAnimationFrame(paint)}
+function change(x){S.target=clamp(S.target+x,0,LIMIT);if(S.target>.02){hint.classList.add('hide');hint.classList.remove('show')}request()}
+canvas.addEventListener('wheel',e=>{e.preventDefault();const delta=e.deltaMode===1?e.deltaY*20:e.deltaMode===2?e.deltaY*380:e.deltaY;change(-clamp(delta,-180,180)*.00135)},{passive:false});
+const pinch=()=>{if(S.ptr.size!==2)return 0;const p=[...S.ptr.values()];return Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y)};
+canvas.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;canvas.setPointerCapture(e.pointerId);S.ptr.set(e.pointerId,{x:e.clientX,y:e.clientY});S.lastDist=pinch()});
+canvas.addEventListener('pointermove',e=>{const old=S.ptr.get(e.pointerId);if(!old)return;S.ptr.set(e.pointerId,{x:e.clientX,y:e.clientY});if(S.ptr.size===2){let n=pinch();if(S.lastDist>8&&n>8)change(Math.log(n/S.lastDist)*1.25);S.lastDist=n}else if(S.depth>2.1){S.panX=clamp(S.panX+e.clientX-old.x,-S.w*.4,S.w*.4);S.panY=clamp(S.panY+e.clientY-old.y,-S.h*.4,S.h*.4);request()}});
+function release(e){S.ptr.delete(e.pointerId);S.lastDist=pinch()}canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);
+canvas.addEventListener('keydown',e=>{if(['+','=','ArrowUp'].includes(e.key)){change(.13);e.preventDefault()}if(['-','ArrowDown'].includes(e.key)){change(-.13);e.preventDefault()}if(e.key==='Home'){S.target=0;S.panX=S.panY=0;request();e.preventDefault()}});
+new ResizeObserver(resize).observe(canvas);resize();request();
+})();
+</script>
 </body>
 </html>
