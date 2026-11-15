@@ -185,19 +185,24 @@ export default function Home() {
       <section className="section lab-section" id="lab">
         <div className="container">
           <Reveal className="lab-heading">
-            <div className="eyebrow"><span>04 /</span> BEYOND THE BRIEF</div>
-            <h2>Where curiosity<br/><em>gets interactive.</em></h2>
-            <p>Twee interactieve ervaringen die je zelf ontdekt. Duik in het spel of zoom eindeloos door nieuwe werelden.</p>
+            <div className="eyebrow"><span>04 /</span> INTERACTIVE EXPERIMENT</div>
+            <h2>Infinite <em>Worlds.</em></h2>
+            <p>Zoom door een handgetekende wereld. Het begint bij het sleutelgat.</p>
           </Reveal>
           <InfiniteWorldsPreview />
-          <Reveal className="lab-game-feature" delay={140}>
+        </div>
+      </section>
+
+      <section className="game-section" id="game" aria-label="The Unfinished Project — spel">
+        <div className="container">
+          <Reveal className="lab-game-feature">
             <div className="lab-game-feature-mark" aria-hidden="true"><span>R<span>.</span></span></div>
             <div className="lab-game-feature-copy">
-              <span>FEATURED EXPERIMENT / ROGER_OS</span>
-              <h3>Done experimenting? <em>Enter the game.</em></h3>
+              <span>INTERACTIVE GAME / ROGER_OS</span>
+              <h3>The Unfinished <em>Project.</em></h3>
               <p>Vier missies, verborgen codes en een systeem met net iets te veel persoonlijkheid.</p>
             </div>
-            <a href="/play" className="lab-game-feature-link">PLAY THE UNFINISHED PROJECT <ArrowUpRight size={17}/></a>
+            <a href="/play" className="lab-game-feature-link">SPEEL HET SPEL <ArrowUpRight size={17}/></a>
           </Reveal>
         </div>
       </section>
