@@ -13,7 +13,7 @@ assert.ok(!/<image\s|<canvas\s|\.webp|\.png|\.jpe?g|data:image\/|drawImage\(/i.t
   'Vector-first world must not silently regress to enlarging raster imagery');
 assert.ok(js.includes('clip-path="url(#') && js.includes('clipPathUnits="userSpaceOnUse"'),
   'Portal children must share real registered vector clipping geometry');
-assert.ok(js.includes('function childTransform') && js.includes('function buildScene') &&
+assert.ok(js.includes('const childTransform=') && js.includes('function buildScene') &&
   js.includes('camera.setAttribute(\'transform\''),
   'Missing shared zoom camera or nested SVG scene graph');
 assert.ok(js.includes('pointerdown') && js.includes('pointermove') &&
