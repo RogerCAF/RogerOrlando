@@ -24,7 +24,7 @@ a{color:inherit;text-decoration:none}button{font:inherit}button:focus-visible,a:
 .hero-art{width:100%;height:min(66vh,675px);display:block;object-fit:cover;object-position:center 43%;border:1px solid #f1d69a2c;background:#372e23}
 .figure-caption{display:flex;justify-content:space-between;gap:10px;padding:14px 2px 0;color:#a69d8d;font-size:9px;letter-spacing:.14em;text-transform:uppercase}.gold-rule{width:68px;height:4px;background:var(--amber);position:absolute;right:-18px;top:50px}
 .section{border-top:1px solid var(--edge);padding:58px 0 65px}.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:34px}.section-head h2{font:normal clamp(35px,4vw,58px)/1.04 Georgia,serif;letter-spacing:-.04em;margin:16px 0 0}.section-head p{color:#b7b3a8;font-size:13px;max-width:390px;margin:0;line-height:1.7}
-.route{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px}
+.route{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:13px}
 .world{min-width:0;border:1px solid #746b5d6e;background:#1c201e;cursor:pointer;padding:8px;text-align:left;color:var(--bone);transition:border-color .18s,background .18s,transform .18s;position:relative}
 .world:hover{border-color:#d1aa78;transform:translateY(-4px)}.world[aria-pressed="true"]{border-color:var(--amber);background:#302a21;box-shadow:0 0 0 1px #cda16761}.world:after{content:"";position:absolute;right:13px;top:13px;width:5px;height:5px;background:#e6bd7c;opacity:0}.world[aria-pressed="true"]:after{opacity:1}
 .world-art{height:auto;aspect-ratio:334/693;background-image:url('/v3/v3-five-world-storyboard.webp');background-size:500% auto;background-repeat:no-repeat;background-position-y:77%;background-color:#6c6555;overflow:hidden;box-shadow:0 2px 12px #0007}
@@ -44,7 +44,7 @@ a{color:inherit;text-decoration:none}button{font:inherit}button:focus-visible,a:
 .hero-figure .art-rim{padding:0;background:transparent;border:0;box-shadow:none}
 .hero-figure .hero-art{height:min(76vh,760px);object-fit:contain;object-position:center center;border:0;background:transparent;filter:drop-shadow(0 22px 25px #0004)}
 .world[data-scene="0"] .world-art{
-  background-image:url('/v3/v3-computer-original-illustrated.webp');
+  background-image:url('/v3/zoom-v3/01-computer.webp');
   background-size:auto 100%;background-position:center center;
   background-color:#dfccb2
 }
@@ -67,6 +67,8 @@ body:before{display:none}
   .meta{margin:18px 0}
   .figure-caption{font-size:9px}
 }
+/* Six distinct illustrated thumbnails: no repeated generic sprite for new world. */
+.world[data-scene="5"] .world-art{background-image:url('/v3/zoom-v3/06-pearl-conflict.webp');background-size:cover;background-position:center 54%;background-color:#296f7c}
 </style>
 </head>
 <body>
@@ -85,13 +87,14 @@ body:before{display:none}
 <figure class="hero-figure"><div class="art-rim"><img class="hero-art" src="/v3/zoom-v3/01-computer.webp" width="1087" height="1447" alt="Illustratieve remake van de originele Grand Computer, met een persoon in een effen pet en ongemerkte koptelefoon, messing circuits, toetsenbord en ROGER-mok; in de ronde monitoropening is een servergang zichtbaar."/></div><span class="gold-rule" aria-hidden="true"></span><figcaption class="figure-caption"><span>Remake van de originele computer / getekende stijl</span><span>Grand Computer · Ink & Light</span></figcaption></figure>
 </section>
 <section class="section" id="route" aria-labelledby="route-title">
-<div class="section-head"><div><div class="kicker">Explore the sequence</div><h2 id="route-title">Vijf werelden, één route.</h2></div><p>Dezelfde materialen, dezelfde lijnvoering en telkens één duidelijk focuspunt. Selecteer een wereld om het doel en de doorgang te bekijken.</p></div>
-<div class="route" role="group" aria-label="Ontwerpstudies van de vijf verbonden werelden">
+<div class="section-head"><div><div class="kicker">Explore the sequence</div><h2 id="route-title">Zes werelden, één oneindige route.</h2></div><p>Dezelfde materialen, dezelfde lijnvoering en telkens één duidelijk focuspunt. Selecteer een wereld om het doel en de doorgang te bekijken.</p></div>
+<div class="route" role="group" aria-label="Ontwerpstudies van de zes verbonden werelden">
 <button class="world" type="button" data-scene="0" aria-pressed="true"><div class="world-art" role="img" aria-label="Getekende computerwereld met monitor" ></div><div class="world-number">01</div><div class="world-name">Computer</div><div class="world-hint">Scherm → servers</div></button>
 <button class="world" type="button" data-scene="1" aria-pressed="false"><div class="world-art" role="img" aria-label="Getekende serverruimte met diepe perspectieflijn"></div><div class="world-number">02</div><div class="world-name">Serverkamer</div><div class="world-hint">Achterdeur → trap</div></button>
 <button class="world" type="button" data-scene="2" aria-pressed="false"><div class="world-art" role="img" aria-label="Getekend trappenhuis met brede rode trap en deur bovenaan"></div><div class="world-number">03</div><div class="world-name">Trappenhuis</div><div class="world-hint">Deur → observatie</div></button>
 <button class="world" type="button" data-scene="3" aria-pressed="false"><div class="world-art" role="img" aria-label="Rustige observatiekamer met verre rechte telescoop"></div><div class="world-number">04</div><div class="world-name">Telescoopkamer</div><div class="world-hint">Klein glas → koninkrijk</div></button>
 <button class="world" type="button" data-scene="4" aria-pressed="false"><div class="world-art" role="img" aria-label="Getekend honeybadgerkoninkrijk met kasteel, vlaggen en gekroonde dieren"></div><div class="world-number">05</div><div class="world-name">Honeybadger Realm</div><div class="world-hint">Een nieuwe fantasiewereld</div></button>
+<button class="world" type="button" data-scene="5" aria-pressed="false"><div class="world-art" role="img" aria-label="Pufferfish en pistol shrimps links en rechts van een oesterparel"></div><div class="world-number">06</div><div class="world-name">Pareloorlog</div><div class="world-hint">Parel → de geheime lus</div></button>
 </div>
 <div class="detail" id="scene-detail" aria-live="polite">
 <div><div class="detail-tag" id="detail-label">WORLD 01 · THE COMPUTER</div><h3 id="detail-title">Het begint bij techniek.</h3><p id="detail-body">De oorspronkelijke computeropstelling blijft herkenbaar, inclusief de persoon met koptelefoon, monitor, bureau en mok. Alleen de illustratiestijl is vernieuwd en de kamer rondom is weggelaten. Door de bestaande ronde opening zie je de servergang.</p><div class="specs"><div><strong id="detail-focus">Eén scherm</strong><small>Centraal focusobject</small></div><div><strong id="detail-door">Monitorbeeld</strong><small>Natuurlijke doorgang</small></div></div></div>
@@ -109,7 +112,8 @@ const studies=[
   {label:'WORLD 02 · SERVER ROOM',title:'Een gang vol verborgen systemen.',body:'Een lange, rustige servergang. Detail zit in de racks, ventilatie, kleine lampjes en kabelgoten. De trapdeur is een gewone, geloofwaardige opening aan het einde.',focus:'Serverracks',door:'Achterdeur',quote:'“Rust in de ruimte, precisie in de techniek.”'},
   {label:'WORLD 03 · THE STAIRWELL',title:'De weg omhoog.',body:'Een duidelijke trap naar de verdieping erboven. Sterke perspectieflijnen, warme lampen en precies genoeg detail in de leuningen. De deur bovenaan bevat de volgende kamer.',focus:'De trap',door:'Deur bovenaan',quote:'“Een nieuwe wereld moet een logische volgende stap voelen.”'},
   {label:'WORLD 04 · THE OBSERVATORY',title:'Eén kleine lens. Een heel universum.',body:'Een rustige observatiekamer met een rechte messing telescoop die verder achterin staat. Het kijkgaatje is fysiek klein; de volgende wereld verschijnt pas tijdens het inzoomen.',focus:'Rechte telescoop',door:'Klein optisch glas',quote:'“De beste portal ziet er niet uit als een portal.”'},
-  {label:'WORLD 05 · THE HONEYBADGER REALM',title:'Het koninkrijk dat niemand verwacht.',body:'Een elegante fantasiewereld met paleisarchitectuur, gekroonde honeybadgers, ceremoniële wachten en kleine verborgen grapjes. Speels, maar met dezelfde getekende afwerking.',focus:'Koninklijk hof',door:'Verborgen vervolg',quote:'“De verrassing wordt groot doordat de doorgang klein is.”'}
+  {label:'WORLD 05 · THE HONEYBADGER REALM',title:'Het koninkrijk dat niemand verwacht.',body:'Een elegante fantasiewereld met paleisarchitectuur, gekroonde honeybadgers, ceremoniële wachten en kleine verborgen grapjes. Speels, maar met dezelfde getekende afwerking.',focus:'Koninklijk hof',door:'Verborgen vervolg',quote:'“De verrassing wordt groot doordat de doorgang klein is.”'},
+  {label:'WORLD 06 · THE PEARL WAR',title:'Een oorlog om één parel.',body:'Links de kleine kogelvissen, rechts de pistol shrimps. Allebei willen ze de parel in de oesterschelp, maar daarin zit een merkwaardig bekende computerwereld verborgen.',focus:'Eén parel',door:'Terug naar de computer',quote:'“Wie lang genoeg kijkt, komt weer bij het begin.”'}
 ];
 const cards=[...document.querySelectorAll('.world')];
 for(const card of cards){
