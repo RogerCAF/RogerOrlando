@@ -1,1 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect width="80" height="80" rx="19" fill="#0b0d12"/><path d="M21 56V24h16c10 0 15 5 15 14 0 7-4 11-10 13l12 5" fill="none" stroke="#e8d6b9" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="59" cy="25" r="4" fill="#c5a57b"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Gouden kroon">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff0d0"/>
+      <stop offset=".45" stop-color="#d6b589"/>
+      <stop offset="1" stop-color="#a7804e"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#0b0d12"/>
+  <path d="M12 24 22 32 32 14 42 32 52 24 49 45H15Z"
+        fill="url(#gold)" stroke="#f4d8a8" stroke-width="1.7" stroke-linejoin="round"/>
+  <path d="M17 50H47" fill="none" stroke="#d6b589" stroke-width="4" stroke-linecap="round"/>
+  <path d="M19 42H45" fill="none" stroke="#7c5935" stroke-width="1.5" opacity=".7"/>
+</svg>
