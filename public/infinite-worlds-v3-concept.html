@@ -49,6 +49,24 @@ a{color:inherit;text-decoration:none}button{font:inherit}button:focus-visible,a:
   background-color:#dfccb2
 }
 @media(max-width:720px){.hero-figure .hero-art{height:min(70vh,620px)}}
+
+/* V3 stage one is deliberately image-first: no cropping, noisy overlay or hidden
+   illustration below several screens of introductory copy on small devices. */
+body:before{display:none}
+.hero{grid-template-columns:minmax(290px,.8fr) minmax(430px,1.2fr)}
+.hero-figure{max-width:720px}
+.art-rim{padding:0;background:#f8eddb;border:1px solid #ac895c66;box-shadow:0 22px 64px #0007}
+.hero-art{width:100%;height:auto;max-height:88svh;object-fit:contain;object-position:center;background:#f8eddb;border:0}
+.gold-rule{display:none}
+@media(max-width:720px){
+  .hero{display:flex;flex-direction:column;gap:25px;padding-top:16px}
+  .hero-figure{order:-1;max-width:580px;width:100%}
+  .hero-art{height:auto;max-height:none;object-fit:contain}
+  .hero-copy{padding-top:0}
+  .hero h1{font-size:clamp(46px,10vw,72px);margin:18px 0}
+  .meta{margin:18px 0}
+  .figure-caption{font-size:9px}
+}
 </style>
 </head>
 <body>
@@ -64,7 +82,7 @@ a{color:inherit;text-decoration:none}button{font:inherit}button:focus-visible,a:
 <div class="meta"><div><strong>05</strong><small>verbonden werelden</small></div><div><strong>01</strong><small>tekenstijl</small></div><div><strong>∞</strong><small>ruimte voor detail</small></div></div>
 <a class="view-button" href="#route">Bekijk de nieuwe werelden <span aria-hidden="true">↓</span></a>
 </div>
-<figure class="hero-figure"><div class="art-rim"><img class="hero-art" src="/v3/v3-computer-original-illustrated.webp" width="1084" height="1286" alt="Getrouwe herillustratie van de oorspronkelijke Grand Computer: dezelfde pet, koptelefoon, zwarte monitor met koperen elektronica, toetsenbord, houten bureau en ROGER-mok, zonder omringende kamer of hanglamp; in de ronde opening is een servergang zichtbaar."/></div><span class="gold-rule" aria-hidden="true"></span><figcaption class="figure-caption"><span>Remake van de originele computer / getekende stijl</span><span>Grand Computer · Ink & Light</span></figcaption></figure>
+<figure class="hero-figure"><div class="art-rim"><img class="hero-art" src="/v3/v3-computer-original-illustrated.webp" width="1084" height="1451" alt="Illustratieve remake van de originele Grand Computer, met een persoon in een effen pet en ongemerkte koptelefoon, messing circuits, toetsenbord en ROGER-mok; in de ronde monitoropening is een servergang zichtbaar."/></div><span class="gold-rule" aria-hidden="true"></span><figcaption class="figure-caption"><span>Remake van de originele computer / getekende stijl</span><span>Grand Computer · Ink & Light</span></figcaption></figure>
 </section>
 <section class="section" id="route" aria-labelledby="route-title">
 <div class="section-head"><div><div class="kicker">Explore the sequence</div><h2 id="route-title">Vijf werelden, één route.</h2></div><p>Dezelfde materialen, dezelfde lijnvoering en telkens één duidelijk focuspunt. Selecteer een wereld om het doel en de doorgang te bekijken.</p></div>
