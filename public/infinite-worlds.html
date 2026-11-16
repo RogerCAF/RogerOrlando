@@ -86,7 +86,7 @@
     for(const [key,url] of Object.entries(sources)){
       const img=new Image();img.decoding='async';
       // Load the first world first, then decode the deeper scenes before they enter view.
-      img.fetchPriority=key==='one'?'high':'low';
+      img.fetchPriority=(key==='one'||key==='door')?'high':'low';
       img.onload=()=>{request();if(typeof img.decode==='function')img.decode().then(request,()=>{});};
       img.onerror=()=>{aria.textContent='Een illustratie kon niet worden geladen.';request();};
       img.src=url; assets[key]=img;
@@ -296,9 +296,11 @@
       ctx.save();clipRect(base,960,1370);clipRect(doorGeo,900,1200);
       // Let the sharp illustrated door take over while it is still small,
       // avoiding a long double-image blend once handles and panels are visible.
-      // Stay on the original high-resolution hall while it still has enough detail.
-      // Blend the matching rectangular vector door in before the pixels enlarge.
-      const detailAlpha=smooth((st.log-1.15)/1.10);
+      // The original starting artwork only contains a ~44x58px door; a sharper
+      // close-up alone cannot fix that soft first impression. Overlay its matching
+      // vector detail from the first frame, then progressively bring it to full opacity.
+      // Both versions occupy exactly the same door rectangle, with no shape switch.
+      const detailAlpha=.55+.45*smooth((st.log-.25)/1.90);
       if(ready('door')&&z<3500){ctx.globalAlpha=detailAlpha;imageRegion('door',doorImgGeo);}
       ctx.globalAlpha=1;
       if(detailAlpha>.02)paintKeyholeFrame(doorGeo);
