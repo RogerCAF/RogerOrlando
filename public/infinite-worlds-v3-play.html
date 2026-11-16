@@ -8,6 +8,8 @@
 <nav class="track" aria-label="Spring naar wereld"><button data-world="0" aria-current="step">01 COMPUTER<span></span></button><button data-world="1">02 SERVERS<span></span></button><button data-world="2">03 TRAP<span></span></button><button data-world="3">04 TELESCOOP<span></span></button><button data-world="4">05 HONEYBADGERS<span></span></button><button data-world="5">06 PAREL<span></span></button></nav>
 <div class="bottom"><div class="caption"><span class="chapter" id="chapter">01 / DE COMPUTER</span><strong id="title">Een wereld in het scherm.</strong><small id="story">Scroll verder. Achter het koper en glas gaat de reis pas beginnen.</small></div><div class="commands"><button type="button" id="again" title="Terug naar het begin" aria-label="Terug naar het begin">↺</button><button type="button" id="minus" title="Uitzoomen" aria-label="Uitzoomen">−</button><button type="button" id="plus" title="Inzoomen" aria-label="Inzoomen">+</button></div></div><div class="status" id="status" role="status" aria-live="polite"></div>
 </main>
+<!-- Browser-native GPU tile engine. The 2D scene graph still controls portal masks. -->
+<script src="./v3/zoom-v3/lod-tiles.js"></script>
 <script>
 (()=>{'use strict';
 // Every physical opening already contains the next image. Six scenes form one
@@ -32,6 +34,9 @@ const portals=[
 const canvas=document.getElementById('art'),ctx=canvas.getContext('2d',{alpha:false});
 const loader=document.getElementById('loading'),chapterEl=document.getElementById('chapter'),titleEl=document.getElementById('title'),storyEl=document.getElementById('story'),status=document.getElementById('status'),controls=[...document.querySelectorAll('[data-world]')];
 const pictures=[];let loaded=0,failed=0;let raf=0;const imagesReady=()=>loaded+failed===art.length;
+// GPU tiles are optional: the existing Canvas2D compositor is the exact
+// fallback on browsers/devices without WebGL. No original artwork changes.
+const tileRenderer=window.InfiniteWorldsTileEngine?.create(pictures,art,req)||null;
 const state={depth:0,target:0,x:0,y:0,tx:0,ty:0,w:0,h:0,dpr:1,pointers:new Map(),pinch:0,last:0,chapter:-1};
 const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -68,6 +73,11 @@ function clipPortal(p,g){const a=aperture(p),cx=g.x+a.cx*g.z,cy=g.y+a.cy*g.z;ctx
   }
  }ctx.clip();}
 function imageDraw(i,g){const im=pictures[i];if(!im.complete||!im.naturalWidth||!isFinite(g.z)||g.z<1e-10)return;
+ // Adaptive WebGL LOD tiles: source art remains at native quality, while
+ // tiles are decoded only for the visible region and cached with a GPU cap.
+ // The rest of the compositing (physical masks, viewer, telescope, pearl)
+ // is unchanged and remains under the existing 2D scene graph.
+ if(tileRenderer && tileRenderer.draw(i,g,ctx,state))return;
  const A=art[i],left=clamp((-g.x-3)/g.z,0,A.w),top=clamp((-g.y-3)/g.z,0,A.h),right=clamp((state.w+3-g.x)/g.z,0,A.w),bottom=clamp((state.h+3-g.y)/g.z,0,A.h);
  if(right<=left||bottom<=top)return;ctx.drawImage(im,left,top,right-left,bottom-top,g.x+left*g.z,g.y+top*g.z,(right-left)*g.z,(bottom-top)*g.z);}
 // The original first art includes a foreground viewer partly in front of the
@@ -118,6 +128,7 @@ canvas.addEventListener('dblclick',()=>zoom(.16));canvas.addEventListener('keydo
 document.getElementById('plus').onclick=()=>zoom(.17);document.getElementById('minus').onclick=()=>zoom(-.17);document.getElementById('again').onclick=goHome;controls.forEach((b,i)=>b.onclick=()=>{const currentCycle=Math.floor(state.target/art.length);state.target=currentCycle*art.length+i;state.tx=state.ty=0;req();});
 if(window.ResizeObserver)new ResizeObserver(resize).observe(canvas);else window.addEventListener('resize',resize);resize();
 // Testing interface supports verified geometric continuity without affecting UX.
-window.__INFINITE_V3={setDepth:(d)=>{state.depth=state.target=Math.max(0,d);state.x=state.y=state.tx=state.ty=0;req();},goHome,atHome:()=>state.target===0&&Math.abs(state.depth)<.0001&&Math.abs(state.x)+Math.abs(state.y)<.1,portals,art,geometry:()=>calcRoot(state.depth),exitScale,childK,entrance};
+window.__INFINITE_V3={setDepth:(d)=>{state.depth=state.target=Math.max(0,d);state.x=state.y=state.tx=state.ty=0;req();},goHome,atHome:()=>state.target===0&&Math.abs(state.depth)<.0001&&Math.abs(state.x)+Math.abs(state.y)<.1,portals,art,geometry:()=>calcRoot(state.depth),exitScale,childK,entrance,
+ tileStats:()=>tileRenderer?.stats()||{gpu:false}};
 })();
 </script></body></html>
