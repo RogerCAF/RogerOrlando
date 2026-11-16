@@ -16,7 +16,7 @@ const art=[
 {file:'./v3/zoom-v3/01-computer-refined.webp',w:1084,h:1451,tag:'01 / DE COMPUTER',title:'Een wereld in het scherm.',story:'De serverkamer is al zichtbaar achter het echte computerglas.'},
 {file:'./v3/zoom-v3/02-server.webp',w:1024,h:1536,tag:'02 / SERVERKAMER',title:'Alles draait ergens op.',story:'Volg de lampen tussen de rekken. Helemaal achteraan wacht een trap.'},
 {file:'./v3/zoom-v3/03-grand-stairway.webp',w:800,h:1280,tag:'03 / DE TRAP',title:'Een verdieping hoger.',story:'Een brede, rechte trap leidt naar de observatiekamer. Het kleine instrument staat al achter de boog.'},
-{file:'./v3/zoom-v3/04-observatory.webp',w:658,h:1386,tag:'04 / HET OBSERVATORIUM',title:'Eén echte, kleine lens.',story:'De telescoop staat ver weg. Kijk dwars door het glas.'},
+{file:'./v3/zoom-v3/04-observatory-daylight.webp',w:658,h:1386,tag:'04 / HET OBSERVATORIUM',title:'Eén echte, kleine lens.',story:'Vanuit de trap kijk je dezelfde stille koepel in. Middenin staat een kleine rechte telescoop.'},
 {file:'./v3/zoom-v3/05-honeybadgers.webp',w:650,h:1380,tag:'05 / HET KONINKRIJK',title:'De honeybadgers zijn de baas.',story:'Een absurde monarchie met een klein geheim in de kasteelpoort.'},
 {file:'./v3/zoom-v3/06-pearl-conflict.webp',w:975,h:1536,tag:'06 / DE PARELOORLOG',title:'Puffers versus pistol shrimps.',story:'Links de kogelvissen, rechts de garnalen. In de parel zit iets vreemds...'}
 ];
@@ -24,8 +24,8 @@ const art=[
 const portals=[
 {shape:'oval',cx:541,cy:690,rx:269,ry:252}, // actual screen glass after visual aperture alignment; original pose and desk remain
 {shape:'arch',x:424,y:729,w:180,h:273},     // staircase at the end of the server aisle
-{shape:'arch',x:274,y:262,w:252,h:326},     // aligned with the actual central observatory arch at the top of the wide staircase
-{shape:'oval',cx:303,cy:738,rx:10.0,ry:11.4}, // small front glass of the real telescope
+{shape:'arch',x:274,y:274,w:252,h:314,archRise:145}, // real painted inner frame; arch crown and shoulders match the stair artwork
+{shape:'oval',cx:332,cy:717,rx:8.8,ry:9.4}, // measured pupil inside the existing hand-drawn real telescope glass
 {shape:'arch',x:349,y:498,w:30,h:35},     // hidden doorway below the royal paw banner
 {shape:'oval',cx:492,cy:813,rx:28,ry:29} // iridescent pearl, cropped master coords
 ];
@@ -51,7 +51,22 @@ function calcRoot(depth){const whole=Math.floor(Math.max(0,depth)),i=whole%art.l
  return {i,cycle,f,z,x:state.w/2+state.x-focusX*z,y:state.h/2+state.y-focusY*z};}
 function childGeom(i,g){const n=(i+1)%art.length, p=portals[i],a=aperture(p),k=childK(i);return{x:g.x+(a.cx-art[n].w*k/2)*g.z,y:g.y+(a.cy-art[n].h*k/2)*g.z,z:g.z*k,i:n};}
 function clipPortal(p,g){const a=aperture(p),cx=g.x+a.cx*g.z,cy=g.y+a.cy*g.z;ctx.beginPath();if(p.shape==='oval')ctx.ellipse(cx,cy,Math.max(.0001,a.rx*g.z),Math.max(.0001,a.ry*g.z),0,0,Math.PI*2);
- else{const x=g.x+p.x*g.z,y=g.y+p.y*g.z,w=p.w*g.z,h=p.h*g.z;ctx.moveTo(x,y+h);ctx.lineTo(x,y+h*.44);ctx.bezierCurveTo(x,y-h*.16,x+w,y-h*.16,x+w,y+h*.44);ctx.lineTo(x+w,y+h);ctx.closePath();}ctx.clip();}
+ else{
+  const x=g.x+p.x*g.z,y=g.y+p.y*g.z,w=p.w*g.z,h=p.h*g.z;
+  if(p.archRise){
+   // This physical doorway is NOT a generic semicircle: the crown starts
+   // at the real blue glass, not over the engraved brass/stone lintel.
+   const rise=p.archRise*g.z,half=w/2,c=.5522847498;
+   ctx.moveTo(x,y+h);ctx.lineTo(x,y+rise);
+   ctx.bezierCurveTo(x,y+rise*(1-c),x+half*(1-c),y,x+half,y);
+   ctx.bezierCurveTo(x+half*(1+c),y,x+w,y+rise*(1-c),x+w,y+rise);
+   ctx.lineTo(x+w,y+h);ctx.closePath();
+  }else{
+   ctx.moveTo(x,y+h);ctx.lineTo(x,y+h*.44);
+   ctx.bezierCurveTo(x,y-h*.16,x+w,y-h*.16,x+w,y+h*.44);
+   ctx.lineTo(x+w,y+h);ctx.closePath();
+  }
+ }ctx.clip();}
 function imageDraw(i,g){const im=pictures[i];if(!im.complete||!im.naturalWidth||!isFinite(g.z)||g.z<1e-10)return;
  const A=art[i],left=clamp((-g.x-3)/g.z,0,A.w),top=clamp((-g.y-3)/g.z,0,A.h),right=clamp((state.w+3-g.x)/g.z,0,A.w),bottom=clamp((state.h+3-g.y)/g.z,0,A.h);
  if(right<=left||bottom<=top)return;ctx.drawImage(im,left,top,right-left,bottom-top,g.x+left*g.z,g.y+top*g.z,(right-left)*g.z,(bottom-top)*g.z);}
@@ -60,21 +75,11 @@ function imageDraw(i,g){const im=pictures[i];if(!im.complete||!im.naturalWidth||
 function foregroundViewer(g){const im=pictures[0];if(!im.complete||!im.naturalWidth)return;ctx.save();ctx.beginPath();const pts=[[0,815],[46,792],[105,757],[165,746],[234,750],[283,777],[311,814],[331,865],[334,930],[362,972],[410,1017],[455,1094],[514,1184],[554,1348],[557,1447],[0,1447]];
  for(let n=0;n<pts.length;n++){const x=g.x+pts[n][0]*g.z,y=g.y+pts[n][1]*g.z;if(n)ctx.lineTo(x,y);else ctx.moveTo(x,y);}ctx.closePath();ctx.clip();imageDraw(0,g);ctx.restore();}
 function inkLine(a,b,w=1,color='#dca66a'){ctx.lineWidth=w;ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();}
-function telescopeMacro(g){const amt=smooth((g.z-2.8)/4.0);if(amt<.001)return;ctx.save();ctx.globalAlpha=amt;ctx.translate(g.x,g.y);ctx.scale(g.z,g.z);
- // Real metalwork redraws crisp during macro approach, never a floating disc.
- const X=303,Y=738;
- const metal=ctx.createLinearGradient(285,690,320,769);metal.addColorStop(0,'#2a211d');metal.addColorStop(.24,'#f3d19a');metal.addColorStop(.42,'#85603c');metal.addColorStop(.73,'#cf9954');metal.addColorStop(1,'#2d2119');
- ctx.fillStyle=metal;ctx.strokeStyle='#29221f';ctx.lineWidth=1.15;ctx.beginPath();ctx.moveTo(291,695);ctx.bezierCurveTo(285,706,282,722,285,739);ctx.bezierCurveTo(286,761,291,767,303,769);ctx.bezierCurveTo(320,768,324,753,322,738);ctx.bezierCurveTo(322,721,320,705,316,695);ctx.closePath();ctx.fill();ctx.stroke();
- for(let j=0;j<18;j++){const y=696+j*3.7;inkLine([289+Math.sin(j*.41)*1.8,y],[315-Math.sin(j*.36)*1.4,y],.18,j%2?'#f9dbaa88':'#3028208a');}
- const rim=ctx.createRadialGradient(X-2,Y-3,3,X,Y,14.1);rim.addColorStop(0,'#201d1e');rim.addColorStop(.55,'#272525');rim.addColorStop(.69,'#786b57');rim.addColorStop(.82,'#d7b98a');rim.addColorStop(.94,'#6a5542');rim.addColorStop(1,'#302922');ctx.fillStyle=rim;ctx.beginPath();ctx.ellipse(X,Y,13.6,15.7,0,0,Math.PI*2);ctx.fill();
- // Leave the inner pupil *open*: the true honeybadger scene is composited there.
- ctx.strokeStyle='#ccb18a';ctx.lineWidth=.43;ctx.beginPath();ctx.ellipse(X,Y,10.45,11.83,0,0,Math.PI*2);ctx.stroke();
- // Nearly invisible precision marks enrich the outer collar at deep zoom.
- for(let j=0;j<42;j++){const t=j*Math.PI*2/42,r1=12.1,r2=12.6+(j%3)*.09;inkLine([X+Math.cos(t)*r1,Y+Math.sin(t)*r1*1.14],[X+Math.cos(t)*r2,Y+Math.sin(t)*r2*1.14],.12,j%4?'#3e2f2577':'#e5cfa388');}
- ctx.restore();}
+// The telescope is now precisely painted in the daylight observatory master.
+// Never draw a second metal tube or floating optical rim over its existing pupil.
 function pearlMacro(g){const amt=smooth((g.z-4.8)/7);if(amt<.001)return;ctx.save();ctx.globalAlpha=amt*.35;ctx.translate(g.x,g.y);ctx.scale(g.z,g.z);const p=portals[5];
  ctx.lineWidth=.9;ctx.strokeStyle='#e7f9e7';ctx.beginPath();ctx.ellipse(p.cx,p.cy,p.rx+3.3,p.ry+3.3,0,0,2*Math.PI);ctx.stroke();ctx.strokeStyle='#d6b7dd66';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(p.cx,p.cy,p.rx+5,p.ry+5,0,0,2*Math.PI);ctx.stroke();for(let j=0;j<22;j++){const theta=j*Math.PI*2/22,rad=p.rx+6+j%3;inkLine([p.cx+Math.cos(theta)*rad,p.cy+Math.sin(theta)*rad],[p.cx+Math.cos(theta)*(rad+1.8),p.cy+Math.sin(theta)*(rad+1.8)],.24,'#d7fbff66');}ctx.restore();}
-function portalDetail(i,g){if(i===3)telescopeMacro(g);if(i===5)pearlMacro(g);}
+function portalDetail(i,g){if(i===5)pearlMacro(g);}
 function renderNested(i,g,remaining,first){imageDraw(i,g);portalDetail(i,g);if(remaining>0){const p=portals[i],n=(i+1)%art.length;ctx.save();clipPortal(p,g);const next=childGeom(i,g);renderNested(n,next,remaining-1,false);ctx.restore();}
  if(i===0&&first)foregroundViewer(g);}
 function req(){if(!raf)raf=requestAnimationFrame(draw);}

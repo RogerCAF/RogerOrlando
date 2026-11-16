@@ -20,7 +20,19 @@ assert.equal(webp.readUInt16LE(28)&0x3fff,1280,'New staircase must remain at reg
 assert.ok(webp.length>350000,'Stair illustration is unexpectedly low fidelity');
 assert.match(html,/03-grand-stairway\.webp/,'New illustrated staircase was not loaded');
 assert.match(concept,/03-grand-stairway\.webp/,'Concept page must show the same corrected staircase');
-assert.ok(html.includes("x:274,y:262,w:252,h:326"),'Stairway opening must align to the central observatory arch');
+assert.ok(html.includes("x:274,y:274,w:252,h:314,archRise:145"),
+ 'Stairway opening must stay inside the true painted arch, preserving its metalwork');
+assert.ok(html.includes("04-observatory-daylight.webp"),
+ 'The stairway should reveal the same daylight glass dome as the child scene');
+assert.ok(!html.includes("function telescopeMacro(g)"),
+ 'An invented duplicate telescope rim must not be pasted over the physical lens');
+const obs=readFileSync('public/v3/zoom-v3/04-observatory-daylight.webp');
+assert.equal(obs.toString('ascii',0,4),'RIFF');
+assert.equal(obs.readUInt16LE(26)&0x3fff,658);
+assert.equal(obs.readUInt16LE(28)&0x3fff,1386);
+assert.ok(obs.length>280000,'The daylight observatory lost illustration detail');
+assert.ok(concept.includes('/v3/zoom-v3/04-observatory-daylight.webp'),
+ 'The preview thumbnail must agree with the playable world');
 assert.ok(html.includes('renderNested(g.i,g,art.length,g.i===0&&g.cycle===0)'),
   'The seated viewer must be drawn IN FRONT of the nested computer screen');
 assert.ok(html.includes(".at-home .caption{opacity:0"),'No caption may obscure the seated viewer at the beginning');
@@ -75,13 +87,27 @@ for(const [w,h] of [[1600,900],[390,844],[1024,768]]){
  assert.equal(a.art.length,6,'Preserve the infinite loop across six worlds');
  assert.equal(a.art[0].w,1084,'Keep the approved original drawing and seated viewer');
  assert.equal(a.art[0].h,1451,'Keep the full original composition height');
- assert.equal(a.portals[3].rx,10,'Telescope must stay genuinely tiny');
+ assert.ok(a.portals[3].rx<=9 && a.portals[3].ry<=10,
+  'Telescope pupil must remain small and aligned with the painted objective');
  let g=a.geometry();
  assert.equal(g.i,0,'Complete outward stop must be the computer scene');
  const x2=g.x+g.z*a.art[0].w,y2=g.y+g.z*a.art[0].h;
  assert.ok(g.x>=-2&&g.y>=-2&&x2<=w+2&&y2<=h+2,
    'At full zoom-out the complete seated-person painting must fit '+w+'×'+h);
  assert.ok(t.atHome(),'At initial/outward stop remove captions covering the original composition');
+ // Exact affine continuity: the end of the stairway must render precisely
+ // the same pixels as the opening of the observatory, with no stage jump.
+ a.setDepth(2.999999);t.flush();
+ const stair=a.geometry(),p=a.portals[2],k=a.childK(2);
+ const child={
+  z:stair.z*k,
+  x:stair.x+(p.x+p.w/2-a.art[3].w*k/2)*stair.z,
+  y:stair.y+(p.y+p.h/2-a.art[3].h*k/2)*stair.z
+ };
+ a.setDepth(3);t.flush();const entered=a.geometry();
+ for(const coord of ['x','y','z'])
+  assert.ok(Math.abs(child[coord]-entered[coord])<.03,
+   'Stair-to-observatory boundary jumps in '+coord+' at '+w+'×'+h);
  a.setDepth(3.4);t.flush();assert.equal(a.geometry().i,3,'A deeper scene must be reachable');
  a.setDepth(1.2);t.flush();assert.equal(a.geometry().i,1,'Zooming backward must return to the server');
  a.goHome();t.flush();g=a.geometry();
@@ -94,4 +120,4 @@ for(const [w,h] of [[1600,900],[390,844],[1024,768]]){
  assert.ok(a.atHome(),'Home must be a hard outward endpoint, not a repeating world');
 }
 
-console.log('V3: monumental staircase art and registered arch, 3 responsive full-person home-view checks, hard outward stop, reset/backward zoom and 6-world inner loop verified.');
+console.log('V3: original full-person zoom-out, accurate daylight stair arch, 3 viewport affine seam checks and 6-world inner loop verified.');
