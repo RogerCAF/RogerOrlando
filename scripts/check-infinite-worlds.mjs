@@ -133,12 +133,12 @@ assert.ok(html.includes("/bureau-world-four-archive-hd.webp"), 'The high-detail 
 assert.match(html, /archivePortal=\{x:530,y:893,r:25\}/, 'New archive glass coordinates lost.');
 const portfolio = readFileSync(new URL('../app/components/PortfolioCaseStudies.tsx', import.meta.url), 'utf8');
 const cityfi = readFileSync(new URL('../public/projects/cityfi-sharp.svg', import.meta.url), 'utf8');
-const bier = readFileSync(new URL('../public/projects/bierkoerier-crisp.svg', import.meta.url), 'utf8');
+const bier = readFileSync(new URL('../public/projects/bierkoerier-original.webp', import.meta.url));
 assert.ok(cityfi.includes('<svg') && cityfi.includes('</svg>'), 'The CityFi artwork must be SVG.');
 assert.ok(!/<image\b|base64,/.test(cityfi), 'CityFi has regressed into a low-resolution embedded bitmap.');
 assert.ok(portfolio.includes('/projects/cityfi-sharp.svg'), 'Crisp CityFi vector not displayed.');
-assert.ok(portfolio.includes('/projects/bierkoerier-crisp.svg'), 'Crisp Bier Koerier treatment not displayed.');
-assert.ok(bier.includes('data:image/webp;base64,'), 'Do not replace the authentic Bier Koerier logo.');
-assert.ok(bier.includes('original-art-edge-definition'), 'Authentic Bier Koerier edge-enhancement missing.');
+assert.ok(portfolio.includes('/projects/bierkoerier-original.webp'), 'Original high-resolution Bier Koerier logo not displayed.');
+assert.ok(bier.byteLength > 150000, 'Authentic Bier Koerier source was replaced with a tiny thumbnail.');
+assert.equal(bier.toString('ascii', 0, 4), 'RIFF', 'Bier Koerier image must be real WebP.');
 
 console.log('Infinite Worlds: original paintings, detailed archive, sharp project marks, portal alignment and 160 zoom events verified.');
