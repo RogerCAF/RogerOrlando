@@ -77,7 +77,7 @@ function Preview({ item }: { item: Study }) {
     <span className="cs-preview-caption">PRESS · HOLD · RELEASE</span>
   </div>;
   if (item.className === "bierkoerier") return <div className="cs-preview cs-bierkoerier-preview">
-    <img className="cs-bierkoerier-art" src="/projects/bierkoerier-portfolio.svg" width={1000} height={400} decoding="async" alt="Bier Koerier Utrecht: scherp oranje-zwart beeldmerk met Domtoren en duidelijke typografie" loading="lazy"/>
+    <img className="cs-bierkoerier-art" src="/projects/bierkoerier-original.webp" width={1500} height={1500} decoding="async" alt="Origineel Bier Koerier Utrecht-logo van de maker, met oranje Utrechtse skyline, Domtoren en woordmerk" loading="lazy"/>
   </div>;
   // The project name is already displayed directly below the artwork.
   // Keeping the authentic icon alone avoids clipping in this compact reel.
