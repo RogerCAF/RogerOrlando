@@ -41,19 +41,18 @@
 <rect x="475" y="636" width="25" height="140" rx="12" fill="url(#goldDark)" stroke="#4a2e17" stroke-width="4"/>
 <rect x="481" y="650" width="13" height="112" rx="6.5" fill="url(#gold)" stroke="#e9c579" stroke-width="1"/>
 <circle cx="414" cy="647" r="3" fill="#fbe4a9" opacity=".85"/><circle cx="487" cy="647" r="3" fill="#fbe4a9" opacity=".85"/>
-<!-- Traditional raised brass escutcheon with a real keyhole, directly beneath the right handle.
-     The aperture is physically open: the child world is clipped to exactly its final silhouette. -->
-<path d="M507.5 778 C488 778 481 790 481 805 C481 825 491 842 507.5 844 C524 842 534 825 534 805 C534 790 527 778 507.5 778Z" fill="#120d0b" stroke="#26180f" stroke-width="4" opacity=".82"/>
-<path d="M507.5 779 C489 779 484 792 484 805 C484 825 493 839 507.5 841 C522 839 531 825 531 805 C531 792 526 779 507.5 779Z" fill="url(#goldDark)" stroke="#6e441f" stroke-width="2.4"/>
-<path d="M507.5 783 C494 783 488 793 488 805 C488 823 495 836 507.5 838 C520 836 527 823 527 805 C527 793 521 783 507.5 783Z" fill="#8b5c35" fill-opacity=".34" stroke="#ffe9b2" stroke-width="1.2"/>
-<path d="M507.5 785 C495 785 490 794 490 805 C490 819 495 831 507.5 833 C520 831 525 819 525 805 C525 794 520 785 507.5 785Z" fill="#291a13" fill-opacity=".63" stroke="#4c2e17" stroke-width="1.3"/>
-<path d="M494 791Q487 808 494 828M521 791Q528 808 521 828" fill="none" stroke="#f3d298" stroke-width="1" stroke-opacity=".65"/>
-<path d="M498 786Q507.5 781 517 786M496 833Q507.5 838 519 833" fill="none" stroke="#fae8b9" stroke-width=".75" stroke-opacity=".68"/>
-<g fill="#f2d9a2" stroke="#603f23" stroke-width=".7">
-<circle cx="507.5" cy="781" r="1.75"/><circle cx="507.5" cy="839.5" r="1.75"/>
-<circle cx="484.5" cy="805" r="1.75"/><circle cx="530.5" cy="805" r="1.75"/></g>
-<!-- The one authoritative opening silhouette is shared by artwork and Canvas Path2D. -->
-<path d="M507.5 792 C501.4 792 497 797 497 803 C497 807.5 500.1 810.8 502.4 812.1 L500 824 Q507.5 828 515 824 L512.6 812.1 C514.9 810.8 518 807.5 518 803 C518 797 513.6 792 507.5 792Z" fill="#0d1014" stroke="#150d09" stroke-width=".8"/>
+<!-- Traditional raised brass escutcheon with a real, physically tiny keyhole.
+     One exact contour is shared with the Canvas clip; no oversized black hole. -->
+<ellipse cx="507.5" cy="801" rx="14.4" ry="20.2" fill="#23150f" stroke="#1b0d07" stroke-width="2.1"/>
+<ellipse cx="507.5" cy="801" rx="13.1" ry="18.9" fill="url(#goldDark)" stroke="#d5a367" stroke-width="1"/>
+<ellipse cx="507.5" cy="801" rx="11.1" ry="16.7" fill="#563520" fill-opacity=".42" stroke="#ffe6aa" stroke-width=".9"/>
+<ellipse cx="507.5" cy="801" rx="9.8" ry="15.3" fill="#301b12" fill-opacity=".67" stroke="#835a36" stroke-width=".65"/>
+<path d="M497 799Q497.2 787 507.5 785M517 799Q516.8 787 507.5 785" stroke="#fff0c6" stroke-opacity=".48" stroke-width=".75" fill="none"/>
+<g fill="#f6e1af" stroke="#664324" stroke-width=".55">
+  <circle cx="507.5" cy="784" r="1.18"/><circle cx="507.5" cy="817" r="1.18"/>
+</g>
+<!-- The next world lives only inside this SMALL lens-shaped physical opening. -->
+<path d="M507.5 794 C504.6 794 502.25 796.4 502.25 799 C502.25 801.3 503.6 802.7 505.3 803.5 L504.5 807.5 Q507.5 809 510.5 807.5 L509.7 803.5 C511.4 802.7 512.75 801.3 512.75 799 C512.75 796.4 510.4 794 507.5 794Z" fill="#0b0e12" stroke="#1d100b" stroke-width=".55"/>
 <path d="M97 1137H807" stroke="#e1ac72" opacity=".38" stroke-width="3"/>
 <rect y="1169" width="900" height="31" fill="#29160f"/><path d="M15 1171H885" stroke="#ca9b63" opacity=".6" stroke-width="4"/>
 <!-- Extra fine relief and hand-cut engraved walnut; geometry remains unchanged. -->
@@ -64,6 +63,6 @@
 <g fill="url(#goldDark)" stroke="#422616" stroke-width=".95"><path d="M116 128.9l3.1 3.1l-3.1 3.1l-3.1-3.1Z" opacity=".74"/><path d="M116 419.9l3.1 3.1l-3.1 3.1l-3.1-3.1Z" opacity=".74"/><path d="M116 857.9l3.1 3.1l-3.1 3.1l-3.1-3.1Z" opacity=".74"/><path d="M116 1080.9l3.1 3.1l-3.1 3.1l-3.1-3.1Z" opacity=".74"/><path d="M392 128.9l3.1 3.1l-3.1 3.1l-3.1-3.1Z" opacity=".74"/><path d="M392 419.9l3.1 3.1l-3.1 3.1l-3.1-3.1Z" opacity=".74"/><path d="M392 857.9l3.1 3.1l-3.1 3.1l-3.1-3.1Z" opacity=".74"/><path d="M392 1080.9l3.1 3.1l-3.1 3.1l-3.1-3.1Z" opacity=".74"/><path d="M508 128.9l3.1 3.1l-3.1 3.1l-3.1-3.1Z" opacity=".74"/><path d="M508 419.9l3.1 3.1l-3.1 3.1l-3.1-3.1Z" opacity=".74"/><path d="M508 857.9l3.1 3.1l-3.1 3.1l-3.1-3.1Z" opacity=".74"/><path d="M508 1080.9l3.1 3.1l-3.1 3.1l-3.1-3.1Z" opacity=".74"/><path d="M784 128.9l3.1 3.1l-3.1 3.1l-3.1-3.1Z" opacity=".74"/><path d="M784 419.9l3.1 3.1l-3.1 3.1l-3.1-3.1Z" opacity=".74"/><path d="M784 857.9l3.1 3.1l-3.1 3.1l-3.1-3.1Z" opacity=".74"/><path d="M784 1080.9l3.1 3.1l-3.1 3.1l-3.1-3.1Z" opacity=".74"/></g>
 <g fill="none" stroke-linecap="round"><path d="M412 657V753M485 657V753" stroke="#fff0bf" stroke-width="1.4" opacity=".65"/><path d="M416 658V753M489 658V753" stroke="#6d3f1c" stroke-width="1.1" opacity=".7"/><path d="M404 666H426M477 666H499M404 746H426M477 746H499" stroke="#e8be75" stroke-width="1.2" opacity=".75"/></g>
 <g fill="#f5dca2" stroke="#70451f" stroke-width=".8" opacity=".78"><circle cx="414.5" cy="670" r="2.1"/><circle cx="487.5" cy="670" r="2.1"/><circle cx="414.5" cy="740" r="2.1"/><circle cx="487.5" cy="740" r="2.1"/></g>
-<!-- No change to the source SVG keyhole contour or its registered Canvas clipping path. -->
-<path d="M497 787Q507.5 779 518 787" fill="none" stroke="#f8dea1" stroke-opacity=".78" stroke-width="1.1"/><circle cx="499" cy="787" r="1.2" fill="#edca86"/><circle cx="516" cy="787" r="1.2" fill="#edca86"/>
+<!-- Hand-engraved keyhole detail shares the canvas registration exactly. -->
+<path d="M499 786Q507.5 781.5 516 786" fill="none" stroke="#f8dea1" stroke-opacity=".6" stroke-width=".9"/>
 </svg>
