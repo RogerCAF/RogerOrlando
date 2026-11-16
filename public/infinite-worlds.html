@@ -75,6 +75,7 @@
     const sources={
       one:'/bureau-world-one.webp',
       hall:'/bureau-hallway-detail.webp',
+      hallEngraving:'/bureau-hallway-engraving.svg',
       door:'/bureau-door-sharp.svg',
       two:'/bureau-world-two.webp',
       server:'/bureau-server-corridor.webp',
@@ -83,7 +84,7 @@
       puffer:'/bureau-ending-puffer.webp',
       shrimp:'/bureau-ending-shrimp.webp'
     };
-    const st={log:0,target:0,panX:0,panY:0,width:0,height:0,dpr:1,frame:0,lastFrame:0,dirty:true,lastPinch:0,lastPinchCenter:null,ending:0,toastTimer:0,pointers:new Map(),prepared:false,queuedLog:0};
+    const st={log:0,target:0,panX:0,panY:0,panTargetX:0,panTargetY:0,width:0,height:0,dpr:1,frame:0,lastFrame:0,dirty:true,lastPinch:0,lastPinchCenter:null,ending:0,toastTimer:0,pointers:new Map(),prepared:false,queuedLog:0};
     const MAX_LOG=19.5;
     const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
     const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
@@ -212,6 +213,12 @@
       st.lastFrame=now;
       st.log+=delta*(reduced?1:1-Math.exp(-dt/105));
       if(Math.abs(delta)<.00015){st.log=st.target;st.lastFrame=0;}else request();
+      // Wheel zoom steers without abrupt pan jumps. Drag stays directly responsive.
+      const panEasing=reduced?1:1-Math.exp(-dt/75);
+      st.panX+=(st.panTargetX-st.panX)*panEasing;
+      st.panY+=(st.panTargetY-st.panY)*panEasing;
+      if(Math.abs(st.panTargetX-st.panX)+Math.abs(st.panTargetY-st.panY)>.04)request();
+      else {st.panX=st.panTargetX;st.panY=st.panTargetY;}
       const z=Math.exp(st.log);
       const fit=Math.min(vw/960,vh/1370);
       const telescopeDiameter=lens.r*2;
@@ -289,6 +296,13 @@
         if(ready('hall')&&hallAlpha>.001){
           ctx.save();ctx.globalAlpha=hallAlpha;
           imageRegion('hall',hallGeo);
+          // Transparent detail art shares precisely the same 1680×2020
+          // source registration as the original painted gallery.
+          const engravingAlpha=hallAlpha*smooth((st.log-1.20)/1.35);
+          if(ready('hallEngraving')&&engravingAlpha>.001){
+            ctx.globalAlpha=engravingAlpha;
+            imageRegion('hallEngraving',hallGeo);
+          }
           ctx.restore();
         }}
       // Detailed door blends into the original as its small painted door approaches.
@@ -357,8 +371,8 @@
       if(Number.isFinite(pointerX)&&Number.isFinite(pointerY)){
         const effective=Math.exp(st.target-oldTarget);
         const b=panBound();
-        st.panX=clamp(st.panX+(st.width*.5-pointerX)*(effective-1)*.55,-b.x,b.x);
-        st.panY=clamp(st.panY+(st.height*.5-pointerY)*(effective-1)*.55,-b.y,b.y);
+        st.panTargetX=clamp(st.panTargetX+(st.width*.5-pointerX)*(effective-1)*.55,-b.x,b.x);
+        st.panTargetY=clamp(st.panTargetY+(st.height*.5-pointerY)*(effective-1)*.55,-b.y,b.y);
       }
       if(st.target>.35)aria.textContent='Je verkent de wereld door in te zoomen.';
       request();
@@ -399,8 +413,9 @@
         const next=distance(),mid=pinchCenter();
         if(st.lastPinchCenter&&mid){
           const b=panBound();
-          st.panX=clamp(st.panX+mid.x-st.lastPinchCenter.x,-b.x,b.x);
-          st.panY=clamp(st.panY+mid.y-st.lastPinchCenter.y,-b.y,b.y);
+          st.panTargetX=clamp(st.panTargetX+mid.x-st.lastPinchCenter.x,-b.x,b.x);
+          st.panTargetY=clamp(st.panTargetY+mid.y-st.lastPinchCenter.y,-b.y,b.y);
+          st.panX=st.panTargetX;st.panY=st.panTargetY;
         }
         if(st.lastPinch>5&&next>5&&mid){
           const r=canvas.getBoundingClientRect();
@@ -410,8 +425,9 @@
       }
       else if(st.pointers.size===1&&st.log>.08){
         const b=panBound();
-        st.panX=clamp(st.panX+(e.clientX-before.x),-b.x,b.x);
-        st.panY=clamp(st.panY+(e.clientY-before.y),-b.y,b.y);
+        st.panTargetX=clamp(st.panTargetX+(e.clientX-before.x),-b.x,b.x);
+        st.panTargetY=clamp(st.panTargetY+(e.clientY-before.y),-b.y,b.y);
+        st.panX=st.panTargetX;st.panY=st.panTargetY;
         request();
       }
     });
@@ -425,8 +441,8 @@
     canvas.addEventListener('keydown',e=>{
       if(['+','=','ArrowUp'].includes(e.key)){e.preventDefault();zoomBy(1.22);}
       if(['-','ArrowDown'].includes(e.key)){e.preventDefault();zoomBy(1/1.22);}
-      if(e.key==='Home'){e.preventDefault();st.target=0;st.panX=st.panY=0;request();}
-      if(e.key==='Escape'){st.panX=st.panY=0;request();}
+      if(e.key==='Home'){e.preventDefault();st.target=0;st.panX=st.panY=st.panTargetX=st.panTargetY=0;request();}
+      if(e.key==='Escape'){st.panX=st.panY=st.panTargetX=st.panTargetY=0;request();}
     });
     const obs=new ResizeObserver(resize);obs.observe(canvas);
     resize();request();

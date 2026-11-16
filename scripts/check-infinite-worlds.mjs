@@ -4,6 +4,7 @@ import { Script } from 'node:vm';
 
 const html = readFileSync(new URL('../public/infinite-worlds.html', import.meta.url), 'utf8');
 const door = readFileSync(new URL('../public/bureau-door-sharp.svg', import.meta.url), 'utf8');
+const galleryEngraving = readFileSync(new URL('../public/bureau-hallway-engraving.svg', import.meta.url), 'utf8');
 const inline = html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 assert.ok(inline, 'The standalone Infinite Worlds script must exist.');
 new Script(inline, { filename: 'infinite-worlds-inline.js' });
@@ -23,10 +24,20 @@ assert.ok(mask, 'The Canvas keyhole path was lost.');
 assert.ok(door.includes('<path d="' + mask + '"'),
   'Door art and Canvas clip diverged — this would produce a visible seam.');
 assert.ok(html.includes('/bureau-door-sharp.svg'), 'Sharp scalable door asset missing.');
+assert.ok(html.includes('/bureau-hallway-engraving.svg'), 'Registered gallery vector detail layer missing.');
+assert.match(galleryEngraving, /viewBox="0 0 1680 2020"/, 'Gallery detail coordinate system differs from painted hallway.');
+assert.ok(!/<image\b|base64,/.test(galleryEngraving), 'Gallery detail must be true vector, not a bitmap disguised as SVG.');
+assert.ok((galleryEngraving.match(/<g transform="translate\(/g)||[]).length >= 8,
+  'Gallery engraving should preserve scaled plaquettes toward the doorway.');
+assert.ok((door.match(/href="#carving"/g)||[]).length === 6, 'Six carved walnut panels missing.');
+assert.ok(door.includes('id="fineWalnut"'), 'Real fine-grain door detail was removed.');
+assert.ok(html.includes('const engravingAlpha=hallAlpha*smooth'), 'Gallery details must blend progressively.');
+assert.ok(html.includes("st.panTargetX") && html.includes("const panEasing="),
+  'Smooth wheel pan camera response missing.');
 
 // The complete finite stack must be loaded and decoded during initial setup,
 // never on each portal or after scroll. Do not reintroduce per-level downloads.
-for (const key of ['one','hall','door','two','server','archive','observatory','puffer','shrimp']) {
+for (const key of ['one','hall','hallEngraving','door','two','server','archive','observatory','puffer','shrimp']) {
   assert.match(inline, new RegExp('\\b' + key + ":'"), 'Missing source: ' + key);
 }
 assert.ok(inline.includes("const totalAssets=Object.keys(sources).length"),
@@ -44,6 +55,7 @@ assert.ok(inline.includes('zoomBy(') && inline.includes("addEventListener('wheel
 // fake canvas. This catches runtime errors and degenerate crop rectangles.
 const listeners = {}, animationFrames = [], mistakes = [];
 let totalDraws = 0, time = 0;
+const renderSources = new Set();
 const element = () => ({
   style: {}, dataset: {}, hidden: false,
   classList: { add(){}, remove(){} }, setAttribute(){},
@@ -61,6 +73,7 @@ const nodes = {
 const ctx = new Proxy({
   drawImage(...args){
     totalDraws++;
+    if(args[0]?.assetUrl) renderSources.add(args[0].assetUrl);
     assert.equal(args.length, 9, 'Every image uses a clipped 9-argument region.');
     for (const n of args.slice(1)) assert.ok(Number.isFinite(n), 'Non-finite image coordinate.');
     for (const n of [args[3],args[4],args[7],args[8]]) {
@@ -75,6 +88,7 @@ canvas.getContext = () => ctx;
 class MockImage {
   constructor(){ this.complete=true;this.naturalWidth=1086;this.naturalHeight=1448; }
   set src(url){
+    this.assetUrl=url;
     if(url.includes('world-one')){ this.naturalWidth=960;this.naturalHeight=1370; }
     if(url.includes('hallway')){ this.naturalWidth=1680;this.naturalHeight=2020; }
     if(url.includes('door-sharp')){ this.naturalWidth=900;this.naturalHeight=1200; }
@@ -114,11 +128,26 @@ for(let i=0;i<80;i++){
   advance(4);
 }
 advance(40);
+assert.ok(renderSources.has('/bureau-hallway-engraving.svg'),
+  'Extra fine gallery details were loaded but never composited while zooming.');
 for(let i=0;i<80;i++){
   listeners.wheel({deltaMode:0,deltaY:150,clientX:470,clientY:350,preventDefault(){}});
   advance(4);
 }
 advance(40);
+// Exercise drag and pinch interactions after zooming to make sure eased
+// wheel pan does not interfere with direct pointer tracking.
+for(let i=0;i<5;i++){
+  listeners.wheel({deltaMode:0,deltaY:-150,clientX:470,clientY:350,preventDefault(){}});
+  advance(15);
+}
+listeners.pointerdown({pointerType:'mouse',button:0,pointerId:1,clientX:410,clientY:330});
+listeners.pointermove({pointerId:1,clientX:440,clientY:350});
+advance(8);
+listeners.pointerdown({pointerType:'touch',button:0,pointerId:2,clientX:580,clientY:350});
+listeners.pointermove({pointerId:2,clientX:620,clientY:370});
+advance(8);
+listeners.pointerup({pointerId:2}); listeners.pointerup({pointerId:1});
 assert.ok(totalDraws > 150, 'The multi-world canvas did not render normally.');
 assert.equal(mistakes.length, 0, 'Rendering exceptions occurred.');
 
