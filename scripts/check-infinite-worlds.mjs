@@ -182,12 +182,18 @@ for(let i=0;i<11;i++){
   listeners.wheel({deltaMode:0,deltaY:-150,clientX:470,clientY:350,preventDefault(){}});
   advance(12);
 }
-for(let i=0;i<25;i++)await Promise.resolve();
-advance(25);
-for(let i=0;i<25;i++)await Promise.resolve();
-advance(25);
+// The mock loader uses microtasks, just like browser image.decode(). Let it
+// settle and keep drawing until the viewport's complete tile set is ready.
+// A few animation frames are insufficient when three sequential SVG decodes
+// are allowed at once by the real memory-constrained renderer.
+for(let retry=0;retry<140&&vectorTileDraws===0;retry++){
+  await Promise.resolve();await Promise.resolve();await Promise.resolve();
+  advance(5);
+}
 assert.ok(vectorTilesCreated>0, 'No viewport-cropped HD tiles were generated.');
-assert.ok(vectorTileDraws>0, 'The zoom renderer never drew a crisp HD tile.');
+assert.ok(vectorTileDraws>0,
+  'The zoom renderer never drew a crisp HD tile. Generated '+vectorTilesCreated+
+  ' tile jobs across '+totalDraws+' draws.');
 for(let i=0;i<80;i++){
   listeners.wheel({deltaMode:0,deltaY:-150,clientX:470,clientY:350,preventDefault(){}});
   advance(4);
