@@ -5,7 +5,7 @@ import {Script} from 'node:vm';
 const html=readFileSync('public/infinite-worlds-v3-play.html','utf8');
 const intro=readFileSync('app/components/InfiniteWorldsPreview.tsx','utf8');
 const images=[
- ['01-computer.webp',1087,1447,180000],
+ ['01-computer-refined.webp',1084,1451,400000],
  ['02-server.webp',1024,1536,200000],
  ['03-stairway.webp',800,1280,120000],
  ['04-observatory.webp',658,1386,120000],
@@ -28,6 +28,10 @@ const js=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 assert.ok(js,'V3 active image compositor is missing');
 new Script(js,{filename:'infinite-worlds-v3-play.js'});
 assert.ok(js.includes('const portals=[') && js.includes('const art=['),'Missing authored image-to-image geometry');
+assert.ok(js.includes("cx:541,cy:690,rx:269,ry:252"),
+  'The screen portal must follow the actual painted glass rather than spill into its brass frame.');
+assert.ok(!js.includes("file:'./v3/zoom-v3/01-computer.webp'"),
+  'The old illustration must not silently reappear in the playable zoom.');
 assert.equal((js.match(/shape:'(?:oval|arch)'/g)||[]).length,6,'Six physical openings are required for the six-world loop');
 for(const label of ['SERVERKAMER','HET OBSERVATORIUM','HONEYBADGERS','PAREL','LUS'])
  assert.ok(html.includes(label),label+' narrative element is missing');
