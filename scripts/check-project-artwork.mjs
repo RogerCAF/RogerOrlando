@@ -27,15 +27,11 @@ for (const { name, path, width, height } of sources) {
   assert.equal(size.width, width, name + ": image was downscaled");
   assert.equal(size.height, height, name + ": image was downscaled");
   assert.ok(size.bytes > 100000, name + ": high-quality original was replaced with thumbnail");
-  if (name === "BreakUrge") {
-    assert.ok(portfolio.includes('src="/projects/breakurge-original.webp"'),
-      "BreakUrge card must display its authentic high-res brand icon");
-  }
-  // The authentic supplied Bier Koerier master stays in the repo; the slim
-  // project-reel presentation is now a deliberately simplified vector mark.
-
+  const originalUrl = "/" + path.replace(/^public\//, "");
+  assert.ok(portfolio.includes('src="' + originalUrl + '"'),
+    name + ": the artwork provided by the user must be displayed unchanged.");
 }
-for (const path of ["public/projects/cityfi-portfolio.svg", "public/projects/bierkoerier-portfolio.svg"]) {
+for (const path of ["public/projects/cityfi-portfolio.svg"]) {
   const svg = readFileSync(path, "utf8");
   const browserPath="/" + path.replace(/^public\//, "");
   assert.ok(portfolio.includes('src="' + browserPath + '"'), "New portfolio vector was not used: " + path);
@@ -46,8 +42,8 @@ for (const path of ["public/projects/cityfi-portfolio.svg", "public/projects/bie
 }
 assert.ok(!portfolio.includes("cs-breakurge-wordmark"), "Duplicate BreakUrge wordmark can crowd its thumbnail.");
 assert.ok(portfolio.includes('cs-preview cs-breakurge-identity'), "Compact BreakUrge centered identity is missing.");
-assert.ok(css.includes("width:112px!important"), "BreakUrge desktop identity must fit 178px artwork frame.");
-assert.ok(css.includes("width:103px!important"), "BreakUrge mobile identity must fit 168px frame.");
+assert.ok(css.includes("width:158px!important"), "Original logo must remain readable at desktop card size.");
+assert.ok(css.includes("width:148px!important"), "Original logo must remain readable on mobile.");
 assert.ok(css.includes("object-fit:contain"), "Uncropped artwork framing removed");
 assert.ok(!/image-rendering:\s*pixelated/.test(css), "Pixelated image rendering is forbidden");
-console.log("Project artwork: authentic high-resolution originals preserved, compact BreakUrge, and crisp CityFi/Bier Koerier wide vector art verified.");
+console.log("Project artwork: exact user-supplied BreakUrge and Bier Koerier full-size originals displayed uncropped; CityFi vector verified.");
