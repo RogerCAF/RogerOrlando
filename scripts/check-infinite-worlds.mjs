@@ -121,4 +121,24 @@ for(let i=0;i<80;i++){
 advance(40);
 assert.ok(totalDraws > 150, 'The multi-world canvas did not render normally.');
 assert.equal(mistakes.length, 0, 'Rendering exceptions occurred.');
-console.log('Infinite Worlds: original paintings, portal alignment, preload and 160 zoom events verified.');
+
+// Visual asset quality: keep the upgraded archive active, preserve the original
+// Bier Koerier artwork, and never silently replace genuine vector logos with
+// low-resolution images embedded in an SVG wrapper again.
+const archiveHd = readFileSync(new URL('../public/bureau-world-four-archive-hd.webp', import.meta.url));
+assert.ok(archiveHd.byteLength > 300000, 'Detailed underwater artwork missing/truncated.');
+assert.equal(archiveHd.toString('ascii', 0, 4), 'RIFF', 'Archive art must be a real WebP.');
+assert.equal(archiveHd.toString('ascii', 8, 12), 'WEBP', 'Archive artwork format corrupt.');
+assert.ok(html.includes("/bureau-world-four-archive-hd.webp"), 'The high-detail archive is not rendered.');
+assert.match(html, /archivePortal=\{x:530,y:893,r:25\}/, 'New archive glass coordinates lost.');
+const portfolio = readFileSync(new URL('../app/components/PortfolioCaseStudies.tsx', import.meta.url), 'utf8');
+const cityfi = readFileSync(new URL('../public/projects/cityfi-sharp.svg', import.meta.url), 'utf8');
+const bier = readFileSync(new URL('../public/projects/bierkoerier-crisp.svg', import.meta.url), 'utf8');
+assert.ok(cityfi.includes('<svg') && cityfi.includes('</svg>'), 'The CityFi artwork must be SVG.');
+assert.ok(!/<image\b|base64,/.test(cityfi), 'CityFi has regressed into a low-resolution embedded bitmap.');
+assert.ok(portfolio.includes('/projects/cityfi-sharp.svg'), 'Crisp CityFi vector not displayed.');
+assert.ok(portfolio.includes('/projects/bierkoerier-crisp.svg'), 'Crisp Bier Koerier treatment not displayed.');
+assert.ok(bier.includes('data:image/webp;base64,'), 'Do not replace the authentic Bier Koerier logo.');
+assert.ok(bier.includes('original-art-edge-definition'), 'Authentic Bier Koerier edge-enhancement missing.');
+
+console.log('Infinite Worlds: original paintings, detailed archive, sharp project marks, portal alignment and 160 zoom events verified.');
