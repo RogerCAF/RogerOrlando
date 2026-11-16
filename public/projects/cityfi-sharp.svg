@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="1280" viewBox="0 0 640 640" role="img" aria-labelledby="title desc">
+<title id="title">CityFi</title><desc id="desc">Crisp blue crystalline city towers enclosed in the original circular silver metal insignia.</desc>
+<defs>
+  <radialGradient id="bg" cx=".51" cy=".43" r=".72"><stop stop-color="#172835"/><stop offset=".36" stop-color="#0a121a"/><stop offset=".75" stop-color="#080c12"/><stop offset="1" stop-color="#020407"/></radialGradient>
+  <linearGradient id="steel" x1="0" y1=".13" x2=".95" y2=".82"><stop stop-color="#1a2128"/><stop offset=".09" stop-color="#64747e"/><stop offset=".21" stop-color="#d9e2e9"/><stop offset=".33" stop-color="#87929b"/><stop offset=".52" stop-color="#28333b"/><stop offset=".69" stop-color="#ced7df"/><stop offset=".84" stop-color="#62707b"/><stop offset="1" stop-color="#242d37"/></linearGradient>
+  <linearGradient id="steelInner" x1=".08" y1="0" x2=".9" y2="1"><stop stop-color="#7c858d"/><stop offset=".19" stop-color="#222e38"/><stop offset=".45" stop-color="#d3dce2"/><stop offset=".62" stop-color="#27343d"/><stop offset="1" stop-color="#8c959f"/></linearGradient>
+  <linearGradient id="blueLeft" x1="0" y1="0" x2=".95" y2=".8"><stop stop-color="#0294d9"/><stop offset=".35" stop-color="#14c7ff"/><stop offset=".62" stop-color="#0473c0"/><stop offset="1" stop-color="#022d80"/></linearGradient>
+  <linearGradient id="blueFront" x1=".12" y1="0" x2=".94" y2="1"><stop stop-color="#78e9ff"/><stop offset=".19" stop-color="#06aef0"/><stop offset=".53" stop-color="#0066c3"/><stop offset="1" stop-color="#09275e"/></linearGradient>
+  <linearGradient id="blueSide" x1="0" y1="0" x2="1" y2=".85"><stop stop-color="#2fcefa"/><stop offset=".35" stop-color="#015eab"/><stop offset=".79" stop-color="#0b225e"/><stop offset="1" stop-color="#061329"/></linearGradient>
+  <linearGradient id="spine" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#c6fcff"/><stop offset=".22" stop-color="#3ab9fc"/><stop offset=".68" stop-color="#0074cb"/><stop offset="1" stop-color="#0450a1"/></linearGradient>
+  <radialGradient id="halo"><stop stop-color="#05aaf5" stop-opacity=".29"/><stop offset=".59" stop-color="#003d88" stop-opacity=".12"/><stop offset="1" stop-color="#00142c" stop-opacity="0"/></radialGradient>
+  <filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="15"/></filter>
+  <filter id="fineGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4"/></filter>
+  <clipPath id="inside"><circle cx="320" cy="320" r="228"/></clipPath>
+</defs>
+<rect width="640" height="640" fill="#080b10"/>
+<rect width="640" height="640" fill="url(#bg)"/>
+<circle cx="320" cy="320" r="269" fill="none" stroke="#030609" stroke-width="16"/>
+<circle cx="320" cy="320" r="255" fill="none" stroke="url(#steel)" stroke-width="21"/>
+<circle cx="320" cy="320" r="244.5" fill="none" stroke="#dce6eb" stroke-opacity=".65" stroke-width="1.8"/>
+<circle cx="320" cy="320" r="267.5" fill="none" stroke="#83919a" stroke-opacity=".85" stroke-width="2"/>
+<circle cx="320" cy="320" r="234" fill="none" stroke="#17222c" stroke-width="14"/>
+<circle cx="320" cy="320" r="232" fill="none" stroke="url(#steelInner)" stroke-width="4"/>
+<g clip-path="url(#inside)">
+  <circle cx="320" cy="320" r="231" fill="url(#bg)"/>
+  <circle cx="318" cy="305" r="226" fill="url(#halo)"/>
+  <path d="M186 462 C246 497 386 502 462 454" fill="none" stroke="#0471cf" stroke-width="12" opacity=".25" filter="url(#glow)"/>
+  <g stroke-linejoin="round" stroke-linecap="round">
+    <path d="M229 276 L267 239 L285 250 L285 423 L229 455 Z" fill="url(#blueLeft)" stroke="#062b65" stroke-width="2.4"/>
+    <path d="M229 276 L249 289 L249 442 L229 455 Z" fill="#054184" opacity=".72"/>
+    <path d="M249 289 L285 250 L285 423 L249 442Z" fill="url(#blueFront)" opacity=".83"/>
+    <path d="M252 288 L267 274 L267 420 L252 431" fill="#29b6f3" opacity=".35"/>
+    <path d="M285 196 L324 164 L365 192 L365 451 L285 458 Z" fill="url(#blueFront)" stroke="#055aa4" stroke-width="2"/>
+    <path d="M285 196 L324 164 L324 448 L285 458Z" fill="url(#blueLeft)"/>
+    <path d="M324 164 L365 192 L365 451 L324 448Z" fill="url(#blueSide)"/>
+    <path d="M310 185 L324 171 L324 444 L310 447Z" fill="url(#spine)" opacity=".92"/>
+    <path d="M324 171 L340 182 L340 440 L324 444Z" fill="#d4f9ff" opacity=".22"/>
+    <path d="M367 257 L401 229 L439 261 L439 434 L367 460Z" fill="url(#blueFront)" stroke="#064c8f" stroke-width="2.5"/>
+    <path d="M367 257 L401 229 L401 448 L367 460Z" fill="#16a9ed" opacity=".8"/>
+    <path d="M401 229 L439 261 L439 434 L401 448Z" fill="url(#blueSide)"/>
+    <path d="M383 248 L401 235 L401 441 L383 449Z" fill="#88edff" opacity=".28"/>
+    <path d="M415 250 L420 254 L420 431 L415 435Z" fill="#7bdfff" opacity=".4"/>
+    <path d="M220 437 L320 483 L443 433" fill="none" stroke="#0087e7" stroke-width="5"/>
+    <path d="M235 450 L320 488 L432 445" fill="none" stroke="#0d4b91" stroke-width="1.3"/>
+    <path d="M255 294L255 397 M271 271L271 384 M301 202L301 398 M347 210L347 419 M378 270L378 427 M428 277L428 406" fill="none" stroke="#a1f2ff" stroke-opacity=".26" stroke-width="2"/>
+    <path d="M285 196L324 164L365 192 M229 276L267 239L285 250 M367 257L401 229L439 261" fill="none" stroke="#7feaff" stroke-opacity=".76" stroke-width="2.5"/>
+  </g>
+  <circle cx="324" cy="147" r="10" fill="#7af8ff" opacity=".45" filter="url(#fineGlow)"/>
+  <path d="M324 130V153 M313 142H335" stroke="#e8fcff" stroke-width="1.6"/>
+  <circle cx="324" cy="142" r="3.3" fill="#d5feff"/>
+</g>
+<circle cx="320" cy="320" r="224" fill="none" stroke="#697883" stroke-width="2" opacity=".65"/>
+<circle cx="320" cy="320" r="243" fill="none" stroke="#ffffff" stroke-width="1" opacity=".22"/>
+</svg>
