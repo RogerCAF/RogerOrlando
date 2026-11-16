@@ -70,18 +70,18 @@ function Preview({ item }: { item: Study }) {
     <span className="cs-authentic-label">LOSCH DENTAL / LIVE PROJECT</span>
   </div>;
   if (item.className === "cityfi") return <div className="cs-preview cs-cityfi cs-authentic-preview">
-    <img className="cs-cityfi-logo" src="/projects/cityfi.svg" alt="Origineel CityFi-logo met drie blauwe gebouwen binnen een zilveren ring" loading="lazy"/>
+    <img className="cs-cityfi-logo" src="/projects/cityfi-sharp.svg" width={1280} height={1280} decoding="async" alt="Origineel CityFi-logo met drie blauwe gebouwen binnen een zilveren ring" loading="lazy"/>
   </div>;
   if (item.className === "ten") return <div className="cs-preview cs-ten cs-red-button-preview">
     <div className="cs-red-button" aria-label="Grote rode knop voor de 10.00 timinggame"><span>10.00</span></div>
     <span className="cs-preview-caption">PRESS · HOLD · RELEASE</span>
   </div>;
   if (item.className === "bierkoerier") return <div className="cs-preview cs-bierkoerier-preview">
-    <img className="cs-bierkoerier-art" src="/projects/bierkoerier.svg" alt="Originele zwart-oranje Bier Koerier Utrecht-afbeelding met Domtoren en skyline" loading="lazy"/>
+    <img className="cs-bierkoerier-art" src="/projects/bierkoerier-crisp.svg" width={360} height={360} decoding="async" alt="Originele zwart-oranje Bier Koerier Utrecht-afbeelding met Domtoren en skyline" loading="lazy"/>
   </div>;
   return <div className="cs-preview cs-breakurge">
     <span className="cs-preview-small">DAY BY DAY / PROGRESS</span>
-    <img className="cs-breakurge-icon" src="/projects/breakurge.svg" alt="Origineel BreakUrge app-icoon" loading="lazy"/>
+    <img className="cs-breakurge-icon" src="/projects/breakurge.svg" width={320} height={320} decoding="async" alt="Origineel BreakUrge app-icoon" loading="lazy"/>
     <span className="cs-breakurge-wordmark">BreakUrge</span>
     <span className="cs-preview-caption">PROGRESS, NOT PERFECTION</span>
   </div>;
