@@ -179,7 +179,7 @@
     };
     const vectorXML=Object.create(null);
     const tileStore=new Map(),tileQueue=[];
-    const TILE_PIXELS=512,MAX_CACHED_TILES=60;
+    const TILE_PIXELS=512,MAX_CACHED_TILES=84;
     let activeTileJobs=0;
     for(const [key,dims] of Object.entries(VECTOR_DIMS)){
       if(typeof fetch!=='function')continue;
@@ -237,6 +237,14 @@
     function drawVectorTiles(key,geo){
       const src=vectorXML[key];
       if(!src||!st.prepared||geo.sx<=0||geo.sy<=0)return false;
+      // Keep the HD budget for the artwork the visitor is actually exploring.
+      // The full-screen door takes over at depth ~3.8; without this priority
+      // all five detail layers would churn the same bounded tile cache every
+      // frame, so not one complete layer could ever become sharp.
+      if(key==='console'&&st.log>2.2)return false;
+      if((key==='hallEngraving'||key==='hallMacro')&&st.log>3.86
+          &&st.doorFillsView)return false;
+      if((key==='door'||key==='doorMacro')&&st.log<3.40)return false;
       const density=Math.max(geo.sx,geo.sy)*st.dpr;
       // Below 1.5 device pixels per source unit, the intrinsic raster is sharp.
       // Deep nested child worlds make parent detail irrelevant at absurd scales.
@@ -378,6 +386,7 @@
       // The replacement is genuinely scale-independent vector art (900×1200),
       // not an enlarged, blurry raster crop.
       const doorImgGeo=doorGeo;
+      st.doorFillsView=boxCoversView(doorGeo,900,1200);
       const twoGeo={ox:doorGeo.ox+aperture.x*doorGeo.sx,
                     oy:doorGeo.oy+aperture.y*doorGeo.sy,
                     sx:doorGeo.sx*aperture.w/1086,
