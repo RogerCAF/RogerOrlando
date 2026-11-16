@@ -74,6 +74,7 @@
     const assets={};
     const sources={
       one:'/bureau-world-one.webp',
+      console:'/bureau-console-precision.svg',
       hall:'/bureau-hallway-detail.webp',
       hallEngraving:'/bureau-hallway-engraving.svg',
       door:'/bureau-door-sharp.svg',
@@ -114,7 +115,7 @@
     for(const [key,url] of Object.entries(sources)){
       const img=new Image();
       img.decoding='async';
-      img.fetchPriority=(key==='one'||key==='door'||key==='hall'||key==='archive')?'high':'auto';
+      img.fetchPriority=(key==='one'||key==='console'||key==='door'||key==='hall'||key==='archive')?'high':'auto';
       img.onload=()=>{
         if(typeof img.decode==='function'){
           img.decode().then(()=>assetDone(key,true),()=>assetDone(key,true));
@@ -290,6 +291,15 @@
       // Always render the visible portion of the parent world. Fixed zoom cutoffs
       // could expose blank space when the visitor pans away from the default route.
       {imageRegion('one',base);
+        // A transparent precision layer belongs to the existing monitor
+        // hardware, not to the nested paintings. It is locked to the same
+        // 960×1370 source image and painted BEFORE the child hallway.
+        const consoleAlpha=.72*smooth((st.log-.26)/1.15);
+        if(ready('console')&&consoleAlpha>.001){
+          ctx.save();ctx.globalAlpha=consoleAlpha;
+          imageRegion('console',base);
+          ctx.restore();
+        }
         // A high-resolution inset for the long gallery softens no edges and
         // only appears on approach. The tapered alpha hides the crop boundary.
         const hallAlpha=smooth((st.log-.6)/1.25);
