@@ -80,7 +80,7 @@
       hallMacro:'/bureau-hallway-macro-detail.svg',
       door:'/bureau-door-sharp.svg',
       doorMacro:'/bureau-door-macro-detail.svg',
-      two:'/bureau-world-two-grand-terrace.webp',
+      two:'/bureau-balcony-telescope-4k.webp',
       server:'/bureau-server-corridor.webp',
       archive:'/bureau-world-four-archive-hd.webp',
       observatory:'/bureau-world-five-observatory.svg',
@@ -88,7 +88,7 @@
       shrimp:'/bureau-ending-shrimp.webp'
     };
     const st={log:0,target:0,panX:0,panY:0,panTargetX:0,panTargetY:0,width:0,height:0,dpr:1,frame:0,lastFrame:0,dirty:true,lastPinch:0,lastPinchCenter:null,ending:0,toastTimer:0,pointers:new Map(),prepared:false,queuedLog:0};
-    const MAX_LOG=19.5;
+    const MAX_LOG=23.4;
     const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
     const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
     const smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
@@ -139,7 +139,9 @@
       request();
     };
     const door={x:459,y:675,w:44,h:58};
-    const lens={x:543,y:694,r:40.5};
+    // Small physical glass aperture on a slender, single-lens brass telescope.
+    // The opening is only 7.2 source pixels wide; it contains the next full world.
+    const lens={x:564,y:720,r:3.6};
     const serverExit={x:512,y:816,r:10.25};
     // An observatory is already visible inside the archive glass; a final world lives in its planet.
     // The higher-detail archive puts its miniature observatory in the central blue lens.
@@ -154,6 +156,29 @@
     function keyhole(){ctx.clip(keyholePath);}
     // Keep the original paintings visible. No synthetic monitors or panel overlays.
     // The detailed hallway image is the source of truth for art and perspective.
+    // Render just the telescope's actual glass rim as vector geometry.
+    // The photographic balcony keeps its original art direction while the
+    // aperture remains sharp at any zoom: no giant circular overlay or orb.
+    function paintTelescopeRim(geo){
+      const x=geo.ox+lens.x*geo.sx,y=geo.oy+lens.y*geo.sy;
+      const rx=lens.r*geo.sx,ry=lens.r*geo.sy;
+      if(rx<=0||ry<=0||x+rx*1.8<0||y+ry*1.8<0||
+         x-rx*1.8>st.width||y-ry*1.8>st.height)return;
+      // When the whole viewport sits inside the optical pupil, omit the
+      // offscreen rim; all that remains is the crisp child world's content.
+      const farX=Math.max(Math.abs(x),Math.abs(st.width-x))/(rx*.84);
+      const farY=Math.max(Math.abs(y),Math.abs(st.height-y))/(ry*.84);
+      if(farX*farX+farY*farY<1)return;
+      ctx.save();
+      ctx.setTransform(st.dpr*geo.sx,0,0,st.dpr*geo.sy,st.dpr*geo.ox,st.dpr*geo.oy);
+      ctx.beginPath();ctx.arc(lens.x,lens.y,lens.r+.83,0,Math.PI*2);
+      ctx.lineWidth=1.24;ctx.strokeStyle='#382317';ctx.stroke();
+      ctx.beginPath();ctx.arc(lens.x,lens.y,lens.r+.42,0,Math.PI*2);
+      ctx.lineWidth=.52;ctx.strokeStyle='#d7af6c';ctx.stroke();
+      ctx.beginPath();ctx.arc(lens.x,lens.y,lens.r+.03,0,Math.PI*2);
+      ctx.lineWidth=.18;ctx.strokeStyle='#ffe4a3';ctx.stroke();
+      ctx.restore();
+    }
     function paintKeyholeFrame(geo){
       const d=st.dpr;
       ctx.save();ctx.setTransform(d*geo.sx,0,0,d*geo.sy,d*geo.ox,d*geo.oy);
@@ -371,9 +396,9 @@
       const skyFocusX=archiveFocusX+(skyPortal.x-543)*door.w/900*aperture.w/1086*serverScale*archiveScale*observatoryScale;
       const skyFocusY=archiveFocusY+(skyPortal.y-724)*door.h/1200*aperture.h/1448*serverScale*archiveScale*observatoryScale;
       const approach=smooth(st.log/3.7);
-      const deep=smooth((st.log-6.4)/3.3);
-      const further=smooth((st.log-10.1)/3.0);
-      const celestial=smooth((st.log-13.3)/3.0);
+      const deep=smooth((st.log-8.9)/3.9);
+      const further=smooth((st.log-14.0)/3.0);
+      const celestial=smooth((st.log-17.5)/3.2);
       const focusX=480+(lensX-480)*approach+(serverExitX-lensX)*deep+
         (archiveFocusX-serverExitX)*further+(skyFocusX-archiveFocusX)*celestial;
       const focusY=685+(lensY-685)*approach+(serverExitY-lensY)*deep+
@@ -508,6 +533,11 @@
       clipCircle(observatoryGeo,skyPortal.x,skyPortal.y,skyPortal.r);
       imageRegion(endKeys[st.ending],endingGeo);
       ctx.restore();
+      // Optical bezel stays attached to the physical telescope rather
+      // than appearing as a separate disc in front of the scene.
+      ctx.save();clipRect(doorGeo,900,1200);clipKeyhole(doorGeo);
+      paintTelescopeRim(twoGeo);
+      ctx.restore();
       st.dirty=false;
     }
     function panBound(){
@@ -528,9 +558,9 @@
       // Give visitors more time to explore the enlarged seafront loggia,
       // its long marble runway and the actual world inside the brass lens.
       // This changes scroll pacing only, never swaps or relocates images.
-      const balconyStage=smooth((st.target-5.7)/.85)*
-        (1-smooth((st.target-9.85)/.85));
-      const balconyZoomGain=1-.34*balconyStage;
+      const balconyStage=smooth((st.target-6.25)/.85)*
+        (1-smooth((st.target-11.55)/1.05));
+      const balconyZoomGain=1-.38*balconyStage;
       st.target=clamp(st.target+delta*balconyZoomGain,0,MAX_LOG);
       // Subtle cursor-relative zoom bias. The continuously registered portal
       // path remains navigable, but mouse/trackpad users can steer the canvas.
