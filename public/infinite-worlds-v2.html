@@ -227,7 +227,13 @@ function zoomBy(factor,pointerX,pointerY){const delta=clamp(Math.log(factor),-.6
   panGoalY=clamp(panGoalY+(CY-pointerY)*delta*.075,-350,350);
  }
  request();}
-function svgCoords(ev){let r=svg.getBoundingClientRect();return {x:(ev.clientX-r.left)/r.width*1200,y:(ev.clientY-r.top)/r.height*900};}
+function svgCoords(ev){
+ // preserveAspectRatio='meet' letterboxes widescreen and portrait devices:
+ // convert from CSS pixels into the exact, unscaled 1200×900 scene coordinates.
+ const r=svg.getBoundingClientRect(),scale=Math.min(r.width/S,r.height/H);
+ const offX=(r.width-S*scale)/2,offY=(r.height-H*scale)/2;
+ return {x:(ev.clientX-r.left-offX)/scale,y:(ev.clientY-r.top-offY)/scale};
+}
 svg.addEventListener('wheel',e=>{e.preventDefault();const d=e.deltaMode===1?e.deltaY*15:e.deltaMode===2?e.deltaY*350:e.deltaY;const pt=svgCoords(e);zoomBy(Math.exp(-clamp(d,-130,130)*.003),pt.x,pt.y);},{passive:false});
 svg.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;svg.setPointerCapture(e.pointerId);pointers.set(e.pointerId,svgCoords(e));pinchDistance=0;});
 svg.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;const now=svgCoords(e),before=pointers.get(e.pointerId);pointers.set(e.pointerId,now);
