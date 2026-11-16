@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:infinite-worlds": "node scripts/check-infinite-worlds.mjs",
+    "prebuild": "npm run test:infinite-worlds"
   },
   "dependencies": {
     "next": "^15.5.0",
