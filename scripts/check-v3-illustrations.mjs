@@ -21,6 +21,17 @@ for(const [name,path,w,h,minBytes] of illustrations){
  assert.ok(length>=minBytes,name+': source over-compressed');
  assert.ok(preview.includes('/'+path.replace('public/','')),name+': illustration not used');
 }
+const redrawn='public/v3/v3-computer-original-illustrated.webp';
+const [rw,rh,rb]=dimensions(redrawn);
+assert.deepEqual([rw,rh],[1084,1451],'Updated portrait illustration dimensions changed');
+assert.ok(rb>250000,'Redrawn original computer art is unexpectedly compressed');
+assert.ok(preview.includes('src="/v3/v3-computer-original-illustrated.webp"'),
+  'The updated original-composition artwork must be the main V3 image');
+assert.match(preview, /\.hero-art\{[^}]*object-fit:contain/,
+  'The main portrait illustration must never be cropped to fill the hero');
+assert.ok(preview.includes('.hero-figure{order:-1;'),
+  'The actual illustration must appear before the long introduction on mobile');
+
 for(let i=0;i<5;i++)assert.ok(preview.includes('data-scene="'+i+'"'),'World '+(i+1)+' missing');
 for(const title of ['Computer','Serverkamer','Trappenhuis','Telescoopkamer','Honeybadger Realm'])
  assert.ok(preview.includes(title),'World heading missing: '+title);
@@ -37,4 +48,4 @@ const script=preview.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 assert.ok(script,'Inline Javascript missing');new Script(script,{filename:'v3-art-preview.js'});
 assert.ok(live.includes('src="/infinite-worlds.html"'),'Original embedded infinite zoom must stay intact');
 assert.ok(live.includes('href="/infinite-worlds.html"'),'Original fullscreen link must stay intact');
-console.log('V3 illustration preview: 2 proper high-res masters, 5 stages, interaction and original homepage preserved.');
+console.log('V3 illustration preview: uncropped original-composition art plus 2 style studies, 5 stages, original homepage preserved.');
