@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200">
+<defs>
+<linearGradient id="frame" x2="1" y2="0"><stop stop-color="#1a0d0a"/><stop offset=".10" stop-color="#593522"/><stop offset=".22" stop-color="#22110d"/><stop offset=".48" stop-color="#553120"/><stop offset=".77" stop-color="#291611"/><stop offset=".90" stop-color="#68422a"/><stop offset="1" stop-color="#170c09"/></linearGradient>
+<linearGradient id="left" x2="1" y2=".15"><stop stop-color="#42261b"/><stop offset=".16" stop-color="#774932"/><stop offset=".48" stop-color="#633925"/><stop offset=".80" stop-color="#452619"/><stop offset="1" stop-color="#2b160f"/></linearGradient>
+<linearGradient id="right" x2="1" y2=".1"><stop stop-color="#2b160f"/><stop offset=".18" stop-color="#4a2a1c"/><stop offset=".52" stop-color="#784b33"/><stop offset=".84" stop-color="#563020"/><stop offset="1" stop-color="#341b13"/></linearGradient>
+<linearGradient id="recess" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#2a1611"/><stop offset=".10" stop-color="#59301f"/><stop offset=".25" stop-color="#7a5037"/><stop offset=".60" stop-color="#55311f"/><stop offset=".94" stop-color="#372018"/><stop offset="1" stop-color="#170d0b"/></linearGradient>
+<linearGradient id="trim" x2="1" y2="1"><stop stop-color="#32190f"/><stop offset=".19" stop-color="#a16e45"/><stop offset=".40" stop-color="#6a412a"/><stop offset=".80" stop-color="#33190e"/><stop offset="1" stop-color="#a37450"/></linearGradient>
+<linearGradient id="gold" x2="1" y2="0"><stop stop-color="#6f4519"/><stop offset=".16" stop-color="#bd863b"/><stop offset=".38" stop-color="#fff1a0"/><stop offset=".53" stop-color="#d4a754"/><stop offset=".75" stop-color="#8b5b20"/><stop offset=".92" stop-color="#eed38c"/><stop offset="1" stop-color="#78501e"/></linearGradient>
+<linearGradient id="goldDark" x2="1" y2="1"><stop stop-color="#f4da93"/><stop offset=".48" stop-color="#ad722d"/><stop offset="1" stop-color="#593617"/></linearGradient>
+<pattern id="grain" width="37" height="460" patternUnits="userSpaceOnUse"><path d="M4 0Q16 78 7 151T9 302T2 460 M18 0Q28 117 22 227T31 460 M33 0Q21 101 33 245T27 460" fill="none" stroke="#e1b184" stroke-width="1.5" opacity=".10"/><path d="M9 0Q0 109 11 225T5 460 M27 0Q38 146 26 313T36 460" fill="none" stroke="#150b08" stroke-width="2" opacity=".22"/></pattern>
+<g id="panel"><rect width="308" height="247" rx="2" fill="#2a160f" stroke="#190c08" stroke-width="13"/><rect x="9" y="9" width="290" height="229" rx="2" fill="url(#trim)" stroke="#ab7850" stroke-width="5"/><rect x="25" y="25" width="258" height="197" fill="url(#recess)" stroke="#2b170f" stroke-width="7"/><path d="M33 207V33H275 M36 203H272V37" fill="none" stroke="#ba8560" stroke-opacity=".54" stroke-width="3"/><rect x="27" y="27" width="254" height="193" fill="url(#grain)" opacity=".35"/></g>
+</defs>
+<rect width="900" height="1200" fill="#2b1710"/>
+<!-- Keep the source world's rectangular walnut double door and two brass pull handles. -->
+<rect x="14" y="8" width="872" height="1175" fill="url(#frame)" stroke="#160c09" stroke-width="15"/>
+<rect x="39" y="27" width="822" height="1134" fill="#a16d48" opacity=".4"/>
+<rect x="53" y="40" width="794" height="1114" fill="#281710" stroke="#0e0806" stroke-width="11"/>
+<rect x="66" y="54" width="378" height="1091" fill="url(#left)" stroke="#1c0d09" stroke-width="5"/>
+<rect x="456" y="54" width="378" height="1091" fill="url(#right)" stroke="#1c0d09" stroke-width="5"/>
+<rect x="77" y="65" width="354" height="1068" fill="url(#grain)" opacity=".42"/>
+<rect x="467" y="65" width="354" height="1068" fill="url(#grain)" opacity=".42"/>
+<path d="M444 43V1148" stroke="#140a07" stroke-width="13"/><path d="M451 43V1148" stroke="#936043" stroke-width="2" opacity=".7"/>
+<use href="#panel" x="100" y="113"/><use href="#panel" x="492" y="113"/>
+<use href="#panel" x="100" y="401"/><use href="#panel" x="492" y="401"/>
+<use href="#panel" x="100" y="842"/><use href="#panel" x="492" y="842"/>
+<path d="M75 700H432 M467 700H822" stroke="#24120d" stroke-width="9"/>
+<path d="M77 705H430 M469 705H820" stroke="#a26b45" stroke-opacity=".45" stroke-width="3"/>
+<!-- Raised long pull handles matching the first-world artwork. -->
+<rect x="402" y="636" width="25" height="140" rx="12" fill="url(#goldDark)" stroke="#4a2e17" stroke-width="4"/>
+<rect x="408" y="650" width="13" height="112" rx="6.5" fill="url(#gold)" stroke="#e9c579" stroke-width="1"/>
+<rect x="475" y="636" width="25" height="140" rx="12" fill="url(#goldDark)" stroke="#4a2e17" stroke-width="4"/>
+<rect x="481" y="650" width="13" height="112" rx="6.5" fill="url(#gold)" stroke="#e9c579" stroke-width="1"/>
+<circle cx="414" cy="647" r="3" fill="#fbe4a9" opacity=".85"/><circle cx="487" cy="647" r="3" fill="#fbe4a9" opacity=".85"/>
+<!-- Small keyhole directly beneath the right handle, using the exact Canvas Path2D silhouette. -->
+<rect x="493" y="783" width="29" height="51" rx="12" fill="#130d0b" opacity=".8"/>
+<rect x="495" y="782" width="25" height="51" rx="11" fill="url(#goldDark)" stroke="#59371d" stroke-width="3"/>
+<path d="M507.5 789 C499 789 495 794 495 801 Q495 807 502 812 L499 826 Q507.5 830 516 826 L513 812 Q520 806 520 801 C520 793 516 789 507.5 789Z" fill="#110f15" stroke="#21140e" stroke-width="1"/>
+<path d="M97 1137H807" stroke="#e1ac72" opacity=".38" stroke-width="3"/>
+<rect y="1169" width="900" height="31" fill="#29160f"/><path d="M15 1171H885" stroke="#ca9b63" opacity=".6" stroke-width="4"/>
+</svg>

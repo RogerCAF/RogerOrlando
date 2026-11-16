@@ -11,21 +11,32 @@
     .world{position:relative;width:100%;height:100%;overflow:hidden;isolation:isolate}
     canvas{display:block;width:100%;height:100%;touch-action:none;cursor:zoom-in;outline:none;user-select:none;-webkit-user-select:none}
     canvas:active{cursor:grabbing}canvas:focus-visible{outline:2px solid #af8b63;outline-offset:-4px}
-    /* A small instrument dock beside the monitor, rather than a button floating over its stand. */
-    .start-dock{position:absolute;z-index:6;right:clamp(10px,2.3vw,30px);top:38%;display:flex;align-items:center;gap:9px;
-      padding:8px 11px 8px 7px;max-width:220px;color:#eedfce;background:rgba(24,29,33,.94);border:1px solid #ad876788;
-      border-radius:9px;box-shadow:0 5px 24px #110f0e33;transition:opacity .24s,transform .24s}
+    /* An unobtrusive, genuinely clickable gallery control — not an overlay on the monitor. */
+    .start-dock{position:absolute;right:clamp(12px,2.6vw,36px);bottom:clamp(16px,3vw,34px);z-index:6}
     .start-dock[hidden]{display:none!important}
-    .power{display:grid;place-items:center;flex:none;width:35px;height:35px;padding:0;border:1px solid #be9365;
-      border-radius:50%;background:#1e2529;color:#e9c99d;cursor:pointer;box-shadow:inset 0 0 0 3px #3c3028}
-    .power:hover,.power:focus-visible{background:#374044;outline:2px solid #e0b785;outline-offset:2px}
-    .power svg{width:21px;height:21px}
-    .dock-copy{display:flex;flex-direction:column;gap:3px;line-height:1.3;text-align:left}
-    .dock-copy strong{font-size:9px;letter-spacing:1.1px;font-weight:700}
-    .dock-copy small{font-size:9px;color:#d3c3b3;max-width:151px}
-    @media(max-width:630px){.start-dock{right:8px;top:32%;max-width:154px;gap:6px;padding:6px 7px 6px 5px;border-radius:7px}
-      .power{width:30px;height:30px}.power svg{width:18px;height:18px}
-      .dock-copy strong{font-size:7px;letter-spacing:.55px}.dock-copy small{font-size:7px;line-height:1.25;max-width:101px}}
+    .surprise{display:flex;align-items:center;gap:11px;min-height:58px;min-width:212px;
+      padding:8px 14px 8px 9px;background:#f5ede4ee;color:#352821;
+      border:1px solid #9b7a60aa;border-radius:12px;backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);box-shadow:0 8px 30px #17110f2d,0 1px 0 #ffffff95 inset;
+      cursor:pointer;text-align:left;font-family:inherit;transition:transform .16s,box-shadow .16s,background .16s}
+    .surprise:hover{transform:translateY(-2px);background:#fff8ee;box-shadow:0 10px 32px #17110f42}
+    .surprise:active{transform:translateY(0) scale(.98)}
+    .surprise:focus-visible{outline:3px solid #b78548;outline-offset:3px}
+    .surprise-icon{display:grid;place-items:center;flex:none;width:41px;height:41px;
+      border-radius:10px;background:#33271f;color:#e8c78d}
+    .surprise-icon svg{width:19px;height:19px}
+    .dock-copy{display:flex;flex-direction:column;gap:3px;line-height:1.26}
+    .dock-copy strong{font-size:13px;font-weight:700;letter-spacing:.02em}
+    .dock-copy small{font-size:10px;color:#755e4e;white-space:nowrap}
+    .start-dock[data-compact="true"] .surprise{min-width:0;width:47px;min-height:47px;padding:3px;border-radius:12px}
+    .start-dock[data-compact="true"] .surprise-icon{width:39px;height:39px}
+    .start-dock[data-compact="true"] .dock-copy{display:none}
+    @media(max-width:630px){
+      .start-dock{right:12px;bottom:max(16px,env(safe-area-inset-bottom))}
+      .surprise{min-width:194px;min-height:54px;gap:9px;padding:6px 11px 6px 6px}
+      .surprise-icon{width:40px;height:40px}
+      .dock-copy strong{font-size:12px}.dock-copy small{font-size:9px}
+    }
     .message{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);max-width:min(90%,480px);border:1px solid #cab39488;border-radius:5px;padding:9px 12px;background:#f9f4edeb;color:#4a4540;font-size:11px;line-height:1.35;letter-spacing:.03em;text-align:center;box-shadow:0 5px 26px #33221123;opacity:0;pointer-events:none;transition:opacity .25s}
     .message.show{opacity:1}
     .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
@@ -36,10 +47,10 @@
   <main class="world">
     <canvas id="drawing" tabindex="0" role="application" aria-label="The Bureau of Impossible Things. Scroll omhoog om in te zoomen, omlaag om uit te zoomen, of gebruik twee vingers. Sleep om rond te kijken. Zoom door het sleutelgat, de telescoop, het ronde serverraam, de vitrine en een kleine planeet. Random kiest alleen een einde."></canvas>
     <aside id="startDock" class="start-dock" aria-label="Kies een willekeurig einde">
-      <button id="random" class="power" type="button" title="Kies een willekeurig einde" aria-label="Kies een willekeurig einde">
-        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.7"><path d="M12 2.5v9"/><path d="M6.5 5.6a9 9 0 1 0 11 0"/></svg>
+      <button id="random" class="surprise" type="button" title="Kies een ander verborgen einde" aria-label="Kies een ander verborgen einde">
+        <span class="surprise-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><path d="M4 7h3c4 0 6 10 10 10h3"/><path d="m17 14 3 3-3 3"/><path d="M4 17h3c1.8 0 3.1-2 4.3-4.2"/><path d="M14 8c.9-.7 1.8-1 3-1h3"/><path d="m17 4 3 3-3 3"/></svg></span>
+        <span class="dock-copy"><strong>Verras me</strong><small>Een ander verborgen einde</small></span>
       </button>
-      <span class="dock-copy"><strong>RANDOM EINDE</strong><small>Druk hier en zoom zelf verder om je einde te vinden.</small></span>
     </aside>
     <div id="message" class="message" role="status" aria-live="polite"></div>
     <div id="aria-status" class="sr" aria-live="polite"></div>
@@ -58,7 +69,7 @@
     const sources={
       one:'/bureau-world-one.webp',
       hall:'/bureau-hallway-detail.webp',
-      door:'/bureau-door-faithful.webp',
+      door:'/bureau-door-sharp.svg',
       two:'/bureau-world-two.webp',
       server:'/bureau-server-corridor.webp',
       archive:'/bureau-world-four-archive.webp',
@@ -99,8 +110,10 @@
     const skyPortal={x:543,y:765,r:34};
     // Exact registration: this small, ordinary escutcheon uses the SAME path in the SVG and canvas.
     // The glimpse beyond the door therefore has no independent position or rescaling.
-    const aperture={x:604,y:900,w:32,h:47};
-    const keyholePath=new Path2D('M620 900 C609 900 604 907 604 914 Q604 922 614 928 L610 942 Q620 947 630 942 L626 928 Q636 921 636 914 C636 906 631 900 620 900Z');
+    // Standard-size lock aperture just below the right brass pull, not in the panel.
+    // Its source SVG and clip use the exact same contour.
+    const aperture={x:495,y:789,w:25,h:41};
+    const keyholePath=new Path2D('M507.5 789 C499 789 495 794 495 801 Q495 807 502 812 L499 826 Q507.5 830 516 826 L513 812 Q520 806 520 801 C520 793 516 789 507.5 789Z');
     function keyhole(){ctx.clip(keyholePath);}
     // Every artwork is replaced by one screen of exactly the same footprint.
     // All coordinates are expressed in the high-resolution hallway's 1680x2020
@@ -173,11 +186,11 @@
     function clipKeyhole(g){
       // At very deep zoom the camera and viewport are fully inside the tiny
       // top section of the keyhole. Skipping the huge off-screen clip is exact.
-      // The actual optical axis passes through the NARROW neck, around (620,925).
-      // Only skip the clip if every screen corner lies inside an inscribed rectangle.
+      // The optical axis now passes just under the right pull, near (507.5,809).
+      // Skip the expensive enormous clipping path only when fully inside the aperture.
       const localLeft=(0-g.ox)/g.sx,localRight=(st.width-g.ox)/g.sx;
       const localTop=(0-g.oy)/g.sy,localBottom=(st.height-g.oy)/g.sy;
-      if(localLeft>=617&&localRight<=623&&localTop>=922&&localBottom<=927)return;
+      if(localLeft>=505&&localRight<=510&&localTop>=807&&localBottom<=810)return;
       ctx.setTransform(st.dpr*g.sx,0,0,st.dpr*g.sy,st.dpr*g.ox,st.dpr*g.oy);
       ctx.clip(keyholePath);
     }
@@ -233,8 +246,9 @@
                      sx:base.sx*420/1680,sy:base.sy*505/2020};
       const doorGeo={ox:base.ox+door.x*base.sx,oy:base.oy+door.y*base.sy,
                      sx:base.sx*door.w/900,sy:base.sy*door.h/1200};
-      // The photographic close-up has twice the raster resolution of door-local coordinates.
-      const doorImgGeo={ox:doorGeo.ox,oy:doorGeo.oy,sx:doorGeo.sx/2,sy:doorGeo.sy/2};
+      // The replacement is genuinely scale-independent vector art (900×1200),
+      // not an enlarged, blurry raster crop.
+      const doorImgGeo=doorGeo;
       const twoGeo={ox:doorGeo.ox+aperture.x*doorGeo.sx,
                     oy:doorGeo.oy+aperture.y*doorGeo.sy,
                     sx:doorGeo.sx*aperture.w/1086,
@@ -254,7 +268,8 @@
       const endingGeo={ox:observatoryGeo.ox+(skyPortal.x-543*endingScale)*observatoryGeo.sx,
                        oy:observatoryGeo.oy+(skyPortal.y-721*endingScale)*observatoryGeo.sy,
                        sx:observatoryGeo.sx*endingScale,sy:observatoryGeo.sy*endingScale};
-      startDock.hidden=st.log>.55||!ready('one');
+      startDock.hidden=!ready('one');
+      startDock.dataset.compact=st.log>.55?'true':'false';
       ctx.setTransform(dpr,0,0,dpr,0,0);
       // Favor smooth high-quality downsampling when the viewport is between worlds.
       ctx.imageSmoothingEnabled=true;
@@ -281,7 +296,9 @@
       ctx.save();clipRect(base,960,1370);clipRect(doorGeo,900,1200);
       // Let the sharp illustrated door take over while it is still small,
       // avoiding a long double-image blend once handles and panels are visible.
-      const detailAlpha=smooth((st.log-.80)/.80);
+      // Stay on the original high-resolution hall while it still has enough detail.
+      // Blend the matching rectangular vector door in before the pixels enlarge.
+      const detailAlpha=smooth((st.log-1.15)/1.10);
       if(ready('door')&&z<3500){ctx.globalAlpha=detailAlpha;imageRegion('door',doorImgGeo);}
       ctx.globalAlpha=1;
       if(detailAlpha>.02)paintKeyholeFrame(doorGeo);
@@ -330,8 +347,9 @@
     }
     power.addEventListener('click',e=>{
       e.preventDefault();e.stopPropagation();
-      st.ending=Math.floor(Math.random()*endKeys.length);
-      toast('Willekeurig einde gekozen. Blijf zelf zoomen om het te ontdekken.');
+      // Never select the same ending twice in a row: the button must visibly work.
+      st.ending=(st.ending+1+Math.floor(Math.random()*(endKeys.length-1)))%endKeys.length;
+      toast('Nieuw verborgen einde gekozen. Zoom verder om het te ontdekken.');
       request();
     });
     canvas.addEventListener('wheel',e=>{
