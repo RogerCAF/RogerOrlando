@@ -77,7 +77,9 @@
       console:'/bureau-console-precision.svg',
       hall:'/bureau-hallway-detail.webp',
       hallEngraving:'/bureau-hallway-engraving.svg',
+      hallMacro:'/bureau-hallway-macro-detail.svg',
       door:'/bureau-door-sharp.svg',
+      doorMacro:'/bureau-door-macro-detail.svg',
       two:'/bureau-world-two.webp',
       server:'/bureau-server-corridor.webp',
       archive:'/bureau-world-four-archive-hd.webp',
@@ -115,7 +117,7 @@
     for(const [key,url] of Object.entries(sources)){
       const img=new Image();
       img.decoding='async';
-      img.fetchPriority=(key==='one'||key==='console'||key==='door'||key==='hall'||key==='archive')?'high':'auto';
+      img.fetchPriority=(key==='one'||key==='console'||key==='door'||key==='doorMacro'||key==='hall'||key==='hallMacro'||key==='archive')?'high':'auto';
       img.onload=()=>{
         if(typeof img.decode==='function'){
           img.decode().then(()=>assetDone(key,true),()=>assetDone(key,true));
@@ -164,6 +166,125 @@
     // round telescope aperture is inset INSIDE the painted brass rim, not over it.
     // At extreme zoom we paint only the visible image pixels, preventing the
     // enormous off-screen transforms that made the last world disappear on iOS.
+
+    // Adaptive vector HD pyramid. SVG in a Canvas image usually becomes a
+    // bitmap at its *intrinsic* dimensions and can blur during deep zoom.
+    // Create small, high-DPI raster tiles from the exact SVG viewBox region
+    // visible at the current camera scale. No scene swap, no altered portals.
+    // Keep raster originals as fallback while the sharp tiles are prepared.
+    const VECTOR_DIMS={
+      console:{w:960,h:1370}, hallEngraving:{w:1680,h:2020},
+      hallMacro:{w:1680,h:2020},door:{w:900,h:1200},
+      doorMacro:{w:900,h:1200}
+    };
+    const vectorXML=Object.create(null);
+    const tileStore=new Map(),tileQueue=[];
+    const TILE_PIXELS=512,MAX_CACHED_TILES=60;
+    let activeTileJobs=0;
+    for(const [key,dims] of Object.entries(VECTOR_DIMS)){
+      if(typeof fetch!=='function')continue;
+      fetch(sources[key],{cache:'force-cache'}).then(r=>{
+        if(!r.ok)throw Error('HD source unavailable');
+        return r.text();
+      }).then(svg=>{
+        const begin=svg.indexOf('>'),end=svg.lastIndexOf('</svg>');
+        if(!svg.startsWith('<svg')||begin<0||end<begin)throw Error('Invalid HD vector');
+        vectorXML[key]={body:svg.slice(begin+1,end),w:dims.w,h:dims.h};
+        request();
+      }).catch(()=>{/* Normal decoded SVG is the safe fallback. */});
+    }
+    function pumpTileQueue(){
+      if(typeof Blob==='undefined'||typeof URL==='undefined'||
+         typeof URL.createObjectURL!=='function')return;
+      while(activeTileJobs<3&&tileQueue.length){
+        const tile=tileQueue.shift();
+        if(tileStore.get(tile.id)!==tile)continue;
+        const source=vectorXML[tile.key];
+        if(!source)continue;
+        activeTileJobs++;
+        let objectURL;
+        try{
+          const outW=Math.max(1,Math.round(tile.w*tile.ratio));
+          const outH=Math.max(1,Math.round(tile.h*tile.ratio));
+          const rendered='<svg xmlns="http://www.w3.org/2000/svg" width="'+outW+
+            '" height="'+outH+'" viewBox="'+tile.x+' '+tile.y+' '+
+            tile.w+' '+tile.h+'" preserveAspectRatio="none">'+source.body+'</svg>';
+          objectURL=URL.createObjectURL(new Blob([rendered],{type:'image/svg+xml;charset=utf-8'}));
+          const img=new Image();
+          let finished=false;
+          const done=ok=>{
+            if(finished)return;
+            finished=true;
+            URL.revokeObjectURL(objectURL);
+            tile.ready=ok;tile.failed=!ok;
+            if(ok)tile.img=img;
+            activeTileJobs--;
+            request();
+            pumpTileQueue();
+          };
+          img.onload=()=>{
+            if(typeof img.decode==='function')img.decode().then(()=>done(true),()=>done(true));
+            else done(true);
+          };
+          img.onerror=()=>done(false);
+          img.src=objectURL;
+        }catch(err){
+          if(objectURL)URL.revokeObjectURL(objectURL);
+          tile.failed=true;activeTileJobs--;
+        }
+      }
+    }
+    function drawVectorTiles(key,geo){
+      const src=vectorXML[key];
+      if(!src||!st.prepared||geo.sx<=0||geo.sy<=0)return false;
+      const density=Math.max(geo.sx,geo.sy)*st.dpr;
+      // Below 1.5 device pixels per source unit, the intrinsic raster is sharp.
+      // Deep nested child worlds make parent detail irrelevant at absurd scales.
+      if(density<1.5||density>262144)return false;
+      const ratio=Math.pow(2,Math.ceil(Math.log2(density)));
+      const span=TILE_PIXELS/ratio;
+      const l=clamp((-geo.ox-2)/geo.sx,0,src.w);
+      const t=clamp((-geo.oy-2)/geo.sy,0,src.h);
+      const r=clamp((st.width-geo.ox+2)/geo.sx,0,src.w);
+      const b=clamp((st.height-geo.oy+2)/geo.sy,0,src.h);
+      if(r<=l||b<=t)return false;
+      const ix0=Math.floor(l/span),iy0=Math.floor(t/span);
+      const ix1=Math.min(Math.ceil(src.w/span)-1,Math.ceil(r/span)-1);
+      const iy1=Math.min(Math.ceil(src.h/span)-1,Math.ceil(b/span)-1);
+      if((ix1-ix0+1)*(iy1-iy0+1)>54)return false;
+      const visible=[];
+      let complete=true;
+      for(let y=iy0;y<=iy1;y++)for(let x=ix0;x<=ix1;x++){
+        const tx=x*span,ty=y*span;
+        const id=key+':'+ratio+':'+x+':'+y;
+        let tile=tileStore.get(id);
+        if(tile){
+          tileStore.delete(id);tileStore.set(id,tile);
+        }else{
+          tile={id,key,ratio,x:tx,y:ty,
+            w:Math.min(span,src.w-tx),h:Math.min(span,src.h-ty),
+            ready:false,failed:false};
+          if(tile.w<=0||tile.h<=0)return false;
+          tileStore.set(id,tile);
+          tileQueue.push(tile);
+          while(tileStore.size>MAX_CACHED_TILES)tileStore.delete(tileStore.keys().next().value);
+        }
+        visible.push(tile);
+        if(!tile.ready)complete=false;
+      }
+      pumpTileQueue();
+      // Transparency matters: replace each entire layer, not overlay a second
+      // semi-transparent copy of its lines (which would darken the art).
+      if(!complete)return false;
+      ctx.setTransform(st.dpr,0,0,st.dpr,0,0);
+      for(const tile of visible){
+        ctx.drawImage(tile.img,0,0,tile.img.naturalWidth,tile.img.naturalHeight,
+          geo.ox+tile.x*geo.sx,geo.oy+tile.y*geo.sy,
+          tile.w*geo.sx,tile.h*geo.sy);
+      }
+      return true;
+    }
+
     function imageRegion(key,geo){
       if(!ready(key)||geo.sx<=0||geo.sy<=0)return;
       const img=assets[key];
@@ -297,7 +418,7 @@
         const consoleAlpha=.72*smooth((st.log-.26)/1.15);
         if(ready('console')&&consoleAlpha>.001){
           ctx.save();ctx.globalAlpha=consoleAlpha;
-          imageRegion('console',base);
+          if(!drawVectorTiles('console',base))imageRegion('console',base);
           ctx.restore();
         }
         // A high-resolution inset for the long gallery softens no edges and
@@ -311,7 +432,14 @@
           const engravingAlpha=hallAlpha*smooth((st.log-1.20)/1.35);
           if(ready('hallEngraving')&&engravingAlpha>.001){
             ctx.globalAlpha=engravingAlpha;
-            imageRegion('hallEngraving',hallGeo);
+            if(!drawVectorTiles('hallEngraving',hallGeo))imageRegion('hallEngraving',hallGeo);
+          }
+          // This independently authored close-up artwork adds actual velvet,
+          // reflective marble and subtle frame tooling, not enlarged pixels.
+          const hallMacroAlpha=hallAlpha*smooth((st.log-1.65)/1.35);
+          if(ready('hallMacro')&&hallMacroAlpha>.001){
+            ctx.globalAlpha=hallMacroAlpha;
+            if(!drawVectorTiles('hallMacro',hallGeo))imageRegion('hallMacro',hallGeo);
           }
           ctx.restore();
         }}
@@ -324,7 +452,17 @@
       // vector detail from the first frame, then progressively bring it to full opacity.
       // Both versions occupy exactly the same door rectangle, with no shape switch.
       const detailAlpha=.55+.45*smooth((st.log-.25)/1.90);
-      if(ready('door')){ctx.globalAlpha=detailAlpha;imageRegion('door',doorImgGeo);}
+      if(ready('door')){
+        ctx.globalAlpha=detailAlpha;
+        if(!drawVectorTiles('door',doorImgGeo))imageRegion('door',doorImgGeo);
+      }
+      // Walnut pores, relief carving and microscopic brass keyhole tooling
+      // share EXACTLY the original 900×1200 door registration.
+      const doorMacroAlpha=detailAlpha*smooth((st.log-2.35)/1.40);
+      if(ready('doorMacro')&&doorMacroAlpha>.001){
+        ctx.globalAlpha=doorMacroAlpha;
+        if(!drawVectorTiles('doorMacro',doorImgGeo))imageRegion('doorMacro',doorImgGeo);
+      }
       ctx.globalAlpha=1;
       if(detailAlpha>.02)paintKeyholeFrame(doorGeo);
       ctx.restore();
