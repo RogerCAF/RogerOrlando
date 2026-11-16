@@ -8,7 +8,7 @@ const images=[
  ['01-computer-refined.webp',1084,1451,400000],
  ['02-server.webp',1024,1536,200000],
  ['03-grand-stairway.webp',800,1280,350000],
- ['04-observatory.webp',658,1386,120000],
+ ['04-observatory-daylight.webp',658,1386,280000],
  ['05-honeybadgers.webp',650,1380,150000],
  ['06-pearl-conflict.webp',975,1536,60000]
 ];
@@ -39,12 +39,16 @@ assert.ok(js.includes('const n=(i+1)%art.length') && js.includes('renderNested(n
  'The pearl must contain world one without fake full-screen swaps');
 assert.ok(js.includes('window.__INFINITE_V3') && js.includes('function calcRoot(depth)'),
  'Camera must have reproducible boundary positions');
-assert.ok(js.includes('function telescopeMacro(g)') && js.includes('ctx.translate(g.x,g.y)'),
- 'The near-zero lens needs a redrawn sharp macro rather than enlarging the thumbnail indefinitely');
+assert.ok(!js.includes('function telescopeMacro(g)'),
+ 'The telescope pupil must be physically painted, not covered by a second floating metal tube');
+assert.ok(js.includes("cx:332,cy:717,rx:8.8,ry:9.4"),
+ 'The tiny lens must follow the real glass of the new observatory painting');
+assert.ok(js.includes("archRise:145") && js.includes('rise*(1-c)'),
+ 'The stairway portal must follow the inner brass arch rather than spilling over its crown');
 for(const action of ['pointerdown','pointermove','pointercancel','wheel','keydown'])
  assert.ok(js.includes(action),'Missing '+action+' input control');
 assert.ok(js.includes('foregroundViewer') && js.includes('ctx.clip()') && js.includes('g.i===0&&g.cycle===0'),
  'Original seated viewer must stay in front of the monitor aperture');
 assert.ok(intro.includes('src="/infinite-worlds.html"') && intro.includes('href="/infinite-worlds.html"'),
  'Never replace the approved production experience before visual signoff');
-console.log('V3 live-preview: 6 verified illustrated masters, continuous physical clips, input, optical macro and recursive pearl loop.');
+console.log('V3 live-preview: 6 painted masters, accurately traced stair arch, natural small telescope pupil, continuous nested clips and pearl loop.');
