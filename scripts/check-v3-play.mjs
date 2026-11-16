@@ -7,7 +7,7 @@ const intro=readFileSync('app/components/InfiniteWorldsPreview.tsx','utf8');
 const images=[
  ['01-computer-refined.webp',1084,1451,400000],
  ['02-server.webp',1024,1536,200000],
- ['03-stairway.webp',800,1280,120000],
+ ['03-grand-stairway.webp',800,1280,350000],
  ['04-observatory.webp',658,1386,120000],
  ['05-honeybadgers.webp',650,1380,150000],
  ['06-pearl-conflict.webp',975,1536,60000]
@@ -43,7 +43,7 @@ assert.ok(js.includes('function telescopeMacro(g)') && js.includes('ctx.translat
  'The near-zero lens needs a redrawn sharp macro rather than enlarging the thumbnail indefinitely');
 for(const action of ['pointerdown','pointermove','pointercancel','wheel','keydown'])
  assert.ok(js.includes(action),'Missing '+action+' input control');
-assert.ok(js.includes('foregroundViewer') && js.includes('ctx.clip()'),
+assert.ok(js.includes('foregroundViewer') && js.includes('ctx.clip()') && js.includes('g.i===0&&g.cycle===0'),
  'Original seated viewer must stay in front of the monitor aperture');
 assert.ok(intro.includes('src="/infinite-worlds.html"') && intro.includes('href="/infinite-worlds.html"'),
  'Never replace the approved production experience before visual signoff');
