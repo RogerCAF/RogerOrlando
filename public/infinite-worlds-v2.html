@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#10151b"/><title>Infinite Worlds — Vector Edition | Roger Orlando</title>
+<style>
+*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#10151b}body{font-family:Inter,'Segoe UI',Arial,sans-serif;color:#f3dfbb}
+main{position:relative;width:100%;height:100%;overflow:hidden;background:#10151b}
+#art{width:100%;height:100%;display:block;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+#art:active{cursor:grabbing}#art:focus-visible{outline:2px solid #ddbc81;outline-offset:-4px}
+.hud{position:absolute;top:clamp(14px,2vw,28px);left:clamp(16px,3vw,44px);display:flex;gap:10px;align-items:center;pointer-events:none;z-index:3}
+.hud .line{width:23px;height:1px;background:#d4ae70}.hud strong{display:block;font-size:10px;letter-spacing:.23em;color:#e5c18e}.hud small{display:block;font-size:9px;letter-spacing:.15em;color:#b8af9f;margin-top:5px}
+.controls{position:absolute;z-index:3;right:clamp(15px,2.7vw,34px);bottom:clamp(20px,3.3vw,36px);display:flex;align-items:center;gap:9px}
+.controls button{font:700 10px/1 Inter,'Segoe UI',sans-serif;letter-spacing:.13em;border:1px solid #ba9c6a88;border-radius:6px;color:#e4cb9e;background:#141a20e8;padding:13px 15px;cursor:pointer;box-shadow:0 7px 19px #0006}
+.controls button:hover{background:#29313b;border-color:#edcf98}.controls button:focus-visible{outline:2px solid #f2d3a4;outline-offset:3px}
+.note{position:absolute;left:clamp(14px,3vw,44px);bottom:clamp(20px,3.3vw,36px);font:600 9px/1.5 Inter,Arial,sans-serif;letter-spacing:.11em;color:#e3c599aa;pointer-events:none;max-width:52vw}
+@media(max-width:600px){.hud strong{font-size:9px}.hud small{font-size:8px}.note{bottom:82px;max-width:75vw}.controls button{padding:12px 10px;font-size:9px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main>
+<svg id="art" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid meet" tabindex="0" role="application" aria-label="Oneindige vectorwerelden. Scroll omhoog om in te zoomen, omlaag om uit te zoomen. Sleep om rond te kijken, gebruik twee vingers op een touchscreen. Zoom door de monitor, het sleutelgat en de kleine telescooplens.">
+<defs>
+  <linearGradient id="wall" x1="0" y1="0" x2=".96" y2="1"><stop stop-color="#34363a"/><stop offset=".36" stop-color="#22252c"/><stop offset="1" stop-color="#0e141c"/></linearGradient>
+  <linearGradient id="bronze" x1="0" y1="0" x2=".98" y2=".82"><stop stop-color="#382617"/><stop offset=".18" stop-color="#a47443"/><stop offset=".38" stop-color="#ecd4a4"/><stop offset=".49" stop-color="#936337"/><stop offset=".72" stop-color="#3b281b"/><stop offset=".9" stop-color="#bd8b53"/><stop offset="1" stop-color="#302017"/></linearGradient>
+  <linearGradient id="steel" x1="0" y1="0" x2=".92" y2="1"><stop stop-color="#647079"/><stop offset=".16" stop-color="#d3d8d3"/><stop offset=".42" stop-color="#3d4a50"/><stop offset=".74" stop-color="#151e27"/><stop offset="1" stop-color="#78858b"/></linearGradient>
+  <linearGradient id="wood" x1="0" y1="0" x2=".92" y2="1"><stop stop-color="#3b261e"/><stop offset=".31" stop-color="#80513a"/><stop offset=".62" stop-color="#40291e"/><stop offset="1" stop-color="#221916"/></linearGradient>
+  <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#333941"/><stop offset=".55" stop-color="#1d252e"/><stop offset="1" stop-color="#0c121b"/></linearGradient>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#203242"/><stop offset=".55" stop-color="#677b7d"/><stop offset="1" stop-color="#c3a57d"/></linearGradient>
+  <radialGradient id="vignette"><stop stop-color="#0e151c" stop-opacity="0"/><stop offset=".72" stop-color="#0b0e13" stop-opacity=".16"/><stop offset="1" stop-color="#040608" stop-opacity=".7"/></radialGradient>
+  <radialGradient id="lens"><stop stop-color="#8ac4bc"/><stop offset=".35" stop-color="#296c80"/><stop offset=".76" stop-color="#0c2639"/><stop offset="1" stop-color="#070f19"/></radialGradient>
+  <pattern id="grain" width="29" height="83" patternUnits="userSpaceOnUse"><path d="M5 -12C18 9 -3 49 9 93M23 -5C10 28 30 54 19 88" fill="none" stroke="#f0d3a3" stroke-opacity=".12" stroke-width=".65"/></pattern>
+  <pattern id="mesh" width="12" height="12" patternUnits="userSpaceOnUse"><path d="M0 0H12M0 0V12" stroke="#f8dcb1" stroke-opacity=".085" stroke-width=".6"/></pattern>
+</defs>
+<g id="camera"></g>
+</svg>
+<div class="hud"><span class="line"></span><div><strong>THE BUREAU OF IMPOSSIBLE THINGS</strong><small id="stageName">01 / GRAND COMPUTER</small></div></div>
+<div class="note">SCROLL TO ZOOM · DRAG TO EXPLORE · EVERY WORLD IS DRAWN IN VECTORS</div>
+<div class="controls"><button type="button" id="home">OPNIEUW</button><button type="button" id="surprise">VERRAS ME</button></div>
+</main>
+<script>
+(()=>{'use strict';
+const S=1200,H=900,CX=600,CY=450;
+const svg=document.getElementById('art'),camera=document.getElementById('camera'),stageName=document.getElementById('stageName');
+const palette={ivory:'#f3dfba',gold:'#d6ab70',muted:'#aa9073',ink:'#10151b'};
+const p=(d,stroke='#d3ac76',w=1,other='')=>`<path d="${d}" ${other.includes('fill=')?'':'fill="none" '}stroke="${stroke}" stroke-width="${w}" ${other}/>`;
+const rect=(x,y,w,h,fill,stroke='none',sw=1,extras='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" ${extras}/>`;
+const line=(x1,y1,x2,y2,color='#d3a875',width=1,extra='')=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="${width}" ${extra}/>`;
+const circ=(x,y,r,fill='none',stroke='none',sw=1,ex='')=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" ${ex}/>`;
+const txt=(x,y,v,size=12,opacity=.7,fill='#e6cba1',anchor='middle')=>`<text x="${x}" y="${y}" font-family="Arial, sans-serif" text-anchor="${anchor}" font-weight="700" letter-spacing="1.4" font-size="${size}" fill="${fill}" opacity="${opacity}">${v}</text>`;
+const varnish=()=>`${rect(0,0,1200,900,'url(#vignette)')}`;
+function screw(x,y,r=4){return `${circ(x,y,r,'#4c4033','#dcb783',1)}${p(`M${x-r*.55} ${y+r*.55}l${r*1.1} -${r*1.1}`,'#181b20',.8)}`;}
+function flour(x,y,s=1){return `<g transform="translate(${x} ${y}) scale(${s})" opacity=".64">${p('M-29 0Q-15 -23 0 -5Q15 -23 29 0M-29 0Q-15 23 0 5Q15 23 29 0M0 -28Q12 -13 0 0Q-12 -13 0 -28M0 28Q12 13 0 0Q-12 13 0 28','#d3a66b',1.3)}${circ(0,0,3,'#e4c795')}</g>`;}
+const glints=(x0,y0,cols,rows,dx,dy)=>Array.from({length:cols*rows},(_,i)=>{let x=x0+i%cols*dx,y=y0+Math.floor(i/cols)*dy;return `${circ(x,y,i%7===0?1.45:.65,i%6===0?'#ffda90':'#9e764b','none',0,`opacity="${i%6===0?.55:.28}"`)}`}).join('');
+function frame(x,y,w,h,kind=0){let c=['#ae895e','#af8f67','#8c795e'][kind%3];return `${rect(x,y,w,h,'#161922',c,5)}${rect(x+5,y+5,w-10,h-10,'url(#wood)','#d9b17a',2)}${rect(x+12,y+12,w-24,h-24,kind%2?'#193038':'#39464a','#3e3024',2)}${p(`M${x+18} ${y+h-20}l${w*.27} -${h*.4}l${w*.19} ${h*.14}l${w*.18} -${h*.3}l${w*.27} ${h*.56}`,'#a69c82',2,'opacity=".7"')}${line(x+17,y+17,x+w-17,y+17,'#fff0be',1,'opacity=".4"')}`;}
+function worldComputer(){let v=`${rect(0,0,S,H,'#10141b')}`;
+// Grand engineered room: sculpted walls, dimensional circuit boards, metal frame and monitor.
+v+=`${rect(0,0,1200,690,'url(#wall)')}${rect(0,20,1200,740,'url(#mesh)')}`;
+for(let side of [0,1]){let off=side?880:18;
+ v+=`${rect(off,105,302,565,'#131a23','#97704c',5)}${rect(off+12,119,279,535,'#1d2a32','#7d6751',1.4)}`;
+ for(let i=0;i<12;i++){let x=off+30+(i%4)*56,y=150+Math.floor(i/4)*158;
+ v+=`${rect(x,y,45,115,i%3===0?'#26343b':'#151d26','#d0ab72',1.3)}${rect(x+7,y+10,31,92,'#1d2c35','#8b6644',.7)}`;
+ for(let j=0;j<6;j++)v+=`${line(x+10,y+19+j*12,x+33,y+19+j*12,j%2?'#4d8b89':'#bb8750',j%2?1:1.4,'opacity=".6"')}`;
+ v+=`${circ(x+22,y+105,2,'#d3a36a')}`;
+ }
+ for(let i=0;i<24;i++){let x=off+30+(i*31)%242,y=165+(i*47)%450;v+=`${p(`M${x} ${y}h${i%2?19:-14}v${i%4?12:-8}h${i%3?18:-11}`,'#bd8b4c',.9,'opacity=".35"')}${circ(x,y,1.1,'#ebc48d')}`;}
+}
+v+=`${rect(0,694,1200,206,'url(#floor)')}${p('M0 715H1200M0 778H1200','#b69a78',2,'opacity=".35"')}`;
+for(let i=0;i<28;i++)v+=`${line(i*44,705,600+(i-14)*76,900,'#d4ad77',.7,'opacity=".15"')}`;
+v+=`${rect(291,170,618,473,'#080c12','#d2ae74',8,'rx="19"')}${rect(306,184,588,440,'url(#bronze)','#2b2019',9,'rx="12"')}${rect(329,209,542,393,'#0c1118','#f1d7ab',2,'rx="4"')}`;
+v+=`${rect(344,223,512,366,'#081522','#424d55',5,'rx="2"')}${rect(359,238,482,336,'#0c1a24','#9c855f',1.3,'rx="2"')}`;
+// The physical monitor glow remains subtle; entire screen is the portal.
+v+=`${rect(470,628,255,30,'#1e252c','#a68a62',2,'rx="8"')}${txt(595,649,'THE BUREAU  /  REV. 02',11,.7)}`;
+v+=`${rect(537,656,122,77,'url(#steel)','#927c59',3)}${p('M460 751H741L768 779H431Z','#dac69f',4)}${rect(428,778,346,20,'url(#bronze)','#ebcc99',1.2,'rx="5"')}`;
+for(let i=0;i<9;i++)v+=`${screw(329+i*68,194,2.6)}`;
+v+=`${txt(598,856,'CAREFUL — IDEAS MAY ESCAPE THROUGH THE SCREEN',11,.6)}`;
+return v+varnish();}
+function worldGallery(){let v=`${rect(0,0,S,H,'#181d24')}${rect(0,0,1200,900,'url(#wall)')}`;
+// Stable, symmetric vanishing point with repeating classical + engineered architecture.
+v+=`${p('M0 0L550 282H650L1200 0','#9e7c56',5,'opacity=".65"')}${p('M0 0L1200 0L680 325H520Z','#d1a66e',3)}`;
+v+=`${rect(505,272,190,350,'#181b20','#c5a176',3)}${rect(518,283,164,327,'url(#wood)','#d8b588',2)}`;
+for(let i=0;i<6;i++){let t=i/5;let l=18+t*476,rr=1200-l,top=40+t*264,bottom=775-t*192;
+ v+=`${p(`M${l} ${top}H${rr}M${l} ${top}V${bottom}M${rr} ${top}V${bottom}`,'#bd9362',3-t*1.9,`opacity="${.7-t*.26}"`)}${p(`M${l+10} ${top+12}Q600 ${top-77*(1-t)} ${rr-10} ${top+12}`,'#ecce99',2-t*.7,`opacity="${.58-t*.19}"`)}`;
+ v+=`${circ(l+12,top+17,5*(1-t)+1.2,'#f1cc8d')}${circ(rr-12,top+17,5*(1-t)+1.2,'#f1cc8d')}`;
+}
+// Original oil paintings remain paintings, not screens.
+for(let i=0;i<4;i++){let k=1-i*.16,fy=220+i*29,fx=25+i*127,fw=185-i*36,fh=270-i*43;
+ v+=`${frame(fx,fy,fw,fh,i)}${frame(1200-fx-fw,fy,fw,fh,i+1)}`;
+}
+v+=`${p('M0 850L550 602H650L1200 850V900H0Z','#a58762',3)}${p('M0 850L550 602H650L1200 850','#ddba7b',2)}`;
+v+=`${rect(0,839,1200,61,'url(#floor)')}${p('M600 608L410 900M600 608L790 900M600 608L86 900M600 608L1114 900','#c5ad87',2,'opacity=".42"')}`;
+for(let i=0;i<9;i++){let y=620+i*i*3.2;v+=`${line(210-i*45,y,990+i*45,y,'#e1c390',1.2,'opacity=".35"')}`;}
+// Door in a consistent warm walnut with 6 genuine recessed panels.
+v+=`${rect(522,310,156,307,'#291b17','#b99b6e',5)}${rect(532,319,136,289,'url(#wood)','#e0bd8d',2)}${line(600,319,600,608,'#170c0a',4)}`;
+for(let x of [538,610])for(let y of [334,420,523])v+=`${rect(x,y,53,73,'#33251f','#b08959',2)}${rect(x+6,y+6,41,61,'url(#grain)','#8c6649',.7)}${flour(x+26,y+36,.16)}`;
+v+=`${rect(593,472,4,35,'url(#bronze)','#f3d8ab',.8,'rx="2"')}${rect(604,472,4,35,'url(#bronze)','#f3d8ab',.8,'rx="2"')}${circ(608,515,12,'#1b1210','#bb9262',2)}${txt(600,863,'THE DOOR DOES NOT ACCEPT PASSWORDS',9,.4)}`;
+return v+varnish();}
+function worldBalcony(){let v=`${rect(0,0,S,H,'#17222c')}${rect(0,0,1200,600,'url(#sky)')}`;
+// Distant landscape, kept clean and understated; same warm architectural metal.
+v+=`${p('M0 431L90 380L198 416L345 340L493 413L601 362L746 421L893 347L1040 407L1200 371V625H0Z','#485c5d',0,'fill="#485c5d" stroke="none"')}`;
+v+=`${p('M0 480L170 438L278 462L381 438L550 469L690 429L824 474L960 432L1090 475L1200 458V612H0Z','#75857a',0,'fill="#75857a" stroke="none"')}`;
+v+=`${rect(0,492,1200,163,'#27414d')}`;
+for(let i=0;i<18;i++)v+=`${p(`M${(i*71)%1200} ${507+(i*27)%115}h${20+i%7*7}`,'#d6c19d',1,'opacity=".22"')}`;
+// spacious observatory loggia, dark, deliberately minimal.
+v+=`${p('M0 0H1200V900H0Z M244 113H956V631H244Z','#d2b181',9,'fill-rule="evenodd" fill="url(#wall)"')}`;
+v+=`${rect(0,0,1200,80,'url(#bronze)')}${rect(0,78,1200,24,'#26282a','#d8b387',2)}`;
+for(let x of [148,1048]){v+=`${rect(x,116,40,536,'url(#steel)','#c7aa7d',3)}${rect(x-16,106,72,38,'url(#bronze)','#e4c896',2)}${rect(x-15,629,69,27,'url(#bronze)','#ceb186',2)}`;}
+v+=`${p('M235 626H965M235 646H965','#e6cca2',4)}${rect(241,623,718,38,'#382f2b','#c2a678',3)}`;
+for(let i=0;i<14;i++)v+=`${rect(250+i*49,638,13,24,'url(#bronze)','#c1a478',.7)}`;
+v+=`${p('M0 900L374 640H826L1200 900Z','#b9a184',4,'fill="url(#floor)"')}`;
+for(let i=0;i<17;i++){let x=300+i*38;v+=`${line(x,651,600+(x-600)*2.1,900,'#d5b584',1,'opacity=".34"')}`;}
+for(let i=0;i<7;i++)v+=`${p(`M${275-i*38} ${670+i*29}H${925+i*38}`,'#dfbc87',1,'opacity=".28"')}`;
+v+=`${circ(600,765,50,'none','#c5a472',1.4,'opacity=".57"')}${circ(600,765,37,'none','#a78353',1.1)}${p('M600 717V814M551 765H649','#d6b380',1)}${txt(600,851,'OBSERVE. DO NOT DISTURB THE HORIZON.',10,.37)}`;
+// One SMALL, real refracting telescope (no giant spherical opening).
+// Slim tube 73px long, 11px barrel diameter, a single objective lens.
+v+=`${p('M566 442L629 434L636 444L571 453Z','#a67b4e',1.5,'fill="url(#bronze)"')}`;
+v+=`${rect(617,437,5,11,'url(#steel)','#e1c291',.9,'transform="rotate(-7 619 443)"')}`;
+v+=`${p('M590 455L603 481','#cba573',4)}${rect(591,476,23,10,'url(#bronze)','#edd4a3',1.1,'rx="2"')}`;
+v+=`${p('M601 482L567 543M601 482L635 543M601 482L602 549','#b8a38b',3.7)}${circ(601,482,5,'#4c4640','#e5c993',1.2)}`;
+v+=`${p('M561 546h13M628 546h13M595 550h13','#bca77e',2)}`;
+v+=`${circ(571,447,7.6,'#0a1a26','#e8c488',2)}${circ(571,447,5.5,'url(#lens)','#182936',.7)}`;
+// Warm tiny optical highlight, precisely one lens.
+v+=`${p('M568 444l1.4 -1.3','#d7f0e8',.9,'opacity=".85"')}${txt(600,875,'A SMALL TELESCOPE. A VERY LONG WAY DOWN.',8,.32)}`;
+return v+varnish();}
+function worldServer(){let v=`${rect(0,0,1200,900,'#101a23')}${rect(0,0,1200,900,'url(#wall)')}`;
+for(let side of [0,1])for(let i=0;i<8;i++){let k=1-i*.081,x=(side?920:55)+(side?-1:1)*i*29,top=75+i*29,w=250*k,h=676-i*47;
+v+=`${rect(x,top,w,h,'#182630','#a18a68',Math.max(.6,2-i*.14))}`;
+for(let q=0;q<9;q++){let yy=top+16+q*(h-25)/9;v+=`${rect(x+9,yy,w-18,Math.max(2,7*k),'#2b3942','#526a70',.6)}${circ(x+w-26,yy+2*k,1.2*k,i%3?'#8cc4ac':'#e6a56e')}`;}
+}
+v+=`${p('M0 900L570 605H630L1200 900','#dbc29e',3)}${p('M600 610L420 900M600 610L780 900','#a9adab',1,'opacity=".6"')}`;
+for(let i=0;i<9;i++)v+=`${line(240-i*32,630+i*34,960+i*32,630+i*34,'#b5a181',1,'opacity=".25"')}`;
+v+=`${rect(543,363,114,264,'url(#wood)','#d9b37b',5)}${rect(555,377,90,240,'#0d1620','#c19b6c',2)}${circ(600,495,18,'#081420','#ba9768',3)}${circ(600,495,13,'url(#lens)','#bad2cf',1)}${txt(600,691,'PLEASE DO NOT UNPLUG THE UNIVERSE',10,.45)}`;
+return v+varnish();}
+function worldArchive(){let v=`${rect(0,0,1200,900,'#10252d')}${rect(0,0,1200,900,'url(#wall)')}`;
+v+=`${rect(160,105,880,490,'#294c57','#c8a679',9)}${rect(175,119,850,466,'#1c4655','#9fb3af',3)}`;
+for(let i=0;i<19;i++)v+=`${p(`M${180+i*48} 310q30 -${30+i%3*11} 68 -3`,'#9fc6c4',2,'opacity=".16"')}`;
+for(let side of [0,1])for(let i=0;i<7;i++){let x=side?864:38,y=117+i*76;v+=`${rect(x,y,275,62,'url(#wood)','#b98c54',3)}`;for(let j=0;j<11;j++)v+=`${rect(x+10+j*23,y+9,10,43,j%3?'#4d504e':'#968166','#d3b58b',.6)}`;}
+v+=`${p('M0 770L550 592H650L1200 770V900H0Z','#c2b28f',2,'fill="url(#floor)"')}${circ(600,700,105,'none','#ba9f78',3,'opacity=".65"')}`;
+v+=`${rect(496,480,208,172,'#131e27','#bda179',6,'rx="11"')}${rect(511,492,178,145,'#1b3a48','#ebd3a2',2,'rx="7"')}${circ(600,560,19,'#071821','#b8a078',2)}`;
+v+=`${circ(600,560,18,'url(#lens)','#b7a478',2)}${txt(600,797,'ARCHIVE / THINGS THAT SHOULD NOT EXIST',9,.55)}`;
+return v+varnish();}
+function worldObservatory(){let v=`${rect(0,0,1200,900,'#0b141c')}${rect(0,0,1200,900,'url(#wall)')}`;
+for(let i=0;i<90;i++){let x=(i*157)%1200,y=(i*241)%520;v+=`${circ(x,y,i%7===0?2:.8,i%7===0?'#e0cfb0':'#87aabc','none',0,`opacity="${i%6===0?.83:.35}"`)}`;}
+v+=`${p('M0 60Q600 -170 1200 60M0 240Q600 -15 1200 240M0 430Q600 175 1200 430','#af8c5f',2,'opacity=".6"')}`;
+for(let i=0;i<7;i++)v+=`${circ(600,450,120+i*54,'none','#b39767',i%2?1:2,`opacity="${.26-i*.028}"`)}`;
+v+=`${p('M0 900L500 645H700L1200 900Z','#ddc7a0',3,'fill="url(#floor)"')}`;
+for(let i=0;i<12;i++){let a=i*Math.PI/6;v+=`${line(600,630,600+140*Math.cos(a),630+95*Math.sin(a),'#bca77c',1,'opacity=".27"')}`;}
+v+=`${circ(600,448,80,'#122c3c','#d8b37d',8)}${circ(600,448,66,'url(#lens)','#91c7c9',2)}${p('M600 361V375M600 521V535M513 448H527M673 448H687','#f4d69c',2)}`;
+v+=`${txt(600,780,'THE STARS ARE NOT PART OF THE WARRANTY',11,.46)}`;
+return v+varnish();}
+function worldEnding(i){let shrimp=i%2===1;let v=`${rect(0,0,1200,900,'#0d1e23')}${rect(0,0,1200,900,'url(#wall)')}${circ(600,450,324,'none','#b99563',10)}${circ(600,450,301,'none','#695941',2)}${circ(600,450,279,'#16343d','#9a8360',2)}`;
+for(let k=0;k<18;k++){let a=k*Math.PI/9;v+=`${circ(600+252*Math.cos(a),450+252*Math.sin(a),k%3?4:7,'#cca776')}`;}
+if(shrimp){v+=`${p('M452 405Q589 300 682 388T630 566Q546 610 491 503Q446 439 498 388','#ffa97e',7,'fill="#d97560"')}`;
+for(let j=0;j<9;j++){let a=j*.34;v+=`${p(`M${505+j*16} ${392+j*7}l-17 34`,'#ffd0a9',4,'opacity=".48"')}`;}
+v+=`${circ(659,416,7,'#091a1f')}${circ(661,413,2,'#fff')}${p('M670 412l44 -50M677 415l51 -23','#edb695',2)}`;
+}else{v+=`${p('M415 458Q443 340 597 353Q779 356 796 453Q777 571 607 564Q433 565 415 458','#e3b16b',7,'fill="#c89759"')}`;
+for(let j=0;j<38;j++){let a=j*2.4;v+=`${circ(595+Math.cos(a)*((j*23)%160),449+Math.sin(a)*((j*17)%85),j%5+1,'#efcf88')}`;}
+v+=`${circ(730,421,10,'#0d1e25')}${circ(733,417,3,'#fff')}${p('M789 447l44 -22l-44 -20Z','#e9a46d',4,'fill="#d99b58"')}`;}
+v+=`${txt(600,760,shrimp?'YOU FOUND THE SECRET SHRIMP.':'YOU FOUND THE CHIEF PUFFERFISH.',17,.9)}${txt(600,794,'CONGRATULATIONS. PLEASE ACT SURPRISED.',10,.53)}`;return v+varnish();}
+const portals=[
+ // Coordinates are the ONLY definition of each physical opening. A child
+ // world is drawn from this same registration, and the camera focuses here.
+ {x:600,y:405,w:440,type:'rect',label:'GRAND COMPUTER'},
+ {x:608,y:515,w:14,type:'keyhole',r:12,label:'GALLERY / KEYHOLE'},
+ {x:571,y:447,w:12,type:'circle',r:8.7,label:'BALCONY / TELESCOPE'},
+ {x:600,y:495,w:20,type:'circle',r:14,label:'SERVER / PORTHOLE'},
+ {x:600,y:560,w:22,type:'circle',r:16,label:'ARCHIVE / SPECIMEN'},
+ {x:600,y:448,w:22,type:'circle',r:16,label:'CELESTIAL OBSERVATORY'}
+];
+// Portal center denotes the center of a 4:3 child world window. The round
+// mask radius encloses all four corners of that window, so the camera can
+// rebase at its exact edge without cropping or visually changing the child.
+const scenes=[worldComputer,worldGallery,worldBalcony,worldServer,worldArchive,worldObservatory];
+const names=['01 / GRAND COMPUTER','02 / GALLERY OF IMPOSSIBLE THINGS','03 / OBSERVATION BALCONY','04 / ENGINE ROOM','05 / UNDERWATER ARCHIVE','06 / CELESTIAL OBSERVATORY','07 / HIDDEN ENDING'];
+const stageLengths=portals.map(o=>Math.log(S/o.w));
+const stops=[0];for(let v of stageLengths)stops.push(stops.at(-1)+v);
+const maxLog=stops.at(-1)+1.8;
+let destination=0,logZ=0,panX=0,panY=0,panGoalX=0,panGoalY=0,ending=0,stage=-1,raf=0,last=0;
+const pointers=new Map();let pinchDistance=0,pinchCenter=null;
+const clamp=(n,a,b)=>Math.min(b,Math.max(a,n));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const childTransform=o=>`translate(${o.x} ${o.y}) scale(${o.w/S}) translate(${-CX} ${-CY})`;
+function portalClip(o,id){
+ const x=o.x,y=o.y,w=o.w,h=w*.75;
+ if(o.type==='rect')return `<clipPath id="${id}" clipPathUnits="userSpaceOnUse">${rect(x-w/2,y-h/2,w,h,'white')}</clipPath>`;
+ if(o.type==='keyhole'){
+  // Little mechanical keyhole: circular top with tapered lower stem. Only the
+  // round head is used as the zooming window. A single unchanged contour.
+  return `<clipPath id="${id}" clipPathUnits="userSpaceOnUse"><path d="M${x-10} ${y}a10 10 0 1 1 20 0Q${x+10} ${y+5} ${x+5} ${y+9}L${x+7} ${y+22}Q${x} ${y+27} ${x-7} ${y+22}L${x-5} ${y+9}Q${x-10} ${y+5} ${x-10} ${y}Z"/></clipPath>`;
+ }
+ return `<clipPath id="${id}" clipPathUnits="userSpaceOnUse">${circ(x,y,o.r,'white')}</clipPath>`;
+}
+function portalBezel(o){
+ if(o.type==='rect')return `${rect(o.x-o.w/2-5,o.y-o.w*.375-5,o.w+10,o.w*.75+10,'none','#e6c694',2.5)}`;
+ if(o.type==='keyhole'){let x=o.x,y=o.y;return `<path d="M${x-10} ${y}a10 10 0 1 1 20 0Q${x+10} ${y+5} ${x+5} ${y+9}L${x+7} ${y+22}Q${x} ${y+27} ${x-7} ${y+22}L${x-5} ${y+9}Q${x-10} ${y+5} ${x-10} ${y}Z" fill="none" stroke="#dfb57b" stroke-width="1.8"/>`}
+ return `${circ(o.x,o.y,o.r+2.1,'none','#dcb57f',2)}${circ(o.x,o.y,o.r+3.6,'none','#73563e',.6)}`;
+}
+function buildScene(i,depth=0){
+ let content=i>=scenes.length?worldEnding(ending):scenes[i]();
+ if(i>=portals.length||depth>1)return `<g data-scene="${i}">${content}</g>`;
+ const o=portals[i],id=`portal_${i}_${depth}`;
+ // Actual child SVG geometry is drawn under its PARENT's clip. The next
+ // world is already visible inside the aperture even at a distance.
+ content+=`${portalClip(o,id)}<g clip-path="url(#${id})"><g transform="${childTransform(o)}">${buildScene(i+1,depth+1)}</g></g>${portalBezel(o)}`;
+ return `<g data-scene="${i}">${content}</g>`;
+}
+function locate(z){let i=0;while(i<stops.length-1&&z>=stops[i+1]-1e-7)i++;return i;}
+function request(){if(!raf)raf=requestAnimationFrame(render);}
+function render(ms){raf=0;const dt=last?clamp(ms-last,1,50):16.67;last=ms;const ease=matchMedia('(prefers-reduced-motion: reduce)').matches?1:1-Math.exp(-dt/92);
+ logZ=lerp(logZ,destination,ease);panX=lerp(panX,panGoalX,ease);panY=lerp(panY,panGoalY,ease);
+ if(Math.abs(logZ-destination)<.00003)logZ=destination;
+ const i=locate(logZ);
+ if(i!==stage){stage=i;camera.innerHTML=buildScene(stage);stageName.textContent=names[stage];}
+ const from=stops[stage],until=stops[Math.min(stage+1,stops.length-1)];
+ const span=Math.max(.00001,until-from),t=clamp((logZ-from)/span,0,1);
+ const o=portals[stage];
+ const focusX=o?lerp(CX,o.x,t):CX,focusY=o?lerp(CY,o.y,t):CY;
+ const zoom=Math.exp(logZ-from);
+ camera.setAttribute('transform',`translate(${(CX+panX-focusX*zoom).toFixed(5)} ${(CY+panY-focusY*zoom).toFixed(5)}) scale(${zoom.toFixed(7)})`);
+ if(Math.abs(logZ-destination)>.00003||Math.abs(panGoalX-panX)+Math.abs(panGoalY-panY)>.04)request();else last=0;
+}
+function zoomBy(factor,pointerX,pointerY){const delta=clamp(Math.log(factor),-.65,.65);destination=clamp(destination+delta,0,maxLog);
+ if(Number.isFinite(pointerX)&&Number.isFinite(pointerY)){
+  // A modest cursor bias encourages exploration without losing the portal.
+  panGoalX=clamp(panGoalX+(CX-pointerX)*delta*.075,-420,420);
+  panGoalY=clamp(panGoalY+(CY-pointerY)*delta*.075,-350,350);
+ }
+ request();}
+function svgCoords(ev){let r=svg.getBoundingClientRect();return {x:(ev.clientX-r.left)/r.width*1200,y:(ev.clientY-r.top)/r.height*900};}
+svg.addEventListener('wheel',e=>{e.preventDefault();const d=e.deltaMode===1?e.deltaY*15:e.deltaMode===2?e.deltaY*350:e.deltaY;const pt=svgCoords(e);zoomBy(Math.exp(-clamp(d,-130,130)*.003),pt.x,pt.y);},{passive:false});
+svg.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;svg.setPointerCapture(e.pointerId);pointers.set(e.pointerId,svgCoords(e));pinchDistance=0;});
+svg.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;const now=svgCoords(e),before=pointers.get(e.pointerId);pointers.set(e.pointerId,now);
+ if(pointers.size===1){panGoalX=clamp(panGoalX+now.x-before.x,-420,420);panGoalY=clamp(panGoalY+now.y-before.y,-350,350);request();}
+ else if(pointers.size===2){const [a,b]=[...pointers.values()],d=Math.hypot(a.x-b.x,a.y-b.y),mid={x:(a.x+b.x)/2,y:(a.y+b.y)/2};if(pinchCenter){panGoalX=clamp(panGoalX+mid.x-pinchCenter.x,-420,420);panGoalY=clamp(panGoalY+mid.y-pinchCenter.y,-350,350);}if(pinchDistance>10&&d>10)zoomBy(d/pinchDistance,mid.x,mid.y);pinchDistance=d;pinchCenter=mid;request();}
+});
+const release=e=>{pointers.delete(e.pointerId);pinchDistance=0;pinchCenter=null;};svg.addEventListener('pointerup',release);svg.addEventListener('pointercancel',release);
+svg.addEventListener('dblclick',e=>{const pt=svgCoords(e);zoomBy(1.5,pt.x,pt.y);});
+svg.addEventListener('keydown',e=>{if(['+','=','ArrowUp'].includes(e.key)){e.preventDefault();zoomBy(1.2);}if(['-','ArrowDown'].includes(e.key)){e.preventDefault();zoomBy(1/1.2);}if(e.key==='Home'){e.preventDefault();destination=panGoalX=panGoalY=0;request();}});
+document.getElementById('home').addEventListener('click',()=>{destination=panGoalX=panGoalY=0;request();});
+document.getElementById('surprise').addEventListener('click',()=>{ending=(ending+1)%2;stage=-1;request();});
+request();
+})();
+</script>
+</body></html>
