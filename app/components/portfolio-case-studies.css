@@ -260,3 +260,38 @@
 .cs-bierkoerier-preview{background:#100906}
 .cs-bierkoerier-art{display:block;width:100%;height:100%;object-fit:cover;object-position:center 55%;filter:none}
 .cs-bierkoerier-preview:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#080504a8,transparent 23%,transparent 75%,#0805046b);}
+
+/* Brand-fidelity / sharpness pass:
+   The CityFi emblem is now true scalable SVG, never a 240px raster in disguise.
+   The authentic Bier Koerier source remains recognisable and is no longer
+   blown up and cropped far beyond its native pixels. */
+.cs-cityfi-logo{
+  width:min(67%,248px)!important;
+  image-rendering:auto;
+  backface-visibility:visible;
+  filter:drop-shadow(0 16px 24px rgba(0,0,0,.45))!important;
+}
+.cs-card:is(.cs-cityfi,.cs-bierkoerier,.cs-breakurge):hover .cs-preview{
+  transform:none;
+}
+.cs-bierkoerier-preview{
+  background:radial-gradient(ellipse at 50% 52%,#352112 0%,#160e09 58%,#090806 100%);
+}
+.cs-bierkoerier-art{
+  width:min(92%,330px);
+  height:min(92%,330px);
+  max-height:100%;
+  object-fit:contain;
+  object-position:center;
+  image-rendering:auto;
+}
+.cs-bierkoerier-preview:after{
+  background:linear-gradient(180deg,rgba(8,5,4,.22),transparent 24%,transparent 80%,rgba(8,5,4,.18));
+}
+.cs-breakurge .cs-breakurge-icon{
+  image-rendering:auto;
+}
+@media(max-width:650px){
+  .cs-cityfi-logo{width:min(69%,220px)!important}
+  .cs-bierkoerier-art{width:min(88%,265px);height:min(88%,265px)}
+}
