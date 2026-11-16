@@ -4,7 +4,7 @@ import { Script } from 'node:vm';
 const preview=readFileSync('public/infinite-worlds-v3-concept.html','utf8');
 const live=readFileSync('app/components/InfiniteWorldsPreview.tsx','utf8');
 const illustrations=[
- ['computerwereld','public/v3/v3-computer-original-illustrated.webp',1084,1286,500000],
+ ['computerwereld','public/v3/v3-computer-original-illustrated.webp',1084,1451,250000],
  ['wereldkaart','public/v3/v3-five-world-storyboard.webp',1672,941,450000]
 ];
 function dimensions(path){
