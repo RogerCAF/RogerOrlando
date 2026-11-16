@@ -5,6 +5,7 @@ import { Script } from 'node:vm';
 const html = readFileSync(new URL('../public/infinite-worlds.html', import.meta.url), 'utf8');
 const door = readFileSync(new URL('../public/bureau-door-sharp.svg', import.meta.url), 'utf8');
 const galleryEngraving = readFileSync(new URL('../public/bureau-hallway-engraving.svg', import.meta.url), 'utf8');
+const consoleEngraving = readFileSync(new URL('../public/bureau-console-precision.svg', import.meta.url), 'utf8');
 const inline = html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 assert.ok(inline, 'The standalone Infinite Worlds script must exist.');
 new Script(inline, { filename: 'infinite-worlds-inline.js' });
@@ -25,6 +26,12 @@ assert.ok(door.includes('<path d="' + mask + '"'),
   'Door art and Canvas clip diverged — this would produce a visible seam.');
 assert.ok(html.includes('/bureau-door-sharp.svg'), 'Sharp scalable door asset missing.');
 assert.ok(html.includes('/bureau-hallway-engraving.svg'), 'Registered gallery vector detail layer missing.');
+assert.ok(html.includes('/bureau-console-precision.svg'), 'Original intro hardware has lost its precision vector detail.');
+assert.match(consoleEngraving, /viewBox="0 0 960 1370"/, 'Console SVG coordinates differ from the original 960px artwork.');
+assert.ok(!/<image\b|base64,/.test(consoleEngraving), 'Intro detail must be true scalable vector artwork.');
+assert.ok(html.indexOf("imageRegion('console',base)") < html.indexOf("imageRegion('hall',hallGeo)"),
+  'Console hardware must be painted behind the nested hallway, never over the paintings.');
+assert.ok(html.includes('const consoleAlpha=.72*smooth'), 'Introduction detail must progressively blend in.');
 assert.match(galleryEngraving, /viewBox="0 0 1680 2020"/, 'Gallery detail coordinate system differs from painted hallway.');
 assert.ok(!/<image\b|base64,/.test(galleryEngraving), 'Gallery detail must be true vector, not a bitmap disguised as SVG.');
 assert.ok((galleryEngraving.match(/<g transform="translate\(/g)||[]).length >= 8,
@@ -37,7 +44,7 @@ assert.ok(html.includes("st.panTargetX") && html.includes("const panEasing="),
 
 // The complete finite stack must be loaded and decoded during initial setup,
 // never on each portal or after scroll. Do not reintroduce per-level downloads.
-for (const key of ['one','hall','hallEngraving','door','two','server','archive','observatory','puffer','shrimp']) {
+for (const key of ['one','console','hall','hallEngraving','door','two','server','archive','observatory','puffer','shrimp']) {
   assert.match(inline, new RegExp('\\b' + key + ":'"), 'Missing source: ' + key);
 }
 assert.ok(inline.includes("const totalAssets=Object.keys(sources).length"),
@@ -128,6 +135,8 @@ for(let i=0;i<80;i++){
   advance(4);
 }
 advance(40);
+assert.ok(renderSources.has('/bureau-console-precision.svg'),
+  'Intro hardware detail was loaded but not rendered during zoom.');
 assert.ok(renderSources.has('/bureau-hallway-engraving.svg'),
   'Extra fine gallery details were loaded but never composited while zooming.');
 for(let i=0;i<80;i++){
