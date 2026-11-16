@@ -30,16 +30,19 @@ assert.ok(door.includes('<path d="' + mask + '"'),
 assert.ok(mask.includes('507.5 792 C501.4 792'), 'Natural compact keyhole aperture lost.');
 assert.ok(door.includes('Traditional raised brass escutcheon'),
   'The brass relief around the first doorway keyhole was removed.');
-assert.ok(html.includes("const lens={x:564,y:720,r:3.6}"),
-  'Lens must remain a tiny objective mounted on the actual brass telescope.');
-assert.ok(html.includes('function paintTelescopeRim(geo)') &&
-  html.includes('paintTelescopeRim(twoGeo)'),
-  'Physical telescope objective must retain a sharply rendered vector rim.');
+assert.ok(html.includes("const lens={x:564.6,y:718.3,rx:1.9,ry:3.05}"),
+  'The lens is no longer aligned to the tiny, naturally elliptical glass pupil.');
+assert.ok(!html.includes('paintTelescopeRim('),
+  'A separately drawn circular brass rim creates the rejected pasted-on look.');
+assert.ok(html.includes('function clipCircle(g,cx,cy,rad,verticalRad=rad)'),
+  'The physical optical opening must support a noncircular perspective ellipse.');
+assert.equal((html.match(/clipCircle\(twoGeo,lens\.x,lens\.y,lens\.rx,lens\.ry\)/g)||[]).length,4,
+  'Every descendant world must pass through the same registered elliptical pupil.');
 assert.ok(html.includes('MAX_LOG=23.4'),
   'The final worlds become unreachable after using a realistically small objective.');
 assert.ok(html.includes('const balconyZoomGain='),
   'Longer, more deliberate balcony approach was lost.');
-assert.ok(html.includes('clipCircle(twoGeo,lens.x,lens.y,lens.r)') &&
+assert.ok(html.includes('clipCircle(twoGeo,lens.x,lens.y,lens.rx,lens.ry)') &&
   html.includes("imageRegion('server',serverGeo)"),
   'The next world must be visible within the balcony lens on every zoom frame.');
 assert.ok(html.includes("two:'/bureau-balcony-telescope-4k.webp'"),

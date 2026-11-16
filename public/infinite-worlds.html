@@ -140,8 +140,10 @@
     };
     const door={x:459,y:675,w:44,h:58};
     // Small physical glass aperture on a slender, single-lens brass telescope.
-    // The opening is only 7.2 source pixels wide; it contains the next full world.
-    const lens={x:564,y:720,r:3.6};
+    // The physical glass is elongated in perspective: use the pupil inside
+    // its existing photographic brass rim, not a new circular overlay.
+    // Inspection of the 1086×1448 master locates the dark pupil near 564.8,718.2.
+    const lens={x:564.6,y:718.3,rx:1.9,ry:3.05};
     const serverExit={x:512,y:816,r:10.25};
     // An observatory is already visible inside the archive glass; a final world lives in its planet.
     // The higher-detail archive puts its miniature observatory in the central blue lens.
@@ -156,29 +158,8 @@
     function keyhole(){ctx.clip(keyholePath);}
     // Keep the original paintings visible. No synthetic monitors or panel overlays.
     // The detailed hallway image is the source of truth for art and perspective.
-    // Render just the telescope's actual glass rim as vector geometry.
-    // The photographic balcony keeps its original art direction while the
-    // aperture remains sharp at any zoom: no giant circular overlay or orb.
-    function paintTelescopeRim(geo){
-      const x=geo.ox+lens.x*geo.sx,y=geo.oy+lens.y*geo.sy;
-      const rx=lens.r*geo.sx,ry=lens.r*geo.sy;
-      if(rx<=0||ry<=0||x+rx*1.8<0||y+ry*1.8<0||
-         x-rx*1.8>st.width||y-ry*1.8>st.height)return;
-      // When the whole viewport sits inside the optical pupil, omit the
-      // offscreen rim; all that remains is the crisp child world's content.
-      const farX=Math.max(Math.abs(x),Math.abs(st.width-x))/(rx*.84);
-      const farY=Math.max(Math.abs(y),Math.abs(st.height-y))/(ry*.84);
-      if(farX*farX+farY*farY<1)return;
-      ctx.save();
-      ctx.setTransform(st.dpr*geo.sx,0,0,st.dpr*geo.sy,st.dpr*geo.ox,st.dpr*geo.oy);
-      ctx.beginPath();ctx.arc(lens.x,lens.y,lens.r+.83,0,Math.PI*2);
-      ctx.lineWidth=1.24;ctx.strokeStyle='#382317';ctx.stroke();
-      ctx.beginPath();ctx.arc(lens.x,lens.y,lens.r+.42,0,Math.PI*2);
-      ctx.lineWidth=.52;ctx.strokeStyle='#d7af6c';ctx.stroke();
-      ctx.beginPath();ctx.arc(lens.x,lens.y,lens.r+.03,0,Math.PI*2);
-      ctx.lineWidth=.18;ctx.strokeStyle='#ffe4a3';ctx.stroke();
-      ctx.restore();
-    }
+    // The original painted telescope rim remains visible. No drawn
+    // circle/ring is composited over the image, avoiding a pasted-on halo.
     function paintKeyholeFrame(geo){
       const d=st.dpr;
       ctx.save();ctx.setTransform(d*geo.sx,0,0,d*geo.sy,d*geo.ox,d*geo.oy);
@@ -353,9 +334,10 @@
       ctx.setTransform(st.dpr*g.sx,0,0,st.dpr*g.sy,st.dpr*g.ox,st.dpr*g.oy);
       ctx.clip(keyholePath);
     }
-    function clipCircle(g,cx,cy,rad){
+    function clipCircle(g,cx,cy,rad,verticalRad=rad){
       const x=g.ox+g.sx*cx,y=g.oy+g.sy*cy;
-      const rx=rad*g.sx,ry=rad*g.sy;
+      // An optional separate Y radius aligns optics drawn in perspective.
+      const rx=rad*g.sx,ry=verticalRad*g.sy;
       const maxDX=Math.max(Math.abs(x),Math.abs(st.width-x))/rx;
       const maxDY=Math.max(Math.abs(y),Math.abs(st.height-y))/ry;
       if(maxDX*maxDX+maxDY*maxDY<.998)return;
@@ -379,7 +361,7 @@
       else {st.panX=st.panTargetX;st.panY=st.panTargetY;}
       const z=Math.exp(st.log);
       const fit=Math.min(vw/960,vh/1370);
-      const telescopeDiameter=lens.r*2;
+      const telescopeDiameter=lens.rx*2;
       const serverScale=telescopeDiameter/1024;
       // Exact cumulative coordinates; no image-to-image motion or scale jumps.
       const lensX=door.x+door.w/900*(aperture.x+aperture.w/1086*lens.x);
@@ -509,34 +491,29 @@
       imageRegion('two',twoGeo);
       ctx.restore();
       ctx.save();clipRect(doorGeo,900,1200);clipKeyhole(doorGeo);
-      clipCircle(twoGeo,lens.x,lens.y,lens.r);
+      clipCircle(twoGeo,lens.x,lens.y,lens.rx,lens.ry);
       imageRegion('server',serverGeo);
       ctx.restore();
       // Underwater archive: one miniature world, precisely inset in the glass at the far end.
       ctx.save();clipRect(doorGeo,900,1200);clipKeyhole(doorGeo);
-      clipCircle(twoGeo,lens.x,lens.y,lens.r);
+      clipCircle(twoGeo,lens.x,lens.y,lens.rx,lens.ry);
       clipCircle(serverGeo,serverExit.x,serverExit.y,serverExit.r);
       imageRegion('archive',archiveGeo);
       ctx.restore();
       // Celestial observatory: miniature view through the archive's central vitrine.
       ctx.save();clipRect(doorGeo,900,1200);clipKeyhole(doorGeo);
-      clipCircle(twoGeo,lens.x,lens.y,lens.r);
+      clipCircle(twoGeo,lens.x,lens.y,lens.rx,lens.ry);
       clipCircle(serverGeo,serverExit.x,serverExit.y,serverExit.r);
       clipCircle(archiveGeo,archivePortal.x,archivePortal.y,archivePortal.r);
       imageRegion('observatory',observatoryGeo);
       ctx.restore();
       // The hidden ending is visible from far away inside the small central planet.
       ctx.save();clipRect(doorGeo,900,1200);clipKeyhole(doorGeo);
-      clipCircle(twoGeo,lens.x,lens.y,lens.r);
+      clipCircle(twoGeo,lens.x,lens.y,lens.rx,lens.ry);
       clipCircle(serverGeo,serverExit.x,serverExit.y,serverExit.r);
       clipCircle(archiveGeo,archivePortal.x,archivePortal.y,archivePortal.r);
       clipCircle(observatoryGeo,skyPortal.x,skyPortal.y,skyPortal.r);
       imageRegion(endKeys[st.ending],endingGeo);
-      ctx.restore();
-      // Optical bezel stays attached to the physical telescope rather
-      // than appearing as a separate disc in front of the scene.
-      ctx.save();clipRect(doorGeo,900,1200);clipKeyhole(doorGeo);
-      paintTelescopeRim(twoGeo);
       ctx.restore();
       st.dirty=false;
     }
