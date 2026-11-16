@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#1a1d21"><meta name="description" content="The Bureau of Impossible Things: scroll door zes rijk geïllustreerde werelden, van het computerscherm tot een verborgen lus in een parel."><title>Infinite Worlds V3 — The Bureau</title>
+<style>
+:root{color-scheme:dark;--ink:#131820;--cream:#f4e8d0;--brass:#d7ae71}*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#1b1b1a}body{font-family:Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;color:var(--cream);-webkit-font-smoothing:antialiased}main{height:100%;width:100%;position:relative;background:#1d1a19;overflow:hidden}canvas{display:block;width:100%;height:100%;touch-action:none;cursor:zoom-in;outline:0}.top{position:absolute;left:0;right:0;top:0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;pointer-events:none;padding:clamp(15px,2.6vw,29px);z-index:10}.top a{pointer-events:auto;color:#f7e5c8;text-decoration:none}.identity{display:flex;align-items:center;gap:11px;font-size:10px;letter-spacing:.19em;text-shadow:0 3px 14px #151515}.identity svg{width:24px;height:24px;fill:none;stroke:#e9be84;stroke-width:1.3}.back{font-size:10px;letter-spacing:.13em;border-bottom:1px solid #ddbd9566;padding:7px 0;text-shadow:0 2px 9px #101010}.haze{position:absolute;inset:0;box-shadow:inset 0 0 72px #1118;pointer-events:none}.bottom{position:absolute;bottom:calc(20px + env(safe-area-inset-bottom));left:clamp(16px,2.6vw,29px);right:clamp(16px,2.6vw,29px);display:flex;justify-content:space-between;align-items:flex-end;gap:18px;pointer-events:none;z-index:10}.caption{pointer-events:auto;background:linear-gradient(96deg,#1d1a1bea,#22201ecf);border:1px solid #dec29b44;padding:13px 16px;max-width:min(380px,64vw);box-shadow:0 9px 30px #0006;backdrop-filter:blur(8px)}.caption .chapter{font-size:9px;letter-spacing:.19em;text-transform:uppercase;color:#e4b980;display:block;margin-bottom:5px}.caption strong{font:normal clamp(16px,2vw,22px)/1.22 Georgia,Times,serif;color:#f8e8d0;display:block}.caption small{font-size:10px;line-height:1.6;color:#d3c0a6;display:block;margin-top:6px}.commands{pointer-events:auto;display:flex;gap:7px}.commands button{width:43px;height:43px;background:#1c1c1cd9;border:1px solid #dcb88a70;color:#f9e5c5;border-radius:2px;font:22px Georgia,serif;cursor:pointer;box-shadow:0 5px 20px #0007}.commands button:hover{background:#403324}.track{position:absolute;right:clamp(15px,3vw,38px);top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;z-index:10}.track button{display:flex;align-items:center;justify-content:flex-end;gap:12px;border:0;background:none;color:#dfcbb1;cursor:pointer;font-size:9px;letter-spacing:.13em;text-align:right;text-shadow:0 2px 5px #000b;opacity:.73}.track button span{width:17px;height:2px;background:#cab28b9a;transition:width .3s,background .3s}.track button[aria-current=step]{opacity:1;color:white}.track button[aria-current=step] span{width:30px;background:#ffddac}.loading{position:absolute;z-index:11;inset:0;display:flex;align-items:center;justify-content:center;background:#181b1e;color:#f2d0a0;font:13px Georgia,serif;letter-spacing:.16em;text-align:center;transition:opacity .35s}.loading[hidden]{display:none}.status{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}button:focus-visible,a:focus-visible,canvas:focus-visible{outline:2px solid #ffda9d;outline-offset:3px}@media(max-width:650px){.identity{font-size:9px;letter-spacing:.08em}.back{font-size:9px}.track{right:14px;top:auto;bottom:calc(162px + env(safe-area-inset-bottom));flex-direction:row;gap:6px;transform:none}.track button{font-size:0;padding:8px 3px}.track button span{width:12px}.track button[aria-current=step] span{width:24px}.bottom{bottom:calc(11px + env(safe-area-inset-bottom));gap:10px}.caption{max-width:230px;padding:10px 12px}.caption strong{font-size:16px}.caption small{font-size:9px}.commands button{width:36px;height:36px;font-size:18px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head>
+<body><main><canvas id="art" tabindex="0" aria-label="Beweeg met scrollen of knijpen door het scherm naar de servergang, trap, telescoopkamer, het honeybadgerkoninkrijk, het aquarium en de verborgen oneindige lus."></canvas><div class="haze" aria-hidden="true"></div><div class="loading" id="loading">ILLUSTRATIES LADEN...</div>
+<div class="top"><a href="/" class="identity" aria-label="Roger Orlando — homepage"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M2 23L6 8L14 16L16 5L22 16L29 8L30 23Z M5 27H28"/></svg><span>THE BUREAU OF<br>IMPOSSIBLE THINGS</span></a><a class="back" href="/infinite-worlds-v3-concept.html">V3 PROJECT ↗</a></div>
+<nav class="track" aria-label="Spring naar wereld"><button data-world="0" aria-current="step">01 COMPUTER<span></span></button><button data-world="1">02 SERVERS<span></span></button><button data-world="2">03 TRAP<span></span></button><button data-world="3">04 TELESCOOP<span></span></button><button data-world="4">05 HONEYBADGERS<span></span></button><button data-world="5">06 PAREL<span></span></button></nav>
+<div class="bottom"><div class="caption"><span class="chapter" id="chapter">01 / DE COMPUTER</span><strong id="title">Een wereld in het scherm.</strong><small id="story">Scroll verder. Achter het koper en glas gaat de reis pas beginnen.</small></div><div class="commands"><button type="button" id="again" title="Terug naar het begin" aria-label="Terug naar het begin">↺</button><button type="button" id="minus" title="Uitzoomen" aria-label="Uitzoomen">−</button><button type="button" id="plus" title="Inzoomen" aria-label="Inzoomen">+</button></div></div><div class="status" id="status" role="status" aria-live="polite"></div>
+</main>
+<script>
+(()=>{'use strict';
+// Every physical opening already contains the next image. Six scenes form one
+// recursive cycle; the pearl folds the viewer back into the starting computer.
+const art=[
+{file:'./v3/zoom-v3/01-computer.webp',w:1087,h:1447,tag:'01 / DE COMPUTER',title:'Een wereld in het scherm.',story:'De serverkamer is al zichtbaar achter het echte computerglas.'},
+{file:'./v3/zoom-v3/02-server.webp',w:1024,h:1536,tag:'02 / SERVERKAMER',title:'Alles draait ergens op.',story:'Volg de lampen tussen de rekken. Helemaal achteraan wacht een trap.'},
+{file:'./v3/zoom-v3/03-stairway.webp',w:800,h:1280,tag:'03 / DE TRAP',title:'Een verdieping hoger.',story:'De bronzen leuning leidt naar het stille observatorium.'},
+{file:'./v3/zoom-v3/04-observatory.webp',w:658,h:1386,tag:'04 / HET OBSERVATORIUM',title:'Eén echte, kleine lens.',story:'De telescoop staat ver weg. Kijk dwars door het glas.'},
+{file:'./v3/zoom-v3/05-honeybadgers.webp',w:650,h:1380,tag:'05 / HET KONINKRIJK',title:'De honeybadgers zijn de baas.',story:'Een absurde monarchie met een klein geheim in de kasteelpoort.'},
+{file:'./v3/zoom-v3/06-pearl-conflict.webp',w:975,h:1536,tag:'06 / DE PARELOORLOG',title:'Puffers versus pistol shrimps.',story:'Links de kogelvissen, rechts de garnalen. In de parel zit iets vreemds...'}
+];
+// Coordinates are in their own actual source master, never guestimated CSS pixels.
+const portals=[
+{shape:'oval',cx:541,cy:664,rx:277,ry:267}, // the existing circular portal inside the approved desk art
+{shape:'arch',x:424,y:729,w:180,h:273},     // staircase at the end of the server aisle
+{shape:'arch',x:512,y:338,w:147,h:161},     // open alcove at the top of the flight
+{shape:'oval',cx:303,cy:738,rx:10.0,ry:11.4}, // small front glass of the real telescope
+{shape:'arch',x:349,y:498,w:30,h:35},     // hidden doorway below the royal paw banner
+{shape:'oval',cx:492,cy:813,rx:28,ry:29} // iridescent pearl, cropped master coords
+];
+const canvas=document.getElementById('art'),ctx=canvas.getContext('2d',{alpha:false});
+const loader=document.getElementById('loading'),chapterEl=document.getElementById('chapter'),titleEl=document.getElementById('title'),storyEl=document.getElementById('story'),status=document.getElementById('status'),controls=[...document.querySelectorAll('[data-world]')];
+const pictures=[];let loaded=0,failed=0;let raf=0;const imagesReady=()=>loaded+failed===art.length;
+const state={depth:0,target:0,x:0,y:0,tx:0,ty:0,w:0,h:0,dpr:1,pointers:new Map(),pinch:0,last:0,chapter:-1};
+const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
+for(let i=0;i<art.length;i++){const image=new Image();pictures[i]=image;image.decoding='async';image.onload=()=>{loaded++;if(imagesReady()){loader.hidden=true;req();}};image.onerror=()=>{failed++;loader.textContent='Een illustratie kon niet worden geladen. Ververs deze pagina.';req();};image.src=art[i].file;}
+function view(){return{w:state.w,h:state.h};}
+function aperture(p){return p.shape==='oval'?{cx:p.cx,cy:p.cy,rx:p.rx,ry:p.ry}:{cx:p.x+p.w/2,cy:p.y+p.h/2,rx:p.w/2,ry:p.h/2};}
+function iscale(i){return Math.min(state.w/art[i].w,state.h/art[i].h)*.995;}
+function exitScale(i){const p=portals[i],a=aperture(p);if(p.shape==='oval')return Math.sqrt((state.w*.5/a.rx)**2+(state.h*.5/a.ry)**2)*1.115;
+ return Math.max(state.w/(p.w*.78),state.h/(p.h*.74))*1.22;}
+function childK(i){const p=portals[i],a=aperture(p),child=art[(i+1)%art.length];return Math.max(2*a.rx/child.w,2*a.ry/child.h);}
+function entrance(i,repeated){if(i===0)return repeated?exitScale(5)*childK(5):iscale(0);return exitScale(i-1)*childK(i-1);}
+function calcRoot(depth){const whole=Math.floor(Math.max(0,depth)),i=whole%art.length,cycle=Math.floor(whole/art.length),f=clamp(depth-whole,0,1),s=smooth(f);const start=entrance(i,cycle>0),end=exitScale(i),z=start*Math.exp(Math.log(Math.max(end/start,1.00001))*s),a=aperture(portals[i]),w=art[i].w,h=art[i].h;
+ const focusX=w/2+(a.cx-w/2)*s,focusY=h/2+(a.cy-h/2)*s;
+ return {i,cycle,f,z,x:state.w/2+state.x-focusX*z,y:state.h/2+state.y-focusY*z};}
+function childGeom(i,g){const n=(i+1)%art.length, p=portals[i],a=aperture(p),k=childK(i);return{x:g.x+(a.cx-art[n].w*k/2)*g.z,y:g.y+(a.cy-art[n].h*k/2)*g.z,z:g.z*k,i:n};}
+function clipPortal(p,g){const a=aperture(p),cx=g.x+a.cx*g.z,cy=g.y+a.cy*g.z;ctx.beginPath();if(p.shape==='oval')ctx.ellipse(cx,cy,Math.max(.0001,a.rx*g.z),Math.max(.0001,a.ry*g.z),0,0,Math.PI*2);
+ else{const x=g.x+p.x*g.z,y=g.y+p.y*g.z,w=p.w*g.z,h=p.h*g.z;ctx.moveTo(x,y+h);ctx.lineTo(x,y+h*.44);ctx.bezierCurveTo(x,y-h*.16,x+w,y-h*.16,x+w,y+h*.44);ctx.lineTo(x+w,y+h);ctx.closePath();}ctx.clip();}
+function imageDraw(i,g){const im=pictures[i];if(!im.complete||!im.naturalWidth||!isFinite(g.z)||g.z<1e-10)return;
+ const A=art[i],left=clamp((-g.x-3)/g.z,0,A.w),top=clamp((-g.y-3)/g.z,0,A.h),right=clamp((state.w+3-g.x)/g.z,0,A.w),bottom=clamp((state.h+3-g.y)/g.z,0,A.h);
+ if(right<=left||bottom<=top)return;ctx.drawImage(im,left,top,right-left,bottom-top,g.x+left*g.z,g.y+top*g.z,(right-left)*g.z,(bottom-top)*g.z);}
+// The original first art includes a foreground viewer partly in front of the
+// monitor. Reapply those exact painted pixels so the portal cannot cover his cap.
+function foregroundViewer(g){const im=pictures[0];if(!im.complete||!im.naturalWidth)return;ctx.save();ctx.beginPath();const pts=[[0,815],[46,792],[105,757],[165,746],[234,750],[283,777],[311,814],[331,865],[334,930],[362,972],[410,1017],[455,1094],[514,1184],[554,1348],[557,1447],[0,1447]];
+ for(let n=0;n<pts.length;n++){const x=g.x+pts[n][0]*g.z,y=g.y+pts[n][1]*g.z;if(n)ctx.lineTo(x,y);else ctx.moveTo(x,y);}ctx.closePath();ctx.clip();imageDraw(0,g);ctx.restore();}
+function inkLine(a,b,w=1,color='#dca66a'){ctx.lineWidth=w;ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();}
+function telescopeMacro(g){const amt=smooth((g.z-2.8)/4.0);if(amt<.001)return;ctx.save();ctx.globalAlpha=amt;ctx.translate(g.x,g.y);ctx.scale(g.z,g.z);
+ // Real metalwork redraws crisp during macro approach, never a floating disc.
+ const X=303,Y=738;
+ const metal=ctx.createLinearGradient(285,690,320,769);metal.addColorStop(0,'#2a211d');metal.addColorStop(.24,'#f3d19a');metal.addColorStop(.42,'#85603c');metal.addColorStop(.73,'#cf9954');metal.addColorStop(1,'#2d2119');
+ ctx.fillStyle=metal;ctx.strokeStyle='#29221f';ctx.lineWidth=1.15;ctx.beginPath();ctx.moveTo(291,695);ctx.bezierCurveTo(285,706,282,722,285,739);ctx.bezierCurveTo(286,761,291,767,303,769);ctx.bezierCurveTo(320,768,324,753,322,738);ctx.bezierCurveTo(322,721,320,705,316,695);ctx.closePath();ctx.fill();ctx.stroke();
+ for(let j=0;j<18;j++){const y=696+j*3.7;inkLine([289+Math.sin(j*.41)*1.8,y],[315-Math.sin(j*.36)*1.4,y],.18,j%2?'#f9dbaa88':'#3028208a');}
+ const rim=ctx.createRadialGradient(X-2,Y-3,3,X,Y,14.1);rim.addColorStop(0,'#201d1e');rim.addColorStop(.55,'#272525');rim.addColorStop(.69,'#786b57');rim.addColorStop(.82,'#d7b98a');rim.addColorStop(.94,'#6a5542');rim.addColorStop(1,'#302922');ctx.fillStyle=rim;ctx.beginPath();ctx.ellipse(X,Y,13.6,15.7,0,0,Math.PI*2);ctx.fill();
+ // Leave the inner pupil *open*: the true honeybadger scene is composited there.
+ ctx.strokeStyle='#ccb18a';ctx.lineWidth=.43;ctx.beginPath();ctx.ellipse(X,Y,10.45,11.83,0,0,Math.PI*2);ctx.stroke();
+ // Nearly invisible precision marks enrich the outer collar at deep zoom.
+ for(let j=0;j<42;j++){const t=j*Math.PI*2/42,r1=12.1,r2=12.6+(j%3)*.09;inkLine([X+Math.cos(t)*r1,Y+Math.sin(t)*r1*1.14],[X+Math.cos(t)*r2,Y+Math.sin(t)*r2*1.14],.12,j%4?'#3e2f2577':'#e5cfa388');}
+ ctx.restore();}
+function pearlMacro(g){const amt=smooth((g.z-4.8)/7);if(amt<.001)return;ctx.save();ctx.globalAlpha=amt*.35;ctx.translate(g.x,g.y);ctx.scale(g.z,g.z);const p=portals[5];
+ ctx.lineWidth=.9;ctx.strokeStyle='#e7f9e7';ctx.beginPath();ctx.ellipse(p.cx,p.cy,p.rx+3.3,p.ry+3.3,0,0,2*Math.PI);ctx.stroke();ctx.strokeStyle='#d6b7dd66';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(p.cx,p.cy,p.rx+5,p.ry+5,0,0,2*Math.PI);ctx.stroke();for(let j=0;j<22;j++){const theta=j*Math.PI*2/22,rad=p.rx+6+j%3;inkLine([p.cx+Math.cos(theta)*rad,p.cy+Math.sin(theta)*rad],[p.cx+Math.cos(theta)*(rad+1.8),p.cy+Math.sin(theta)*(rad+1.8)],.24,'#d7fbff66');}ctx.restore();}
+function portalDetail(i,g){if(i===3)telescopeMacro(g);if(i===5)pearlMacro(g);}
+function renderNested(i,g,remaining,first){imageDraw(i,g);portalDetail(i,g);if(remaining>0){const p=portals[i],n=(i+1)%art.length;ctx.save();clipPortal(p,g);const next=childGeom(i,g);renderNested(n,next,remaining-1,false);ctx.restore();}
+ if(i===0&&first)foregroundViewer(g);}
+function req(){if(!raf)raf=requestAnimationFrame(draw);}
+let active=-1;
+function updateCaption(whole){const i=whole%art.length;if(i===active)return;active=i;const w=art[i],cycle=Math.floor(whole/art.length);chapterEl.textContent=w.tag+(cycle?' · LUS '+(cycle+1):'');titleEl.textContent=w.title;storyEl.textContent=w.story;
+ controls.forEach((b,j)=>b.setAttribute('aria-current',j===i?'step':'false'));status.textContent=w.title;}
+function draw(now){raf=0;if(!state.w||!state.h||!loaded)return;const dt=state.last?clamp(now-state.last,1,75):16;state.last=now;
+ const ease=reduced?1:1-Math.exp(-dt/145);state.depth+=(state.target-state.depth)*ease;
+ const panEase=reduced?1:1-Math.exp(-dt/88);state.x+=(state.tx-state.x)*panEase;state.y+=(state.ty-state.y)*panEase;
+ if(Math.abs(state.target-state.depth)>.00001||Math.abs(state.tx-state.x)+Math.abs(state.ty-state.y)>.04)req();else{state.depth=state.target;state.last=0;}
+ ctx.setTransform(state.dpr,0,0,state.dpr,0,0);ctx.fillStyle='#272321';ctx.fillRect(0,0,state.w,state.h);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+ const g=calcRoot(state.depth);renderNested(g.i,g,art.length,false);updateCaption(Math.floor(state.depth));}
+function resize(){const b=canvas.getBoundingClientRect();state.w=Math.max(1,b.width);state.h=Math.max(1,b.height);state.dpr=Math.min(2,devicePixelRatio||1);canvas.width=Math.max(1,Math.floor(state.w*state.dpr));canvas.height=Math.max(1,Math.floor(state.h*state.dpr));req();}
+function zoom(by){state.target=clamp(state.target+by,0,1e8);req();}
+canvas.addEventListener('wheel',event=>{event.preventDefault();const delta=event.deltaMode===1?event.deltaY*16:event.deltaY;zoom(clamp(-delta*.0011,-.2,.2));},{passive:false});
+canvas.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;canvas.setPointerCapture(e.pointerId);state.pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(state.pointers.size>=2){const v=[...state.pointers.values()];state.pinch=Math.hypot(v[0].x-v[1].x,v[0].y-v[1].y);}canvas.style.cursor='grabbing';});
+canvas.addEventListener('pointermove',e=>{if(!state.pointers.has(e.pointerId))return;const before=state.pointers.get(e.pointerId);state.pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(state.pointers.size>=2){const v=[...state.pointers.values()],d=Math.hypot(v[0].x-v[1].x,v[0].y-v[1].y);if(state.pinch>2&&d>2)zoom(Math.log(d/state.pinch)*.34);state.pinch=d;}else if(state.depth>.2){state.tx=clamp(state.tx+e.clientX-before.x,-state.w*.5,state.w*.5);state.ty=clamp(state.ty+e.clientY-before.y,-state.h*.5,state.h*.5);req();}});
+const release=e=>{state.pointers.delete(e.pointerId);state.pinch=0;canvas.style.cursor='zoom-in';};canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);
+canvas.addEventListener('dblclick',()=>zoom(.16));canvas.addEventListener('keydown',e=>{if(['+','=','ArrowUp'].includes(e.key)){e.preventDefault();zoom(.12);}if(['-','ArrowDown'].includes(e.key)){e.preventDefault();zoom(-.12);}if(e.key==='Home'){e.preventDefault();state.target=0;state.tx=state.ty=0;req();}});
+document.getElementById('plus').onclick=()=>zoom(.17);document.getElementById('minus').onclick=()=>zoom(-.17);document.getElementById('again').onclick=()=>{state.target=0;state.tx=state.ty=0;req();};controls.forEach((b,i)=>b.onclick=()=>{const currentCycle=Math.floor(state.target/art.length);state.target=currentCycle*art.length+i;state.tx=state.ty=0;req();});
+if(window.ResizeObserver)new ResizeObserver(resize).observe(canvas);else window.addEventListener('resize',resize);resize();
+// Testing interface supports verified geometric continuity without affecting UX.
+window.__INFINITE_V3={setDepth:(d)=>{state.depth=state.target=Math.max(0,d);state.x=state.y=state.tx=state.ty=0;req();},portals,art,geometry:()=>calcRoot(state.depth),exitScale,childK,entrance};
+})();
+</script></body></html>

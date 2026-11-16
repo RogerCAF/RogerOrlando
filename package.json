@@ -8,10 +8,11 @@
     "start": "next start",
     "lint": "next lint",
     "test:infinite-worlds": "node scripts/check-infinite-worlds.mjs",
-    "prebuild": "npm run test:infinite-worlds && npm run test:vector-worlds && npm run test:project-artwork && npm run test:v3-illustrations",
+    "prebuild": "npm run test:infinite-worlds && npm run test:vector-worlds && npm run test:project-artwork && npm run test:v3-illustrations && npm run test:v3-play",
     "test:project-artwork": "node scripts/check-project-artwork.mjs",
     "test:vector-worlds": "node scripts/check-vector-worlds.mjs",
-    "test:v3-illustrations": "node scripts/check-v3-illustrations.mjs"
+    "test:v3-illustrations": "node scripts/check-v3-illustrations.mjs",
+    "test:v3-play": "node scripts/check-v3-play.mjs"
   },
   "dependencies": {
     "next": "^15.5.0",
