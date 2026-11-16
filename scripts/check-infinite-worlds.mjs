@@ -33,11 +33,11 @@ assert.ok(html.includes('/bureau-hallway-macro-detail.svg'), 'Hallway macro-leve
 assert.ok(html.includes('/bureau-door-macro-detail.svg'), 'Door macro-level art source is missing.');
 assert.match(galleryMacro, /viewBox="0 0 1680 2020"/, 'Hallway close-up not aligned with original painting.');
 assert.match(doorMacro, /viewBox="0 0 900 1200"/, 'Door close-up not aligned with original keyhole.');
-assert.ok(!/<image\\b|base64,/.test(doorMacro+galleryMacro),
+assert.ok(!/<image\b|base64,/.test(doorMacro+galleryMacro),
   'HD macro artwork must be real scale-independent artwork, not fake upscaled raster data.');
-assert.ok((doorMacro.match(/<circle\\b/g)||[]).length > 1000,
+assert.ok((doorMacro.match(/<circle\b/g)||[]).length > 1000,
   'The door has lost its substantive high-frequency wood and metal microdetails.');
-assert.ok((galleryMacro.match(/<path\\b/g)||[]).length > 450,
+assert.ok((galleryMacro.match(/<path\b/g)||[]).length > 450,
   'The gallery has lost its independently authored close-up material details.');
 assert.ok(html.includes('const TILE_PIXELS=512') &&
   html.includes('URL.createObjectURL(new Blob([rendered]') &&
@@ -122,12 +122,12 @@ class MockImage {
     if(url.includes('hallway-macro')){ this.naturalWidth=1680;this.naturalHeight=2020; }
     if(url.startsWith('blob:svg-tile')){
       const markup=tileBlobs.get(url).parts.join('');
-      const m=markup.match(/width="(\\d+)" height="(\\d+)"/);
+      const m=markup.match(/width="(\d+)" height="(\d+)"/);
       assert.ok(m, 'Dynamic tile has no output pixel dimensions.');
       this.naturalWidth=Number(m[1]);this.naturalHeight=Number(m[2]);
       assert.ok(this.naturalWidth<=512&&this.naturalHeight<=512,
         'HD tiles must not allocate full-world 4K bitmap surfaces.');
-      assert.ok(/viewBox="[-\\d.]+ [-\\d.]+ [\\d.]+ [\\d.]+"/.test(markup),
+      assert.ok(/viewBox="[-\d.]+ [-\d.]+ [\d.]+ [\d.]+"/.test(markup),
         'Tile must crop the vector source to the visible coordinate rectangle.');
     }
     Promise.resolve().then(() => this.onload?.());
