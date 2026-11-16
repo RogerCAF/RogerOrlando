@@ -6,6 +6,8 @@ const html = readFileSync(new URL('../public/infinite-worlds.html', import.meta.
 const door = readFileSync(new URL('../public/bureau-door-sharp.svg', import.meta.url), 'utf8');
 const galleryEngraving = readFileSync(new URL('../public/bureau-hallway-engraving.svg', import.meta.url), 'utf8');
 const consoleEngraving = readFileSync(new URL('../public/bureau-console-precision.svg', import.meta.url), 'utf8');
+const galleryMacro = readFileSync(new URL('../public/bureau-hallway-macro-detail.svg', import.meta.url), 'utf8');
+const doorMacro = readFileSync(new URL('../public/bureau-door-macro-detail.svg', import.meta.url), 'utf8');
 const inline = html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 assert.ok(inline, 'The standalone Infinite Worlds script must exist.');
 new Script(inline, { filename: 'infinite-worlds-inline.js' });
@@ -27,6 +29,22 @@ assert.ok(door.includes('<path d="' + mask + '"'),
 assert.ok(html.includes('/bureau-door-sharp.svg'), 'Sharp scalable door asset missing.');
 assert.ok(html.includes('/bureau-hallway-engraving.svg'), 'Registered gallery vector detail layer missing.');
 assert.ok(html.includes('/bureau-console-precision.svg'), 'Original intro hardware has lost its precision vector detail.');
+assert.ok(html.includes('/bureau-hallway-macro-detail.svg'), 'Hallway macro-level art source is missing.');
+assert.ok(html.includes('/bureau-door-macro-detail.svg'), 'Door macro-level art source is missing.');
+assert.match(galleryMacro, /viewBox="0 0 1680 2020"/, 'Hallway close-up not aligned with original painting.');
+assert.match(doorMacro, /viewBox="0 0 900 1200"/, 'Door close-up not aligned with original keyhole.');
+assert.ok(!/<image\b|base64,/.test(doorMacro+galleryMacro),
+  'HD macro artwork must be real scale-independent artwork, not fake upscaled raster data.');
+assert.ok((doorMacro.match(/<circle\b/g)||[]).length > 1000,
+  'The door has lost its substantive high-frequency wood and metal microdetails.');
+assert.ok((galleryMacro.match(/<path\b/g)||[]).length > 450,
+  'The gallery has lost its independently authored close-up material details.');
+assert.ok(html.includes('const TILE_PIXELS=512') &&
+  html.includes('URL.createObjectURL(new Blob([rendered]') &&
+  html.includes('drawVectorTiles(\'door\'') &&
+  html.includes('drawVectorTiles(\'hallMacro\''),
+  'Adaptive viewport-cropped SVG HD tile renderer was removed.');
+
 assert.match(consoleEngraving, /viewBox="0 0 960 1370"/, 'Console SVG coordinates differ from the original 960px artwork.');
 assert.ok(!/<image\b|base64,/.test(consoleEngraving), 'Intro detail must be true scalable vector artwork.');
 assert.ok(html.indexOf("imageRegion('console',base)") < html.indexOf("imageRegion('hall',hallGeo)"),
@@ -44,7 +62,7 @@ assert.ok(html.includes("st.panTargetX") && html.includes("const panEasing="),
 
 // The complete finite stack must be loaded and decoded during initial setup,
 // never on each portal or after scroll. Do not reintroduce per-level downloads.
-for (const key of ['one','console','hall','hallEngraving','door','two','server','archive','observatory','puffer','shrimp']) {
+for (const key of ['one','console','hall','hallEngraving','hallMacro','door','doorMacro','two','server','archive','observatory','puffer','shrimp']) {
   assert.match(inline, new RegExp('\\b' + key + ":'"), 'Missing source: ' + key);
 }
 assert.ok(inline.includes("const totalAssets=Object.keys(sources).length"),
@@ -62,6 +80,7 @@ assert.ok(inline.includes('zoomBy(') && inline.includes("addEventListener('wheel
 // fake canvas. This catches runtime errors and degenerate crop rectangles.
 const listeners = {}, animationFrames = [], mistakes = [];
 let totalDraws = 0, time = 0;
+let vectorTileDraws=0,vectorTilesCreated=0;
 const renderSources = new Set();
 const element = () => ({
   style: {}, dataset: {}, hidden: false,
@@ -80,6 +99,7 @@ const nodes = {
 const ctx = new Proxy({
   drawImage(...args){
     totalDraws++;
+    if(args[0]?.assetUrl?.startsWith('blob:svg-tile'))vectorTileDraws++;
     if(args[0]?.assetUrl) renderSources.add(args[0].assetUrl);
     assert.equal(args.length, 9, 'Every image uses a clipped 9-argument region.');
     for (const n of args.slice(1)) assert.ok(Number.isFinite(n), 'Non-finite image coordinate.');
@@ -98,12 +118,38 @@ class MockImage {
     this.assetUrl=url;
     if(url.includes('world-one')){ this.naturalWidth=960;this.naturalHeight=1370; }
     if(url.includes('hallway')){ this.naturalWidth=1680;this.naturalHeight=2020; }
-    if(url.includes('door-sharp')){ this.naturalWidth=900;this.naturalHeight=1200; }
+    if(url.includes('door-sharp')||url.includes('door-macro')){ this.naturalWidth=900;this.naturalHeight=1200; }
+    if(url.includes('hallway-macro')){ this.naturalWidth=1680;this.naturalHeight=2020; }
+    if(url.startsWith('blob:svg-tile')){
+      const markup=tileBlobs.get(url).parts.join('');
+      const m=markup.match(/width="(\d+)" height="(\d+)"/);
+      assert.ok(m, 'Dynamic tile has no output pixel dimensions.');
+      this.naturalWidth=Number(m[1]);this.naturalHeight=Number(m[2]);
+      assert.ok(this.naturalWidth<=512&&this.naturalHeight<=512,
+        'HD tiles must not allocate full-world 4K bitmap surfaces.');
+      assert.ok(/viewBox="[-\d.]+ [-\d.]+ [\d.]+ [\d.]+"/.test(markup),
+        'Tile must crop the vector source to the visible coordinate rectangle.');
+    }
     Promise.resolve().then(() => this.onload?.());
   }
   decode(){ return Promise.resolve(); }
 }
+const svgFixtures={
+  '/bureau-door-sharp.svg':door,
+  '/bureau-door-macro-detail.svg':doorMacro,
+  '/bureau-hallway-engraving.svg':galleryEngraving,
+  '/bureau-hallway-macro-detail.svg':galleryMacro,
+  '/bureau-console-precision.svg':consoleEngraving
+};
+const tileBlobs=new Map();
+class MockBlob { constructor(parts){this.parts=parts;} }
+const MockURL={
+  createObjectURL(blob){const url='blob:svg-tile-'+(++vectorTilesCreated);tileBlobs.set(url,blob);return url;},
+  revokeObjectURL(url){tileBlobs.delete(url);}
+};
 const env = {
+  fetch: async url=>({ok:!!svgFixtures[url],text:async()=>svgFixtures[url]}),
+  Blob:MockBlob,URL:MockURL,
   document: { getElementById: id => nodes[id] },
   window: { devicePixelRatio: 2 },
   Image: MockImage,
@@ -130,6 +176,24 @@ const advance = (count) => {
 };
 advance(5);
 assert.equal(typeof listeners.wheel, 'function', 'Scroll zoom listener missing.');
+// Stop at a meaningful intermediate zoom depth so the HD renderer actually
+// requests, decodes and displays close-up tiles instead of just doing 160 wheel events.
+for(let i=0;i<11;i++){
+  listeners.wheel({deltaMode:0,deltaY:-150,clientX:470,clientY:350,preventDefault(){}});
+  advance(12);
+}
+// The mock loader uses microtasks, just like browser image.decode(). Let it
+// settle and keep drawing until the viewport's complete tile set is ready.
+// A few animation frames are insufficient when three sequential SVG decodes
+// are allowed at once by the real memory-constrained renderer.
+for(let retry=0;retry<140&&vectorTileDraws===0;retry++){
+  await Promise.resolve();await Promise.resolve();await Promise.resolve();
+  advance(5);
+}
+assert.ok(vectorTilesCreated>0, 'No viewport-cropped HD tiles were generated.');
+assert.ok(vectorTileDraws>0,
+  'The zoom renderer never drew a crisp HD tile. Generated '+vectorTilesCreated+
+  ' tile jobs across '+totalDraws+' draws.');
 for(let i=0;i<80;i++){
   listeners.wheel({deltaMode:0,deltaY:-150,clientX:470,clientY:350,preventDefault(){}});
   advance(4);
