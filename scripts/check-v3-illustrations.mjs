@@ -4,7 +4,7 @@ import { Script } from 'node:vm';
 const preview=readFileSync('public/infinite-worlds-v3-concept.html','utf8');
 const live=readFileSync('app/components/InfiniteWorldsPreview.tsx','utf8');
 const illustrations=[
- ['computerwereld','public/v3/zoom-v3/01-computer.webp',1087,1447,200000],
+ ['computerwereld','public/v3/zoom-v3/01-computer-refined-preview.webp',1084,1283,400000],
  ['wereldkaart','public/v3/v3-five-world-storyboard.webp',1672,941,450000]
 ];
 function dimensions(path){
@@ -25,7 +25,7 @@ const redrawn='public/v3/v3-computer-original-illustrated.webp';
 const [rw,rh,rb]=dimensions(redrawn);
 assert.deepEqual([rw,rh],[1084,1451],'Updated portrait illustration dimensions changed');
 assert.ok(rb>250000,'Redrawn original computer art is unexpectedly compressed');
-assert.ok(preview.includes('src="/v3/zoom-v3/01-computer.webp"'),
+assert.ok(preview.includes('src="/v3/zoom-v3/01-computer-refined-preview.webp"'),
   'The updated original-composition artwork must be the main V3 image');
 assert.match(preview, /\.hero-art\{[^}]*object-fit:contain/,
   'The main portrait illustration must never be cropped to fill the hero');
@@ -38,8 +38,11 @@ for(const title of ['Computer','Serverkamer','Trappenhuis','Telescoopkamer','Hon
 assert.ok(preview.includes('De zes werelden zijn nu ook speelbaar'),'V3 study must link to the playable version');
 assert.ok(preview.includes('De oorspronkelijke computeropstelling blijft herkenbaar'),
   'V3 artwork must preserve the original composition rather than redesigning the first world');
-assert.ok(preview.includes('background-image:url(\'/v3/zoom-v3/01-computer.webp\')'),
+assert.ok(preview.includes('background-image:url(\'/v3/zoom-v3/01-computer-refined-preview.webp\')'),
   'Thumbnail must show the approved original computer layout');
+assert.ok(preview.includes('max-height:82svh') &&
+  preview.includes('hero-copy{width:100%;max-width:870px;text-align:center'),
+  'The refined picture must lead the page instead of remaining a small side illustration.');
 assert.ok(!preview.includes('class="hero-art" src="/v3/v3-computer-art.webp"'),
   'The rejected generic study must not return as the first-world hero');
 
