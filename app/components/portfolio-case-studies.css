@@ -332,3 +332,71 @@
   .cs-breakurge .cs-breakurge-icon{width:130px!important}
   .cs-bierkoerier-art{width:min(94%,280px);height:min(94%,280px)}
 }
+
+
+/* November brand-art direction: three identities, one compact editorial reel.
+   This block deliberately wins over earlier wide-card and square-logo rules.
+   The 178px desktop / 168px mobile visual remains the single source of truth. */
+.cs-scroller .cs-card.cs-breakurge .cs-preview.cs-breakurge-identity{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0;
+  padding:0!important;
+  background:radial-gradient(ellipse at 50% 46%,#164838 0%,#0c211c 39%,#070e12 75%,#070a0c 100%);
+}
+.cs-scroller .cs-card.cs-breakurge .cs-preview.cs-breakurge-identity .cs-breakurge-icon{
+  display:block!important;
+  position:static!important;
+  inset:auto!important;
+  flex:0 0 auto;
+  width:112px!important;
+  height:112px!important;
+  max-width:112px!important;
+  max-height:112px!important;
+  margin:0!important;
+  aspect-ratio:1!important;
+  border-radius:22%;
+  object-fit:contain!important;
+  box-shadow:0 14px 27px #0008,0 0 0 1px #69d8ae24;
+  filter:none!important;
+}
+.cs-scroller .cs-card.cs-cityfi .cs-preview.cs-cityfi{
+  background:radial-gradient(ellipse at 49% 48%,#143542 0%,#0b2029 47%,#060c13 100%);
+}
+.cs-scroller .cs-card.cs-cityfi .cs-cityfi-logo,
+.cs-scroller .cs-card.cs-bierkoerier .cs-bierkoerier-art{
+  display:block!important;
+  position:relative!important;
+  inset:auto!important;
+  width:min(90%,315px)!important;
+  max-width:315px!important;
+  height:auto!important;
+  max-height:122px!important;
+  aspect-ratio:5/2!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  filter:none!important;
+  transform:none!important;
+  image-rendering:auto;
+}
+.cs-scroller .cs-card.cs-bierkoerier .cs-preview.cs-bierkoerier-preview{
+  background:radial-gradient(ellipse at center,#28170c 0%,#130e0b 49%,#080909 100%);
+}
+.cs-scroller .cs-card.cs-bierkoerier .cs-bierkoerier-preview:after{
+  content:none;
+}
+@media(max-width:650px){
+ .cs-scroller .cs-card.cs-breakurge .cs-preview.cs-breakurge-identity .cs-breakurge-icon{
+   width:103px!important;height:103px!important;max-width:103px!important;max-height:103px!important;
+ }
+ .cs-scroller .cs-card.cs-cityfi .cs-cityfi-logo,
+ .cs-scroller .cs-card.cs-bierkoerier .cs-bierkoerier-art{
+   width:min(88%,288px)!important;
+   max-width:288px!important;
+   max-height:108px!important;
+ }
+}

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="400" viewBox="0 0 1000 400" role="img" aria-labelledby="ct cd">
+<title id="ct">CityFi</title><desc id="cd">Minimal architectural C symbol with three electric-cyan city towers and CITYFI wordmark.</desc>
+<defs>
+<linearGradient id="cityAccent" x1=".05" y1="0" x2=".95" y2="1"><stop stop-color="#6af0f4"/><stop offset=".45" stop-color="#18becd"/><stop offset="1" stop-color="#08728c"/></linearGradient>
+<linearGradient id="face" x1="0" y1="0" x2=".95" y2=".9"><stop stop-color="#3cf4eb"/><stop offset="1" stop-color="#1388be"/></linearGradient>
+</defs>
+<g stroke-linejoin="round">
+<!-- Single readable angular C, deliberately without a chrome badge, floating rings or effects. -->
+<path d="M206 52L340 127L309 158L206 103L107 160V251L206 307L309 251L340 281L206 357L62 277V134Z" fill="url(#cityAccent)"/>
+<path d="M107 160L206 103L309 158" fill="none" stroke="#b1ffff" stroke-opacity=".4" stroke-width="2.6"/>
+<path d="M107 251L206 307L309 251" fill="none" stroke="#07304c" stroke-opacity=".45" stroke-width="3"/>
+<!-- Geometric buildings inside the C: restrained and recognizable at thumbnail size. -->
+<path d="M145 251V207L177 192V268L145 251Z" fill="#167d9b"/>
+<path d="M177 192L197 202V282L177 268Z" fill="#063450"/>
+<path d="M191 278V151L218 136L245 151V282L206 302Z" fill="url(#face)"/>
+<path d="M218 136L245 151V282L218 297Z" fill="#066381"/>
+<path d="M214 141V118H222V142" fill="#67f3f0"/>
+<path d="M251 274V192L280 210V254L251 274Z" fill="#0e9fb3"/>
+<path d="M280 210L294 203V250L280 254Z" fill="#064963"/>
+<g fill="#bbfffd" opacity=".87"><rect x="158" y="220" width="7" height="11" rx="1"/><rect x="158" y="240" width="7" height="11" rx="1"/><rect x="203" y="174" width="8" height="12" rx="1"/><rect x="203" y="196" width="8" height="12" rx="1"/><rect x="203" y="219" width="8" height="12" rx="1"/><rect x="262" y="216" width="7" height="10" rx="1"/><rect x="262" y="233" width="7" height="10" rx="1"/></g>
+</g>
+<g font-family="Arial,Helvetica,sans-serif" font-weight="800" letter-spacing="-7"><text x="393" y="241" font-size="133" fill="#f7fbff">CITY</text><text x="724" y="241" font-size="133" fill="#25cbd3">FI</text></g>
+<path d="M397 278H849" stroke="#71adbb" stroke-opacity=".32" stroke-width="2"/>
+<text x="400" y="312" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="27" letter-spacing="6.3" fill="#9ec2ca">COLLECT THE WORLD</text>
+</svg>

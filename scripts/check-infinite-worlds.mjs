@@ -255,13 +255,18 @@ assert.equal(archiveHd.toString('ascii', 8, 12), 'WEBP', 'Archive artwork format
 assert.ok(html.includes("/bureau-world-four-archive-hd.webp"), 'The high-detail archive is not rendered.');
 assert.match(html, /archivePortal=\{x:530,y:893,r:25\}/, 'New archive glass coordinates lost.');
 const portfolio = readFileSync(new URL('../app/components/PortfolioCaseStudies.tsx', import.meta.url), 'utf8');
-const cityfi = readFileSync(new URL('../public/projects/cityfi-sharp.svg', import.meta.url), 'utf8');
-const bier = readFileSync(new URL('../public/projects/bierkoerier-original.webp', import.meta.url));
-assert.ok(cityfi.includes('<svg') && cityfi.includes('</svg>'), 'The CityFi artwork must be SVG.');
-assert.ok(!/<image\b|base64,/.test(cityfi), 'CityFi has regressed into a low-resolution embedded bitmap.');
-assert.ok(portfolio.includes('/projects/cityfi-sharp.svg'), 'Crisp CityFi vector not displayed.');
-assert.ok(portfolio.includes('/projects/bierkoerier-original.webp'), 'Original high-resolution Bier Koerier logo not displayed.');
-assert.ok(bier.byteLength > 150000, 'Authentic Bier Koerier source was replaced with a tiny thumbnail.');
-assert.equal(bier.toString('ascii', 0, 4), 'RIFF', 'Bier Koerier image must be real WebP.');
+const cityfi = readFileSync(new URL('../public/projects/cityfi-portfolio.svg', import.meta.url), 'utf8');
+const bierVector = readFileSync(new URL('../public/projects/bierkoerier-portfolio.svg', import.meta.url), 'utf8');
+const bierMaster = readFileSync(new URL('../public/projects/bierkoerier-original.webp', import.meta.url));
+for(const [name,svg] of [['CityFi',cityfi],['Bier Koerier',bierVector]]){
+  assert.ok(svg.includes('<svg') && svg.includes('</svg>'), name+' portfolio mark must be SVG.');
+  assert.ok(!/<image\b|base64,/.test(svg), name+' must remain actual vector, not an embedded bitmap.');
+  assert.ok(svg.includes('viewBox="0 0 1000 400"'), name+' must fit the horizontal gallery card.');
+}
+assert.ok(portfolio.includes('/projects/cityfi-portfolio.svg'), 'Updated CityFi vector not displayed.');
+assert.ok(portfolio.includes('/projects/bierkoerier-portfolio.svg'), 'Updated Bier Koerier vector not displayed.');
+assert.ok(portfolio.includes('/projects/breakurge-original.webp'), 'Original BreakUrge icon must be displayed.');
+assert.ok(bierMaster.byteLength > 150000, 'Authentic supplied Bier Koerier artwork must be retained.');
+assert.equal(bierMaster.toString('ascii', 0, 4), 'RIFF', 'Original Bier Koerier WebP asset is corrupt.');
 
-console.log('Infinite Worlds: original paintings, detailed archive, sharp project marks, portal alignment and 160 zoom events verified.');
+console.log('Infinite Worlds: original paintings, detailed archive, cohesive horizontal project marks, portal alignment and 160 zoom events verified.');
