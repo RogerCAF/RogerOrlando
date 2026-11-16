@@ -89,7 +89,7 @@ for(const [w,h] of [[1600,900],[390,844],[1024,768]]){
  assert.ok(a.atHome()&&t.atHome(),'Full zoom-out must end at a centered, unobstructed computer portrait');
  assert.ok(Math.abs(g.x+g.z*a.art[0].w/2-w/2)<.0001,'Home must center artwork horizontally');
  assert.ok(Math.abs(g.y+g.z*a.art[0].h/2-h/2)<.0001,'Home must center artwork vertically');
- t.handlers.wheel({deltaY:500,deltaMode:0,preventDefault:noop});t.flush();
+ t.handlers.wheel({deltaY:500,deltaMode:0,preventDefault:()=>{}});t.flush();
  assert.equal(a.geometry().i,0,'Scrolling outward cannot move beyond the seated viewer');
  assert.ok(a.atHome(),'Home must be a hard outward endpoint, not a repeating world');
 }
