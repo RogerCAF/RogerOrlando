@@ -400,3 +400,57 @@
    max-height:108px!important;
  }
 }
+
+
+/* Brand fidelity: show the actual artwork supplied by the creator.
+   Never replace or stylize their marks, crop square artwork to a
+   landscape ratio, or hide their original lettering inside a fake badge. */
+.cs-scroller .cs-card.cs-bierkoerier .cs-preview.cs-bierkoerier-preview{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0!important;
+  background:#080606;
+}
+.cs-scroller .cs-card.cs-bierkoerier .cs-preview.cs-bierkoerier-preview .cs-bierkoerier-art{
+  position:static!important;
+  inset:auto!important;
+  flex:0 0 auto;
+  display:block!important;
+  width:158px!important;
+  height:158px!important;
+  max-width:calc(100% - 16px)!important;
+  max-height:calc(100% - 16px)!important;
+  aspect-ratio:1/1!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  border:0!important;
+  border-radius:0!important;
+  transform:none!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+.cs-scroller .cs-card.cs-breakurge .cs-preview.cs-breakurge-identity{
+  background:#070d0c;
+  padding:0!important;
+}
+.cs-scroller .cs-card.cs-breakurge .cs-preview.cs-breakurge-identity .cs-breakurge-icon{
+  width:158px!important;
+  height:158px!important;
+  max-width:calc(100% - 16px)!important;
+  max-height:calc(100% - 16px)!important;
+  object-fit:contain!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+@media(max-width:650px){
+  .cs-scroller .cs-card.cs-bierkoerier .cs-preview.cs-bierkoerier-preview .cs-bierkoerier-art,
+  .cs-scroller .cs-card.cs-breakurge .cs-preview.cs-breakurge-identity .cs-breakurge-icon{
+    width:148px!important;
+    height:148px!important;
+    max-width:calc(100% - 14px)!important;
+    max-height:calc(100% - 14px)!important;
+  }
+}
