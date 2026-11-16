@@ -70,20 +70,19 @@ function Preview({ item }: { item: Study }) {
     <span className="cs-authentic-label">LOSCH DENTAL / LIVE PROJECT</span>
   </div>;
   if (item.className === "cityfi") return <div className="cs-preview cs-cityfi cs-authentic-preview">
-    <img className="cs-cityfi-logo" src="/projects/cityfi-sharp.svg" width={1280} height={1280} decoding="async" alt="Origineel CityFi-logo met drie blauwe gebouwen binnen een zilveren ring" loading="lazy"/>
+    <img className="cs-cityfi-logo" src="/projects/cityfi-portfolio.svg" width={1000} height={400} decoding="async" alt="CityFi: strak turquoise C-beeldmerk met stadssilhouet en woordmerk" loading="lazy"/>
   </div>;
   if (item.className === "ten") return <div className="cs-preview cs-ten cs-red-button-preview">
     <div className="cs-red-button" aria-label="Grote rode knop voor de 10.00 timinggame"><span>10.00</span></div>
     <span className="cs-preview-caption">PRESS · HOLD · RELEASE</span>
   </div>;
   if (item.className === "bierkoerier") return <div className="cs-preview cs-bierkoerier-preview">
-    <img className="cs-bierkoerier-art" src="/projects/bierkoerier-original.webp" width={1500} height={1500} decoding="async" alt="Origineel Bier Koerier Utrecht-logo met oranje typografie en de Utrechtse skyline" loading="lazy"/>
+    <img className="cs-bierkoerier-art" src="/projects/bierkoerier-portfolio.svg" width={1000} height={400} decoding="async" alt="Bier Koerier Utrecht: scherp oranje-zwart beeldmerk met Domtoren en duidelijke typografie" loading="lazy"/>
   </div>;
-  return <div className="cs-preview cs-breakurge">
-    <span className="cs-preview-small">DAY BY DAY / PROGRESS</span>
-    <img className="cs-breakurge-icon" src="/projects/breakurge-original.webp" width={1254} height={1254} decoding="async" alt="Origineel metallic BreakUrge-logo met gebroken B, groene lichtaccenten en donkere achtergrond" loading="lazy"/>
-    <span className="cs-breakurge-wordmark">BreakUrge</span>
-    <span className="cs-preview-caption">PROGRESS, NOT PERFECTION</span>
+  // The project name is already displayed directly below the artwork.
+  // Keeping the authentic icon alone avoids clipping in this compact reel.
+  return <div className="cs-preview cs-breakurge-identity">
+    <img className="cs-breakurge-icon" src="/projects/breakurge-original.webp" width={1254} height={1254} decoding="async" alt="BreakUrge: origineel metallic gebroken B met groene lichtaccenten" loading="lazy"/>
   </div>;
 }
 
