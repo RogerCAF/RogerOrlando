@@ -295,3 +295,40 @@
   .cs-cityfi-logo{width:min(69%,220px)!important}
   .cs-bierkoerier-art{width:min(88%,265px);height:min(88%,265px)}
 }
+
+/* Original high-resolution project masters — keep true source detail on Retina screens.
+   Unlike the old .svg wrappers, these contain 1254px and 1500px source art. */
+.cs-breakurge .cs-preview {
+  background:radial-gradient(ellipse at 50% 43%,#10372f 0%,#0a1d18 54%,#070f11 100%);
+}
+.cs-breakurge .cs-breakurge-icon {
+  width:clamp(120px,39%,172px)!important;
+  max-width:172px!important;
+  aspect-ratio:1!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  border-radius:22%;
+  image-rendering:auto;
+  filter:none!important;
+  box-shadow:0 15px 38px rgba(0,0,0,.48),0 0 23px rgba(12,185,127,.07);
+}
+.cs-bierkoerier .cs-visual,
+.cs-bierkoerier-preview { background:#090706; }
+.cs-bierkoerier-art {
+  display:block;
+  width:min(96%,360px);
+  height:min(96%,360px);
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+  object-position:center;
+  image-rendering:auto;
+  filter:none!important;
+}
+.cs-bierkoerier-preview:after {
+  background:linear-gradient(180deg,rgba(0,0,0,.08),transparent 24%,transparent 86%,rgba(0,0,0,.08));
+}
+@media(max-width:650px){
+  .cs-breakurge .cs-breakurge-icon{width:130px!important}
+  .cs-bierkoerier-art{width:min(94%,280px);height:min(94%,280px)}
+}

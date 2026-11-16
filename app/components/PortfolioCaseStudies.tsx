@@ -77,11 +77,11 @@ function Preview({ item }: { item: Study }) {
     <span className="cs-preview-caption">PRESS · HOLD · RELEASE</span>
   </div>;
   if (item.className === "bierkoerier") return <div className="cs-preview cs-bierkoerier-preview">
-    <img className="cs-bierkoerier-art" src="/projects/bierkoerier-crisp.svg" width={360} height={360} decoding="async" alt="Originele zwart-oranje Bier Koerier Utrecht-afbeelding met Domtoren en skyline" loading="lazy"/>
+    <img className="cs-bierkoerier-art" src="/projects/bierkoerier-original.webp" width={1500} height={1500} decoding="async" alt="Origineel Bier Koerier Utrecht-logo met oranje typografie en de Utrechtse skyline" loading="lazy"/>
   </div>;
   return <div className="cs-preview cs-breakurge">
     <span className="cs-preview-small">DAY BY DAY / PROGRESS</span>
-    <img className="cs-breakurge-icon" src="/projects/breakurge.svg" width={320} height={320} decoding="async" alt="Origineel BreakUrge app-icoon" loading="lazy"/>
+    <img className="cs-breakurge-icon" src="/projects/breakurge-original.webp" width={1254} height={1254} decoding="async" alt="Origineel metallic BreakUrge-logo met gebroken B, groene lichtaccenten en donkere achtergrond" loading="lazy"/>
     <span className="cs-breakurge-wordmark">BreakUrge</span>
     <span className="cs-preview-caption">PROGRESS, NOT PERFECTION</span>
   </div>;

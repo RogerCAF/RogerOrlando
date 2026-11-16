@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test:infinite-worlds": "node scripts/check-infinite-worlds.mjs",
-    "prebuild": "npm run test:infinite-worlds"
+    "prebuild": "npm run test:infinite-worlds && npm run test:project-artwork",
+    "test:project-artwork": "node scripts/check-project-artwork.mjs"
   },
   "dependencies": {
     "next": "^15.5.0",
