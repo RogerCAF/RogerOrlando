@@ -74,13 +74,19 @@
     const request=()=>{st.dirty=true;if(!st.frame)st.frame=requestAnimationFrame(render);};
     for(const [key,url] of Object.entries(sources)){
       const img=new Image();img.decoding='async';
-      img.onload=request; img.onerror=()=>{aria.textContent='Een illustratie kon niet worden geladen.';request();};
+      // Load the first world first, then decode the deeper scenes before they enter view.
+      img.fetchPriority=key==='one'?'high':'low';
+      img.onload=()=>{request();if(typeof img.decode==='function')img.decode().then(request,()=>{});};
+      img.onerror=()=>{aria.textContent='Een illustratie kon niet worden geladen.';request();};
       img.src=url; assets[key]=img;
     }
     const ready=key=>assets[key]&&assets[key].complete&&assets[key].naturalWidth>0;
     const resize=()=>{
       const b=canvas.getBoundingClientRect();st.width=b.width;st.height=b.height;
-      st.dpr=Math.min(2,window.devicePixelRatio||1);
+      // Native 3x sharpness on Retina phones, subject to a 6 MP canvas budget.
+      // On large desktops this budget scales down gracefully to protect FPS.
+      st.dpr=Math.min(3,Math.max(1,window.devicePixelRatio||1),
+        Math.sqrt(6000000/Math.max(1,st.width*st.height)));
       const w=Math.max(1,Math.round(st.width*st.dpr)),h=Math.max(1,Math.round(st.height*st.dpr));
       if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
       request();
@@ -264,11 +270,13 @@
         // only appears on approach. The tapered alpha hides the crop boundary.
         const hallAlpha=smooth((st.log-.6)/1.25);
         if(ready('hall')&&hallAlpha>.001){
-          ctx.save();ctx.globalAlpha=hallAlpha;imageRegion('hall',hallGeo);ctx.restore();
-        }
-        // Screens sit exactly on top of the original picture positions,
-        // not as floating UI decorations elsewhere in the gallery.
-        paintScreens(hallGeo);}
+          ctx.save();ctx.globalAlpha=hallAlpha;
+          imageRegion('hall',hallGeo);
+          // The screens belong to this hallway detail and must fade in WITH it.
+          // Keeping both in one opacity group preserves the approved start image.
+          paintScreens(hallGeo);
+          ctx.restore();
+        }}
       // Detailed door blends into the original as its small painted door approaches.
       ctx.save();clipRect(base,960,1370);clipRect(doorGeo,900,1200);
       // Let the sharp illustrated door take over while it is still small,
