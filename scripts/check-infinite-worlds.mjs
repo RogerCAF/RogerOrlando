@@ -8,6 +8,7 @@ const galleryEngraving = readFileSync(new URL('../public/bureau-hallway-engravin
 const consoleEngraving = readFileSync(new URL('../public/bureau-console-precision.svg', import.meta.url), 'utf8');
 const galleryMacro = readFileSync(new URL('../public/bureau-hallway-macro-detail.svg', import.meta.url), 'utf8');
 const doorMacro = readFileSync(new URL('../public/bureau-door-macro-detail.svg', import.meta.url), 'utf8');
+const grandTerrace = readFileSync(new URL('../public/bureau-world-two-grand-terrace.webp', import.meta.url));
 const inline = html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 assert.ok(inline, 'The standalone Infinite Worlds script must exist.');
 new Script(inline, { filename: 'infinite-worlds-inline.js' });
@@ -26,6 +27,26 @@ const mask = inline.match(/const keyholePath=new Path2D\('([^']+)'\)/)?.[1];
 assert.ok(mask, 'The Canvas keyhole path was lost.');
 assert.ok(door.includes('<path d="' + mask + '"'),
   'Door art and Canvas clip diverged — this would produce a visible seam.');
+assert.ok(mask.includes('507.5 792 C501.4 792'), 'Natural compact keyhole aperture lost.');
+assert.ok(door.includes('Traditional raised brass escutcheon'),
+  'The brass relief around the first doorway keyhole was removed.');
+assert.ok(html.includes("const lens={x:543,y:694,r:40.5}"),
+  'Balcony portal no longer aligns with the center of the new illustration.');
+assert.ok(html.includes('const balconyZoomGain='),
+  'Longer, more deliberate balcony approach was lost.');
+assert.ok(html.includes('clipCircle(twoGeo,lens.x,lens.y,lens.r)') &&
+  html.includes("imageRegion('server',serverGeo)"),
+  'The next world must be visible within the balcony lens on every zoom frame.');
+assert.ok(html.includes("two:'/bureau-world-two-grand-terrace.webp'"),
+  'Original compact balcony has replaced the larger illustrated coastal gallery.');
+assert.equal(grandTerrace.toString('ascii',0,4),'RIFF','Grand balcony WebP is corrupt.');
+assert.equal(grandTerrace.toString('ascii',8,12),'WEBP','Grand balcony is not WebP.');
+assert.ok(grandTerrace.byteLength>400000,
+  'Detailed terrace master was replaced by a tiny low-fidelity thumbnail.');
+assert.equal(grandTerrace.readUInt16LE(26)&0x3fff,1086,
+  'Terrace must preserve the design canvas width.');
+assert.equal(grandTerrace.readUInt16LE(28)&0x3fff,1448,
+  'Terrace must preserve the design canvas height.');
 assert.ok(html.includes('/bureau-door-sharp.svg'), 'Sharp scalable door asset missing.');
 assert.ok(html.includes('/bureau-hallway-engraving.svg'), 'Registered gallery vector detail layer missing.');
 assert.ok(html.includes('/bureau-console-precision.svg'), 'Original intro hardware has lost its precision vector detail.');

@@ -41,10 +41,19 @@
 <rect x="475" y="636" width="25" height="140" rx="12" fill="url(#goldDark)" stroke="#4a2e17" stroke-width="4"/>
 <rect x="481" y="650" width="13" height="112" rx="6.5" fill="url(#gold)" stroke="#e9c579" stroke-width="1"/>
 <circle cx="414" cy="647" r="3" fill="#fbe4a9" opacity=".85"/><circle cx="487" cy="647" r="3" fill="#fbe4a9" opacity=".85"/>
-<!-- Small keyhole directly beneath the right handle, using the exact Canvas Path2D silhouette. -->
-<rect x="493" y="783" width="29" height="51" rx="12" fill="#130d0b" opacity=".8"/>
-<rect x="495" y="782" width="25" height="51" rx="11" fill="url(#goldDark)" stroke="#59371d" stroke-width="3"/>
-<path d="M507.5 789 C499 789 495 794 495 801 Q495 807 502 812 L499 826 Q507.5 830 516 826 L513 812 Q520 806 520 801 C520 793 516 789 507.5 789Z" fill="#110f15" stroke="#21140e" stroke-width="1"/>
+<!-- Traditional raised brass escutcheon with a real keyhole, directly beneath the right handle.
+     The aperture is physically open: the child world is clipped to exactly its final silhouette. -->
+<path d="M507.5 778 C488 778 481 790 481 805 C481 825 491 842 507.5 844 C524 842 534 825 534 805 C534 790 527 778 507.5 778Z" fill="#120d0b" stroke="#26180f" stroke-width="4" opacity=".82"/>
+<path d="M507.5 779 C489 779 484 792 484 805 C484 825 493 839 507.5 841 C522 839 531 825 531 805 C531 792 526 779 507.5 779Z" fill="url(#goldDark)" stroke="#6e441f" stroke-width="2.4"/>
+<path d="M507.5 783 C494 783 488 793 488 805 C488 823 495 836 507.5 838 C520 836 527 823 527 805 C527 793 521 783 507.5 783Z" fill="#8b5c35" fill-opacity=".34" stroke="#ffe9b2" stroke-width="1.2"/>
+<path d="M507.5 785 C495 785 490 794 490 805 C490 819 495 831 507.5 833 C520 831 525 819 525 805 C525 794 520 785 507.5 785Z" fill="#291a13" fill-opacity=".63" stroke="#4c2e17" stroke-width="1.3"/>
+<path d="M494 791Q487 808 494 828M521 791Q528 808 521 828" fill="none" stroke="#f3d298" stroke-width="1" stroke-opacity=".65"/>
+<path d="M498 786Q507.5 781 517 786M496 833Q507.5 838 519 833" fill="none" stroke="#fae8b9" stroke-width=".75" stroke-opacity=".68"/>
+<g fill="#f2d9a2" stroke="#603f23" stroke-width=".7">
+<circle cx="507.5" cy="781" r="1.75"/><circle cx="507.5" cy="839.5" r="1.75"/>
+<circle cx="484.5" cy="805" r="1.75"/><circle cx="530.5" cy="805" r="1.75"/></g>
+<!-- The one authoritative opening silhouette is shared by artwork and Canvas Path2D. -->
+<path d="M507.5 792 C501.4 792 497 797 497 803 C497 807.5 500.1 810.8 502.4 812.1 L500 824 Q507.5 828 515 824 L512.6 812.1 C514.9 810.8 518 807.5 518 803 C518 797 513.6 792 507.5 792Z" fill="#0d1014" stroke="#150d09" stroke-width=".8"/>
 <path d="M97 1137H807" stroke="#e1ac72" opacity=".38" stroke-width="3"/>
 <rect y="1169" width="900" height="31" fill="#29160f"/><path d="M15 1171H885" stroke="#ca9b63" opacity=".6" stroke-width="4"/>
 <!-- Extra fine relief and hand-cut engraved walnut; geometry remains unchanged. -->

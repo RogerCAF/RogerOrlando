@@ -80,7 +80,7 @@
       hallMacro:'/bureau-hallway-macro-detail.svg',
       door:'/bureau-door-sharp.svg',
       doorMacro:'/bureau-door-macro-detail.svg',
-      two:'/bureau-world-two.webp',
+      two:'/bureau-world-two-grand-terrace.webp',
       server:'/bureau-server-corridor.webp',
       archive:'/bureau-world-four-archive-hd.webp',
       observatory:'/bureau-world-five-observatory.svg',
@@ -139,7 +139,7 @@
       request();
     };
     const door={x:459,y:675,w:44,h:58};
-    const lens={x:541,y:766,r:33.5};
+    const lens={x:543,y:694,r:40.5};
     const serverExit={x:512,y:816,r:10.25};
     // An observatory is already visible inside the archive glass; a final world lives in its planet.
     // The higher-detail archive puts its miniature observatory in the central blue lens.
@@ -150,15 +150,18 @@
     // Standard-size lock aperture just below the right brass pull, not in the panel.
     // Its source SVG and clip use the exact same contour.
     const aperture={x:495,y:789,w:25,h:41};
-    const keyholePath=new Path2D('M507.5 789 C499 789 495 794 495 801 Q495 807 502 812 L499 826 Q507.5 830 516 826 L513 812 Q520 806 520 801 C520 793 516 789 507.5 789Z');
+    const keyholePath=new Path2D('M507.5 792 C501.4 792 497 797 497 803 C497 807.5 500.1 810.8 502.4 812.1 L500 824 Q507.5 828 515 824 L512.6 812.1 C514.9 810.8 518 807.5 518 803 C518 797 513.6 792 507.5 792Z');
     function keyhole(){ctx.clip(keyholePath);}
     // Keep the original paintings visible. No synthetic monitors or panel overlays.
     // The detailed hallway image is the source of truth for art and perspective.
     function paintKeyholeFrame(geo){
       const d=st.dpr;
       ctx.save();ctx.setTransform(d*geo.sx,0,0,d*geo.sy,d*geo.ox,d*geo.oy);
-      ctx.lineJoin='round';ctx.lineWidth=6;ctx.strokeStyle='#322317';ctx.stroke(keyholePath);
-      ctx.lineWidth=3.5;ctx.strokeStyle='#cda56b';ctx.stroke(keyholePath);
+      // Restrained beveled metal border around the actual open cutout.
+      // Thin strokes stay elegant at high magnification; no thick black blob.
+      ctx.lineJoin='round';ctx.lineWidth=3.1;ctx.strokeStyle='#25180e';ctx.stroke(keyholePath);
+      ctx.lineWidth=1.7;ctx.strokeStyle='#c79652';ctx.stroke(keyholePath);
+      ctx.lineWidth=.65;ctx.strokeStyle='#ffe1a7';ctx.stroke(keyholePath);
       ctx.restore();
     }
     const endKeys=['puffer','shrimp'];
@@ -522,7 +525,13 @@
         return;
       }
       const oldTarget=st.target;
-      st.target=clamp(st.target+delta,0,MAX_LOG);
+      // Give visitors more time to explore the enlarged seafront loggia,
+      // its long marble runway and the actual world inside the brass lens.
+      // This changes scroll pacing only, never swaps or relocates images.
+      const balconyStage=smooth((st.target-5.7)/.85)*
+        (1-smooth((st.target-9.85)/.85));
+      const balconyZoomGain=1-.34*balconyStage;
+      st.target=clamp(st.target+delta*balconyZoomGain,0,MAX_LOG);
       // Subtle cursor-relative zoom bias. The continuously registered portal
       // path remains navigable, but mouse/trackpad users can steer the canvas.
       if(Number.isFinite(pointerX)&&Number.isFinite(pointerY)){
