@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="400" viewBox="0 0 1000 400" role="img" aria-labelledby="bt bd">
+<title id="bt">Bier Koerier Utrecht</title><desc id="bd">Crisp amber-orange Utrecht Dom tower symbol with confident orange-and-ivory Bier Koerier Utrecht typography.</desc>
+<defs><linearGradient id="amber" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffcf7e"/><stop offset=".42" stop-color="#ff982e"/><stop offset="1" stop-color="#d65118"/></linearGradient></defs>
+<!-- Legible custom Utrecht skyline badge, derived from the supplied brand theme. -->
+<g fill="none" stroke="url(#amber)" stroke-linejoin="round" stroke-linecap="square">
+<path d="M55 305H360" stroke-width="6"/>
+<path d="M93 305V245L74 245V214H119V245H108V305" stroke-width="4"/>
+<path d="M145 305V258H180V305M275 305V251H302V305M310 305V272H339V305" stroke-width="4"/>
+<path d="M191 304V145H265V304M184 150L226 111L272 150" stroke-width="8"/>
+<path d="M207 145V110H246V145M218 110V86H235V110M226 86V63" stroke-width="6"/>
+<path d="M207 181H250M204 205H252M207 271H250" stroke-width="3.5"/>
+<path d="M201 304V280M256 304V280" stroke-width="2"/>
+</g>
+<g fill="#ffb05a"><circle cx="226" cy="60" r="5"/><circle cx="226" cy="192" r="12"/><rect x="217" y="229" width="17" height="32" rx="7"/></g>
+<g fill="#110e0c"><circle cx="226" cy="192" r="8"/><path d="M226 185V192L231 196" stroke="#ffe9c7" stroke-width="2.3" fill="none"/></g>
+<g fill="#e6a468" opacity=".63"><rect x="215" y="155" width="7" height="17" rx="2"/><rect x="232" y="155" width="7" height="17" rx="2"/><rect x="152" y="269" width="7" height="13"/><rect x="165" y="269" width="7" height="13"/><rect x="282" y="263" width="7" height="15"/></g>
+<path d="M389 77V322" stroke="#ff9e43" stroke-opacity=".52" stroke-width="2"/>
+<text x="418" y="180" font-family="Impact,'Arial Narrow',Arial,sans-serif" font-weight="900" font-size="101" letter-spacing="3" fill="#ff9d35">BIER</text>
+<text x="417" y="263" font-family="Impact,'Arial Narrow',Arial,sans-serif" font-weight="900" font-size="105" letter-spacing="0" fill="#f7efe4">KOERIER</text>
+<path d="M420 284H875" stroke="#f3a456" stroke-opacity=".58" stroke-width="3"/>
+<text x="423" y="317" font-family="Arial,Helvetica,sans-serif" font-size="29" font-weight="800" letter-spacing="13" fill="#ffb262">UTRECHT</text>
+</svg>
