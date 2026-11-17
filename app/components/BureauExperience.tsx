@@ -125,7 +125,7 @@ export default function BureauExperience() {
           user-select: none !important;
           background: transparent !important;
         }
-        .bureau-embed .scene > img:not(.bureau-original-ink):not(.bureau-desk-base):not(.bureau-bag-photo):not(.bureau-bag-ink):not(.bureau-screen-crisp):not(.bureau-shelf-front):not(.bureau-bag-edge) {
+        .bureau-embed .scene > img:not(.bureau-original-ink):not(.bureau-desk-base):not(.bureau-bag-photo):not(.bureau-bag-ink):not(.bureau-screen-crisp):not(.bureau-shelf-front):not(.bureau-bag-edge):not(.bureau-screen-archive) {
           position: relative;
           z-index: 1;
           /* Flatten the existing art without replacing it. */
@@ -206,6 +206,23 @@ export default function BureauExperience() {
           filter: none !important;
           opacity: 1 !important;
         }
+        /* A vector-sharp, crown-free archive layout lies exactly within
+           the ORIGINAL monitor glass; no new hardware, no extra objects. */
+        .bureau-embed .scene > img.bureau-screen-archive {
+          position: absolute !important;
+          inset: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          z-index: 7 !important;
+          object-fit: fill !important;
+          pointer-events: none !important;
+          user-select: none !important;
+          filter: none !important;
+          opacity: 1 !important;
+          background: transparent !important;
+          -webkit-mask-image: none !important;
+          mask-image: none !important;
+        }
         /* Actual wood front faces the viewer, visually in front of every
            book, controller and cube so nothing passes through the plank. */
         .bureau-embed .scene > img.bureau-shelf-front {
@@ -248,26 +265,29 @@ export default function BureauExperience() {
 
         /* Make the EXISTING visitor notebook visible again. Clicking it opens
            the shared names list and single-signature guestbook already built. */
+        /* The existing names list is now a small ink-and-leather notebook,
+           not a gold sticker floating over the desk. */
         .bureau-embed #bureau-guestbook-entry {
           position: absolute !important;
           left: 17.5% !important;
-          top: 65% !important;
-          width: 16% !important;
-          height: 12.5% !important;
+          top: 66.8% !important;
+          width: 15.3% !important;
+          height: 10% !important;
           z-index: 10 !important;
           box-sizing: border-box !important;
-          padding: 0 4px 0 8% !important;
+          padding: 0 5% 0 5.7% !important;
           display: flex !important;
           flex-direction: column !important;
-          justify-content: center !important;
           align-items: center !important;
-          gap: 3px !important;
-          transform: rotate(-8deg) !important;
-          border: 2px solid #2a201d !important;
-          border-radius: 2px 5px 6px 2px !important;
-          background: linear-gradient(145deg,#d7b17c 0%,#b88654 35%,#855735 100%) !important;
-          box-shadow: 3px 4px 0 #261b1c, 0 8px 12px rgba(0,0,0,.16) !important;
-          color: #261c1b !important;
+          justify-content: center !important;
+          gap: 5px !important;
+          transform: rotate(-7deg) skewX(-5deg) !important;
+          border: 2px solid #8f6b48 !important;
+          border-left: 7px solid #422b20 !important;
+          border-radius: 3px 9px 7px 3px !important;
+          background: linear-gradient(150deg,#3c3230,#17191e 48%,#252125 88%,#403229) !important;
+          box-shadow: 3px 3px 0 #c4a47c,4px 5px 0 #33251e,0 10px 15px rgba(0,0,0,.26) !important;
+          color: #dfc49b !important;
           text-shadow: none !important;
           cursor: pointer !important;
           font-family: Georgia,serif !important;
@@ -276,37 +296,54 @@ export default function BureauExperience() {
         .bureau-embed #bureau-guestbook-entry::before {
           content: "" !important;
           position: absolute !important;
-          top: 0 !important; bottom: 0 !important; left: 8% !important;
-          width: 4% !important;
-          background: #5b3e2b !important;
+          inset: 8% auto 8% 4% !important;
+          width: 2% !important;
+          border-left: 1px solid rgba(230,183,122,.56) !important;
+          border-right: 1px solid rgba(230,183,122,.18) !important;
+          background: transparent !important;
+        }
+        .bureau-embed #bureau-guestbook-entry::after {
+          content: "" !important;
+          position: absolute !important;
+          width: 26% !important;
+          height: 2.4% !important;
+          background: #a64737 !important;
+          left: 48% !important;
+          top: 73% !important;
+          transform: translateX(-50%) !important;
+          opacity: .9 !important;
         }
         .bureau-embed #bureau-guestbook-entry strong {
           display: block !important;
-          font: 800 clamp(6px,.85vw,14px)/1.1 Georgia,serif !important;
-          letter-spacing: .06em !important;
+          font: 700 clamp(6px, .74vw, 12px)/1.15 Georgia,serif !important;
+          letter-spacing: .05em !important;
           white-space: nowrap !important;
+          color: #e4cda9 !important;
         }
         .bureau-embed #bureau-guestbook-entry span {
-          font: 700 clamp(5px,.58vw,10px)/1.1 ui-monospace,monospace !important;
-          letter-spacing: .1em !important;
+          font: 500 clamp(5px,.5vw,8px)/1 ui-monospace,monospace !important;
+          letter-spacing: .12em !important;
+          color: #aa9382 !important;
         }
         .bureau-embed #bureau-guestbook-entry:hover,
         .bureau-embed #bureau-guestbook-entry:focus-visible {
-          filter: brightness(1.1) !important;
-          transform: rotate(-5deg) translateY(-2px) !important;
-          outline: 2px solid #eed5ad !important;
+          filter: brightness(1.18) !important;
+          transform: rotate(-5deg) skewX(-5deg) translateY(-2px) !important;
+          outline: 1px solid #a9865f !important;
           outline-offset: 2px !important;
         }
         @media(max-width: 680px) {
           .bureau-embed #bureau-guestbook-entry {
             border-width: 1px !important;
+            border-left-width: 3px !important;
             gap: 1px !important;
+            box-shadow: 1px 1px 0 #c4a47c,2px 2px 0 #33251e !important;
           }
           .bureau-embed #bureau-guestbook-entry strong {
-            font-size: 7px !important;
+            font-size: 5px !important;
             letter-spacing: 0 !important;
           }
-          .bureau-embed #bureau-guestbook-entry span { font-size: 5px !important; }
+          .bureau-embed #bureau-guestbook-entry span { font-size: 3.5px !important; }
         }
         /* No synthetic traced outlines: those stray strokes detached from
            the illustrated desk on narrow devices. */
@@ -480,6 +517,20 @@ export default function BureauExperience() {
         scene.appendChild(shelf);
       }
 
+      // Premium screen layout: replace only the displayed wallpaper/artwork,
+      // not the monitor or its hotspot. No crown or new surrounding furniture.
+      if (scene && !document.getElementById("bureau-screen-archive")) {
+        const screen = document.createElement("img");
+        screen.id = "bureau-screen-archive";
+        screen.className = "bureau-screen-archive";
+        screen.alt = "";
+        screen.decoding = "async";
+        screen.draggable = false;
+        screen.setAttribute("aria-hidden", "true");
+        screen.src = "/bureau/screen-archive-no-crown.svg?v=screen-v1";
+        scene.appendChild(screen);
+      }
+
       // The original punchbag image is split into its own interactive layer.
       // Nothing else (including the phone or computer) is repositioned.
       if (scene && !document.getElementById("bureau-relocated-bag")) {
@@ -531,7 +582,7 @@ export default function BureauExperience() {
         notebook.type = "button";
         notebook.setAttribute("aria-label", "Open de gedeelde namenlijst en teken het gastenboek");
         notebook.title = "NAMENLIJST / GASTENBOEK";
-        notebook.innerHTML = "<strong>NAMENLIJST</strong><span>VISITORS LOG</span>";
+        notebook.innerHTML = "<strong>GUESTBOOK</strong><span>NAMENLIJST</span>";
         notebook.addEventListener("click", event => {
           event.preventDefault();
           event.stopPropagation();
@@ -625,7 +676,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=crisp-screen-shelf-bag-v16"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=archive-and-guestbook-v17"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
