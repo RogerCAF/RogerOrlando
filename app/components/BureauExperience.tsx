@@ -217,9 +217,9 @@ export default function BureauExperience() {
         outline.innerHTML = `
           <g fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path d="M31 616 L1667 545" stroke="#ddc09c" stroke-opacity=".32" stroke-width="1.4"/>
-            <path d="M35 706 L174 779 L622 731 L1669 657" stroke="#d7b68c" stroke-opacity=".59" stroke-width="2"/>
-            <path d="M176 780 L174 848 M613 732 L607 821 M1555 668 L1559 842"
-              stroke="#c5a482" stroke-opacity=".32" stroke-width="1.9"/>
+            <path d="M35 706 L174 779 L622 731" stroke="#d7b68c" stroke-opacity=".40" stroke-width="1.6"/>
+            <path d="M176 780 L174 831 M613 732 L607 802"
+              stroke="#c5a482" stroke-opacity=".22" stroke-width="1.5"/>
           </g>`;
         scene.appendChild(outline);
       }
