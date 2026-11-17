@@ -41,6 +41,7 @@ export default function Home() {
           {links.map(([label, href]) => <a className={active === href.slice(1) ? "active" : ""} key={href} href={href}>{label}</a>)}
         </nav>
         <a className="nav-action" href="#connect">LET'S CONNECT <ArrowUpRight size={15}/></a>
+        <a href="/bureau" className="mobile-bureau-shortcut" aria-label="Open The Bureau">THE BUREAU <ArrowUpRight size={13}/></a>
         <button className="menu-toggle" type="button" aria-label={menuOpen ? "Sluit menu" : "Open menu"} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={23}/> : <Menu size={23}/>}</button>
       </div>
       <nav className={`mobile-nav ${menuOpen ? "open" : ""}`} aria-label="Mobiele navigatie">{links.map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}<ArrowUpRight size={19}/></a>)}<a className="mobile-contact-cta" href="#connect" onClick={() => setMenuOpen(false)}>CONTACT <ArrowUpRight size={19}/></a></nav>
