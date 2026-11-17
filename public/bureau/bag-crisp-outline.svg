@@ -4,19 +4,19 @@
  <path d="M1534 116 Q1574 99 1619 113 Q1659 124 1660 166
           L1660 470 Q1657 535 1590 565
           Q1522 548 1501 493 L1490 181 Q1491 133 1534 116 Z"
-       stroke="#090e15" stroke-width="9"/>
+       stroke="#090e15" stroke-width="6.1"/>
  <path d="M1534 116 Q1574 99 1619 113 Q1659 124 1660 166
           L1660 470 Q1657 535 1590 565
           Q1522 548 1501 493 L1490 181 Q1491 133 1534 116 Z"
-       stroke="#d99758" stroke-width="3.5" opacity=".87"/>
+       stroke="#d99758" stroke-width="2.1" opacity=".75"/>
  <path d="M1519 166 Q1575 151 1639 165 M1518 509 Q1581 538 1640 505"
-       stroke="#bc8052" stroke-width="3.8" opacity=".75"/>
- <path d="M1513 203 L1517 482 M1645 201 L1641 478" stroke="#9c693e" stroke-width="2.5" opacity=".75"/>
+       stroke="#bc8052" stroke-width="2.4" opacity=".58"/>
+ <path d="M1513 203 L1517 482 M1645 201 L1641 478" stroke="#9c693e" stroke-width="1.8" opacity=".55"/>
  <path d="M1524 0 L1534 0 L1580 130 L1565 141 Z
           M1578 0 L1592 0 L1569 142 L1554 142 Z
           M1633 0 L1646 0 L1608 135 L1594 135 Z"
-       stroke="#16151b" stroke-width="5"/>
+       stroke="#16151b" stroke-width="3.6"/>
  <path d="M1528 3 L1573 131 M1585 3 L1563 132 M1640 4 L1601 127"
-       stroke="#d4a371" stroke-width="2.3" opacity=".85"/>
+       stroke="#d4a371" stroke-width="1.7" opacity=".66"/>
 </g>
 </svg>
