@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import PortfolioCaseStudies from "./components/PortfolioCaseStudies";
+import BureauExperience from "./components/BureauExperience";
 import { ArrowDown, ArrowRight, ArrowUpRight, Braces, Check, ChevronDown, Code2, Cpu, ExternalLink, Github, Globe2, Layers3, Menu, MonitorSmartphone, Network, ShieldCheck, Sparkles, TerminalSquare, Palette, X } from "lucide-react";
 
 const expertise = [
@@ -185,7 +186,7 @@ export default function Home() {
       <section className="bureau-home-section" id="lab" aria-label="The Bureau — interactieve wereld">
         <h2 className="bureau-home-sr-only">The Bureau — interactieve wereld</h2>
         <div className="bureau-home-experience">
-          <iframe src="/bureau/index.html?embed=1" title="The Bureau — interactieve zoomwereld" loading="lazy" allowFullScreen />
+          <BureauExperience />
         </div>
       </section>
 
