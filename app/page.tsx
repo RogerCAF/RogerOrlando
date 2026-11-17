@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import InfiniteWorldsPreview from "./components/InfiniteWorldsPreview";
 import PortfolioCaseStudies from "./components/PortfolioCaseStudies";
 import { ArrowDown, ArrowRight, ArrowUpRight, Braces, Check, ChevronDown, Code2, Cpu, ExternalLink, Github, Globe2, Layers3, Menu, MonitorSmartphone, Network, ShieldCheck, Sparkles, TerminalSquare, Palette, X } from "lucide-react";
 
@@ -31,7 +30,7 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
   useEffect(() => { document.body.classList.toggle("menu-open", menuOpen); return () => document.body.classList.remove("menu-open"); }, [menuOpen]);
-  const links = [["Over mij", "#about"], ["Projecten", "#work"], ["The Bureau", "/bureau"]];
+  const links = [["Over mij", "#about"], ["Projecten", "#work"], ["The Bureau", "#lab"]];
   return <div className="site">
     <div className="noise" aria-hidden="true" />
     <header className="header">
@@ -41,7 +40,7 @@ export default function Home() {
           {links.map(([label, href]) => <a className={active === href.slice(1) ? "active" : ""} key={href} href={href}>{label}</a>)}
         </nav>
         <a className="nav-action" href="#connect">LET'S CONNECT <ArrowUpRight size={15}/></a>
-        <a href="/bureau" className="mobile-bureau-shortcut" aria-label="Open The Bureau">THE BUREAU <ArrowUpRight size={13}/></a>
+        <a href="#lab" className="mobile-bureau-shortcut" aria-label="Open The Bureau">THE BUREAU <ArrowUpRight size={13}/></a>
         <button className="menu-toggle" type="button" aria-label={menuOpen ? "Sluit menu" : "Open menu"} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={23}/> : <Menu size={23}/>}</button>
       </div>
       <nav className={`mobile-nav ${menuOpen ? "open" : ""}`} aria-label="Mobiele navigatie">{links.map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}<ArrowUpRight size={19}/></a>)}<a className="mobile-contact-cta" href="#connect" onClick={() => setMenuOpen(false)}>CONTACT <ArrowUpRight size={19}/></a></nav>
@@ -58,7 +57,7 @@ export default function Home() {
             <p className="hero-summary">Ik ben <strong>Roger Chin A Foeng</strong>. Met een achtergrond in grafisch design en een focus op IT en development combineer ik visuele kwaliteit met doordachte techniek. Van het grote idee tot het kleinste detail.</p>
             <div className="hero-buttons">
               <a className="button button-primary" href="#work">Ontdek mijn projecten <ArrowUpRight size={17}/></a>
-              <a className="button button-quiet" href="/bureau">Open The Bureau <ArrowUpRight size={16}/></a>
+              <a className="button button-quiet" href="#lab">Open The Bureau <ArrowUpRight size={16}/></a>
             </div>
           </div>
           <div className="hero-art hero-art-premium" aria-label="Gedetailleerd verguld monogram R met architectonische lijnen en lichtaccenten">
@@ -183,19 +182,19 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section lab-section" id="lab">
-        <div className="container">
-          <Reveal className="lab-heading">
+      <section className="bureau-home-section" id="lab" aria-labelledby="bureau-home-title">
+        <div className="container bureau-home-intro">
+          <div className="bureau-home-heading">
             <div className="eyebrow"><span>04 /</span> INTERACTIVE EXPERIMENT</div>
-            <h2>Infinite <em>Worlds.</em></h2>
-            <p>Van je scherm door een sleutelgat en een kijklens naar verborgen werelden. Alleen zoomen.</p>
-          </Reveal>
-          <InfiniteWorldsPreview />
-          <p style={{ textAlign: 'center', marginTop: '30px' }}>
-            <a href="/bureau" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', color: '#d9b68d', textDecoration: 'none', fontSize: '13px', letterSpacing: '0.08em' }}>
-              ONTDEK THE BUREAU — MIJN INTERACTIEVE STUDIO <ArrowUpRight size={17}/>
-            </a>
-          </p>
+            <h2 id="bureau-home-title">The <em>Bureau.</em></h2>
+            <p>Een verborgen wereld die je laag voor laag ontdekt. Zoom naar binnen, raak details aan en kijk wat er achter het volgende scherm schuilgaat.</p>
+          </div>
+          <a className="bureau-home-fullscreen" href="/bureau" aria-label="Open The Bureau op volledig scherm">
+            OPEN OP VOLLEDIG SCHERM <ArrowUpRight size={16}/>
+          </a>
+        </div>
+        <div className="bureau-home-experience">
+          <iframe src="/bureau/index.html" title="The Bureau — interactieve zoomwereld" loading="lazy" allowFullScreen />
         </div>
       </section>
 
