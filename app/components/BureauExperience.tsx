@@ -89,8 +89,8 @@ export default function BureauExperience() {
           filter: none !important;
         }
         .bureau-embed .scene > img {
-          -webkit-mask-image: url("/bureau/scene-cutout.svg?v=chair-free-v5") !important;
-          mask-image: url("/bureau/scene-cutout.svg?v=chair-free-v5") !important;
+          -webkit-mask-image: url("/bureau/scene-cutout.svg?v=cleanlines-v6") !important;
+          mask-image: url("/bureau/scene-cutout.svg?v=cleanlines-v6") !important;
           -webkit-mask-repeat: no-repeat !important;
           mask-repeat: no-repeat !important;
           -webkit-mask-size: 100% 100% !important;
@@ -111,7 +111,7 @@ export default function BureauExperience() {
         .bureau-embed .scene > img {
           position: relative;
           z-index: 1;
-          filter: drop-shadow(0 9px 13px rgba(33,25,21,.12));
+          filter: none !important;
         }
         /* No synthetic traced outlines: those stray strokes detached from
            the illustrated desk on narrow devices. */
