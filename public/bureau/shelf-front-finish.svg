@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1672" height="941" viewBox="0 0 1672 941" preserveAspectRatio="none">
+<defs>
+ <linearGradient id="edge" x1="0" x2="0" y1="0" y2="1">
+  <stop offset="0" stop-color="#946741"/><stop offset=".35" stop-color="#6b452d"/><stop offset=".83" stop-color="#3b2b26"/><stop offset="1" stop-color="#241f21"/>
+ </linearGradient>
+ <linearGradient id="rim" x1="0" x2="1" y1="0" y2="0">
+  <stop offset="0" stop-color="#a66f41"/><stop offset=".3" stop-color="#f6bb72"/><stop offset=".68" stop-color="#db9957"/><stop offset="1" stop-color="#7b4d30"/>
+ </linearGradient>
+</defs>
+<!-- The front fascia is ABOVE the items. This hides lower pixels of books,
+     Rubik's cube, controller and speaker that formerly showed through the shelf. -->
+<path d="M441 181 Q443 175 450 175 L1379 182 Q1392 182 1395 187
+         L1395 205 L1373 223 L451 218 L439 209 Z"
+      fill="url(#edge)" stroke="#201c1a" stroke-width="4" stroke-linejoin="round"/>
+<!-- A very narrow wood top: items rest against this line, never below it. -->
+<path d="M446 179 Q864 177 1387 185" fill="none" stroke="#edbc84"
+      stroke-width="4.1" stroke-linecap="round" opacity=".84"/>
+<path d="M447 187 L1388 192" stroke="#3b2924" stroke-width="3" opacity=".65"/>
+<!-- Original amber LED below the shelf front, not another floating plank. -->
+<path d="M451 215 L1371 217" stroke="#f7b36b" stroke-width="5" stroke-linecap="round" opacity=".86"/>
+<path d="M455 222 L1366 222" stroke="#794324" stroke-width="2" stroke-linecap="round" opacity=".56"/>
+</svg>
