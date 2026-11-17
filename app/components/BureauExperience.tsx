@@ -113,16 +113,8 @@ export default function BureauExperience() {
           z-index: 1;
           filter: drop-shadow(0 9px 13px rgba(33,25,21,.12));
         }
-        .bureau-embed .bureau-desk-outline {
-          position: absolute;
-          inset: 0;
-          height: 100%;
-          width: 100%;
-          z-index: 2;
-          overflow: visible;
-          pointer-events: none;
-          opacity: .68;
-        }
+        /* No synthetic traced outlines: those stray strokes detached from
+           the illustrated desk on narrow devices. */
         /* Text-free correction of the original illustrated Fight Camp poster.
            Only erased lettering is composited; the rest of the art stays intact. */
         .bureau-embed .bureau-poster-text-clean {
@@ -135,41 +127,40 @@ export default function BureauExperience() {
           height: 9.8831% !important;
           background: url("/bureau/poster-text-clean.svg") center/100% 100% no-repeat;
         }
-        .bureau-embed .stage-heading { display: none !important; }
-        .bureau-embed .top {
-          opacity: .64 !important;
-          transition: opacity .2s ease !important;
+        /* Artwork only inside the portfolio. The standalone Bureau retains
+           its settings toolbar for visitors who want the full experience. */
+        .bureau-embed .top,
+        .bureau-embed .stage-heading,
+        .bureau-embed .scene-caption,
+        .bureau-embed .stage-hint,
+        .bureau-embed .bottom,
+        .bureau-embed .v2-subtitle,
+        .bureau-embed .v2-quick {
+          display: none !important;
         }
-        .bureau-embed .top:hover,
-        .bureau-embed .top:focus-within { opacity: 1 !important; }
         @media (max-width: 680px) {
+          /* On phone show the WHOLE illustration. No 770px canvas that
+             overflows a 390px screen or clips the monitor/punching bag. */
           .bureau-embed .scene-outer {
-            display: flex !important;
-            justify-content: flex-start !important;
-            align-items: center !important;
+            display: grid !important;
+            place-items: center !important;
+            overflow: hidden !important;
             width: 100% !important;
             height: 100% !important;
-            min-height: 0 !important;
-            overflow-x: auto !important;
-            overflow-y: hidden !important;
-            scrollbar-width: none !important;
-            overscroll-behavior-x: contain;
-            touch-action: pan-x pan-y;
-            -webkit-overflow-scrolling: touch;
+            padding: 0 !important;
+            touch-action: pan-y !important;
           }
-          .bureau-embed .scene-outer::-webkit-scrollbar { display: none; }
           .bureau-embed .scene {
-            flex: 0 0 auto !important;
-            width: max(770px, 190vw) !important;
-            max-width: none !important;
-            margin: 0 !important;
+            width: min(98vw, var(--bureau-art-width, 98vw)) !important;
+            max-width: 98vw !important;
+            margin: 0 auto !important;
             animation: none !important;
+            transform: none !important;
           }
-          .bureau-embed .top {
-            pointer-events: none !important;
-            opacity: .85 !important;
+          .bureau-embed .spot {
+            border: 0 !important;
+            box-shadow: none !important;
           }
-          .bureau-embed .top button { pointer-events: auto !important; }
         }
       `;
 
@@ -230,25 +221,6 @@ export default function BureauExperience() {
         scene.appendChild(correction);
       }
 
-      // Trace the desk edge very lightly. This is an overlay, not a new drawing:
-      // the original illustration and surviving hotspots retain their positions.
-      if (scene && !document.getElementById("bureau-desk-outline")) {
-        const ns = "http://www.w3.org/2000/svg";
-        const outline = document.createElementNS(ns, "svg");
-        outline.id = "bureau-desk-outline";
-        outline.setAttribute("class", "bureau-desk-outline");
-        outline.setAttribute("viewBox", "0 0 1672 941");
-        outline.setAttribute("preserveAspectRatio", "none");
-        outline.setAttribute("aria-hidden", "true");
-        outline.innerHTML = `
-          <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M31 616 L1667 545" stroke="#ddc09c" stroke-opacity=".32" stroke-width="1.4"/>
-            <path d="M35 706 L174 779 L622 731" stroke="#d7b68c" stroke-opacity=".40" stroke-width="1.6"/>
-            <path d="M176 780 L174 831 M613 732 L607 802"
-              stroke="#c5a482" stroke-opacity=".22" stroke-width="1.5"/>
-          </g>`;
-        scene.appendChild(outline);
-      }
       document.getElementById(style.id)?.remove();
       document.head.appendChild(style);
 
@@ -257,13 +229,11 @@ export default function BureauExperience() {
       const layoutArtwork = () => {
         const vw = window.innerWidth;
         const frameHeight = frame.getBoundingClientRect().height;
-        // Fit the actual inline art area, not the full device viewport:
-        // the image must never be clipped where it meets the project section.
-        // Mobile keeps a horizontal, swipeable desk with aligned hotspots.
-        const artWidth = Math.min(vw * 0.97, frameHeight * (1672 / 941) * 0.955, 1390);
+        // Compute the painted width from the actual frame, preserving the
+        // original 1672:941 aspect ratio, with breathing room on every side.
+        // This scales the interaction hotspots along with their illustrations.
+        const artWidth = Math.min(vw * 0.975, frameHeight * (1672 / 941) * 0.93, 1390);
         document.documentElement.style.setProperty("--bureau-art-width", `${Math.round(artWidth)}px`);
-        const stage = document.querySelector<HTMLElement>(".scene-outer");
-        if (stage && vw <= 680) stage.scrollLeft = (stage.scrollWidth - stage.clientWidth) / 2;
       };
       window.requestAnimationFrame(layoutArtwork);
       const styledWindow = window as Window & { __bureauArtworkLayout?: () => void };
@@ -310,7 +280,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=integrated-cleanposter-v8"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=integrated-clean-mobile-v9"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
