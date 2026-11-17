@@ -450,3 +450,45 @@
     min-height:0;
   }
 }
+
+
+/* What I Do — compact 2×2 skill cards on phones (desktop unchanged). */
+@media (max-width: 600px) {
+  .expertise-section .expertise-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 11px;
+  }
+  .expertise-section .expertise-card {
+    min-width: 0;
+    min-height: 228px;
+    padding: 18px 15px 21px;
+    overflow-wrap: anywhere;
+  }
+  .expertise-section .expertise-top { align-items: flex-start; }
+  .expertise-section .expertise-top span {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+  .expertise-section .expertise-top svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+  .expertise-section .expertise-card h3 {
+    margin: 25px 0 9px;
+    font-size: clamp(14px, 3.75vw, 17px);
+    line-height: 1.35;
+    letter-spacing: -.4px;
+  }
+  .expertise-section .expertise-card p {
+    margin: 0 0 16px;
+    font-size: 10px;
+    line-height: 1.6;
+  }
+  .expertise-section .card-line {
+    left: 15px;
+    bottom: 13px;
+    height: 2px;
+  }
+}
