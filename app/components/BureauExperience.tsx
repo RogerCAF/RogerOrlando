@@ -123,6 +123,18 @@ export default function BureauExperience() {
           pointer-events: none;
           opacity: .68;
         }
+        /* Text-free correction of the original illustrated Fight Camp poster.
+           Only erased lettering is composited; the rest of the art stays intact. */
+        .bureau-embed .bureau-poster-text-clean {
+          position: absolute !important;
+          z-index: 4 !important;
+          pointer-events: none !important;
+          left: 8.0742% !important;
+          top: 29.543% !important;
+          width: 13.6364% !important;
+          height: 9.8831% !important;
+          background: url("/bureau/poster-text-clean.svg") center/100% 100% no-repeat;
+        }
         .bureau-embed .stage-heading { display: none !important; }
         .bureau-embed .top {
           opacity: .64 !important;
@@ -197,11 +209,25 @@ export default function BureauExperience() {
           });
           icons.appendChild(app);
         };
-        const observer = new MutationObserver(addToDesktop);
+        const refreshBureauOS = () => {
+          addToDesktop();
+          const heading = gameContent.querySelector("h1");
+          if (heading?.textContent?.trim() === "Muay Thai")
+            heading.textContent = "Fight Camp";
+        };
+        const observer = new MutationObserver(refreshBureauOS);
         observer.observe(gameContent, { childList: true });
         appWindow.__bureauGameObserver = observer;
-        addToDesktop();
+        refreshBureauOS();
         document.documentElement.dataset.bureauGameInstalled = "1";
+      }
+
+      if (scene && !document.getElementById("bureau-poster-text-clean")) {
+        const correction = document.createElement("div");
+        correction.id = "bureau-poster-text-clean";
+        correction.className = "bureau-poster-text-clean";
+        correction.setAttribute("aria-hidden", "true");
+        scene.appendChild(correction);
       }
 
       // Trace the desk edge very lightly. This is an overlay, not a new drawing:
@@ -284,7 +310,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=integrated-chairfree-v7"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=integrated-cleanposter-v8"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
