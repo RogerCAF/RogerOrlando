@@ -395,3 +395,37 @@
 .bureau-home-experience{position:relative;display:block;width:100%;height:100vh;height:100svh;min-height:500px;overflow:hidden;border:0;border-radius:0;background:transparent;box-shadow:none}
 .bureau-home-experience iframe{display:block;width:100%;height:100%;padding:0;margin:0;border:0;border-radius:0;background:transparent;box-shadow:none}
 @media(max-width:600px){.bureau-home-experience{height:100svh;min-height:400px}}
+
+
+/* 2026-11 Bureau: artwork floating in the page, without a room-shaped frame.
+   The light work section gently hands off to the warm charcoal Bureau studio. */
+.bureau-home-section {
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse 72% 48% at 50% 49%, rgba(132,93,67,.18) 0%, transparent 77%),
+    linear-gradient(180deg,
+      #f0efeb 0%,
+      #b7b0a9 9%,
+      #4b4646 23%,
+      #222124 46%,
+      #12151a 74%,
+      #0b0d12 100%);
+}
+.bureau-home-experience {background:transparent}
+.bureau-home-experience::after {
+  content:"";
+  position:absolute;
+  inset:auto 0 0;
+  height:8%;
+  pointer-events:none;
+  z-index:2;
+  background:linear-gradient(to bottom, transparent, #0b0d12);
+}
+@media(max-width:600px) {
+  .bureau-home-section {
+    background:
+      radial-gradient(ellipse 100% 47% at 50% 48%,rgba(136,94,65,.16),transparent 74%),
+      linear-gradient(180deg,#f0efeb 0%,#655b58 17%,#272326 42%,#0b0d12 100%);
+  }
+  .bureau-home-experience::after{height:5%}
+}
