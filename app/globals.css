@@ -492,3 +492,114 @@
     height: 2px;
   }
 }
+
+
+/* Clean end of page — the Bureau flows straight into a compact,
+   editorial footer, rather than another tall card-like section. */
+.footer {
+  position: relative;
+  background: linear-gradient(180deg,#10151d 0%,#0b0d12 38%,#0b0d12 100%);
+  border: 0;
+  padding: 0;
+}
+.footer .footer-main {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 40px 0 27px;
+}
+.footer-identity {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: clamp(20px,3vw,42px);
+}
+.footer-identity .brand {
+  display: inline-flex;
+  gap: 15px;
+  flex-shrink: 0;
+}
+.footer-identity .brand-word {
+  font-size: 25px;
+  letter-spacing: -1.7px;
+}
+.footer-identity .brand-caption { display: none; }
+.footer-identity p {
+  padding-left: clamp(18px,2.5vw,30px);
+  margin: 0;
+  border-left: 1px solid rgba(214,181,137,.22);
+  color: #9da2a9;
+  font-size: 11px;
+  line-height: 1.6;
+  letter-spacing: .015em;
+}
+.footer .back-to-top {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  color: #c6ae89;
+  font-size: 10px;
+  letter-spacing: 1.15px;
+  text-decoration: none;
+  transition: color .2s ease;
+}
+.footer .back-to-top:hover,
+.footer .back-to-top:focus-visible { color: #f3e1c6; }
+.footer .footer-bottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 19px 0 25px;
+  border-top: 1px solid rgba(255,255,255,.095);
+  color: #747c89;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.7;
+  letter-spacing: 1.1px;
+}
+.footer .footer-bottom span:last-child {white-space: nowrap}
+.footer .footer-star {font-size: 13px;vertical-align: middle;margin-left: 3px}
+@media(max-width:680px) {
+  .footer .footer-main {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) auto;
+    align-items: start;
+    gap: 18px;
+    padding: 28px 0 20px;
+  }
+  .footer-identity {display: block; min-width: 0}
+  .footer-identity .brand-word {font-size: 23px}
+  .footer-identity p {
+    margin: 8px 0 0;
+    padding: 0;
+    border: 0;
+    font-size: 10px;
+    line-height: 1.4;
+    color: #8d939d;
+  }
+  .footer .back-to-top {
+    padding-top: 5px;
+    gap: 7px;
+    font-size: 9px;
+    letter-spacing: .5px;
+  }
+  .footer .back-to-top svg {width: 15px;height: 15px}
+  .footer .footer-bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 18px;
+    padding: 13px 0 22px;
+    font-size: 8px;
+    letter-spacing: .5px;
+  }
+  .footer .footer-bottom span:last-child {font-size: 8px}
+}
