@@ -603,3 +603,14 @@
   }
   .footer .footer-bottom span:last-child {font-size: 8px}
 }
+
+/* Bureau finish: show the real tabletop, not 170px of empty transparent
+   canvas under it. The scene itself stays at its original aspect ratio. */
+.bureau-home-experience {
+  height: clamp(360px, 48vw, 610px);
+}
+@media (max-width: 680px) {
+  .bureau-home-experience {
+    height: clamp(185px, 47vw, 315px);
+  }
+}
