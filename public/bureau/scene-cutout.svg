@@ -24,7 +24,7 @@
     <path d="M434 267 Q433 265 447 267 L1224 282 Q1234 285 1234 298 L1234 534 Q1234 544 1222 545 L440 553 Q429 554 429 543 Z"/>
     <path d="M823 530 L905 531 L912 568 L955 574 L955 583 L733 583 L740 574 L818 565 Z"/>
     <!-- Computer tower on the desk stays: only the under-desk cabinet goes -->
-    <path d="M1245 319 L1450 319 L1508 348 L1509 582 L1241 588 Z"/>
+    <path d="M1245 319 L1450 319 L1508 348 L1509 564 L1241 565 Z"/>
     <!-- Keyboard and desk accessories -->
     <path d="M519 564 L704 550 L708 618 L521 624 Z"/>
     <path d="M559 621 L747 591 L1071 594 L1074 652 L611 697 L542 660 Z"/>
@@ -37,9 +37,11 @@
     <path d="M1634 0 L1646 0 L1607 135 L1594 135 Z"/>
     <path d="M1534 116 Q1574 99 1619 113 Q1659 124 1660 166 L1660 470 Q1657 535 1590 565 Q1522 548 1501 493 L1490 181 Q1491 133 1534 116 Z"/>
   </g>
-  <!-- A visually quiet desk silhouette: front rim only, with feathered contours.
-       No solid cupboard, no chair, no floor slab. -->
-  <g fill="white" filter="url(#soft-desk)">
-    <path d="M29 614 L1672 543 L1672 655 L623 729 L175 777 L34 705 Z"/>
+  <!-- Only the traced wood edge remains. The broad desktop polygon previously
+       exposed the chair pixels even though the chair's own mask was deleted. -->
+  <g fill="none" stroke="white" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M29 614 L1671 544" stroke-width="11"/>
+    <path d="M32 630 L173 742 L623 693 L1008 661" stroke-width="8"/>
+    <path d="M173 743 L174 786 M623 694 L622 746" stroke-width="7"/>
   </g>
 </svg>
