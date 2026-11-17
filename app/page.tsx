@@ -178,7 +178,7 @@ export default function Home() {
 
       <section className="section work-section" id="work">
         <div className="container">
-          <Reveal className="section-head work-heading"><div><div className="eyebrow"><span>03 /</span> SELECTED WORK</div><h2>Proof over<br/><em>promises.</em></h2></div><p>Van websites tot appconcepten. Vijf projecten, vijf verschillende uitdagingen en een eigen verhaal achter elk ontwerp.</p></Reveal>
+          <Reveal className="section-head work-heading"><div><div className="eyebrow"><span>03 /</span> SELECTED WORK</div><h2>Proof over<br/><em>promises.</em></h2></div><p>Van websites tot appconcepten. Vier projecten, vier verschillende uitdagingen en een eigen verhaal achter elk ontwerp.</p></Reveal>
           <PortfolioCaseStudies />
         </div>
       </section>
