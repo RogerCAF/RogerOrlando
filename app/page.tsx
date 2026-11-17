@@ -190,19 +190,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="game-section" id="game" aria-label="The Unfinished Project — spel">
-        <div className="container">
-          <Reveal className="lab-game-feature">
-            <div className="lab-game-feature-mark" aria-hidden="true"><span>R<span>.</span></span></div>
-            <div className="lab-game-feature-copy">
-              <span>INTERACTIVE GAME / ROGER_OS</span>
-              <h3>The Unfinished <em>Project.</em></h3>
-              <p>Vier missies, verborgen codes en een systeem met net iets te veel persoonlijkheid.</p>
-            </div>
-            <a href="/play" className="lab-game-feature-link">SPEEL HET SPEL <ArrowUpRight size={17}/></a>
-          </Reveal>
-        </div>
-      </section>
 
 
 
