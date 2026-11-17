@@ -9,6 +9,8 @@ import {
   ScanLine, ShieldCheck, Sparkles, Terminal, Trophy, Zap
 } from "lucide-react";
 import "./play.css";
+import "./anomalies.css";
+import AnomalyBoard from "./AnomalyBoard";
 import TenSecondChallenge from "./TenSecondChallenge";
 import ChaosLockdown from "./ChaosLockdown";
 import FinalProtocolInteraction from "./FinalProtocolInteraction";
@@ -41,6 +43,7 @@ const endings = {
 
 export default function Play() {
   const [game, setGame] = useState<Game>(INITIAL);
+  const [embedded, setEmbedded] = useState(false);
   const [ready, setReady] = useState(false);
   const [stage, setStage] = useState(0);
   const [dial, setDial] = useState(380);
@@ -54,6 +57,7 @@ export default function Play() {
   const [chaosLocked, setChaosLocked] = useState(false);
 
   useEffect(() => {
+    setEmbedded(window.parent !== window && new URLSearchParams(window.location.search).get("bureau") === "1");
     try {
       const raw = window.localStorage.getItem("rogeros-game-v1");
       if (raw) {
@@ -187,7 +191,7 @@ export default function Play() {
   const current = MISSIONS[stage];
 
   return (
-    <div className="ro-game">
+    <div className={`ro-game ${embedded ? "ro-game-bureau" : ""}`}>
       <div className="rg-ambient" aria-hidden="true"/>
       <div className="rg-wrap">
         <header className="rg-nav">
@@ -391,6 +395,7 @@ export default function Play() {
           </div>
         </section>
 
+        <AnomalyBoard />
         <TenSecondChallenge />
 
         <section className="rg-after">
