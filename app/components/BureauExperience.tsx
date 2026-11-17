@@ -230,11 +230,11 @@ export default function BureauExperience() {
       // reach the Muay Thai corner, punching bag, bookshelf, and other hotspots.
       const layoutArtwork = () => {
         const vw = window.innerWidth;
-        const vh = window.innerHeight;
-        // Desktop: never crop or stretch the 1672×941 illustration.
-        // Mobile: allow a larger illustration to scroll sideways, preserving
-        // the touch targets and original aspect ratio.
-        const artWidth = Math.min(vw * 0.97, vh * (1672 / 941) * 0.94, 1430);
+        const frameHeight = frame.getBoundingClientRect().height;
+        // Fit the actual inline art area, not the full device viewport:
+        // the image must never be clipped where it meets the project section.
+        // Mobile keeps a horizontal, swipeable desk with aligned hotspots.
+        const artWidth = Math.min(vw * 0.97, frameHeight * (1672 / 941) * 0.955, 1390);
         document.documentElement.style.setProperty("--bureau-art-width", `${Math.round(artWidth)}px`);
         const stage = document.querySelector<HTMLElement>(".scene-outer");
         if (stage && vw <= 680) stage.scrollLeft = (stage.scrollWidth - stage.clientWidth) / 2;
