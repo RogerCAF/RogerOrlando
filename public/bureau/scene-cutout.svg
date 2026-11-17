@@ -2,11 +2,6 @@
   <!-- The Bureau / clean object silhouette, based on the original scene coordinates.
        Only illustrated objects and the desk itself remain. No chair, floor, rug or
        under-desk drawer. The background is fully transparent. -->
-  <defs>
-    <filter id="soft-desk" x="-4%" y="-9%" width="108%" height="120%" color-interpolation-filters="sRGB">
-      <feGaussianBlur stdDeviation="1.1"/>
-    </filter>
-  </defs>
   <g fill="white">
     <!-- Existing interactive artwork: keep object positions aligned with hotspots -->
     <path d="M91 19 L373 7 L373 404 L88 404 Z"/>
@@ -25,19 +20,14 @@
     <path d="M823 530 L905 531 L912 568 L955 574 L955 583 L733 583 L740 574 L818 565 Z"/>
     <!-- Computer tower on the desk stays: only the under-desk cabinet goes -->
     <path d="M1245 319 L1450 319 L1508 348 L1509 564 L1241 565 Z"/>
-    <!-- Keyboard and desk accessories -->
+    <!-- Only actual keyboard and mouse; no lower decorative strokes -->
     <path d="M519 564 L704 550 L708 618 L521 624 Z"/>
-    <path d="M559 621 L747 591 L1071 594 L1074 652 L611 697 L542 660 Z"/>
+    <path d="M561 616 L747 593 L1070 595 L1068 625 L613 663 L551 640 Z"/>
     <path d="M1092 592 Q1122 574 1170 580 L1198 591 L1179 617 L1119 626 Z"/>
-    <path d="M258 675 L314 658 L361 678 L369 701 L292 712 L257 697 Z"/>
-    <path d="M371 650 L487 629 L591 648 L582 713 L381 724 Z"/>
     <!-- Interactive heavy bag remains -->
     <path d="M1524 0 L1535 0 L1580 130 L1565 141 Z"/>
     <path d="M1579 0 L1592 0 L1569 141 L1553 142 Z"/>
     <path d="M1634 0 L1646 0 L1607 135 L1594 135 Z"/>
     <path d="M1534 116 Q1574 99 1619 113 Q1659 124 1660 166 L1660 470 Q1657 535 1590 565 Q1522 548 1501 493 L1490 181 Q1491 133 1534 116 Z"/>
   </g>
-  <!-- The original tabletop rim, narrowly cropped to avoid revealing
-       the removed chair, floor, drawer or any floating lower strokes. -->
-  <path fill="#fff" d="M29 614 L1671 543 L1671 557 L33 631 Z"/>
 </svg>
