@@ -46,12 +46,32 @@ export default function BureauExperience() {
       const style = document.createElement("style");
       style.id = "bureau-seamless-portfolio";
       style.textContent = `
+        /* The iframe is only an interaction layer. The actual page owns the
+           paper background, transitions and the overall artwork dimensions. */
         html.bureau-embed,
         html.bureau-embed body,
         .bureau-embed .scene-outer {
+          margin: 0 !important;
           background: transparent !important;
           background-image: none !important;
           box-shadow: none !important;
+        }
+        .bureau-embed .scene-outer {
+          width: 100% !important;
+          height: 100% !important;
+          min-height: 0 !important;
+          padding: 0 !important;
+          display: grid !important;
+          place-items: center !important;
+          overflow: hidden !important;
+        }
+        .bureau-embed .scene {
+          width: var(--bureau-art-width, 1200px) !important;
+          max-width: none !important;
+          flex: 0 0 auto !important;
+          margin: 0 auto !important;
+          animation: none !important;
+          transform: none !important;
         }
         .bureau-embed .scene-outer::before,
         .bureau-embed .scene-outer::after,
@@ -78,21 +98,13 @@ export default function BureauExperience() {
           pointer-events: none !important;
         }
         .bureau-embed .scene { isolation: isolate; position: relative; }
-        .bureau-embed .scene::before {
-          content: "";
-          position: absolute;
-          z-index: 0;
-          inset: 7% 2% 13%;
-          pointer-events: none;
-          border-radius: 50%;
-          background: radial-gradient(ellipse 62% 33% at 50% 75%,
-            rgba(183,135,92,.14), rgba(129,107,102,.055) 52%, transparent 100%);
-          filter: blur(22px);
-        }
+        /* No simulated room lighting: it created a visible rectangular stage. */
+        .bureau-embed .scene::before,
+        .bureau-embed .scene::after { display: none !important; }
         .bureau-embed .scene > img {
           position: relative;
           z-index: 1;
-          filter: drop-shadow(0 15px 17px rgba(8,8,9,.16));
+          filter: drop-shadow(0 9px 13px rgba(33,25,21,.12));
         }
         .bureau-embed .bureau-desk-outline {
           position: absolute;
@@ -105,13 +117,19 @@ export default function BureauExperience() {
           opacity: .68;
         }
         .bureau-embed .stage-heading { display: none !important; }
+        .bureau-embed .top {
+          opacity: .64 !important;
+          transition: opacity .2s ease !important;
+        }
+        .bureau-embed .top:hover,
+        .bureau-embed .top:focus-within { opacity: 1 !important; }
         @media (max-width: 680px) {
           .bureau-embed .scene-outer {
             display: flex !important;
             justify-content: flex-start !important;
             align-items: center !important;
             width: 100% !important;
-            height: 100svh !important;
+            height: 100% !important;
             min-height: 0 !important;
             overflow-x: auto !important;
             overflow-y: hidden !important;
@@ -123,12 +141,15 @@ export default function BureauExperience() {
           .bureau-embed .scene-outer::-webkit-scrollbar { display: none; }
           .bureau-embed .scene {
             flex: 0 0 auto !important;
-            width: max(1010px, 225vw) !important;
+            width: max(770px, 190vw) !important;
             max-width: none !important;
             margin: 0 !important;
             animation: none !important;
           }
-          .bureau-embed .top { pointer-events: none !important; }
+          .bureau-embed .top {
+            pointer-events: none !important;
+            opacity: .85 !important;
+          }
           .bureau-embed .top button { pointer-events: auto !important; }
         }
       `;
@@ -217,19 +238,26 @@ export default function BureauExperience() {
 
       // On narrow screens show the computer/desk first; visitors can swipe to
       // reach the Muay Thai corner, punching bag, bookshelf, and other hotspots.
-      const centerArtwork = () => {
+      const layoutArtwork = () => {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        // Desktop: never crop or stretch the 1672×941 illustration.
+        // Mobile: allow a larger illustration to scroll sideways, preserving
+        // the touch targets and original aspect ratio.
+        const artWidth = Math.min(vw * 0.97, vh * (1672 / 941) * 0.94, 1430);
+        document.documentElement.style.setProperty("--bureau-art-width", `${Math.round(artWidth)}px`);
         const stage = document.querySelector<HTMLElement>(".scene-outer");
-        if (!stage || window.innerWidth > 680) return;
-        stage.scrollLeft = (stage.scrollWidth - stage.clientWidth) / 2;
+        if (stage && vw <= 680) stage.scrollLeft = (stage.scrollWidth - stage.clientWidth) / 2;
       };
-      window.requestAnimationFrame(centerArtwork);
+      window.requestAnimationFrame(layoutArtwork);
+      window.addEventListener("resize", layoutArtwork);
     } catch {
       // If the frame is ever served cross-origin, its original experience still works.
     }
   }, []);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=seamless-v4"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=integrated-v5"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
