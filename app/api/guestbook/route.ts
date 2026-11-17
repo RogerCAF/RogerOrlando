@@ -1,134 +1,116 @@
-// The Bureau guestbook — Next.js App Router endpoint.
-// Visitors' public signatures are stored as comments on a dedicated GitHub issue.
-// Required Vercel server-side environment variable: GITHUB_TOKEN (Issues: read/write).
-// Optional: GITHUB_REPO and GITHUB_ISSUE_NUMBER.
+import { list, put } from "@vercel/blob";
+
+// The Bureau: public, shared visitor notebook without a traditional database.
+// Each signature is a separate immutable private blob, so concurrent writes
+// cannot erase earlier signatures. The blob credentials remain server-side.
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const PREFIX = "THE_BUREAU_GUEST_V1:";
-const MAX_ENTRIES = 1000;
-const MAX_VISIBLE = 100;
-const DEFAULT_REPO = "RogerCAF/RogerOrlando";
-const DEFAULT_ISSUE = 44;
+const PREFIX = "the-bureau/guestbook/v1/";
+const MAX_NAMES = 1000;
+const MAX_SHOWN = 200;
 
-type Entry = { name: string; date: string; id: number };
-type GitHubComment = { id: number; body: string; created_at: string };
-
-function reply(data: unknown, status = 200): Response {
-  return Response.json(data, {
+function json(payload: unknown, status = 200, extra: Record<string,string> = {}) {
+  return Response.json(payload, {
     status,
     headers: {
-      "Cache-Control": "no-store, max-age=0",
+      "Cache-Control": "no-store",
       "X-Content-Type-Options": "nosniff",
-    },
-  });
-}
-
-function cleanName(value: unknown): string | null {
-  if (typeof value !== "string") return null;
-  const name = value
-    .normalize("NFC")
-    .replace(/[\r\n\t\u0000-\u001f\u007f]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-  if (name.length < 2 || name.length > 32) return null;
-  return /^[\p{L}\p{M}\p{N} ._'’\-]+$/u.test(name) ? name : null;
-}
-
-const keyFor = (name: string) => name.normalize("NFC").toLocaleLowerCase("nl").trim();
-
-function config() {
-  const repo = process.env.GITHUB_REPO || DEFAULT_REPO;
-  const issue = Number(process.env.GITHUB_ISSUE_NUMBER || DEFAULT_ISSUE);
-  const token = process.env.GITHUB_TOKEN || "";
-  if (!/^[\w.-]+\/[\w.-]+$/.test(repo) || !Number.isSafeInteger(issue) || issue < 1 || !token) {
-    return null;
-  }
-  return { repo, issue, token };
-}
-
-async function github(url: string, cfg: NonNullable<ReturnType<typeof config>>, init?: RequestInit) {
-  const result = await fetch(url, {
-    ...init,
-    cache: "no-store",
-    headers: {
-      Accept: "application/vnd.github+json",
-      Authorization: `Bearer ${cfg.token}`,
-      "X-GitHub-Api-Version": "2022-11-28",
-      "User-Agent": "the-bureau-guestbook",
-      ...(init?.body ? { "Content-Type": "application/json" } : {}),
-    },
-  });
-  if (!result.ok) throw new Error(`GitHub request failed: ${result.status}`);
-  return result.json();
-}
-
-async function entries(cfg: NonNullable<ReturnType<typeof config>>): Promise<Entry[]> {
-  const root = `https://api.github.com/repos/${cfg.repo}/issues/${cfg.issue}/comments`;
-  const output: Entry[] = [];
-  for (let page = 1; page <= Math.ceil(MAX_ENTRIES / 100); page++) {
-    const comments = (await github(`${root}?per_page=100&page=${page}`, cfg)) as GitHubComment[];
-    if (!Array.isArray(comments)) throw new Error("Invalid GitHub response");
-    for (const comment of comments) {
-      if (typeof comment.body !== "string" || !comment.body.startsWith(PREFIX)) continue;
-      const name = cleanName(comment.body.slice(PREFIX.length));
-      if (name) output.push({ name, date: String(comment.created_at).slice(0, 10), id: comment.id });
+      ...extra
     }
-    if (comments.length < 100) break;
-  }
-  return output;
+  });
 }
-
+function validate(raw: unknown): string | null {
+  if (typeof raw !== "string") return null;
+  const name = raw.normalize("NFC").replace(/[\u0000-\u001f\u007f]/g, " ")
+    .replace(/\s+/g, " ").trim();
+  if (name.length < 2 || name.length > 32 || !/[\p{L}\p{N}]/u.test(name)) return null;
+  if (!/^[\p{L}\p{M}\p{N} ._'’\-]+$/u.test(name)) return null;
+  return name;
+}
+function blobName(name: string) {
+  return Buffer.from(name.toLocaleLowerCase("nl"), "utf8").toString("base64url");
+}
+function displayName(pathname: string) {
+  const encoded = pathname.slice(PREFIX.length).replace(/\.json$/, "");
+  try {
+    const name = Buffer.from(encoded, "base64url").toString("utf8");
+    return validate(name);
+  } catch { return null; }
+}
+async function allEntries() {
+  const entries: {name:string;date:string;id:string}[] = [];
+  let cursor: string | undefined;
+  for (let page=0;page<10;page++) {
+    const data = await list({ prefix: PREFIX, limit: 100, cursor });
+    for (const blob of data.blobs) {
+      if (!blob.pathname.startsWith(PREFIX) || !blob.pathname.endsWith(".json")) continue;
+      const name = displayName(blob.pathname);
+      if (name) entries.push({
+        name,
+        date: new Date(blob.uploadedAt).toISOString().slice(0,10),
+        id: blob.pathname
+      });
+    }
+    if (!data.hasMore) break;
+    cursor = data.cursor;
+  }
+  return entries.sort((a,b) => a.date.localeCompare(b.date) || a.name.localeCompare(b.name));
+}
+function safeEntries(entries: Awaited<ReturnType<typeof allEntries>>) {
+  return entries.slice(-MAX_SHOWN).map(({name,date})=>({name,date}));
+}
 export async function GET() {
-  const cfg = config();
-  if (!cfg) return reply({ mode: "not_configured", error: "Guestbook needs a server-side GitHub token." }, 503);
   try {
-    const all = await entries(cfg);
-    return reply({ mode: "shared", entries: all.slice(-MAX_VISIBLE), total: all.length });
+    const entries=await allEntries();
+    return json({mode:"shared",entries:safeEntries(entries),total:entries.length});
   } catch {
-    return reply({ error: "Could not load the guestbook." }, 502);
+    return json({error:"The visitor book is temporarily unavailable."},503);
   }
 }
-
-export async function POST(request: Request) {
-  const cfg = config();
-  if (!cfg) return reply({ mode: "not_configured", error: "Guestbook needs a server-side GitHub token." }, 503);
-
-  const origin = request.headers.get("origin");
-  const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
-  if (origin) {
-    try {
-      if (new URL(origin).host !== host) return reply({ error: "Cross-origin signing is disabled." }, 403);
-    } catch {
-      return reply({ error: "Invalid request origin." }, 403);
-    }
+export async function POST(request:Request) {
+  const origin=request.headers.get("origin");
+  const host=request.headers.get("x-forwarded-host")||request.headers.get("host");
+  if (origin && host) {
+    try { if (new URL(origin).host!==host) return json({error:"Cross-origin request rejected."},403); }
+    catch { return json({error:"Invalid request origin."},403); }
   }
-  if (!request.headers.get("content-type")?.startsWith("application/json")) {
-    return reply({ error: "JSON required." }, 415);
-  }
-
-  let body: unknown;
+  const cookie=request.headers.get("cookie")||"";
+  if (/(?:^|;\s*)the_bureau_signed=1(?:;|$)/.test(cookie))
+    return json({error:"You already signed this book."},409);
+  if (!request.headers.get("content-type")?.startsWith("application/json"))
+    return json({error:"Send JSON."},415);
+  let body:Record<string,unknown>;
   try {
-    const raw = await request.text();
-    if (raw.length > 512) return reply({ error: "Request is too large." }, 413);
-    body = JSON.parse(raw);
-  } catch {
-    return reply({ error: "Invalid JSON." }, 400);
-  }
-  const name = cleanName(body && typeof body === "object" && "name" in body ? (body as { name: unknown }).name : null);
-  if (!name) return reply({ error: "Use one name of 2–32 characters." }, 400);
-
+    const raw=await request.text();
+    if (raw.length>512) return json({error:"Request too long."},413);
+    body=JSON.parse(raw);
+    if (!body || typeof body!=="object") return json({error:"Invalid request."},400);
+  } catch {return json({error:"Invalid JSON."},400);}
+  if (body.website) return json({error:"Invalid request."},400); // honeypot
+  const name=validate(body.name);
+  if (!name) return json({error:"Use one name of 2–32 characters."},400);
   try {
-    const all = await entries(cfg);
-    if (all.length >= MAX_ENTRIES) return reply({ error: "The guestbook is full." }, 409);
-    if (all.some((entry) => keyFor(entry.name) === keyFor(name))) {
-      return reply({ error: "This name has already signed." }, 409);
-    }
-    const url = `https://api.github.com/repos/${cfg.repo}/issues/${cfg.issue}/comments`;
-    const comment = (await github(url, cfg, { method: "POST", body: JSON.stringify({ body: PREFIX + name }) })) as GitHubComment;
-    const added = { name, date: String(comment.created_at).slice(0, 10), id: comment.id };
-    return reply({ mode: "shared", entries: all.concat([added]).slice(-MAX_VISIBLE) }, 201);
-  } catch {
-    return reply({ error: "Saving the signature failed. Check GitHub token permissions." }, 502);
+    const entries=await allEntries();
+    if (entries.length>=MAX_NAMES) return json({error:"The visitor book is full."},409);
+    if (entries.some(x=>blobName(x.name)===blobName(name)))
+      return json({error:"This name already appears in the book."},409);
+
+    const pathname=PREFIX+blobName(name)+".json";
+    await put(pathname,JSON.stringify({name,date:new Date().toISOString()}),{
+      access:"private",
+      contentType:"application/json",
+      addRandomSuffix:false,
+      allowOverwrite:false
+    });
+    const added={name:name.toLocaleLowerCase("nl"),date:new Date().toISOString().slice(0,10),id:pathname};
+    return json({mode:"shared",entries:safeEntries([...entries,added]),total:entries.length+1},201,{
+      "Set-Cookie":"the_bureau_signed=1; Path=/; Max-Age=31536000; HttpOnly; Secure; SameSite=Lax"
+    });
+  } catch (e) {
+    const message=e instanceof Error?e.message:"";
+    if (/already exist|conflict|409/i.test(message))
+      return json({error:"This name already appears in the book."},409);
+    return json({error:"Could not save your signature. Please try later."},503);
   }
 }
