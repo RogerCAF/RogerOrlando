@@ -33,17 +33,7 @@ const studies: Study[] = [
     wink: "Collect cities. Ignore parking tickets."
   },
   {
-    id: "03", name: "10.00", category: "MOBILE GAME / INTERACTION DESIGN",
-    description: "Een timinggame met één uitdaging: raak exact tien seconden. Simpel genoeg om te begrijpen, lastig genoeg om opnieuw te proberen.",
-    stage: "APP PROJECT", className: "ten", tags: ["REACT NATIVE", "IOS", "GAME UX"],
-    role: "Game concept, UX & appbouw", focus: "Timing · Feedback · Spelgevoel",
-    question: "Hoe maak je van één knop een ervaring die spannend aanvoelt?",
-    approach: "Door één centrale interactie, een eigen visuele identiteit en feedback die het moment van precisie voelbaar maakt.",
-    thought: "Simpel maken is meestal het moeilijkste onderdeel.",
-    wink: "Ten seconds. Infinite excuses."
-  },
-  {
-    id: "04", name: "BreakUrge", category: "MOBILE APP / WELLBEING",
+    id: "03", name: "BreakUrge", category: "MOBILE APP / WELLBEING",
     description: "Een appconcept dat dagelijkse vooruitgang zichtbaar maakt. Geen onnodige ruis, maar overzicht en motivatie.",
     stage: "APP PROJECT", className: "breakurge", tags: ["EXPO", "REACT NATIVE", "UX/UI"],
     role: "Concept, interaction & mobile UX", focus: "Rust · Motivatie · Voortgang",
@@ -53,7 +43,7 @@ const studies: Study[] = [
     wink: "Less noise. More progress."
   },
   {
-    id: "05", name: "Bier Koerier Utrecht", category: "BRANDING / VISUAL IDENTITY",
+    id: "04", name: "Bier Koerier Utrecht", category: "BRANDING / VISUAL IDENTITY",
     description: "Een opvallende zwart-oranje identiteit waarin de Utrechtse skyline en de Domtoren centraal staan.",
     stage: "DESIGN PROJECT", className: "bierkoerier", tags: ["BRANDING", "GRAPHIC DESIGN", "UTRECHT"],
     role: "Visueel ontwerp", focus: "Identiteit · Typografie · Utrecht",
@@ -71,10 +61,6 @@ function Preview({ item }: { item: Study }) {
   </div>;
   if (item.className === "cityfi") return <div className="cs-preview cs-cityfi cs-authentic-preview">
     <img className="cs-cityfi-logo" src="/projects/cityfi-portfolio.svg" width={1000} height={400} decoding="async" alt="CityFi: strak turquoise C-beeldmerk met stadssilhouet en woordmerk" loading="lazy"/>
-  </div>;
-  if (item.className === "ten") return <div className="cs-preview cs-ten cs-red-button-preview">
-    <div className="cs-red-button" aria-label="Grote rode knop voor de 10.00 timinggame"><span>10.00</span></div>
-    <span className="cs-preview-caption">PRESS · HOLD · RELEASE</span>
   </div>;
   if (item.className === "bierkoerier") return <div className="cs-preview cs-bierkoerier-preview">
     <img className="cs-bierkoerier-art" src="/projects/bierkoerier-original.webp" width={1500} height={1500} decoding="async" alt="Origineel Bier Koerier Utrecht-logo van de maker, met oranje Utrechtse skyline, Domtoren en woordmerk" loading="lazy"/>
