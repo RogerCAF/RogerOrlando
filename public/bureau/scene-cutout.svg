@@ -37,11 +37,7 @@
     <path d="M1634 0 L1646 0 L1607 135 L1594 135 Z"/>
     <path d="M1534 116 Q1574 99 1619 113 Q1659 124 1660 166 L1660 470 Q1657 535 1590 565 Q1522 548 1501 493 L1490 181 Q1491 133 1534 116 Z"/>
   </g>
-  <!-- Only the traced wood edge remains. The broad desktop polygon previously
-       exposed the chair pixels even though the chair's own mask was deleted. -->
-  <g fill="none" stroke="white" stroke-linejoin="round" stroke-linecap="round">
-    <path d="M29 614 L1671 544" stroke-width="11"/>
-    <path d="M32 630 L173 742 L623 693 L1008 661" stroke-width="8"/>
-    <path d="M173 743 L174 786 M623 694 L622 746" stroke-width="7"/>
-  </g>
+  <!-- The original tabletop rim, narrowly cropped to avoid revealing
+       the removed chair, floor, drawer or any floating lower strokes. -->
+  <path fill="#fff" d="M29 614 L1671 543 L1671 557 L33 631 Z"/>
 </svg>
