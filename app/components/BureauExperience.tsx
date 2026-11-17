@@ -113,6 +113,9 @@ export default function BureauExperience() {
           z-index: 1;
           /* Quieter, flatter colors while keeping the user's real objects. */
           filter: saturate(.76) contrast(1.12) brightness(1.035) !important;
+          /* Posterize the original pixels into a simpler drawn-color palette;
+             the new SVG ink layer supplies the hand-traced detail. */
+          filter: url("#bureau-original-palette") saturate(.92) !important;
         }
         .bureau-embed .scene > img.bureau-original-ink {
           position: absolute !important;
@@ -261,6 +264,26 @@ export default function BureauExperience() {
         scene.appendChild(correction);
       }
 
+      if (!document.getElementById("bureau-original-palette-defs")) {
+        const defs = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        defs.id = "bureau-original-palette-defs";
+        defs.setAttribute("width", "0");
+        defs.setAttribute("height", "0");
+        defs.setAttribute("aria-hidden", "true");
+        defs.style.cssText = "position:absolute;overflow:hidden;pointer-events:none";
+        defs.innerHTML = `
+          <defs>
+            <filter id="bureau-original-palette" color-interpolation-filters="sRGB">
+              <feGaussianBlur stdDeviation=".65"/>
+              <feComponentTransfer>
+                <feFuncR type="discrete" tableValues="0 .11 .22 .33 .44 .55 .66 .77 .88 1"/>
+                <feFuncG type="discrete" tableValues="0 .11 .22 .33 .44 .55 .66 .77 .88 1"/>
+                <feFuncB type="discrete" tableValues="0 .11 .22 .33 .44 .55 .66 .77 .88 1"/>
+              </feComponentTransfer>
+            </filter>
+          </defs>`;
+        document.body.appendChild(defs);
+      }
       document.getElementById(style.id)?.remove();
       document.head.appendChild(style);
 
@@ -320,7 +343,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=original-illustrated-v11"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=original-comic-ink-v12"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
