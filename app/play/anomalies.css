@@ -1,0 +1,72 @@
+
+/* The Bureau / Unfinished Project: optional anomaly missions */
+.rg-anomalies{margin:65px 0 45px;padding:0;border:1px solid #47515a;background:linear-gradient(135deg,#161d25,#0f151c 85%);box-shadow:0 24px 70px #0005;overflow:hidden}
+.rg-anomalies-head{display:flex;justify-content:space-between;gap:30px;padding:35px 38px 30px;background:radial-gradient(circle at 90% 20%,#5c4e3a35,transparent 40%);border-bottom:1px solid #3d474d}
+.rg-anomalies-head>div:first-child{max-width:700px}
+.rg-anomaly-eyebrow{display:inline-flex;align-items:center;gap:9px;color:#d8b98e;font-size:10px;font-weight:800;letter-spacing:2px}
+.rg-anomalies-head h2{font:800 clamp(28px,3vw,43px)/1.14 "Manrope",sans-serif;letter-spacing:-1.5px;margin:15px 0 12px}
+.rg-anomalies-head h2 em{font:500 1em/1.1 "Playfair Display",Georgia,serif;color:#d9bb89}
+.rg-anomalies-head p{font-size:13px;line-height:1.9;color:#9ca9b1;margin:0}
+.rg-anomaly-count{display:flex;flex-direction:column;gap:9px;align-items:flex-end;justify-content:center;white-space:nowrap}
+.rg-anomaly-count>span{color:#9caaae;font-size:9px;letter-spacing:1.4px;font-weight:800}
+.rg-anomaly-count>strong{color:#e4c69b;font:800 52px/1 "Manrope",sans-serif}
+.rg-anomaly-count small{color:#a3aaac;font-size:19px}
+.rg-anomaly-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:1px solid #46525c;background:#111821}
+.rg-anomaly-tabs>button{display:flex;align-items:center;gap:10px;min-width:0;padding:21px 19px;border:0;border-right:1px solid #3a444c;border-bottom:2px solid transparent;background:transparent;color:#c3b8a5;text-align:left;cursor:pointer;transition:background .2s}
+.rg-anomaly-tabs>button:hover{background:#222a34}
+.rg-anomaly-tabs>button.selected{border-bottom-color:#dcaf6b;background:#272923;color:#f4dfb9}
+.rg-anomaly-tabs>button>span{font-size:10px;color:#a58d6c;font-weight:800;white-space:nowrap}
+.rg-anomaly-tabs>button>strong{flex:1;font:800 12px/1.4 "Manrope",sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rg-anomaly-tabs>button svg{flex:0 0 16px}
+.rg-anomaly-stage{padding:29px 33px 30px}
+.rg-anomaly-stage-top{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #34424b;padding:0 0 19px;color:#dda96c;font-size:10px;font-weight:800;letter-spacing:1.3px}
+.rg-anomaly-stage-top span:first-child{display:flex;align-items:center;gap:9px}
+.rg-anomaly-stage-top span:last-child{color:#aab9ab}
+.rg-anomaly-task{min-height:335px;padding-top:24px}
+.rg-anomaly-visual{display:flex;align-items:center;gap:17px;min-height:64px;color:#dbb884}
+.rg-anomaly-visual>div{display:flex;flex-direction:column;gap:7px}
+.rg-anomaly-visual strong{font:800 15px/1.3 "Manrope",sans-serif;letter-spacing:.2px;color:#f1dfc5}
+.rg-anomaly-visual span{font-size:9px;letter-spacing:1.3px;color:#89949c;font-weight:800}
+.rg-anomaly-task>p{font-size:12px;line-height:1.9;color:#a7b4bb;max-width:780px;margin:10px 0 24px}
+.rg-anomaly-task>p strong{color:#f0d6aa}
+.rg-anomaly-sequence{display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:21px;border:1px solid #3c505b;background:#10171f;min-height:78px}
+.rg-anomaly-sequence>span{font-size:9px;letter-spacing:1.3px;font-weight:800;color:#9ea6aa}
+.rg-anomaly-sequence>strong{flex:1;font:800 12px/1.5 ui-monospace,monospace;color:#ebcea3}
+.rg-anomaly-sequence>small{color:#a9c9b7;font-size:10px}
+.rg-anomaly-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:17px}
+.rg-anomaly-actions>button{min-height:44px;padding:10px 15px;border:1px solid #7a6954;background:#282a2c;color:#edd0a7;font-size:10px;font-weight:800;letter-spacing:.7px;cursor:pointer}
+.rg-anomaly-actions>button:hover:enabled{background:#d4b080;color:#1b1e21}
+.rg-anomaly-actions>button:disabled{opacity:.25;cursor:not-allowed}
+.rg-anomaly-packets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.rg-anomaly-packets button{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px;padding:15px 17px;text-align:left;background:#1a2530;border:1px solid #425564;color:#e2d7c6;cursor:pointer;min-height:57px;transition:background .15s,border-color .15s}
+.rg-anomaly-packets button:hover:enabled{border-color:#d3b183;background:#263540}
+.rg-anomaly-packets button.is-flagged{border-color:#81b99c;background:#163328}
+.rg-anomaly-packets button>span{font:800 9px ui-monospace,monospace;color:#acc0c9}
+.rg-anomaly-packets button>strong{font:800 12px ui-monospace,monospace}
+.rg-anomaly-packets button>small{flex-basis:100%;font-size:9px;letter-spacing:1px;color:#849da7}
+.rg-anomaly-packets button.is-flagged>small{color:#9ed6b0}
+.rg-anomaly-ghost-zone{height:225px;position:relative;isolation:isolate;overflow:hidden;border:1px solid #374956;background:radial-gradient(ellipse at 50% 50%,#24333c,#0a1119 72%)}
+.rg-anomaly-ghost-zone::before{content:"";position:absolute;inset:0;opacity:.19;background-image:linear-gradient(#fff2 1px,transparent 1px),linear-gradient(90deg,#fff2 1px,transparent 1px);background-size:27px 27px}
+.rg-anomaly-scanline{pointer-events:none;position:absolute;inset:-100% 0 0;background:linear-gradient(180deg,transparent 45%,#96d3e20c 50%,transparent 55%);animation:rg-ghost-scan 4s linear infinite}
+.rg-anomaly-ghost{position:absolute;z-index:3;transform:translate(-50%,-50%);display:flex;align-items:center;flex-direction:column;gap:4px;padding:12px 18px;min-width:115px;border:1px solid #caa479;background:#37332ee9;box-shadow:0 0 18px #d6a15e55;color:#f3d7b1;cursor:crosshair;transition:left .2s,top .2s}
+.rg-anomaly-ghost:hover{background:#8f653b;color:#fff}
+.rg-anomaly-ghost>span{font:800 9px ui-monospace,monospace;letter-spacing:1px}
+.rg-anomaly-ghost-counter{position:absolute;z-index:4;right:14px;bottom:13px;font:800 10px ui-monospace,monospace;color:#bdcbd1}
+.rg-anomaly-ghost-done{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;color:#9bd4ac;font:900 14px ui-monospace,monospace;letter-spacing:.1em}
+.rg-anomaly-cleared{display:flex;align-items:center;gap:12px;padding:14px 17px;background:#183329;border:1px solid #55966d;color:#b4e5c2;font-size:10px;font-weight:800;letter-spacing:1px}
+.rg-anomaly-cleared>strong{margin-left:auto;white-space:nowrap}
+.rg-anomaly-note{display:flex;align-items:center;gap:10px;padding:18px 0 0;color:#c0ada1;font-size:11px;line-height:1.5}
+.rg-anomaly-note svg{color:#d9b183;flex:0 0 auto}
+.rg-anomaly-note span{flex:1}
+.rg-anomaly-note small{color:#8f999f;white-space:nowrap;font-size:9px}
+.rg-anomaly-achievement{display:flex;align-items:center;gap:15px;padding:22px 30px;background:linear-gradient(90deg,#3f3726,#292b25);border-top:1px solid #d4b47c;color:#e8c995}
+.rg-anomaly-achievement>div{display:flex;flex-direction:column;gap:6px;flex:1}
+.rg-anomaly-achievement strong{font-size:12px;letter-spacing:1px}
+.rg-anomaly-achievement span{font-size:11px;color:#d7c7ad}
+.rg-anomaly-footer{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:20px 32px;border-top:1px solid #36414a;color:#8d9f9e}
+.rg-anomaly-footer>span{display:flex;align-items:center;gap:8px;font-size:9px;font-weight:800;letter-spacing:1px}
+.rg-anomaly-footer>button{display:flex;align-items:center;gap:8px;border:0;background:none;color:#cfb28b;font-size:9px;font-weight:800;letter-spacing:1px;cursor:pointer}
+@keyframes rg-ghost-scan{to{transform:translateY(70%)}}
+@media(max-width:760px){.rg-anomalies{margin-top:40px}.rg-anomalies-head{padding:25px 18px 20px;gap:14px}.rg-anomaly-count>strong{font-size:33px}.rg-anomaly-count>span{font-size:7px;letter-spacing:0}.rg-anomaly-tabs>button{padding:13px 8px;flex-wrap:wrap;gap:6px}.rg-anomaly-tabs>button>strong{flex-basis:100%;font-size:10px}.rg-anomaly-tabs>button>span{font-size:8px}.rg-anomaly-tabs>button svg{display:none}.rg-anomaly-stage{padding:22px 17px}.rg-anomaly-packets{grid-template-columns:1fr}.rg-anomaly-note{flex-wrap:wrap}.rg-anomaly-footer{padding:16px;flex-wrap:wrap}}
+@media(max-width:490px){.rg-anomalies-head{display:block}.rg-anomaly-count{flex-direction:row;align-items:baseline;justify-content:flex-start;gap:14px;margin-top:18px}.rg-anomaly-count>strong{font-size:28px}.rg-anomaly-count small{font-size:13px}.rg-anomaly-sequence{padding:13px}.rg-anomaly-actions>button{flex:1 1 30%}.rg-anomaly-ghost{min-width:95px;padding:10px 12px}.rg-anomaly-visual strong{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.rg-anomaly-scanline{animation:none}}
