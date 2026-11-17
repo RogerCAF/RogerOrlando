@@ -1,0 +1,23 @@
+
+/* Compact game mode opened from the interactive desk, not a second portfolio page */
+.ro-game-bureau .rg-wrap{max-width:1450px;padding-inline:clamp(17px,4vw,70px)}
+.ro-game-bureau .rg-nav{display:none}
+.ro-game-bureau .rg-hero{min-height:285px;padding:30px 0 35px;gap:26px;grid-template-columns:minmax(0,1.5fr) minmax(190px,.5fr)}
+.ro-game-bureau .rg-hero h1{font-size:clamp(36px,4.2vw,66px);letter-spacing:-2.8px;margin:13px 0}
+.ro-game-bureau .rg-kicker{font-size:9px}
+.ro-game-bureau .rg-intro{font-size:13px;line-height:1.7;max-width:660px}
+.ro-game-bureau .rg-art{height:230px}
+.ro-game-bureau .rg-art-core{font-size:125px}
+.ro-game-bureau .rg-hero-actions{margin-top:18px}
+.ro-game-bureau .rg-after,.ro-game-bureau .rg-footer{display:none}
+.ro-game-bureau .rg-anomalies{margin-top:40px}
+.ro-game-bureau{min-height:100dvh}
+@media(max-width:720px){
+  .ro-game-bureau .rg-wrap{padding-inline:15px}
+  .ro-game-bureau .rg-hero{grid-template-columns:1fr;min-height:auto;padding:29px 0 24px}
+  .ro-game-bureau .rg-art{display:none}
+  .ro-game-bureau .rg-hero h1{font-size:clamp(34px,8vw,48px);letter-spacing:-2px;margin:12px 0}
+  .ro-game-bureau .rg-intro{font-size:12px;line-height:1.65}
+  .ro-game-bureau .rg-hero-actions{margin-top:17px}
+  .ro-game-bureau .rg-anomalies{margin-top:29px}
+}
