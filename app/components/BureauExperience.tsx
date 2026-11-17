@@ -257,14 +257,51 @@ export default function BureauExperience() {
         if (stage && vw <= 680) stage.scrollLeft = (stage.scrollWidth - stage.clientWidth) / 2;
       };
       window.requestAnimationFrame(layoutArtwork);
+      const styledWindow = window as Window & { __bureauArtworkLayout?: () => void };
+      if (styledWindow.__bureauArtworkLayout)
+        window.removeEventListener("resize", styledWindow.__bureauArtworkLayout);
+      styledWindow.__bureauArtworkLayout = layoutArtwork;
       window.addEventListener("resize", layoutArtwork);
     } catch {
       // If the frame is ever served cross-origin, its original experience still works.
     }
   }, []);
 
+  // The embedded artwork is several megabytes of inline artwork. It can finish
+  // loading before React hydrates and attaches iframe.onLoad, especially on iOS.
+  // Make the integration deterministic rather than relying on that single event.
+  useEffect(() => {
+    const frame = iframeRef.current;
+    if (!frame) return;
+    let attempts = 0;
+    const installIfReady = () => {
+      try {
+        const doc = frame.contentDocument;
+        if (!doc?.getElementById("scene")) return false;
+        prepareScene();
+        return !!doc.getElementById("bureau-unfinished-trigger")
+          && !!doc.getElementById("bureau-seamless-portfolio");
+      } catch {
+        return false;
+      }
+    };
+    const onFrameLoad = () => { installIfReady(); };
+    frame.addEventListener("load", onFrameLoad);
+    // Cover both early iframe load and delayed parse/hydration.
+    const poll = window.setInterval(() => {
+      attempts++;
+      if (installIfReady() || attempts >= 32) window.clearInterval(poll);
+    }, 250);
+    const raf = window.requestAnimationFrame(() => installIfReady());
+    return () => {
+      window.clearInterval(poll);
+      window.cancelAnimationFrame(raf);
+      frame.removeEventListener("load", onFrameLoad);
+    };
+  }, [prepareScene]);
+
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=integrated-v5"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=integrated-v6"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
