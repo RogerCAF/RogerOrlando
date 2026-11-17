@@ -395,7 +395,7 @@
   position:relative;
   background:#10151d;
   color:#f5f0ea;
-  padding-bottom:clamp(4px,1.4vw,18px);
+  padding-bottom:clamp(80px,7.5vw,118px);
 }
 .work-section::after {
   display:block!important;
@@ -413,7 +413,7 @@
   position:relative;
   isolation:isolate;
   width:100%;left:auto;
-  margin:-16px 0 0;
+  margin:0;
   padding:0;
   overflow:hidden;
   border:0;
@@ -457,10 +457,10 @@
 .bureau-home-experience::before,
 .bureau-home-experience::after {display:none!important}
 @media(max-width:680px) {
-  .work-section {padding-bottom:6px;background:#10151d}
+  .work-section {padding-bottom:clamp(60px,15vw,76px);background:#10151d}
   .work-section::after {height:75px}
   .bureau-home-section {
-    margin-top:-8px;
+    margin-top:0;
     background:linear-gradient(180deg,#10151d 0%,#10151d 64%,#0b0d12 100%);
   }
   .bureau-home-experience {
