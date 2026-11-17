@@ -89,8 +89,8 @@ export default function BureauExperience() {
           filter: none !important;
         }
         .bureau-embed .scene > img {
-          -webkit-mask-image: url("/bureau/scene-cutout.svg?v=cleanlines-v6") !important;
-          mask-image: url("/bureau/scene-cutout.svg?v=cleanlines-v6") !important;
+          -webkit-mask-image: url("/bureau/scene-without-bag.svg?v=bag-v1") !important;
+          mask-image: url("/bureau/scene-without-bag.svg?v=bag-v1") !important;
           -webkit-mask-repeat: no-repeat !important;
           mask-repeat: no-repeat !important;
           -webkit-mask-size: 100% 100% !important;
@@ -125,7 +125,7 @@ export default function BureauExperience() {
           user-select: none !important;
           background: transparent !important;
         }
-        .bureau-embed .scene > img:not(.bureau-original-ink):not(.bureau-desk-base) {
+        .bureau-embed .scene > img:not(.bureau-original-ink):not(.bureau-desk-base):not(.bureau-bag-photo):not(.bureau-bag-ink) {
           position: relative;
           z-index: 1;
           /* Flatten the existing art without replacing it. */
@@ -143,6 +143,114 @@ export default function BureauExperience() {
           filter: none !important;
           opacity: .91 !important;
           background: transparent !important;
+        }
+        /* Separate the existing punching bag from the desk. The base scene
+           no longer renders that part of its original pixels; the same artwork
+           is drawn independently with its original ink detail. */
+        .bureau-embed .scene > img.bureau-original-ink {
+          -webkit-mask-image: url("/bureau/ink-without-bag.svg?v=bag-v1") !important;
+          mask-image: url("/bureau/ink-without-bag.svg?v=bag-v1") !important;
+          -webkit-mask-repeat: no-repeat !important;
+          mask-repeat: no-repeat !important;
+          -webkit-mask-size: 100% 100% !important;
+          mask-size: 100% 100% !important;
+        }
+        .bureau-embed .scene > img.bureau-bag-photo,
+        .bureau-embed .scene > img.bureau-bag-ink {
+          position: absolute !important;
+          inset: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          object-fit: fill !important;
+          pointer-events: none !important;
+          user-select: none !important;
+          background: transparent !important;
+          -webkit-mask-image: url("/bureau/bag-only-cutout.svg?v=bag-v1") !important;
+          mask-image: url("/bureau/bag-only-cutout.svg?v=bag-v1") !important;
+          -webkit-mask-repeat: no-repeat !important;
+          mask-repeat: no-repeat !important;
+          -webkit-mask-size: 100% 100% !important;
+          mask-size: 100% 100% !important;
+          transform-origin: 94.2% 0% !important;
+          transform: translateX(1.5%) scale(.82) !important;
+        }
+        .bureau-embed .scene > img.bureau-bag-photo {
+          z-index: 2 !important;
+          filter: url("#bureau-original-palette") saturate(.92) !important;
+        }
+        .bureau-embed .scene > img.bureau-bag-ink {
+          z-index: 3 !important;
+          opacity: .91 !important;
+          filter: none !important;
+        }
+        .bureau-embed .spot[data-open="bag"] {
+          left: 88.5% !important;
+          top: 0% !important;
+          width: 11.5% !important;
+          height: 52% !important;
+        }
+
+        /* Make the EXISTING visitor notebook visible again. Clicking it opens
+           the shared names list and single-signature guestbook already built. */
+        .bureau-embed #bureau-guestbook-entry {
+          position: absolute !important;
+          left: 17.5% !important;
+          top: 65% !important;
+          width: 16% !important;
+          height: 12.5% !important;
+          z-index: 10 !important;
+          box-sizing: border-box !important;
+          padding: 0 4px 0 8% !important;
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: center !important;
+          align-items: center !important;
+          gap: 3px !important;
+          transform: rotate(-8deg) !important;
+          border: 2px solid #2a201d !important;
+          border-radius: 2px 5px 6px 2px !important;
+          background: linear-gradient(145deg,#d7b17c 0%,#b88654 35%,#855735 100%) !important;
+          box-shadow: 3px 4px 0 #261b1c, 0 8px 12px rgba(0,0,0,.16) !important;
+          color: #261c1b !important;
+          text-shadow: none !important;
+          cursor: pointer !important;
+          font-family: Georgia,serif !important;
+          transition: filter .15s, transform .15s !important;
+        }
+        .bureau-embed #bureau-guestbook-entry::before {
+          content: "" !important;
+          position: absolute !important;
+          top: 0 !important; bottom: 0 !important; left: 8% !important;
+          width: 4% !important;
+          background: #5b3e2b !important;
+        }
+        .bureau-embed #bureau-guestbook-entry strong {
+          display: block !important;
+          font: 800 clamp(6px,.85vw,14px)/1.1 Georgia,serif !important;
+          letter-spacing: .06em !important;
+          white-space: nowrap !important;
+        }
+        .bureau-embed #bureau-guestbook-entry span {
+          font: 700 clamp(5px,.58vw,10px)/1.1 ui-monospace,monospace !important;
+          letter-spacing: .1em !important;
+        }
+        .bureau-embed #bureau-guestbook-entry:hover,
+        .bureau-embed #bureau-guestbook-entry:focus-visible {
+          filter: brightness(1.1) !important;
+          transform: rotate(-5deg) translateY(-2px) !important;
+          outline: 2px solid #eed5ad !important;
+          outline-offset: 2px !important;
+        }
+        @media(max-width: 680px) {
+          .bureau-embed #bureau-guestbook-entry {
+            border-width: 1px !important;
+            gap: 1px !important;
+          }
+          .bureau-embed #bureau-guestbook-entry strong {
+            font-size: 7px !important;
+            letter-spacing: 0 !important;
+          }
+          .bureau-embed #bureau-guestbook-entry span { font-size: 5px !important; }
         }
         /* No synthetic traced outlines: those stray strokes detached from
            the illustrated desk on narrow devices. */
@@ -284,6 +392,52 @@ export default function BureauExperience() {
         scene.appendChild(ink);
       }
 
+      // The original punchbag image is split into its own interactive layer.
+      // Nothing else (including the phone or computer) is repositioned.
+      if (scene && !document.getElementById("bureau-relocated-bag")) {
+        const original = scene.querySelector<HTMLImageElement>(
+          ":scope > img:not(.bureau-original-ink):not(.bureau-desk-base):not(.bureau-bag-photo):not(.bureau-bag-ink)"
+        );
+        if (original) {
+          const bagPhoto = document.createElement("img");
+          bagPhoto.id = "bureau-relocated-bag";
+          bagPhoto.className = "bureau-bag-photo";
+          bagPhoto.src = original.currentSrc || original.src;
+          bagPhoto.alt = "";
+          bagPhoto.decoding = "async";
+          bagPhoto.draggable = false;
+          bagPhoto.setAttribute("aria-hidden", "true");
+          scene.appendChild(bagPhoto);
+
+          const bagInk = document.createElement("img");
+          bagInk.id = "bureau-relocated-bag-ink";
+          bagInk.className = "bureau-bag-ink";
+          bagInk.src = "/bureau/original-contour-ink.svg?v=original-v1";
+          bagInk.alt = "";
+          bagInk.decoding = "async";
+          bagInk.draggable = false;
+          bagInk.setAttribute("aria-hidden", "true");
+          scene.appendChild(bagInk);
+        }
+      }
+
+      // The notebook was already a hidden hotspot; make its visitor list
+      // discoverable without introducing any unrelated items.
+      if (scene && !document.getElementById("bureau-guestbook-entry")) {
+        const notebook = document.createElement("button");
+        notebook.id = "bureau-guestbook-entry";
+        notebook.type = "button";
+        notebook.setAttribute("aria-label", "Open de gedeelde namenlijst en teken het gastenboek");
+        notebook.title = "NAMENLIJST / GASTENBOEK";
+        notebook.innerHTML = "<strong>NAMENLIJST</strong><span>VISITORS LOG</span>";
+        notebook.addEventListener("click", event => {
+          event.preventDefault();
+          event.stopPropagation();
+          document.querySelector<HTMLButtonElement>('.spot[data-open="about"]')?.click();
+        });
+        scene.appendChild(notebook);
+      }
+
       if (scene && !document.getElementById("bureau-poster-text-clean")) {
         const correction = document.createElement("div");
         correction.id = "bureau-poster-text-clean";
@@ -370,7 +524,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=clean-desk-tight-v14"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=bag-and-guests-v15"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
