@@ -190,6 +190,11 @@ export default function Home() {
             <p>Van je scherm door een sleutelgat en een kijklens naar verborgen werelden. Alleen zoomen.</p>
           </Reveal>
           <InfiniteWorldsPreview />
+          <p style={{ textAlign: 'center', marginTop: '30px' }}>
+            <a href="/bureau" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', color: '#d9b68d', textDecoration: 'none', fontSize: '13px', letterSpacing: '0.08em' }}>
+              ONTDEK THE BUREAU — MIJN INTERACTIEVE STUDIO <ArrowUpRight size={17}/>
+            </a>
+          </p>
         </div>
       </section>
 
