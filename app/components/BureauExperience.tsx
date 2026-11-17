@@ -89,8 +89,8 @@ export default function BureauExperience() {
           filter: none !important;
         }
         .bureau-embed .scene > img {
-          -webkit-mask-image: url("/bureau/scene-cutout.svg?v=clean-v4") !important;
-          mask-image: url("/bureau/scene-cutout.svg?v=clean-v4") !important;
+          -webkit-mask-image: url("/bureau/scene-cutout.svg?v=chair-free-v5") !important;
+          mask-image: url("/bureau/scene-cutout.svg?v=chair-free-v5") !important;
           -webkit-mask-repeat: no-repeat !important;
           mask-repeat: no-repeat !important;
           -webkit-mask-size: 100% 100% !important;
@@ -162,47 +162,46 @@ export default function BureauExperience() {
       `;
 
       style.textContent += `
-        .bureau-dossier-entry {
-          position:absolute;z-index:19;left:45.3%;top:62.9%;width:8.2%;height:9%;min-width:44px;
-          padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-          gap:4px;border:1px solid #a37641;border-radius:3px 3px 5px 5px;
-          transform:rotate(-9deg);background:linear-gradient(145deg,#d9b67c,#9b6d3f 82%);
-          box-shadow:3px 6px 0 #322315,5px 10px 19px #0008;
-          color:#24170d;cursor:pointer;transition:transform .18s,filter .18s;
-          font:900 clamp(6px,.72vw,11px)/1.1 ui-monospace,monospace;letter-spacing:-.025em;
+        /* Unfinished Project lives inside the illustrated computer's OS.
+           No floating folder or standalone GAME toolbar on the artwork. */
+        .bureau-embed #bureau-unfinished-os-app {
+          border: 1px solid rgba(211,169,106,.55) !important;
+          color: #f3dbb6 !important;
+          background: rgba(179,124,57,.15) !important;
+          transition: background .15s, transform .15s;
         }
-        .bureau-dossier-entry::before {content:'';position:absolute;top:-6px;left:3px;width:40%;height:6px;
-          background:#be955c;border:1px solid #977044;border-bottom:0;border-radius:2px 3px 0 0}
-        .bureau-dossier-entry svg{width:23%;min-width:12px;height:auto;stroke:currentColor;fill:none;stroke-width:2}
-        .bureau-dossier-entry span{max-width:96%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        .bureau-dossier-entry:hover,.bureau-dossier-entry:focus-visible {
-          transform:rotate(-4deg) translateY(-4px) scale(1.07);filter:brightness(1.15);
-          outline:2px solid #fff2d8;outline-offset:4px
+        .bureau-embed #bureau-unfinished-os-app:hover,
+        .bureau-embed #bureau-unfinished-os-app:focus-visible {
+          background: rgba(215,159,85,.32) !important;
+          transform: translateY(-2px);
         }
-        .bureau-dossier-entry::after{content:'OPEN THE UNFINISHED PROJECT';position:absolute;bottom:120%;left:50%;
-          transform:translateX(-50%);white-space:nowrap;opacity:0;pointer-events:none;
-          padding:8px 10px;border:1px solid #b18c58;background:#171719;color:#f2debf;
-          font:800 9px/1.2 ui-monospace,monospace;letter-spacing:.09em;transition:opacity .2s}
-        .bureau-dossier-entry:hover::after,.bureau-dossier-entry:focus-visible::after{opacity:1}
-        .bureau-dossier-toolbar{border-color:#b99a65!important;color:#f3d5a9!important;
-          background:rgba(35,26,20,.87)!important;cursor:pointer!important}
-        @media(max-width:680px){.bureau-dossier-entry{font-size:8px;gap:4px}}
       `;
       const scene = document.getElementById("scene");
-      if (scene && !document.getElementById("bureau-unfinished-trigger")) {
-        const entry = document.createElement("button");
-        entry.type = "button";
-        entry.id = "bureau-unfinished-trigger";
-        entry.className = "bureau-dossier-entry";
-        entry.setAttribute("aria-label", "Open The Unfinished Project, het interactieve avontuur");
-        entry.title = "THE UNFINISHED PROJECT / SECRET DOSSIER";
-        entry.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM8 7h8M8 12h8M8 16h5"/></svg><span>UNFINISHED</span><span>.EXE</span>';
-        entry.addEventListener("click", (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          setGameOpen(true);
-        });
-        scene.appendChild(entry);
+      const gameContent = document.getElementById("content");
+      if (gameContent) {
+        const appWindow = window as Window & { __bureauGameObserver?: MutationObserver };
+        appWindow.__bureauGameObserver?.disconnect();
+        const addToDesktop = () => {
+          const icons = gameContent.querySelector(".desktop-icons");
+          if (!icons || icons.querySelector("#bureau-unfinished-os-app")) return;
+          const app = document.createElement("button");
+          app.type = "button";
+          app.id = "bureau-unfinished-os-app";
+          app.setAttribute("aria-label", "Speel The Unfinished Project");
+          app.title = "THE UNFINISHED PROJECT / GAME";
+          app.innerHTML = "▣<br>Unfinished.exe";
+          app.addEventListener("click", event => {
+            event.preventDefault();
+            event.stopPropagation();
+            setGameOpen(true);
+          });
+          icons.appendChild(app);
+        };
+        const observer = new window.MutationObserver(addToDesktop);
+        observer.observe(gameContent, { childList: true });
+        appWindow.__bureauGameObserver = observer;
+        addToDesktop();
+        document.documentElement.dataset.bureauGameInstalled = "1";
       }
 
       // Trace the desk edge very lightly. This is an overlay, not a new drawing:
@@ -224,22 +223,6 @@ export default function BureauExperience() {
           </g>`;
         scene.appendChild(outline);
       }
-      const toolbar = document.querySelector(".top-right");
-      if (toolbar && !document.getElementById("bureau-unfinished-toolbar")) {
-        const launcher = document.createElement("button");
-        launcher.type = "button";
-        launcher.id = "bureau-unfinished-toolbar";
-        launcher.className = "pill bureau-dossier-toolbar";
-        launcher.textContent = "▣ GAME";
-        launcher.title = "Open The Unfinished Project";
-        launcher.addEventListener("click", (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          setGameOpen(true);
-        });
-        toolbar.prepend(launcher);
-      }
-
       document.getElementById(style.id)?.remove();
       document.head.appendChild(style);
 
@@ -279,8 +262,8 @@ export default function BureauExperience() {
         const doc = frame.contentDocument;
         if (!doc?.getElementById("scene")) return false;
         prepareScene();
-        return !!doc.getElementById("bureau-unfinished-trigger")
-          && !!doc.getElementById("bureau-seamless-portfolio");
+        return !!doc.getElementById("bureau-seamless-portfolio")
+          && doc.documentElement.dataset.bureauGameInstalled === "1";
       } catch {
         return false;
       }
@@ -301,7 +284,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=integrated-v6"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=integrated-chairfree-v7"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
