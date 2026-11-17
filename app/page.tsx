@@ -185,7 +185,7 @@ export default function Home() {
       <section className="bureau-home-section" id="lab" aria-label="The Bureau — interactieve wereld">
         <h2 className="bureau-home-sr-only">The Bureau — interactieve wereld</h2>
         <div className="bureau-home-experience">
-          <iframe src="/bureau/index.html" title="The Bureau — interactieve zoomwereld" loading="lazy" allowFullScreen />
+          <iframe src="/bureau/index.html?embed=1" title="The Bureau — interactieve zoomwereld" loading="lazy" allowFullScreen />
         </div>
       </section>
 
