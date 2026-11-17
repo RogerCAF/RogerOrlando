@@ -1,22 +1,17 @@
-# The Bureau — shared guestbook (no separate database)
+# The Bureau — public guestbook
 
-**Storage:** GitHub Issue [#44](https://github.com/RogerCAF/RogerOrlando/issues/44) in `RogerCAF/RogerOrlando`.  
-**API:** `app/api/guestbook/route.ts` on the existing Next.js site.  
-**Status:** API source is committed; a Vercel server-side token must be configured before it can accept signatures.
+**Status:** deployed in the existing `roger-orlando` Vercel project at [The Bureau](https://www.rogerorlando.nl/bureau).
 
-## Enable the API in the existing Vercel project
+**Storage:** private Vercel Blob store `the-bureau-guestbook` attached to the existing project. No traditional database or GitHub personal-access token is required.
 
-1. Create a GitHub **fine-grained personal access token** at https://github.com/settings/personal-access-tokens/new.
-2. Select **Only select repositories** → `RogerOrlando`. Set repository permissions **Issues: Read and write** (metadata read-only is automatic). Use an expiration date.
-3. In the Vercel project connected to `RogerCAF/RogerOrlando`, go to **Settings → Environment Variables** and add **`GITHUB_TOKEN`** with the token as its value, scoped to Production (and Preview if desired).
-4. Redeploy the project. The API defaults to `GITHUB_REPO=RogerCAF/RogerOrlando` and `GITHUB_ISSUE_NUMBER=44`; no other variables are needed.
-5. Test `https://YOUR-DOMAIN/api/guestbook`. A successful response contains `"mode":"shared"` and an `entries` array.
-6. The Bureau V3 web client submits to `/api/guestbook` and shows the shared entries. It must be hosted on the same domain as the API or explicitly updated to use an absolute API URL.
+- The interactive notebook in `public/bureau/index.html` reads and writes to the same-origin endpoint `/api/guestbook`.
+- The guestbook API lives in `app/api/guestbook/route.ts`, and the shared list is also shown on the standalone `/bureau/guestbook` page.
+- Vercel securely provisions `BLOB_READ_WRITE_TOKEN` through the connected Blob store; do **not** expose the token in client code or Git.
+- Each valid name (2–32 characters, one line) is stored in its own private object.
+- A duplicate name is rejected. The browser also remembers whether it signed and the API sets a signed cookie. This is **not identity verification**; visitors can bypass browser restrictions.
+- Public entries are visible to all visitors. A name may be removed by deleting its corresponding object in Blob storage.
+- Production signature endpoint should gain a stricter spam/rate-limit control before advertising the site heavily.
 
-## Safety notes
+**Previous prototype:** GitHub Issue #44 was an earlier draft storage option. It is no longer used by the live API.
 
-- The token must **never** be added to this repository, HTML, screenshots, or chat messages. Only put it in Vercel environment variables.
-- GitHub Issues is public. Names posted to the guestbook are visible in issue comments; communicate this to visitors.
-- Exact duplicate names are rejected; the web client limits a browser to one signature. It is not possible to enforce *one name per human* without verification.
-- Protect public launch against automated spam (e.g. CAPTCHA / rate limiting); the simple API is a prototype.
-- Delete inappropriate comments under Issue #44 for moderation.
+**Do not commit secret values.**
