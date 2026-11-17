@@ -138,6 +138,18 @@ export default function BureauExperience() {
         .bureau-embed .v2-quick {
           display: none !important;
         }
+        /* The original hidden toast was translated 150% but still left a
+           gold rounded top border poking out at the bottom of the iframe. */
+        .bureau-embed #toast:not(.show) {
+          visibility: hidden !important;
+          pointer-events: none !important;
+        }
+        .bureau-embed #toast.show {
+          visibility: visible !important;
+          bottom: 12px !important;
+          right: 12px !important;
+          max-width: calc(100% - 24px) !important;
+        }
         @media (max-width: 680px) {
           /* On phone show the WHOLE illustration. No 770px canvas that
              overflows a 390px screen or clips the monitor/punching bag. */
@@ -280,7 +292,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=integrated-clean-mobile-v9"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=integrated-no-stray-toast-v10"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
