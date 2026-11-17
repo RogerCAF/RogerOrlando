@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import "./play.css";
 import "./anomalies.css";
+import "./bureau-game-play.css";
 import AnomalyBoard from "./AnomalyBoard";
 import TenSecondChallenge from "./TenSecondChallenge";
 import ChaosLockdown from "./ChaosLockdown";
