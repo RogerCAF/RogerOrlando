@@ -31,7 +31,7 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
   useEffect(() => { document.body.classList.toggle("menu-open", menuOpen); return () => document.body.classList.remove("menu-open"); }, [menuOpen]);
-  const links = [["Over mij", "#about"], ["Projecten", "#work"]];
+  const links = [["Over mij", "#about"], ["Projecten", "#work"], ["The Bureau", "/bureau"]];
   return <div className="site">
     <div className="noise" aria-hidden="true" />
     <header className="header">
@@ -57,7 +57,7 @@ export default function Home() {
             <p className="hero-summary">Ik ben <strong>Roger Chin A Foeng</strong>. Met een achtergrond in grafisch design en een focus op IT en development combineer ik visuele kwaliteit met doordachte techniek. Van het grote idee tot het kleinste detail.</p>
             <div className="hero-buttons">
               <a className="button button-primary" href="#work">Ontdek mijn projecten <ArrowUpRight size={17}/></a>
-              <a className="button button-quiet" href="#lab">Ontdek de Playground <ArrowDown size={16}/></a>
+              <a className="button button-quiet" href="/bureau">Open The Bureau <ArrowUpRight size={16}/></a>
             </div>
           </div>
           <div className="hero-art hero-art-premium" aria-label="Gedetailleerd verguld monogram R met architectonische lijnen en lichtaccenten">
