@@ -108,10 +108,24 @@ export default function BureauExperience() {
         /* No simulated room lighting: it created a visible rectangular stage. */
         .bureau-embed .scene::before,
         .bureau-embed .scene::after { display: none !important; }
-        .bureau-embed .scene > img {
+        .bureau-embed .scene > img:first-of-type {
           position: relative;
           z-index: 1;
+          /* Quieter, flatter colors while keeping the user's real objects. */
+          filter: saturate(.76) contrast(1.12) brightness(1.035) !important;
+        }
+        .bureau-embed .scene > img.bureau-original-ink {
+          position: absolute !important;
+          inset: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          z-index: 3 !important;
+          pointer-events: none !important;
+          user-select: none !important;
+          object-fit: fill !important;
           filter: none !important;
+          opacity: .91 !important;
+          background: transparent !important;
         }
         /* No synthetic traced outlines: those stray strokes detached from
            the illustrated desk on narrow devices. */
@@ -225,6 +239,20 @@ export default function BureauExperience() {
         document.documentElement.dataset.bureauGameInstalled = "1";
       }
 
+      // Trace the existing illustrated objects (including the actual Muay Thai
+      // poster and Rubik's Cube) without replacing them or moving hotspots.
+      if (scene && !document.getElementById("bureau-original-ink")) {
+        const ink = document.createElement("img");
+        ink.id = "bureau-original-ink";
+        ink.className = "bureau-original-ink";
+        ink.alt = "";
+        ink.setAttribute("aria-hidden", "true");
+        ink.decoding = "async";
+        ink.draggable = false;
+        ink.src = "/bureau/original-contour-ink.svg?v=original-v1";
+        scene.appendChild(ink);
+      }
+
       if (scene && !document.getElementById("bureau-poster-text-clean")) {
         const correction = document.createElement("div");
         correction.id = "bureau-poster-text-clean";
@@ -292,7 +320,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=integrated-no-stray-toast-v10"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=original-illustrated-v11"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
