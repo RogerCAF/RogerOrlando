@@ -108,13 +108,27 @@ export default function BureauExperience() {
         /* No simulated room lighting: it created a visible rectangular stage. */
         .bureau-embed .scene::before,
         .bureau-embed .scene::after { display: none !important; }
-        .bureau-embed .scene > img:first-of-type {
+        /* Place a single illustrated desk behind the EXISTING cutout artwork.
+           Keyboard, mouse, monitor, Rubik and poster keep their exact positions. */
+        .bureau-embed .scene > img.bureau-desk-base {
+          position: absolute !important;
+          inset: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          z-index: 0 !important;
+          object-fit: fill !important;
+          opacity: 1 !important;
+          -webkit-mask-image: none !important;
+          mask-image: none !important;
+          filter: none !important;
+          pointer-events: none !important;
+          user-select: none !important;
+          background: transparent !important;
+        }
+        .bureau-embed .scene > img:not(.bureau-original-ink):not(.bureau-desk-base) {
           position: relative;
           z-index: 1;
-          /* Quieter, flatter colors while keeping the user's real objects. */
-          filter: saturate(.76) contrast(1.12) brightness(1.035) !important;
-          /* Posterize the original pixels into a simpler drawn-color palette;
-             the new SVG ink layer supplies the hand-traced detail. */
+          /* Flatten the existing art without replacing it. */
           filter: url("#bureau-original-palette") saturate(.92) !important;
         }
         .bureau-embed .scene > img.bureau-original-ink {
@@ -242,6 +256,20 @@ export default function BureauExperience() {
         document.documentElement.dataset.bureauGameInstalled = "1";
       }
 
+      // One cohesive surface under the real monitor, PC, mouse and keyboard.
+      // Unlike extending the photo mask, this cannot reveal the removed chair.
+      if (scene && !document.getElementById("bureau-desk-surface")) {
+        const desk = document.createElement("img");
+        desk.id = "bureau-desk-surface";
+        desk.className = "bureau-desk-base";
+        desk.alt = "";
+        desk.setAttribute("aria-hidden", "true");
+        desk.draggable = false;
+        desk.decoding = "async";
+        desk.src = "/bureau/desk-surface-clean.svg?v=desk-v1";
+        scene.appendChild(desk);
+      }
+
       // Trace the existing illustrated objects (including the actual Muay Thai
       // poster and Rubik's Cube) without replacing them or moving hotspots.
       if (scene && !document.getElementById("bureau-original-ink")) {
@@ -343,7 +371,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=original-comic-ink-v12"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=seamless-desk-v13"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
