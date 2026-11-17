@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1672" height="941" viewBox="0 0 1672 941" preserveAspectRatio="none">
+  <!-- White forms are visible; transparent space is the removed room backdrop.
+       Keep the original image coordinates so every interactive hotspot still aligns. -->
+  <g fill="#fff">
+    <!-- Muay Thai frame -->
+    <path d="M91 19 L373 7 L373 404 L88 404 Z"/>
+    <!-- Shelf and its individual objects; no solid wall behind them -->
+    <path d="M443 174 L1389 182 L1388 217 L1368 237 L447 219 Z"/>
+    <path d="M618 171 C630 139 628 93 653 90 L689 89 C716 92 731 142 747 175 L745 188 L613 190 Z"/>
+    <path d="M784 113 L829 94 L883 106 L884 185 L843 208 L785 186 Z"/>
+    <path d="M916 143 L1064 129 L1072 199 L917 200 Z"/>
+    <path d="M1061 70 L1117 50 L1189 26 L1245 15 L1248 206 L1061 200 Z"/>
+    <path d="M1247 65 Q1258 48 1282 54 L1350 65 Q1361 67 1364 86 L1365 204 L1250 205 Z"/>
+    <!-- Lamp above the monitor -->
+    <path d="M646 246 Q645 236 660 236 L865 243 L1082 249 L1096 254 L1093 263 L653 261 Z"/>
+    <path d="M838 243 L845 220 L863 221 L870 253 Z"/>
+    <!-- Monitor and stand -->
+    <path d="M434 267 Q433 265 447 267 L1224 282 Q1234 285 1234 298 L1234 534 Q1234 544 1222 545 L440 553 Q429 554 429 543 Z"/>
+    <path d="M823 530 L905 531 L912 568 L955 574 L955 583 L733 583 L740 574 L818 565 Z"/>
+    <!-- Tower and desk accessories -->
+    <path d="M1245 319 L1450 319 L1508 348 L1509 582 L1241 588 Z"/>
+    <path d="M519 564 L704 550 L708 618 L521 624 Z"/>
+    <path d="M559 621 L747 591 L1071 594 L1074 652 L611 697 L542 660 Z"/>
+    <path d="M1092 592 Q1122 574 1170 580 L1198 591 L1179 617 L1119 626 Z"/>
+    <path d="M258 675 L314 658 L361 678 L369 701 L292 712 L257 697 Z"/>
+    <path d="M371 650 L487 629 L591 648 L582 713 L381 724 Z"/>
+    <!-- Punching bag and its chain -->
+    <path d="M1524 0 L1535 0 L1580 130 L1565 141 Z"/>
+    <path d="M1579 0 L1592 0 L1569 141 L1553 142 Z"/>
+    <path d="M1634 0 L1646 0 L1607 135 L1594 135 Z"/>
+    <path d="M1534 116 Q1574 99 1619 113 Q1659 124 1660 166 L1660 470 Q1657 535 1590 565 Q1522 548 1501 493 L1490 181 Q1491 133 1534 116 Z"/>
+    <!-- Desk top and apron: shaped perimeter instead of rectangular image -->
+    <path d="M29 614 L1672 543 L1672 674 L620 740 L174 790 L34 706 Z"/>
+    <path d="M172 771 L614 727 L608 801 L180 837 Z"/>
+    <!-- Underdesk drawer and right leg -->
+    <path d="M185 779 L598 778 L594 941 L182 941 Z"/>
+    <path d="M1540 688 L1667 667 L1666 922 L1553 941 Z"/>
+    <!-- Chair body, arms, and base -->
+    <path d="M1224 573 Q1277 543 1413 555 Q1492 569 1492 619 Q1471 744 1403 866 L1347 941 L1006 941 L955 916 L968 864 L1020 828 L1126 827 L1127 794 L951 824 L923 806 L932 777 L1137 746 L1163 691 Z"/>
+    <!-- Floor rug retains the interactive hidden detail with an irregular perspective edge -->
+    <path d="M633 866 L1461 780 L1652 860 L1672 941 L628 941 Z"/>
+  </g>
+</svg>
