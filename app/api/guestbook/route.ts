@@ -29,7 +29,7 @@ function validate(raw: unknown): string | null {
   return name;
 }
 function blobName(name: string) {
-  return Buffer.from(name.toLocaleLowerCase("nl"), "utf8").toString("base64url");
+  return Buffer.from(name, "utf8").toString("base64url");
 }
 function displayName(pathname: string) {
   const encoded = pathname.slice(PREFIX.length).replace(/\.json$/, "");
@@ -93,7 +93,7 @@ export async function POST(request:Request) {
   try {
     const entries=await allEntries();
     if (entries.length>=MAX_NAMES) return json({error:"The visitor book is full."},409);
-    if (entries.some(x=>blobName(x.name)===blobName(name)))
+    if (entries.some(x=>x.name.toLocaleLowerCase("nl")===name.toLocaleLowerCase("nl")))
       return json({error:"This name already appears in the book."},409);
 
     const pathname=PREFIX+blobName(name)+".json";
@@ -103,7 +103,7 @@ export async function POST(request:Request) {
       addRandomSuffix:false,
       allowOverwrite:false
     });
-    const added={name:name.toLocaleLowerCase("nl"),date:new Date().toISOString().slice(0,10),id:pathname};
+    const added={name,date:new Date().toISOString().slice(0,10),id:pathname};
     return json({mode:"shared",entries:safeEntries([...entries,added]),total:entries.length+1},201,{
       "Set-Cookie":"the_bureau_signed=1; Path=/; Max-Age=31536000; HttpOnly; Secure; SameSite=Lax"
     });
