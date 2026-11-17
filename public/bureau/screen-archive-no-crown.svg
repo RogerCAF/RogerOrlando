@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1672" height="941" viewBox="0 0 1672 941" preserveAspectRatio="none" aria-hidden="true">
+<defs>
+  <linearGradient id="screen" x1="0.12" y1="0.04" x2="0.93" y2="1">
+    <stop offset="0" stop-color="#11131a"/><stop offset=".43" stop-color="#080a0f"/><stop offset=".78" stop-color="#101116"/><stop offset="1" stop-color="#06080d"/>
+  </linearGradient>
+  <linearGradient id="ash" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#5c5861" stop-opacity=".3"/><stop offset=".55" stop-color="#98939e" stop-opacity=".13"/><stop offset="1" stop-color="#2c2f38" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="hot" x1="0" y1="0" x2="1" y2=".12">
+    <stop offset="0" stop-color="#9a2e22" stop-opacity="0"/><stop offset=".38" stop-color="#ba4432" stop-opacity=".35"/><stop offset=".66" stop-color="#a33629" stop-opacity=".48"/><stop offset="1" stop-color="#822b24" stop-opacity="0"/>
+  </linearGradient>
+  <clipPath id="displayClip"><path d="M452 292 L1212 305 L1212 515 L452 528 Z"/></clipPath>
+</defs>
+<g clip-path="url(#displayClip)">
+<path d="M449 289 L1216 303 L1216 532 L449 531 Z" fill="url(#screen)"/>
+<!-- restrained graphite-marble veins; the former mountain picture and crown are covered -->
+<g fill="none" stroke="url(#ash)" stroke-linecap="round">
+<path d="M462 311 C554 333 532 365 624 373 S742 415 767 468 S792 497 843 519" stroke-width="5"/>
+<path d="M450 344 C506 327 566 368 592 404 S650 471 722 495" stroke-width="2.4"/>
+<path d="M1212 314 C1103 343 1129 376 1097 405 S1044 445 1019 497" stroke-width="5"/>
+<path d="M1213 379 C1133 394 1172 429 1103 450 S1065 481 1050 522" stroke-width="2.2"/>
+<path d="M468 491 Q538 483 573 510 M1090 333 Q1148 348 1200 327" stroke-width="2"/>
+</g>
+<g fill="none" stroke="url(#hot)" stroke-width="2.7">
+<path d="M458 476 Q511 447 550 470 T672 483"/>
+<path d="M1010 338 Q1078 326 1110 347 T1214 360"/>
+</g>
+<!-- actual screen layout, keeps all original interaction hotspots unobstructed -->
+<text x="831" y="367" text-anchor="middle" fill="#f3e8dc" font-family="Georgia, Times New Roman, serif" font-size="36" letter-spacing="7">THE BUREAU</text>
+<path d="M686 386 H755 M907 386 H975" stroke="#8b8688" stroke-width="1.2" opacity=".66"/>
+<text x="831" y="389" text-anchor="middle" fill="#c0b6b1" font-family="Arial, sans-serif" font-size="10.5" font-weight="500" letter-spacing="5.4">PERSONAL ARCHIVE</text>
+<path d="M767 405 Q822 397 892 404" fill="none" stroke="#a44133" stroke-width="2" opacity=".75"/>
+<path d="M790 409 L867 407" stroke="#e06c4f" stroke-width="1" opacity=".52"/>
+<g fill="#101116" fill-opacity=".64" stroke="#747176" stroke-opacity=".75" stroke-width="1">
+<rect x="574" y="446" width="158" height="38" rx="1.5"/>
+<rect x="751" y="446" width="158" height="38" rx="1.5"/>
+<rect x="928" y="446" width="158" height="38" rx="1.5"/>
+</g>
+<g fill="#e2d8cf" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" letter-spacing="1.6" text-anchor="middle">
+<text x="653" y="470">PROJECTS</text>
+<text x="830" y="470">PLAYGROUND</text>
+<text x="1007" y="470">ARCHIVE</text>
+</g>
+<path d="M452 526 L1212 514" stroke="#bc8f6d" stroke-opacity=".33" stroke-width="1.3"/>
+</g>
+</svg>
