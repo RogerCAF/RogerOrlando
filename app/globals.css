@@ -389,6 +389,8 @@
 }
 
 
+/* Pull the work gallery and the illustration into one continuous composition. */
+.work-section{padding-bottom:clamp(35px,4vw,67px)}
 /* The Bureau is an illustration woven into the page, not a separate fullscreen app.
    The top shares Selected Work's paper surface; the bottom becomes the footer. */
 .bureau-home-section {
