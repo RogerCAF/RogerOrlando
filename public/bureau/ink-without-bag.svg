@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1672 941" width="1672" height="941" preserveAspectRatio="none"><defs><mask id="remove-bag" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" style="mask-type:luminance"><rect width="1672" height="941" fill="#fff"/><g fill="#000" stroke="#000" stroke-width="11" stroke-linejoin="round">
+<path d="M1534 116 Q1574 99 1619 113 Q1659 124 1660 166 L1660 470 Q1657 535 1590 565 Q1522 548 1501 493 L1490 181 Q1491 133 1534 116 Z"/>
+<path d="M1524 0 L1535 0 L1580 130 L1565 141 Z"/>
+<path d="M1579 0 L1592 0 L1569 141 L1553 142 Z"/>
+<path d="M1634 0 L1646 0 L1607 135 L1594 135 Z"/></g></mask></defs><rect width="1672" height="941" fill="#fff" mask="url(#remove-bag)"/></svg>
