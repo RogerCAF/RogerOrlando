@@ -62,12 +62,47 @@ export default function BureauExperience() {
           filter: none !important;
         }
         .bureau-embed .scene > img {
-          -webkit-mask-image: url("/bureau/scene-cutout.svg") !important;
-          mask-image: url("/bureau/scene-cutout.svg") !important;
+          -webkit-mask-image: url("/bureau/scene-cutout.svg?v=clean-v4") !important;
+          mask-image: url("/bureau/scene-cutout.svg?v=clean-v4") !important;
           -webkit-mask-repeat: no-repeat !important;
           mask-repeat: no-repeat !important;
           -webkit-mask-size: 100% 100% !important;
           mask-size: 100% 100% !important;
+        }
+
+        /* No hidden hit targets for furniture that is no longer drawn. */
+        .bureau-embed .spot[data-open="chair"],
+        .bureau-embed .spot[data-open="drawer"],
+        .bureau-embed .spot[data-open="rug"] {
+          display: none !important;
+          pointer-events: none !important;
+        }
+        .bureau-embed .scene { isolation: isolate; position: relative; }
+        .bureau-embed .scene::before {
+          content: "";
+          position: absolute;
+          z-index: 0;
+          inset: 7% 2% 13%;
+          pointer-events: none;
+          border-radius: 50%;
+          background: radial-gradient(ellipse 62% 33% at 50% 75%,
+            rgba(183,135,92,.14), rgba(129,107,102,.055) 52%, transparent 100%);
+          filter: blur(22px);
+        }
+        .bureau-embed .scene > img {
+          position: relative;
+          z-index: 1;
+          filter: drop-shadow(0 15px 17px rgba(8,8,9,.16));
+        }
+        .bureau-embed .bureau-desk-outline {
+          position: absolute;
+          inset: 0;
+          height: 100%;
+          width: 100%;
+          z-index: 2;
+          overflow: visible;
+          pointer-events: none;
+          opacity: .68;
         }
         .bureau-embed .stage-heading { display: none !important; }
         @media (max-width: 680px) {
@@ -88,7 +123,7 @@ export default function BureauExperience() {
           .bureau-embed .scene-outer::-webkit-scrollbar { display: none; }
           .bureau-embed .scene {
             flex: 0 0 auto !important;
-            width: max(740px, 202vw) !important;
+            width: max(1010px, 225vw) !important;
             max-width: none !important;
             margin: 0 !important;
             animation: none !important;
@@ -141,6 +176,26 @@ export default function BureauExperience() {
         });
         scene.appendChild(entry);
       }
+
+      // Trace the desk edge very lightly. This is an overlay, not a new drawing:
+      // the original illustration and surviving hotspots retain their positions.
+      if (scene && !document.getElementById("bureau-desk-outline")) {
+        const ns = "http://www.w3.org/2000/svg";
+        const outline = document.createElementNS(ns, "svg");
+        outline.id = "bureau-desk-outline";
+        outline.setAttribute("class", "bureau-desk-outline");
+        outline.setAttribute("viewBox", "0 0 1672 941");
+        outline.setAttribute("preserveAspectRatio", "none");
+        outline.setAttribute("aria-hidden", "true");
+        outline.innerHTML = `
+          <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M31 616 L1667 545" stroke="#ddc09c" stroke-opacity=".32" stroke-width="1.4"/>
+            <path d="M35 706 L174 779 L622 731 L1669 657" stroke="#d7b68c" stroke-opacity=".59" stroke-width="2"/>
+            <path d="M176 780 L174 848 M613 732 L607 821 M1555 668 L1559 842"
+              stroke="#c5a482" stroke-opacity=".32" stroke-width="1.9"/>
+          </g>`;
+        scene.appendChild(outline);
+      }
       const toolbar = document.querySelector(".top-right");
       if (toolbar && !document.getElementById("bureau-unfinished-toolbar")) {
         const launcher = document.createElement("button");
@@ -174,7 +229,7 @@ export default function BureauExperience() {
   }, []);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=seamless-v3"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=seamless-v4"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
