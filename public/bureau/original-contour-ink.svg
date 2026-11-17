@@ -39,10 +39,10 @@
 <path d="M1125 592 Q1139 584 1156 586 L1157 612"/>
 </g></defs>
 <!-- Dark structural ink and fine warm edge highlights follow the ORIGINAL silhouettes -->
-<use href="#structure" stroke="#0c1018" stroke-width="7" opacity=".80"/>
-<use href="#structure" stroke="#e3c49a" stroke-width="2.9" opacity=".86"/>
+<use href="#structure" stroke="#0c1018" stroke-width="5.2" opacity=".68"/>
+<use href="#structure" stroke="#d1b28c" stroke-width="1.65" opacity=".62"/>
 <!-- Ink picked directly from long edge features in the original source image -->
-<g fill="none" stroke="#10121b" stroke-width="4.4" opacity=".78" stroke-linecap="round" stroke-linejoin="round">
+<g fill="none" stroke="#10121b" stroke-width="2.9" opacity=".40" stroke-linecap="round" stroke-linejoin="round">
 <path d="M140 18 L336 38 L346 44 L344 378 L106 378 L106 152 L116 146 L140 178 L134 168 L138 150 L128 146 L122 152 L118 146 L108 150 L104 140 L106 20 L106 380 L344 380 L344 40 L154 18"/>
 <path d="M164 16 L344 34 L350 38 L350 384 L346 388 L104 390 L100 386 L102 166 L98 20 L102 168 L100 388 L348 388 L350 36 L184 16"/>
 <path d="M1650 164 L1652 488 L1648 504 L1638 514 L1634 510 L1640 506 L1636 504 L1640 496 L1642 502 L1640 490 L1646 478 L1642 470 L1644 348 L1640 342 L1644 294 L1638 276 L1644 294 L1640 338 L1644 348 L1644 444 L1640 448 L1644 452 L1642 470 L1646 478 L1640 496 L1636 496 L1638 502 L1636 512 L1630 514 L1632 518 L1608 534 L1612 540 L1612 534 L1626 526 L1636 512 L1638 514 L1636 570 L1636 522 L1648 504 L1652 488 L1650 176"/>
@@ -68,7 +68,7 @@
 <path d="M1366 498 L1374 498 L1384 512 L1380 516 L1268 512 L1334 512 L1374 518 L1334 522 L1300 516 L1270 516 L1352 522 L1380 520 L1378 518 L1386 512 L1388 518 L1388 512 L1376 502 L1382 498 L1368 498"/>
 <path d="M1200 18 L1196 22 L1196 178 L1196 22 L1200 18 L1216 22 L1216 122 L1216 22 L1204 18"/>
 </g>
-<g fill="none" stroke="#e9c08a" stroke-width="1.1" opacity=".49" stroke-linecap="round" stroke-linejoin="round">
+<g fill="none" stroke="#d7b48a" stroke-width=".9" opacity=".24" stroke-linecap="round" stroke-linejoin="round">
 <path d="M140 18 L336 38 L346 44 L344 378 L106 378 L106 152 L116 146 L140 178 L134 168 L138 150 L128 146 L122 152 L118 146 L108 150 L104 140 L106 20 L106 380 L344 380 L344 40 L154 18"/>
 <path d="M164 16 L344 34 L350 38 L350 384 L346 388 L104 390 L100 386 L102 166 L98 20 L102 168 L100 388 L348 388 L350 36 L184 16"/>
 <path d="M1650 164 L1652 488 L1648 504 L1638 514 L1634 510 L1640 506 L1636 504 L1640 496 L1642 502 L1640 490 L1646 478 L1642 470 L1644 348 L1640 342 L1644 294 L1638 276 L1644 294 L1640 338 L1644 348 L1644 444 L1640 448 L1644 452 L1642 470 L1646 478 L1640 496 L1636 496 L1638 502 L1636 512 L1630 514 L1632 518 L1608 534 L1612 540 L1612 534 L1626 526 L1636 512 L1638 514 L1636 570 L1636 522 L1648 504 L1652 488 L1650 176"/>
@@ -95,7 +95,7 @@
 <path d="M1200 18 L1196 22 L1196 178 L1196 22 L1200 18 L1216 22 L1216 122 L1216 22 L1204 18"/>
 </g>
 <!-- Actual Rubik's Cube face grid: colors only within the existing small cube -->
-<g stroke="#14121a" stroke-width="2" stroke-linejoin="round" opacity=".82">
+<g stroke="#14121a" stroke-width="1.7" stroke-linejoin="round" opacity=".84">
 <path d="M790 118 L806 121 L806 139 L790 135 Z" fill="#e4b83c"/>
 <path d="M807 122 L825 125 L825 143 L807 140 Z" fill="#db573d"/>
 <path d="M790 138 L807 141 L807 159 L790 156 Z" fill="#5189ba"/>
@@ -105,5 +105,5 @@
 <path d="M846 152 L863 145 L862 163 L846 170 Z" fill="#b84b35"/>
 <path d="M865 144 L880 137 L879 155 L864 162 Z" fill="#4d9a79"/>
 </g>
-<g fill="none" stroke="#ffdfb2" stroke-width="2.1" opacity=".84" stroke-linecap="round" stroke-linejoin="round"><path d="M615 603 l17 -1 l1 7 l-17 2 Z"/><path d="M642 603 l17 -1 l1 7 l-17 2 Z"/><path d="M669 603 l17 -1 l1 7 l-17 2 Z"/><path d="M696 603 l17 -1 l1 7 l-17 2 Z"/><path d="M723 603 l17 -1 l1 7 l-17 2 Z"/><path d="M750 603 l17 -1 l1 7 l-17 2 Z"/><path d="M777 603 l17 -1 l1 7 l-17 2 Z"/><path d="M804 603 l17 -1 l1 7 l-17 2 Z"/><path d="M831 603 l17 -1 l1 7 l-17 2 Z"/><path d="M858 603 l17 -1 l1 7 l-17 2 Z"/><path d="M885 603 l17 -1 l1 7 l-17 2 Z"/><path d="M912 603 l17 -1 l1 7 l-17 2 Z"/><path d="M939 603 l17 -1 l1 7 l-17 2 Z"/><path d="M966 603 l17 -1 l1 7 l-17 2 Z"/><path d="M993 603 l17 -1 l1 7 l-17 2 Z"/><path d="M619 617 l17 -1 l1 7 l-17 2 Z"/><path d="M646 617 l17 -1 l1 7 l-17 2 Z"/><path d="M673 617 l17 -1 l1 7 l-17 2 Z"/><path d="M700 617 l17 -1 l1 7 l-17 2 Z"/><path d="M727 617 l17 -1 l1 7 l-17 2 Z"/><path d="M754 617 l17 -1 l1 7 l-17 2 Z"/><path d="M781 617 l17 -1 l1 7 l-17 2 Z"/><path d="M808 617 l17 -1 l1 7 l-17 2 Z"/><path d="M835 617 l17 -1 l1 7 l-17 2 Z"/><path d="M862 617 l17 -1 l1 7 l-17 2 Z"/><path d="M889 617 l17 -1 l1 7 l-17 2 Z"/><path d="M916 617 l17 -1 l1 7 l-17 2 Z"/><path d="M943 617 l17 -1 l1 7 l-17 2 Z"/><path d="M970 617 l17 -1 l1 7 l-17 2 Z"/><path d="M997 617 l17 -1 l1 7 l-17 2 Z"/><path d="M623 631 l17 -1 l1 7 l-17 2 Z"/><path d="M650 631 l17 -1 l1 7 l-17 2 Z"/><path d="M677 631 l17 -1 l1 7 l-17 2 Z"/><path d="M704 631 l17 -1 l1 7 l-17 2 Z"/><path d="M731 631 l17 -1 l1 7 l-17 2 Z"/><path d="M758 631 l17 -1 l1 7 l-17 2 Z"/><path d="M785 631 l17 -1 l1 7 l-17 2 Z"/><path d="M812 631 l17 -1 l1 7 l-17 2 Z"/><path d="M839 631 l17 -1 l1 7 l-17 2 Z"/><path d="M866 631 l17 -1 l1 7 l-17 2 Z"/><path d="M893 631 l17 -1 l1 7 l-17 2 Z"/><path d="M920 631 l17 -1 l1 7 l-17 2 Z"/><path d="M947 631 l17 -1 l1 7 l-17 2 Z"/><path d="M974 631 l17 -1 l1 7 l-17 2 Z"/><path d="M1001 631 l17 -1 l1 7 l-17 2 Z"/></g>
+<g fill="none" stroke="#e4b987" stroke-width="1.5" opacity=".54" stroke-linecap="round" stroke-linejoin="round"><path d="M615 603 l17 -1 l1 7 l-17 2 Z"/><path d="M642 603 l17 -1 l1 7 l-17 2 Z"/><path d="M669 603 l17 -1 l1 7 l-17 2 Z"/><path d="M696 603 l17 -1 l1 7 l-17 2 Z"/><path d="M723 603 l17 -1 l1 7 l-17 2 Z"/><path d="M750 603 l17 -1 l1 7 l-17 2 Z"/><path d="M777 603 l17 -1 l1 7 l-17 2 Z"/><path d="M804 603 l17 -1 l1 7 l-17 2 Z"/><path d="M831 603 l17 -1 l1 7 l-17 2 Z"/><path d="M858 603 l17 -1 l1 7 l-17 2 Z"/><path d="M885 603 l17 -1 l1 7 l-17 2 Z"/><path d="M912 603 l17 -1 l1 7 l-17 2 Z"/><path d="M939 603 l17 -1 l1 7 l-17 2 Z"/><path d="M966 603 l17 -1 l1 7 l-17 2 Z"/><path d="M993 603 l17 -1 l1 7 l-17 2 Z"/><path d="M619 617 l17 -1 l1 7 l-17 2 Z"/><path d="M646 617 l17 -1 l1 7 l-17 2 Z"/><path d="M673 617 l17 -1 l1 7 l-17 2 Z"/><path d="M700 617 l17 -1 l1 7 l-17 2 Z"/><path d="M727 617 l17 -1 l1 7 l-17 2 Z"/><path d="M754 617 l17 -1 l1 7 l-17 2 Z"/><path d="M781 617 l17 -1 l1 7 l-17 2 Z"/><path d="M808 617 l17 -1 l1 7 l-17 2 Z"/><path d="M835 617 l17 -1 l1 7 l-17 2 Z"/><path d="M862 617 l17 -1 l1 7 l-17 2 Z"/><path d="M889 617 l17 -1 l1 7 l-17 2 Z"/><path d="M916 617 l17 -1 l1 7 l-17 2 Z"/><path d="M943 617 l17 -1 l1 7 l-17 2 Z"/><path d="M970 617 l17 -1 l1 7 l-17 2 Z"/><path d="M997 617 l17 -1 l1 7 l-17 2 Z"/><path d="M623 631 l17 -1 l1 7 l-17 2 Z"/><path d="M650 631 l17 -1 l1 7 l-17 2 Z"/><path d="M677 631 l17 -1 l1 7 l-17 2 Z"/><path d="M704 631 l17 -1 l1 7 l-17 2 Z"/><path d="M731 631 l17 -1 l1 7 l-17 2 Z"/><path d="M758 631 l17 -1 l1 7 l-17 2 Z"/><path d="M785 631 l17 -1 l1 7 l-17 2 Z"/><path d="M812 631 l17 -1 l1 7 l-17 2 Z"/><path d="M839 631 l17 -1 l1 7 l-17 2 Z"/><path d="M866 631 l17 -1 l1 7 l-17 2 Z"/><path d="M893 631 l17 -1 l1 7 l-17 2 Z"/><path d="M920 631 l17 -1 l1 7 l-17 2 Z"/><path d="M947 631 l17 -1 l1 7 l-17 2 Z"/><path d="M974 631 l17 -1 l1 7 l-17 2 Z"/><path d="M1001 631 l17 -1 l1 7 l-17 2 Z"/></g>
 </svg>
