@@ -56,6 +56,13 @@ export default function BureauExperience() {
           background-image: none !important;
           box-shadow: none !important;
         }
+        html.bureau-embed,
+        html.bureau-embed body {
+          width: 100% !important;
+          height: 100% !important;
+          min-height: 0 !important;
+          overflow: hidden !important;
+        }
         .bureau-embed .scene-outer {
           width: 100% !important;
           height: 100% !important;
