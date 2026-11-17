@@ -182,17 +182,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bureau-home-section" id="lab" aria-labelledby="bureau-home-title">
-        <div className="container bureau-home-intro">
-          <div className="bureau-home-heading">
-            <div className="eyebrow"><span>04 /</span> INTERACTIVE EXPERIMENT</div>
-            <h2 id="bureau-home-title">The <em>Bureau.</em></h2>
-            <p>Een verborgen wereld die je laag voor laag ontdekt. Zoom naar binnen, raak details aan en kijk wat er achter het volgende scherm schuilgaat.</p>
-          </div>
-          <a className="bureau-home-fullscreen" href="/bureau" aria-label="Open The Bureau op volledig scherm">
-            OPEN OP VOLLEDIG SCHERM <ArrowUpRight size={16}/>
-          </a>
-        </div>
+      <section className="bureau-home-section" id="lab" aria-label="The Bureau — interactieve wereld">
+        <h2 className="bureau-home-sr-only">The Bureau — interactieve wereld</h2>
         <div className="bureau-home-experience">
           <iframe src="/bureau/index.html" title="The Bureau — interactieve zoomwereld" loading="lazy" allowFullScreen />
         </div>
