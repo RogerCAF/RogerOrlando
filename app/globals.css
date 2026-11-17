@@ -389,46 +389,29 @@
 }
 
 
-/* The Bureau / seamless integration into Roger's existing dark site.
-   The illustration stays cut out and interactive; no light card, room or stage. */
+/* THE BUREAU — integrated with the existing DARK portfolio.
+   No white section, no fake room, no background panel, no light gradient. */
 .work-section {
-  position: relative;
-  background: #f0efeb;
-  padding-bottom: clamp(175px, 17vw, 265px);
+  position:relative;
+  background:#10151d;
+  color:#f5f0ea;
+  padding-bottom:clamp(28px,4vw,56px);
 }
-.work-section::after {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  left: 0; right: 0; bottom: 0;
-  height: clamp(185px, 18vw, 278px);
-  pointer-events: none;
-  background: linear-gradient(to bottom,
-    rgba(240,239,235,0) 0%,
-    #e6e3dd 22%,
-    #aaa5a0 46%,
-    #6b6665 67%,
-    #29292d 86%,
-    #15181e 100%);
-}
-.work-section > .container { position:relative; z-index:1 }
+.work-section::after {display:none!important;content:none!important}
 .bureau-home-section {
-  position: relative;
-  isolation: isolate;
-  left: auto;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  border: 0;
-  background:
-    radial-gradient(ellipse 53% 66% at 51% 49%,
-      rgba(151,113,77,.17), rgba(109,91,81,.035) 69%, transparent 100%),
-    linear-gradient(180deg, #15181e 0%, #16191f 55%, #101319 82%, #0b0d12 100%);
+  position:relative;
+  isolation:isolate;
+  left:auto;
+  width:100%;
+  margin:0;
+  padding:0;
+  overflow:hidden;
+  border:0;
+  background:#10151d;
 }
 .bureau-home-sr-only {
-  position: absolute; width:1px; height:1px; padding:0; margin:-1px;
-  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
 }
 .bureau-home-experience {
   position:relative;
@@ -439,29 +422,20 @@
   margin:0 auto;
   background:transparent;
   overflow:hidden;
-  border:0;
-  border-radius:0;
-  box-shadow:none;
+  border:0;border-radius:0;box-shadow:none;
 }
 .bureau-home-experience iframe {
-  display:block;
-  width:100%; height:100%;
-  padding:0; margin:0;
-  border:0; border-radius:0;
-  background:transparent; box-shadow:none;
+  display:block;width:100%;height:100%;
+  margin:0;padding:0;border:0;border-radius:0;
+  background:transparent;box-shadow:none;
 }
 .bureau-home-experience::before,
-.bureau-home-experience::after{display:none}
+.bureau-home-experience::after {display:none!important}
 @media(max-width:680px){
-  .work-section {padding-bottom:155px}
-  .work-section::after {height:170px}
-  .bureau-home-section {
-    background:
-      radial-gradient(ellipse 90% 60% at 50% 50%,rgba(154,115,79,.12),transparent 84%),
-      linear-gradient(180deg,#15181e 0%,#15181e 65%,#0b0d12 100%);
-  }
+  .work-section {padding-bottom:30px;background:#10151d}
+  .work-section::after {display:none!important}
+  .bureau-home-section{background:#10151d}
   .bureau-home-experience{
-    width:100%;
-    height:clamp(390px,115vw,570px);
+    width:100%;height:clamp(390px,115vw,570px);
   }
 }
