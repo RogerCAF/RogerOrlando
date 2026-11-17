@@ -69,7 +69,7 @@ export default function BureauExperience() {
           min-height: 0 !important;
           padding: 0 !important;
           display: grid !important;
-          place-items: center !important;
+          place-items: start center !important;
           overflow: hidden !important;
         }
         .bureau-embed .scene {
@@ -186,7 +186,7 @@ export default function BureauExperience() {
              overflows a 390px screen or clips the monitor/punching bag. */
           .bureau-embed .scene-outer {
             display: grid !important;
-            place-items: center !important;
+            place-items: start center !important;
             overflow: hidden !important;
             width: 100% !important;
             height: 100% !important;
@@ -319,11 +319,10 @@ export default function BureauExperience() {
       // reach the Muay Thai corner, punching bag, bookshelf, and other hotspots.
       const layoutArtwork = () => {
         const vw = window.innerWidth;
-        const frameHeight = frame.getBoundingClientRect().height;
-        // Compute the painted width from the actual frame, preserving the
-        // original 1672:941 aspect ratio, with breathing room on every side.
-        // This scales the interaction hotspots along with their illustrations.
-        const artWidth = Math.min(vw * 0.975, frameHeight * (1672 / 941) * 0.93, 1390);
+        // Size the original artwork from viewport width, not the clipped
+        // section height. The desk ends around y=770 of the 941px canvas;
+        // crop only the empty transparent area beneath it.
+        const artWidth = Math.min(vw * 0.975, 1250);
         document.documentElement.style.setProperty("--bureau-art-width", `${Math.round(artWidth)}px`);
       };
       window.requestAnimationFrame(layoutArtwork);
@@ -371,7 +370,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=seamless-desk-v13"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=clean-desk-tight-v14"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
