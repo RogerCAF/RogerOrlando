@@ -387,3 +387,30 @@
   .mobile-bureau-shortcut{display:inline-flex;align-items:center;justify-content:center;gap:5px;margin-left:auto;padding:10px 11px;border:1px solid rgba(214,181,137,.65);border-radius:3px;color:#e7cba3;background:rgba(214,181,137,.10);font-size:9px;font-weight:800;letter-spacing:.085em;white-space:nowrap;text-decoration:none}
   .mobile-bureau-shortcut:focus-visible{outline:2px solid #eed0a4;outline-offset:3px}
 }
+
+
+/* Full-bleed Bureau embedded in the portfolio, replacing the old Infinite Zoom card. */
+.bureau-home-section{position:relative;overflow:hidden;padding:96px 0 0;background:#0b0d12}
+.bureau-home-intro{display:flex;justify-content:space-between;align-items:flex-end;gap:38px;padding-bottom:32px}
+.bureau-home-heading h2{margin:17px 0 16px;font-size:clamp(48px,5.2vw,78px);line-height:1.1;letter-spacing:-.045em;color:#f6f0e7}
+.bureau-home-heading h2 em{font-family:Georgia,serif;font-weight:400;color:#d6b589}
+.bureau-home-heading p{margin:0;max-width:615px;color:#aeb2bb;font-size:15px;line-height:1.85}
+.bureau-home-fullscreen{display:inline-flex;flex-shrink:0;align-items:center;justify-content:center;gap:12px;padding:15px 18px;color:#e4c69c;border:1px solid rgba(214,181,137,.40);font-size:11px;font-weight:800;letter-spacing:.09em;text-decoration:none;transition:background .2s,border-color .2s}
+.bureau-home-fullscreen:hover,.bureau-home-fullscreen:focus-visible{background:rgba(214,181,137,.10);border-color:#d6b589}
+.bureau-home-experience{position:relative;isolation:isolate;width:100%;height:min(90svh,1000px);min-height:560px;overflow:hidden;background:#0b0d12}
+.bureau-home-experience iframe{display:block;width:100%;height:100%;border:0;background:transparent}
+@media(max-width:900px){
+  .bureau-home-section{padding-top:72px}
+  .bureau-home-intro{gap:18px}
+  .bureau-home-heading h2{font-size:clamp(42px,8vw,65px)}
+  .bureau-home-heading p{font-size:14px}
+  .bureau-home-fullscreen{font-size:10px;letter-spacing:.05em;padding:13px 12px}
+}
+@media(max-width:600px){
+  .bureau-home-section{padding-top:58px}
+  .bureau-home-intro{display:flex;flex-direction:column;align-items:stretch;gap:18px;padding-bottom:22px}
+  .bureau-home-heading h2{font-size:clamp(43px,12vw,59px);margin:12px 0}
+  .bureau-home-heading p{font-size:13px;line-height:1.75}
+  .bureau-home-fullscreen{align-self:flex-start}
+  .bureau-home-experience{height:84svh;min-height:480px}
+}
