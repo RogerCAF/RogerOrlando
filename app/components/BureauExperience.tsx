@@ -125,7 +125,7 @@ export default function BureauExperience() {
           user-select: none !important;
           background: transparent !important;
         }
-        .bureau-embed .scene > img:not(.bureau-original-ink):not(.bureau-desk-base):not(.bureau-bag-photo):not(.bureau-bag-ink) {
+        .bureau-embed .scene > img:not(.bureau-original-ink):not(.bureau-desk-base):not(.bureau-bag-photo):not(.bureau-bag-ink):not(.bureau-screen-crisp):not(.bureau-shelf-front):not(.bureau-bag-edge) {
           position: relative;
           z-index: 1;
           /* Flatten the existing art without replacing it. */
@@ -176,12 +176,68 @@ export default function BureauExperience() {
         }
         .bureau-embed .scene > img.bureau-bag-photo {
           z-index: 2 !important;
-          filter: url("#bureau-original-palette") saturate(.92) !important;
+          /* No palette Gaussian on the bag: it softened the outer stitching. */
+          filter: contrast(1.08) saturate(.90) !important;
         }
         .bureau-embed .scene > img.bureau-bag-ink {
           z-index: 3 !important;
           opacity: .91 !important;
           filter: none !important;
+        }
+        /* The display uses the original high-quality pixels, but no
+           posterize/Gaussian filter. Its natural image aspect stays aligned
+           with the existing monitor and click areas. */
+        .bureau-embed .scene > img.bureau-screen-crisp {
+          position: absolute !important;
+          inset: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          z-index: 2 !important;
+          object-fit: fill !important;
+          pointer-events: none !important;
+          user-select: none !important;
+          background: transparent !important;
+          -webkit-mask-image: url("/bureau/screen-crisp-mask.svg?v=crisp-v1") !important;
+          mask-image: url("/bureau/screen-crisp-mask.svg?v=crisp-v1") !important;
+          -webkit-mask-repeat: no-repeat !important;
+          mask-repeat: no-repeat !important;
+          -webkit-mask-size: 100% 100% !important;
+          mask-size: 100% 100% !important;
+          filter: none !important;
+          opacity: 1 !important;
+        }
+        /* Actual wood front faces the viewer, visually in front of every
+           book, controller and cube so nothing passes through the plank. */
+        .bureau-embed .scene > img.bureau-shelf-front {
+          position: absolute !important;
+          inset: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          z-index: 5 !important;
+          object-fit: fill !important;
+          pointer-events: none !important;
+          user-select: none !important;
+          background: transparent !important;
+          -webkit-mask-image: none !important;
+          mask-image: none !important;
+          filter: none !important;
+        }
+        /* Vector edge drawn after photo and ink, no raster-mask blur. */
+        .bureau-embed .scene > img.bureau-bag-edge {
+          position: absolute !important;
+          inset: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          z-index: 6 !important;
+          object-fit: fill !important;
+          pointer-events: none !important;
+          user-select: none !important;
+          background: transparent !important;
+          -webkit-mask-image: none !important;
+          mask-image: none !important;
+          filter: none !important;
+          transform-origin: 94.2% 0% !important;
+          transform: translateX(1.5%) scale(.82) !important;
         }
         .bureau-embed .spot[data-open="bag"] {
           left: 88.5% !important;
@@ -392,6 +448,38 @@ export default function BureauExperience() {
         scene.appendChild(ink);
       }
 
+      // Restore unblurred monitor pixels independently of the flatter shading
+      // of the other objects. Rendering remains aligned at every viewport size.
+      if (scene && !document.getElementById("bureau-screen-crisp")) {
+        const original = scene.querySelector<HTMLImageElement>(
+          ":scope > img:not(.bureau-original-ink):not(.bureau-desk-base):not(.bureau-bag-photo):not(.bureau-bag-ink):not(.bureau-screen-crisp):not(.bureau-shelf-front):not(.bureau-bag-edge)"
+        );
+        if (original) {
+          const screen = document.createElement("img");
+          screen.id = "bureau-screen-crisp";
+          screen.className = "bureau-screen-crisp";
+          screen.src = original.currentSrc || original.src;
+          screen.alt = "";
+          screen.decoding = "async";
+          screen.draggable = false;
+          screen.setAttribute("aria-hidden", "true");
+          scene.appendChild(screen);
+        }
+      }
+
+      // The shelf's front edge must occlude the bottom of the books and cube.
+      if (scene && !document.getElementById("bureau-shelf-front")) {
+        const shelf = document.createElement("img");
+        shelf.id = "bureau-shelf-front";
+        shelf.className = "bureau-shelf-front";
+        shelf.src = "/bureau/shelf-front-finish.svg?v=front-v1";
+        shelf.alt = "";
+        shelf.decoding = "async";
+        shelf.draggable = false;
+        shelf.setAttribute("aria-hidden", "true");
+        scene.appendChild(shelf);
+      }
+
       // The original punchbag image is split into its own interactive layer.
       // Nothing else (including the phone or computer) is repositioned.
       if (scene && !document.getElementById("bureau-relocated-bag")) {
@@ -419,6 +507,20 @@ export default function BureauExperience() {
           bagInk.setAttribute("aria-hidden", "true");
           scene.appendChild(bagInk);
         }
+      }
+
+      // Crisp vector boundary for the moved bag, registered to the exact
+      // same transform as the original bag photo and untouched click region.
+      if (scene && !document.getElementById("bureau-bag-sharp-edge")) {
+        const edge = document.createElement("img");
+        edge.id = "bureau-bag-sharp-edge";
+        edge.className = "bureau-bag-edge";
+        edge.alt = "";
+        edge.decoding = "async";
+        edge.draggable = false;
+        edge.setAttribute("aria-hidden", "true");
+        edge.src = "/bureau/bag-crisp-outline.svg?v=edge-v1";
+        scene.appendChild(edge);
       }
 
       // The notebook was already a hidden hotspot; make its visitor list
@@ -456,7 +558,6 @@ export default function BureauExperience() {
         defs.innerHTML = `
           <defs>
             <filter id="bureau-original-palette" color-interpolation-filters="sRGB">
-              <feGaussianBlur stdDeviation=".65"/>
               <feComponentTransfer>
                 <feFuncR type="discrete" tableValues="0 .11 .22 .33 .44 .55 .66 .77 .88 1"/>
                 <feFuncG type="discrete" tableValues="0 .11 .22 .33 .44 .55 .66 .77 .88 1"/>
@@ -524,7 +625,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=bag-and-guests-v15"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=crisp-screen-shelf-bag-v16"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
