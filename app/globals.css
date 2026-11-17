@@ -389,53 +389,82 @@
 }
 
 
-/* THE BUREAU — integrated with the existing DARK portfolio.
-   No white section, no fake room, no background panel, no light gradient. */
+/* The Bureau is part of the same dark canvas as Selected Work.
+   No stage-shaped background, frame, white wash or hard section break. */
 .work-section {
   position:relative;
   background:#10151d;
   color:#f5f0ea;
-  padding-bottom:clamp(28px,4vw,56px);
+  padding-bottom:clamp(4px,1.4vw,18px);
 }
-.work-section::after {display:none!important;content:none!important}
+.work-section::after {
+  display:block!important;
+  content:""!important;
+  position:absolute;
+  inset:auto 0 -1px;
+  height:clamp(100px,15vw,185px);
+  z-index:0;
+  pointer-events:none;
+  background:radial-gradient(ellipse 52% 80% at 50% 100%,
+    rgba(181,133,83,.085),rgba(113,94,74,.02) 68%,transparent 100%);
+}
+.work-section > .container {position:relative;z-index:1}
 .bureau-home-section {
   position:relative;
   isolation:isolate;
-  left:auto;
-  width:100%;
-  margin:0;
+  width:100%;left:auto;
+  margin:-16px 0 0;
   padding:0;
   overflow:hidden;
   border:0;
-  background:#10151d;
+  background:linear-gradient(180deg,#10151d 0%,#10151d 54%,#0e1219 79%,#0b0d12 100%);
+}
+.bureau-home-section::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:radial-gradient(ellipse 60% 49% at 49% 55%,
+    rgba(209,163,113,.07) 0%,rgba(209,163,113,.022) 50%,transparent 89%);
 }
 .bureau-home-sr-only {
-  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  position:absolute;width:1px;height:1px;margin:-1px;padding:0;
   overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
 }
 .bureau-home-experience {
   position:relative;
   display:block;
   width:min(100%,1510px);
-  height:clamp(420px,57vw,785px);
+  height:clamp(410px,53vw,750px);
   min-height:0;
   margin:0 auto;
-  background:transparent;
+  padding:0;
+  border:0;
+  border-radius:0;
   overflow:hidden;
-  border:0;border-radius:0;box-shadow:none;
+  box-shadow:none;
+  background:transparent;
 }
 .bureau-home-experience iframe {
-  display:block;width:100%;height:100%;
-  margin:0;padding:0;border:0;border-radius:0;
-  background:transparent;box-shadow:none;
+  display:block;
+  width:100%;height:100%;
+  margin:0;padding:0;
+  border:0;border-radius:0;
+  background:transparent;
+  box-shadow:none;
 }
 .bureau-home-experience::before,
 .bureau-home-experience::after {display:none!important}
-@media(max-width:680px){
-  .work-section {padding-bottom:30px;background:#10151d}
-  .work-section::after {display:none!important}
-  .bureau-home-section{background:#10151d}
-  .bureau-home-experience{
-    width:100%;height:clamp(390px,115vw,570px);
+@media(max-width:680px) {
+  .work-section {padding-bottom:6px;background:#10151d}
+  .work-section::after {height:75px}
+  .bureau-home-section {
+    margin-top:-8px;
+    background:linear-gradient(180deg,#10151d 0%,#10151d 64%,#0b0d12 100%);
+  }
+  .bureau-home-experience {
+    width:100%;
+    height:clamp(365px,104vw,490px);
   }
 }
