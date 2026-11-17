@@ -1,0 +1,18 @@
+
+.bureau-game-overlay{position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;overflow:hidden;background:#090e14;color:#f6eee1;animation:bureau-game-arrival .28s ease-out both}
+.bureau-game-chrome{flex:0 0 auto;min-height:64px;display:flex;justify-content:space-between;align-items:center;gap:18px;padding:10px clamp(14px,3vw,45px);border-bottom:1px solid #a88a5950;background:linear-gradient(100deg,#191c20,#10151a);box-shadow:0 10px 32px #0006}
+.bureau-game-identity{display:flex;align-items:center;gap:12px;min-width:0}
+.bureau-game-signal{width:9px;height:9px;flex:0 0 9px;border-radius:50%;background:#dfb477;box-shadow:0 0 0 5px #c39b5d1a,0 0 18px #dfb477}
+.bureau-game-identity>span:last-child{display:flex;flex-direction:column;gap:5px;min-width:0}
+.bureau-game-identity strong{font:800 clamp(11px,1.1vw,14px)/1.1 ui-monospace,monospace;letter-spacing:.08em;color:#f0d2a7}
+.bureau-game-identity small{font:600 9px/1.1 ui-monospace,monospace;letter-spacing:.14em;color:#8f9ba2}
+.bureau-game-actions{display:flex;align-items:center;gap:11px}
+.bureau-game-encrypted{font:600 9px ui-monospace,monospace;letter-spacing:.15em;color:#8ca99b;white-space:nowrap}
+.bureau-game-actions>a{height:39px;width:39px;display:grid;place-items:center;border:1px solid #5b6470;color:#d4d4cd;transition:background .2s}
+.bureau-game-actions>a:hover{background:#27323c}
+.bureau-game-actions>button{display:flex;align-items:center;justify-content:center;gap:9px;min-height:39px;padding:0 13px;border:1px solid #d1a86b;background:#c69e67;color:#1c1c1a;font:800 10px ui-monospace,monospace;letter-spacing:.04em;cursor:pointer}
+.bureau-game-actions>button:hover{background:#f0c992}
+.bureau-game-viewport{width:100%;flex:1;min-height:0;display:block;border:0;background:#080c11}
+@media(max-width:670px){.bureau-game-chrome{min-height:61px;padding:9px 12px;gap:8px}.bureau-game-identity{gap:8px}.bureau-game-identity strong{font-size:10px;letter-spacing:0}.bureau-game-identity small{font-size:7px;letter-spacing:.03em}.bureau-game-actions{gap:6px}.bureau-game-encrypted,.bureau-game-actions>button>span{display:none}.bureau-game-actions>button{min-width:43px;padding:0 8px}.bureau-game-actions>a{width:37px;height:39px}}
+@keyframes bureau-game-arrival{from{opacity:.4;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.bureau-game-overlay{animation:none}}
