@@ -197,6 +197,14 @@ export default function Home() {
     </main>
 
     <footer className="footer" id="connect">
-      <div className="container footer-main"><Brand/><p>Design brain. Engineer hands.<br/>Made with intention.</p><a href="#home" className="back-to-top">BACK TO TOP <ArrowUpRight size={16}/></a></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} ROGER ORLANDO — ROGER CHIN A FOENG</span><span>DESIGNED & BUILT WITH CARE <span className="footer-star">✳</span></span></div></footer>
+      <div className="container footer-main">
+        <div className="footer-identity"><Brand/><p>Design brain. Engineer hands.</p></div>
+        <a href="#home" className="back-to-top">BACK TO TOP <ArrowUpRight size={16}/></a>
+      </div>
+      <div className="container footer-bottom">
+        <span>© {new Date().getFullYear()} ROGER ORLANDO — ROGER CHIN A FOENG</span>
+        <span>BUILT WITH CARE <span className="footer-star">✳</span></span>
+      </div>
+    </footer>
   </div>;
 }
