@@ -197,7 +197,7 @@ export default function BureauExperience() {
           });
           icons.appendChild(app);
         };
-        const observer = new window.MutationObserver(addToDesktop);
+        const observer = new MutationObserver(addToDesktop);
         observer.observe(gameContent, { childList: true });
         appWindow.__bureauGameObserver = observer;
         addToDesktop();
