@@ -379,3 +379,11 @@
 /* World one is presented as a calm vertical work, never cropped on desktop or mobile. */
 .iw-preview-frame{width:100%;max-width:770px;margin-inline:auto;height:min(84dvh,1000px);min-height:610px;background:#e9ddd8;border-color:rgba(215,188,158,.38);box-shadow:0 28px 70px rgba(0,0,0,.16)}
 @media(max-width:650px){.iw-preview-frame{height:clamp(530px,79svh,795px);min-height:530px;border-radius:9px}}
+
+/* Keep The Bureau discoverable without opening the hamburger menu on phones. */
+.mobile-bureau-shortcut{display:none}
+@media(max-width:900px){
+  .nav-inner{gap:10px}
+  .mobile-bureau-shortcut{display:inline-flex;align-items:center;justify-content:center;gap:5px;margin-left:auto;padding:10px 11px;border:1px solid rgba(214,181,137,.65);border-radius:3px;color:#e7cba3;background:rgba(214,181,137,.10);font-size:9px;font-weight:800;letter-spacing:.085em;white-space:nowrap;text-decoration:none}
+  .mobile-bureau-shortcut:focus-visible{outline:2px solid #eed0a4;outline-offset:3px}
+}
