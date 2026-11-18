@@ -89,7 +89,7 @@ export default function BureauExperience() {
           filter: none !important;
         }
         .bureau-embed .scene > img {
-          -webkit-mask-image: url("/bureau/scene-without-bag.svg?v=bag-v1") !important;
+          -webkit-mask-image: url("/bureau/scene-dual-monitors.svg?v=dual-v1") !important;
           mask-image: url("/bureau/scene-without-bag.svg?v=bag-v1") !important;
           -webkit-mask-repeat: no-repeat !important;
           mask-repeat: no-repeat !important;
@@ -125,7 +125,7 @@ export default function BureauExperience() {
           user-select: none !important;
           background: transparent !important;
         }
-        .bureau-embed .scene > img:not(.bureau-original-ink):not(.bureau-desk-base):not(.bureau-bag-photo):not(.bureau-bag-ink):not(.bureau-screen-crisp):not(.bureau-shelf-front):not(.bureau-bag-edge):not(.bureau-screen-archive) {
+        .bureau-embed .scene > img:not(.bureau-original-ink):not(.bureau-desk-base):not(.bureau-bag-photo):not(.bureau-bag-ink):not(.bureau-screen-crisp):not(.bureau-shelf-front):not(.bureau-bag-edge):not(.bureau-screen-archive):not(.bureau-dual-rig) {
           position: relative;
           z-index: 1;
           /* Flatten the existing art without replacing it. */
@@ -148,7 +148,7 @@ export default function BureauExperience() {
            no longer renders that part of its original pixels; the same artwork
            is drawn independently with its original ink detail. */
         .bureau-embed .scene > img.bureau-original-ink {
-          -webkit-mask-image: url("/bureau/ink-without-bag.svg?v=bag-v1") !important;
+          -webkit-mask-image: url("/bureau/ink-without-bag-tower.svg?v=dual-v1") !important;
           mask-image: url("/bureau/ink-without-bag.svg?v=bag-v1") !important;
           -webkit-mask-repeat: no-repeat !important;
           mask-repeat: no-repeat !important;
@@ -222,6 +222,43 @@ export default function BureauExperience() {
           background: transparent !important;
           -webkit-mask-image: none !important;
           mask-image: none !important;
+        }
+        /* Two crisp screens sharing a low-profile monitor arm, plus an
+           upright PC case. This is the sole modified hardware layer: all
+           original artwork, project actions and guestbook remain available. */
+        .bureau-embed .scene > img.bureau-dual-rig {
+          position: absolute !important;
+          inset: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          z-index: 8 !important;
+          object-fit: fill !important;
+          background: transparent !important;
+          -webkit-mask-image: none !important;
+          mask-image: none !important;
+          filter: none !important;
+          pointer-events: none !important;
+          user-select: none !important;
+        }
+        .bureau-embed .bureau-secondary-display {
+          position: absolute !important;
+          left: 65.9% !important;
+          top: 29.7% !important;
+          width: 9.4% !important;
+          height: 28.9% !important;
+          z-index: 12 !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          border: 0 !important;
+          border-radius: 0 !important;
+          background: transparent !important;
+          color: transparent !important;
+          cursor: pointer !important;
+          -webkit-tap-highlight-color: transparent !important;
+        }
+        .bureau-embed .bureau-secondary-display:focus-visible {
+          outline: 2px solid #d7b18a !important;
+          outline-offset: 2px !important;
         }
         /* Actual wood front faces the viewer, visually in front of every
            book, controller and cube so nothing passes through the plank. */
@@ -574,6 +611,35 @@ export default function BureauExperience() {
         scene.appendChild(edge);
       }
 
+      // Twin monitors and a squared-up case sit in exactly the old hardware
+      // footprint. The main monitor, books, Rubik, phone, bag and names list
+      // retain their original scene coordinates and functionality.
+      if (scene && !document.getElementById("bureau-dual-rig")) {
+        const rig = document.createElement("img");
+        rig.id = "bureau-dual-rig";
+        rig.className = "bureau-dual-rig";
+        rig.src = "/bureau/dual-screens-upright-pc.svg?v=dual-v1";
+        rig.alt = "";
+        rig.decoding = "async";
+        rig.draggable = false;
+        rig.setAttribute("aria-hidden", "true");
+        scene.appendChild(rig);
+      }
+      if (scene && !document.getElementById("bureau-secondary-display")) {
+        const secondary = document.createElement("button");
+        secondary.type = "button";
+        secondary.id = "bureau-secondary-display";
+        secondary.className = "bureau-secondary-display";
+        secondary.setAttribute("aria-label", "Open Bureau OS via het tweede scherm");
+        secondary.title = "TWEEDE SCHERM / BUREAU OS";
+        secondary.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          document.querySelector<HTMLButtonElement>('.spot[data-open="projects"]')?.click();
+        });
+        scene.appendChild(secondary);
+      }
+
       // The notebook was already a hidden hotspot; make its visitor list
       // discoverable without introducing any unrelated items.
       if (scene && !document.getElementById("bureau-guestbook-entry")) {
@@ -676,7 +742,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=clean-drawing-v18"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=dual-screens-arm-v19"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
