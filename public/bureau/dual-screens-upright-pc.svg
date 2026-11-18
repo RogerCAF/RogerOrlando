@@ -12,7 +12,7 @@
  <radialGradient id="fan"><stop stop-color="#ebbd8d"/><stop offset=".15" stop-color="#a96634"/><stop offset=".36" stop-color="#302429"/><stop offset=".71" stop-color="#cb793c"/><stop offset=".86" stop-color="#71452e"/><stop offset="1" stop-color="#2a2227"/></radialGradient>
  <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#11131b"/><stop offset=".5" stop-color="#070b12"/><stop offset="1" stop-color="#171117"/></linearGradient>
  <linearGradient id="rim"><stop stop-color="#d0a178"/><stop offset=".48" stop-color="#5a4641"/><stop offset="1" stop-color="#ad7b51"/></linearGradient>
- <clipPath id="rubikclip"><rect x="782" y="91" width="109" height="85"/></clipPath>
+ 
 </defs>
 
 <!-- Brushed-metal dual arm. Clamp and articulated joints are below the
@@ -35,8 +35,8 @@
 <!-- A SECOND, VERTICAL MONITOR: clean graphite, matching amber trim.
      It intentionally sits at the right edge of the original main monitor. -->
 <g>
- <rect x="1103" y="280" width="152" height="268" rx="10" fill="#0a0c13" stroke="#11141b" stroke-width="5.36"/>
- <rect x="1104" y="281" width="150" height="266" rx="9" fill="none" stroke="#c19468" stroke-width="1.95" opacity=".70"/>
+ <rect x="1103" y="280" width="152" height="268" rx="10" fill="#0a0c13" stroke="#141821" stroke-width="1.5"/>
+
  <rect x="1114" y="292" width="130" height="243" rx="3" fill="url(#screen)" stroke="#55515a" stroke-width="1.09"/>
  <path d="M1120 322 Q1148 316 1163 330 T1242 326 M1118 499 Q1160 481 1180 495 T1243 486"
    fill="none" stroke="#aa5639" stroke-opacity="0.24" stroke-width="1.53"/>
@@ -67,13 +67,12 @@
   <rect x="1274" y="296" width="221" height="280" rx="7" fill="#10121a"
         stroke="#0a0d13" stroke-width="4.55"/>
   <rect x="1276" y="298" width="217" height="276" rx="6" fill="url(#tower)"
-        stroke="#bc8d61" stroke-width="1.83" />
+        stroke="#493d38" stroke-width=".8" />
   <!-- One flush front window; both the components and fans sit BEHIND it. -->
   <rect x="1286" y="309" width="195" height="251" rx="3"
-        fill="url(#glass)" stroke="#53413c" stroke-width="1.95"/>
+        fill="url(#glass)" stroke="#2c292a" stroke-width="1.0"/>
   <rect x="1291" y="314" width="185" height="240" rx="2"
-        fill="#0c1016" fill-opacity=".67" stroke="#997052"
-        stroke-opacity="0.44" stroke-width="1.09"/>
+        fill="#0c1016" fill-opacity=".67" stroke="none"/>
   <!-- Delicate printed motherboard traces, strictly horizontal/vertical. -->
   <g stroke="#8a5e42" stroke-width="1.34" fill="none" opacity=".63">
     <path d="M1303 334 H1343 V363 H1353 M1304 348 H1328 V377 H1353
@@ -95,35 +94,25 @@
   <!-- Front fans are evenly spaced, all circles in ONE vertical plane. -->
   <g>
     <circle cx="1411" cy="352" r="30" fill="#17141b" stroke="#5b4035" stroke-width="1.75"/>
-    <circle cx="1411" cy="352" r="25" fill="url(#fan)" stroke="#e1a16b" stroke-width="1.46"/>
-    <circle cx="1411" cy="352" r="12" fill="#25191e" stroke="#d8a777" stroke-width="1.31"/>
+    <circle cx="1411" cy="352" r="25" fill="url(#fan)" stroke="#694838" stroke-width=".7"/>
+    <circle cx="1411" cy="352" r="12" fill="#25191e" stroke="#6a5047" stroke-width=".65"/>
     <circle cx="1411" cy="435" r="30" fill="#17141b" stroke="#5b4035" stroke-width="1.75"/>
-    <circle cx="1411" cy="435" r="25" fill="url(#fan)" stroke="#e1a16b" stroke-width="1.46"/>
-    <circle cx="1411" cy="435" r="12" fill="#25191e" stroke="#d8a777" stroke-width="1.31"/>
+    <circle cx="1411" cy="435" r="25" fill="url(#fan)" stroke="#694838" stroke-width=".7"/>
+    <circle cx="1411" cy="435" r="12" fill="#25191e" stroke="#6a5047" stroke-width=".65"/>
     <circle cx="1411" cy="518" r="30" fill="#17141b" stroke="#5b4035" stroke-width="1.75"/>
-    <circle cx="1411" cy="518" r="25" fill="url(#fan)" stroke="#e1a16b" stroke-width="1.46"/>
-    <circle cx="1411" cy="518" r="12" fill="#25191e" stroke="#d8a777" stroke-width="1.31"/>
+    <circle cx="1411" cy="518" r="25" fill="url(#fan)" stroke="#694838" stroke-width=".7"/>
+    <circle cx="1411" cy="518" r="12" fill="#25191e" stroke="#6a5047" stroke-width=".65"/>
   </g>
   <!-- Subtle glass detail and straight bezel: no 3D corner anywhere. -->
   <path d="M1289 317 H1478 M1289 550 H1478"
         stroke="#e0ab78" stroke-width="1.26" opacity=".47"/>
   <path d="M1294 320 V543" stroke="#b99a7c" stroke-width="0.92" opacity=".25"/>
   <path d="M1471 321 V543" stroke="#d6a16c" stroke-width="0.92" opacity=".39"/>
-  <path d="M1283 570 H1486" stroke="#f0b77c" stroke-width="1.26" opacity=".52"/>
-  <circle cx="1284" cy="308" r="2" fill="#b58a5e"/>
-  <circle cx="1486" cy="308" r="2" fill="#b58a5e"/>
-  <circle cx="1284" cy="566" r="2" fill="#b58a5e"/>
-  <circle cx="1486" cy="566" r="2" fill="#b58a5e"/>
+
+
   <path d="M1291 576 V580 H1314 V576 M1454 576 V580 H1478 V576"
         fill="none" stroke="#74523e" stroke-width="1.83"/>
 </g>
 
-<!-- Precision vectors on top of the SAME Rubik's Cube, no size or position change. -->
-<g clip-path="url(#rubikclip)" stroke-linejoin="round" stroke-linecap="round">
- <path d="M785 113 L829 94 L883 105 L883 185 L843 205 L785 186 Z" fill="none" stroke="#0d111a" stroke-width="2.8"/>
- <path d="M785 113 L843 128 L883 105 M843 128 L843 204" fill="none" stroke="#f3c594" stroke-width="1.46"/>
- <path d="M805 118 L805 189 M824 125 L824 197 M785 140 L843 151 M785 161 L843 174" fill="none" stroke="#12151c" stroke-width="1.75"/>
- <path d="M856 122 L856 201 M869 113 L869 194 M844 152 L882 139 M844 175 L883 163" fill="none" stroke="#15131a" stroke-width="1.46"/>
- <path d="M794 106 L850 118 M803 103 L859 115 M812 99 L870 112" fill="none" stroke="#e2ae6e" stroke-width="1.13" opacity=".70"/>
-</g>
+<!-- The original Rubik illustration is intentionally untouched: no traced double edges. -->
 </svg>
