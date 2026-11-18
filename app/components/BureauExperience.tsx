@@ -89,8 +89,8 @@ export default function BureauExperience() {
           filter: none !important;
         }
         .bureau-embed .scene > img {
-          -webkit-mask-image: url("/bureau/scene-dual-monitors.svg?v=desk-aligned-v24") !important;
-          mask-image: url("/bureau/scene-dual-monitors.svg?v=desk-aligned-v24") !important;
+          -webkit-mask-image: url("/bureau/scene-dual-monitors.svg?v=no-cube-box-v26") !important;
+          mask-image: url("/bureau/scene-dual-monitors.svg?v=no-cube-box-v26") !important;
           -webkit-mask-repeat: no-repeat !important;
           mask-repeat: no-repeat !important;
           -webkit-mask-size: 100% 100% !important;
@@ -125,7 +125,7 @@ export default function BureauExperience() {
           user-select: none !important;
           background: transparent !important;
         }
-        .bureau-embed .scene > img:not(.bureau-original-ink):not(.bureau-desk-base):not(.bureau-bag-photo):not(.bureau-bag-ink):not(.bureau-screen-crisp):not(.bureau-shelf-front):not(.bureau-bag-edge):not(.bureau-screen-archive):not(.bureau-dual-rig):not(.bureau-poster-unframed):not(.bureau-input-devices) {
+        .bureau-embed .scene > img:not(.bureau-original-ink):not(.bureau-desk-base):not(.bureau-bag-photo):not(.bureau-bag-ink):not(.bureau-screen-crisp):not(.bureau-shelf-front):not(.bureau-bag-edge):not(.bureau-screen-archive):not(.bureau-dual-rig):not(.bureau-poster-unframed):not(.bureau-input-devices):not(.bureau-rubik-isolated) {
           position: relative;
           z-index: 1;
           /* Flatten the existing art without replacing it. */
@@ -165,8 +165,8 @@ export default function BureauExperience() {
           pointer-events: none !important;
           user-select: none !important;
           background: transparent !important;
-          -webkit-mask-image: url("/bureau/bag-only-cutout.svg?v=bag-v1") !important;
-          mask-image: url("/bureau/bag-only-cutout.svg?v=bag-v1") !important;
+          -webkit-mask-image: url("/bureau/bag-only-cutout.svg?v=trimmed-bag-v26") !important;
+          mask-image: url("/bureau/bag-only-cutout.svg?v=trimmed-bag-v26") !important;
           -webkit-mask-repeat: no-repeat !important;
           mask-repeat: no-repeat !important;
           -webkit-mask-size: 100% 100% !important;
@@ -237,6 +237,23 @@ export default function BureauExperience() {
           -webkit-mask-image: none !important;
           mask-image: none !important;
           filter: none !important;
+          pointer-events: none !important;
+          user-select: none !important;
+        }
+        /* The Rubik is now its own transparent object. Its old photo mask
+           included a rectangular lightbox; it is no longer rendered. */
+        .bureau-embed .scene > img.bureau-rubik-isolated {
+          position: absolute !important;
+          inset: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          z-index: 4 !important;
+          object-fit: fill !important;
+          -webkit-mask-image: none !important;
+          mask-image: none !important;
+          opacity: 1 !important;
+          filter: none !important;
+          background: transparent !important;
           pointer-events: none !important;
           user-select: none !important;
         }
@@ -552,11 +569,35 @@ export default function BureauExperience() {
             const ctx = canvas.getContext("2d");
             if (!ctx) return;
             ctx.drawImage(original, 127, 45, 216, 333, 0, 0, 221, 348);
+            // The printed poster has Thai and English lettering embedded in
+            // its lower quarter. Fade out that region of the actual pixels;
+            // an HTML text replacement cannot remove raster lettering.
+            ctx.globalCompositeOperation = "destination-out";
+            const fade = ctx.createLinearGradient(0, 218, 0, 255);
+            fade.addColorStop(0, "rgba(0,0,0,0)");
+            fade.addColorStop(1, "rgba(0,0,0,1)");
+            ctx.fillStyle = fade;
+            ctx.fillRect(0, 218, canvas.width, canvas.height - 218);
+            ctx.globalCompositeOperation = "source-over";
             poster.src = canvas.toDataURL("image/png");
           };
           if (original.complete && original.naturalWidth) drawUnframedArtwork();
           else original.addEventListener("load", drawUnframedArtwork, { once: true });
         }
+      }
+
+      // The original Rubik raster image carried a brown rectangular backing.
+      // Render only the precisely shaped colored cube; the shelf remains intact.
+      if (scene && !document.getElementById("bureau-rubik-isolated")) {
+        const cube = document.createElement("img");
+        cube.id = "bureau-rubik-isolated";
+        cube.className = "bureau-rubik-isolated";
+        cube.src = "/bureau/rubik-isolated-no-box.svg?v=rubik-v1";
+        cube.alt = "";
+        cube.draggable = false;
+        cube.decoding = "async";
+        cube.setAttribute("aria-hidden", "true");
+        scene.appendChild(cube);
       }
 
       // Restore unblurred monitor pixels independently of the flatter shading
@@ -762,7 +803,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=aligned-hardware-v25"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=clean-cube-bag-poster-v26"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
