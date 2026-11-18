@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1672" height="941" viewBox="0 0 1672 941" preserveAspectRatio="none" aria-hidden="true">
+<!-- One unified, physically seated desktop peripheral pair, following the rear/front desk edge at ~ -2deg. -->
+<defs>
+ <linearGradient id="keySurface" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#474047"/><stop offset=".25" stop-color="#292b35"/><stop offset="1" stop-color="#171a21"/></linearGradient>
+ <linearGradient id="keyFront" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#302d32"/><stop offset="1" stop-color="#111820"/></linearGradient>
+ <linearGradient id="mouseBody" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#4a4142"/><stop offset=".5" stop-color="#242831"/><stop offset="1" stop-color="#161a23"/></linearGradient>
+ <filter id="contactShadow" x="-20%" y="-75%" width="145%" height="260%"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>
+<!-- Both devices share one perspective and the same wooden tabletop, not independent tilted raster cutouts. -->
+<g id="keyboard-assembly" transform="translate(625 623) rotate(-2)">
+ <rect x="2" y="11" width="427" height="62" rx="12" fill="#080b12" opacity=".34" filter="url(#contactShadow)"/>
+ <rect x="0" y="0" width="426" height="60" rx="8" fill="#171920" stroke="#36343a" stroke-width="1.1"/>
+ <rect x="3" y="3" width="420" height="49" rx="5" fill="url(#keySurface)"/>
+ <path d="M3 49 L422 49 L415 58 L10 58 Z" fill="url(#keyFront)"/>
+ <g stroke-linejoin="round"><rect x="16.0" y="8.0" width="25" height="9" rx="1.8" fill="#3d3435" stroke="#5d5655" stroke-width=".55" />
+<rect x="43.8" y="8.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="71.6" y="8.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="99.4" y="8.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="127.2" y="8.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="155.0" y="8.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="182.8" y="8.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="210.6" y="8.0" width="25" height="9" rx="1.8" fill="#3d3435" stroke="#5d5655" stroke-width=".55" />
+<rect x="238.4" y="8.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="266.2" y="8.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="294.0" y="8.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="321.8" y="8.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="349.6" y="8.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="377.4" y="8.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="23.0" y="20.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="50.8" y="20.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="78.6" y="20.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="106.4" y="20.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="134.2" y="20.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="162.0" y="20.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="189.8" y="20.0" width="25" height="9" rx="1.8" fill="#3d3435" stroke="#5d5655" stroke-width=".55" />
+<rect x="217.6" y="20.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="245.4" y="20.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="273.2" y="20.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="301.0" y="20.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="328.8" y="20.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="356.6" y="20.0" width="25" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="384.4" y="20.0" width="25" height="9" rx="1.8" fill="#3d3435" stroke="#5d5655" stroke-width=".55" />
+<rect x="22.0" y="32.0" width="27" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="52.5" y="32.0" width="27" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="83.0" y="32.0" width="27" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="113.5" y="32.0" width="27" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="144.0" y="32.0" width="27" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="174.5" y="32.0" width="27" height="9" rx="1.8" fill="#3d3435" stroke="#5d5655" stroke-width=".55" />
+<rect x="205.0" y="32.0" width="27" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="235.5" y="32.0" width="27" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="266.0" y="32.0" width="27" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="296.5" y="32.0" width="27" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="327.0" y="32.0" width="27" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="357.5" y="32.0" width="27" height="9" rx="1.8" fill="#292d35" stroke="#5d5655" stroke-width=".55" />
+<rect x="16" y="44" width="33" height="8" rx="1.8" fill="#333239"/><rect x="54" y="44" width="28" height="8" rx="1.8" fill="#333239"/><rect x="87" y="44" width="216" height="8" rx="2.0" fill="#292d34" stroke="#615653" stroke-width=".5"/><rect x="309" y="44" width="38" height="8" rx="1.8" fill="#333239"/><rect x="352" y="44" width="44" height="8" rx="1.8" fill="#333239"/></g>
+ <path d="M9 4 H416" stroke="#9b7960" stroke-width=".9" opacity=".45"/>
+ <path d="M14 57 H408" stroke="#76594d" stroke-width=".75" opacity=".43"/>
+ <circle cx="409" cy="10" r="1.7" fill="#ca8558" opacity=".65"/>
+</g>
+<g id="mouse-assembly" transform="translate(1145 640) rotate(-2)">
+ <ellipse cx="3" cy="11" rx="42" ry="29" fill="#080a0e" opacity=".3" filter="url(#contactShadow)"/>
+ <!-- The mouse is flat on the same table plane and aligned to the keyboard angle. -->
+ <path d="M-20 -23 Q-1 -31 19 -23 Q31 -14 34 4 Q35 25 12 29 Q-7 32 -26 21 Q-34 11 -29 -7 Q-26 -17 -20 -23 Z" fill="url(#mouseBody)" stroke="#3b3636" stroke-width="1.2"/>
+ <path d="M0 -24 Q-2 -7 -2 4" fill="none" stroke="#6b6160" stroke-width=".9" opacity=".64"/>
+ <rect x="-5" y="-15" width="5" height="11" rx="2.5" fill="#b0805e" opacity=".84"/>
+ <path d="M-25 8 Q-22 24 10 27" fill="none" stroke="#897164" stroke-width=".8" opacity=".55"/>
+</g>
+</svg>
