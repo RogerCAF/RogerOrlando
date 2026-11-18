@@ -31,25 +31,25 @@
   <path d="M284 600 Q854 589 1401 569 Q1419 568 1427 584
            L1472 674 Q1477 685 1462 690 L338 745
            Q330 746 322 741 L260 693 Q252 685 259 672 Z"
-        fill="url(#wood)" stroke="#11141a" stroke-width="5.4"
+        fill="url(#wood)" stroke="#11141a" stroke-width="3.8"
         stroke-linejoin="round"/>
   <!-- Subtle integrated top edge. No loose lines outside the silhouette. -->
   <path d="M293 611 Q850 602 1395 580" fill="none"
-        stroke="#ae825d" stroke-width="2.1" opacity=".62" stroke-linecap="round"/>
+        stroke="#ae825d" stroke-width="1.25" opacity=".46" stroke-linecap="round"/>
   <path d="M266 686 L330 737 Q335 741 341 741 L1463 681"
-        fill="none" stroke="url(#rim)" stroke-width="4.3"
+        fill="none" stroke="url(#rim)" stroke-width="3"
         stroke-linecap="round" stroke-linejoin="round"/>
   <!-- Compact front fascia. The bottom ends cleanly: no legs or drawers. -->
   <path d="M260 689 L332 741 L1464 685 L1464 708
            Q1463 715 1452 718 L345 770
            Q330 772 321 764 L257 716 Z"
-        fill="url(#front)" stroke="#11161b" stroke-width="5.2"
+        fill="url(#front)" stroke="#11161b" stroke-width="3.7"
         stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M328 754 Q833 730 1456 700"
-        fill="none" stroke="#b77e51" stroke-width="1.5"
+        fill="none" stroke="#b77e51" stroke-width="1"
         opacity=".32" stroke-linecap="round"/>
   <!-- Fine warm highlight under the top, inside the desk shape. -->
   <path d="M340 739 Q880 710 1460 681"
-        fill="none" stroke="#d3a67c" stroke-width=".9" opacity=".32"/>
+        fill="none" stroke="#d3a67c" stroke-width=".65" opacity=".24"/>
   <path d="M265 699 L330 754" stroke="#7c573f" stroke-width="1.2" opacity=".4"/>
 </svg>
