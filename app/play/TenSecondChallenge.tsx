@@ -13,7 +13,7 @@ export default function TenSecondChallenge() {
   const [elapsed, setElapsed] = useState(0);
   const [showTime, setShowTime] = useState(true);
   const started = useRef<number | null>(null);
-  const frame = useRef<number | null>(null);
+  const displayTimer = useRef<number | null>(null);
   const phaseRef = useRef<"ready" | "running" | "result">("ready");
   const attemptsRef = useRef<Attempt[]>([]);
   const displayRef = useRef(true);
@@ -30,31 +30,33 @@ export default function TenSecondChallenge() {
         setAttempts(safe);
       }
     } catch { /* Browser storage may be unavailable. */ }
-    return () => { if (frame.current !== null) cancelAnimationFrame(frame.current); };
+    return () => { if (displayTimer.current !== null) window.clearInterval(displayTimer.current); };
   }, []);
 
+  // Only the *visual readout* needs periodic updates. The score itself is
+  // measured with performance.now() when STOP is pressed, so reducing renders
+  // does not change the accuracy of the 10.00 challenge.
   const tick = useCallback(() => {
-    if (started.current === null) return;
-    if (displayRef.current) setElapsed(performance.now() - started.current);
-    frame.current = requestAnimationFrame(tick);
+    if (started.current === null || document.hidden || !displayRef.current) return;
+    setElapsed(performance.now() - started.current);
   }, []);
 
   const start = useCallback(() => {
     if (phaseRef.current === "running") return;
-    if (frame.current !== null) cancelAnimationFrame(frame.current);
+    if (displayTimer.current !== null) window.clearInterval(displayTimer.current);
     started.current = performance.now();
     setElapsed(0);
     phaseRef.current = "running";
     setPhase("running");
-    frame.current = requestAnimationFrame(tick);
+    displayTimer.current = window.setInterval(tick, 40);
   }, [tick]);
 
   const stop = useCallback(() => {
     if (phaseRef.current !== "running" || started.current === null) return;
     const actual = performance.now() - started.current;
     started.current = null;
-    if (frame.current !== null) cancelAnimationFrame(frame.current);
-    frame.current = null;
+    if (displayTimer.current !== null) window.clearInterval(displayTimer.current);
+    displayTimer.current = null;
     phaseRef.current = "result";
     setPhase("result");
     setElapsed(actual);
