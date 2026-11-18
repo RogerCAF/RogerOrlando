@@ -59,59 +59,86 @@
  <circle cx="1178" cy="541" r="2.2" fill="#d59b68"/>
 </g>
 
-<!-- Truly FRONT-FACING PC tower. Single vertical front plane, absolutely no
-     side-wall, 3/4 projection, skewed top or trapezoid. Its original screen
-     footprint and interactive hotspot stay unchanged. -->
-<g id="pc-front-elevation" stroke-linejoin="round" stroke-linecap="round">
-  <!-- A taller-than-wide chassis, square-on from the front. -->
-  <rect x="1274" y="296" width="221" height="280" rx="7" fill="#10121a"
-        stroke="#0a0d13" stroke-width="4.55"/>
-  <rect x="1276" y="298" width="217" height="276" rx="6" fill="url(#tower)"
-        stroke="#493d38" stroke-width=".8" />
-  <!-- One flush front window; both the components and fans sit BEHIND it. -->
-  <rect x="1286" y="309" width="195" height="251" rx="3"
-        fill="url(#glass)" stroke="#2c292a" stroke-width="1.0"/>
-  <rect x="1291" y="314" width="185" height="240" rx="2"
-        fill="#0c1016" fill-opacity=".67" stroke="none"/>
-  <!-- Delicate printed motherboard traces, strictly horizontal/vertical. -->
-  <g stroke="#8a5e42" stroke-width="1.34" fill="none" opacity=".63">
-    <path d="M1303 334 H1343 V363 H1353 M1304 348 H1328 V377 H1353
-             M1303 523 H1345 V504 H1355 M1312 539 H1349 V513
-             M1303 409 H1351 M1303 423 H1346 M1303 468 H1342
-             M1304 483 H1349"/>
+<!-- True front-on Lian Li-inspired glass midtower: all four sides square, precise
+     vertical lines, a much narrower footprint and 3 fans in one perfectly straight column. -->
+<g id="pc-front-elevation" stroke-linejoin="round">
+  <!-- Soft contact shadow and flat feet fix the chassis visually to the tabletop. -->
+  <ellipse cx="1396" cy="582" rx="92" ry="9" fill="#070a0e" opacity=".30"/>
+  <rect x="1321" y="574" width="26" height="8" rx="1.5" fill="#0d1119"/>
+  <rect x="1449" y="574" width="23" height="8" rx="1.5" fill="#0d1119"/>
+  <!-- One narrow straight-on chassis. No side-angle, tapered silhouette or double stroke. -->
+  <rect x="1309" y="286" width="172" height="291" rx="5"
+        fill="#171a22" stroke="#34343a" stroke-width="1.7"/>
+  <rect x="1314" y="292" width="162" height="278" rx="3" fill="url(#tower)"/>
+  <rect x="1322" y="301" width="135" height="257" rx="2.5"
+        fill="url(#glass)" stroke="#393739" stroke-width=".8"/>
+  <rect x="1328" y="307" width="123" height="246" rx="1" fill="#0a1016" fill-opacity=".53"/>
+  <!-- Straight, non-skewed graphite frame, restrained highlights only. -->
+  <path d="M1322 301 H1457 V558 H1322 Z" fill="none" stroke="#87715e" stroke-opacity=".3" stroke-width=".7"/>
+  <path d="M1464 302 V556" stroke="#5c514a" stroke-opacity=".38" stroke-width="1.2"/>
+  <rect x="1462" y="305" width="8" height="246" rx="1.5" fill="#202027"/>
+  <path d="M1466 322 V539" stroke="#6c5548" stroke-opacity=".3" stroke-width="1"/>
+  <!-- Visible tidy internal hardware behind glass; never extrudes beyond the case. -->
+  <rect x="1335" y="320" width="43" height="192" rx="2" fill="#171b23" stroke="#60534a" stroke-opacity=".36" stroke-width=".7"/>
+  <path d="M1342 337 H1371 M1342 343 H1367 M1342 466 H1369 M1342 478 H1369 M1344 493 H1370"
+        stroke="#8a735e" stroke-opacity=".43" stroke-width="1" fill="none"/>
+  <rect x="1339" y="370" width="31" height="70" rx="2" fill="#25232a"/>
+  <path d="M1344 376 H1365 M1344 432 H1365" stroke="#7d5d50" stroke-width=".9" opacity=".56"/>
+  <circle cx="1354" cy="405" r="12" fill="#191d27" stroke="#8c6b56" stroke-width=".85"/>
+  <path d="M1347 409 L1351 402 L1356 408 L1361 402" stroke="#ad8b72" stroke-width=".95" fill="none"/>
+  <rect x="1339" y="447" width="31" height="8" rx="1.5" fill="#272b33"/>
+  <!-- All three fans have precisely the same x and radius. -->
+  <g transform="translate(1409 351)">
+  <circle r="31" fill="#111820" stroke="#3d3432" stroke-width="1.3"/>
+  <circle r="27.5" fill="#25252b" stroke="#9c7457" stroke-opacity=".55" stroke-width="1.7"/>
+  <circle r="23.5" fill="url(#fan)" fill-opacity=".63" stroke="#4f3937" stroke-width=".8"/>
+  <g fill="#b07d59" opacity=".45">
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z"/>
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z" transform="rotate(60)"/>
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z" transform="rotate(120)"/>
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z" transform="rotate(180)"/>
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z" transform="rotate(240)"/>
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z" transform="rotate(300)"/>
   </g>
-  <rect x="1300" y="373" width="54" height="102" rx="3"
-        fill="#15171b" stroke="#99704e" stroke-width="1.43"/>
-  <path d="M1307 381 H1347 M1307 466 H1347 M1310 393 V451
-           M1344 391 V457" stroke="#bf8457" stroke-width="1.34" opacity=".62"/>
-  <circle cx="1327" cy="421" r="17" fill="#1a1a20"
-          stroke="#ca925c" stroke-width="1.39"/>
-  <path d="M1316 424 L1321 417 L1327 424 L1333 417 L1338 424"
-        fill="none" stroke="#d2a475" stroke-width="1.18"/>
-  <rect x="1305" y="491" width="49" height="11" rx="1"
-        fill="#2b2527" stroke="#ac774e" stroke-width="1.09"/>
-
-  <!-- Front fans are evenly spaced, all circles in ONE vertical plane. -->
-  <g>
-    <circle cx="1411" cy="352" r="30" fill="#17141b" stroke="#5b4035" stroke-width="1.75"/>
-    <circle cx="1411" cy="352" r="25" fill="url(#fan)" stroke="#694838" stroke-width=".7"/>
-    <circle cx="1411" cy="352" r="12" fill="#25191e" stroke="#6a5047" stroke-width=".65"/>
-    <circle cx="1411" cy="435" r="30" fill="#17141b" stroke="#5b4035" stroke-width="1.75"/>
-    <circle cx="1411" cy="435" r="25" fill="url(#fan)" stroke="#694838" stroke-width=".7"/>
-    <circle cx="1411" cy="435" r="12" fill="#25191e" stroke="#6a5047" stroke-width=".65"/>
-    <circle cx="1411" cy="518" r="30" fill="#17141b" stroke="#5b4035" stroke-width="1.75"/>
-    <circle cx="1411" cy="518" r="25" fill="url(#fan)" stroke="#694838" stroke-width=".7"/>
-    <circle cx="1411" cy="518" r="12" fill="#25191e" stroke="#6a5047" stroke-width=".65"/>
+  <circle r="8" fill="#191b22" stroke="#a27e66" stroke-width="1.1"/>
+  <circle r="2.1" fill="#a58a78" opacity=".6"/>
+</g>
+  <g transform="translate(1409 430)">
+  <circle r="31" fill="#111820" stroke="#3d3432" stroke-width="1.3"/>
+  <circle r="27.5" fill="#25252b" stroke="#9c7457" stroke-opacity=".55" stroke-width="1.7"/>
+  <circle r="23.5" fill="url(#fan)" fill-opacity=".63" stroke="#4f3937" stroke-width=".8"/>
+  <g fill="#b07d59" opacity=".45">
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z"/>
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z" transform="rotate(60)"/>
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z" transform="rotate(120)"/>
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z" transform="rotate(180)"/>
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z" transform="rotate(240)"/>
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z" transform="rotate(300)"/>
   </g>
-  <!-- Subtle glass detail and straight bezel: no 3D corner anywhere. -->
-  <path d="M1289 317 H1478 M1289 550 H1478"
-        stroke="#e0ab78" stroke-width="1.26" opacity=".47"/>
-  <path d="M1294 320 V543" stroke="#b99a7c" stroke-width="0.92" opacity=".25"/>
-  <path d="M1471 321 V543" stroke="#d6a16c" stroke-width="0.92" opacity=".39"/>
-
-
-  <path d="M1291 576 V580 H1314 V576 M1454 576 V580 H1478 V576"
-        fill="none" stroke="#74523e" stroke-width="1.83"/>
+  <circle r="8" fill="#191b22" stroke="#a27e66" stroke-width="1.1"/>
+  <circle r="2.1" fill="#a58a78" opacity=".6"/>
+</g>
+  <g transform="translate(1409 509)">
+  <circle r="31" fill="#111820" stroke="#3d3432" stroke-width="1.3"/>
+  <circle r="27.5" fill="#25252b" stroke="#9c7457" stroke-opacity=".55" stroke-width="1.7"/>
+  <circle r="23.5" fill="url(#fan)" fill-opacity=".63" stroke="#4f3937" stroke-width=".8"/>
+  <g fill="#b07d59" opacity=".45">
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z"/>
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z" transform="rotate(60)"/>
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z" transform="rotate(120)"/>
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z" transform="rotate(180)"/>
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z" transform="rotate(240)"/>
+   <path d="M-3 -10 Q-14 -25 -6 -23 Q10 -23 9 -13 Q3 -8 -3 -10Z" transform="rotate(300)"/>
+  </g>
+  <circle r="8" fill="#191b22" stroke="#a27e66" stroke-width="1.1"/>
+  <circle r="2.1" fill="#a58a78" opacity=".6"/>
+</g>
+  <!-- Gentle glass reflection and clean bottom branding. -->
+  <path d="M1327 309 L1330 520" stroke="#d4c4b2" stroke-opacity=".10" stroke-width="2.4"/>
+  <path d="M1333 555 H1445" stroke="#8d6d59" stroke-opacity=".36" stroke-width=".75"/>
+  <rect x="1325" y="560" width="133" height="10" rx="1" fill="#11151d"/>
+  <text x="1391" y="568" text-anchor="middle" font-family="Arial,sans-serif"
+        font-size="6.6" font-weight="700" letter-spacing="3" fill="#aa9381" opacity=".68">LIAN LI</text>
 </g>
 
 <!-- The original Rubik illustration is intentionally untouched: no traced double edges. -->
