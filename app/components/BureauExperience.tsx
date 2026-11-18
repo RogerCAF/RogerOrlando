@@ -818,6 +818,47 @@ export default function BureauExperience() {
           height: 34.3% !important;
           z-index: 10 !important;
         }
+        /* Match interactions to the exact approved objects, not to the
+           former drawing's coordinates. Never add visual boxes. */
+        .bureau-embed .spot[data-open="projects"] {
+          left: 30.4% !important;
+          top: 34.2% !important;
+          width: 43.8% !important;
+          height: 33.7% !important;
+          z-index: 10 !important;
+        }
+        .bureau-embed .spot[data-open="muay"] {
+          left: 17.1% !important;
+          top: 7.1% !important;
+          width: 18.3% !important;
+          height: 30.3% !important;
+          z-index: 10 !important;
+        }
+        .bureau-embed .spot[data-open="pc"] {
+          left: 75.8% !important;
+          top: 28.5% !important;
+          width: 19.8% !important;
+          height: 50% !important;
+          z-index: 11 !important;
+        }
+        .bureau-embed .spot[data-open="arcade"] {
+          left: 70.1% !important;
+          top: 62.8% !important;
+          width: 7.3% !important;
+          height: 17.4% !important;
+          z-index: 13 !important;
+        }
+        .bureau-embed .spot[data-open="keyboard"] {
+          left: 31.6% !important;
+          top: 76.7% !important;
+          width: 28.9% !important;
+          height: 9.3% !important;
+          z-index: 10 !important;
+        }
+        .bureau-embed .spot[data-open="about"],
+        .bureau-embed .spot[data-open="archive"] {
+          pointer-events: none !important;
+        }
       `;
       if (scene && !document.getElementById("bureau-approved-photo")) {
         const approved = document.createElement("img");
@@ -888,7 +929,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=approved-photo-v28"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=approved-photo-v29"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
