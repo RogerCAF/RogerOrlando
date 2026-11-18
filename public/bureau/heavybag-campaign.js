@@ -12,10 +12,10 @@
   const HEALTH = [75,110,165,240,325,420,570,750,950,1220,1550,1950,2400,3050,3850,4700,5800,7000,8200,12000];
   const TYPE = ['basic','basic','armor','heavy','heavy','speed','guard','armor','armor','guard','speed','heavy','speed','speed','armor','guard','heavy','guard','armor','final'];
   const UPGRADES = [
-    {id:'gloves',icon:'🥊',name:'Impact Gloves',effect:'Extra damage on every hit',limit:8,cost:35,step:34},
-    {id:'technique',icon:'⚡',name:'Precision',effect:'Stronger perfect hits',limit:7,cost:45,step:46},
-    {id:'focus',icon:'◎',name:'Focus',effect:'Wider perfect timing zone',limit:6,cost:50,step:59},
-    {id:'finisher',icon:'🔥',name:'Finisher',effect:'More power when meter is full',limit:7,cost:65,step:66}
+    {id:'gloves',icon:'🥊',name:'Impact Gloves',effect:'More base power on every strike',limit:8,cost:35,step:34},
+    {id:'technique',icon:'⚡',name:'Precision',effect:'Much stronger perfectly timed hits',limit:7,cost:45,step:46},
+    {id:'focus',icon:'◎',name:'Focus',effect:'A larger perfect-hit timing zone',limit:6,cost:50,step:59},
+    {id:'finisher',icon:'🔥',name:'Finisher',effect:'Greater damage on a charged finisher',limit:7,cost:65,step:66}
   ];
   const fmt = n => Math.max(0,Math.round(n)).toLocaleString('en-US');
   const clamp = (n,min,max)=>Math.max(min,Math.min(max,n));
@@ -65,9 +65,17 @@
   let fight=null;
   let loop=0;
   let lastPaint=0;
+  let impactAnimation=null;
+  const PAINT_INTERVAL=1000/30; // Update the live UI at most 30 times per second.
 
   function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch{}}
   function cost(u){return Math.ceil(u.cost+u.step*Math.pow(data.upgrades[u.id],1.58))}
+  function upgradeBenefit(u,level){
+    if(u.id==='gloves')return `${11+level*7} base power`;
+    if(u.id==='technique')return `×${(1.85+level*.34).toFixed(2)} perfect`;
+    if(u.id==='focus')return `${16+level*3}% timing window`;
+    return `×${(6.4+level*2.1).toFixed(1)} finisher`;
+  }
   function bagInfo(index=data.selected){
     const world=Math.floor(index/4),slot=index%4;
     return {index,world,slot,name:WORLDS[world].bags[slot],hp:HEALTH[index],type:TYPE[index],time:35+world*7+(index===19?22:0)};
@@ -85,7 +93,7 @@
     const period=(1780-Math.floor(info.world*125))*modifier*phaseSpeed;
     const t=((elapsed%period)+period)%period/period;
     const position=(t<.5?t*2:(1-t)*2)*100;
-    const width=clamp(16+data.upgrades.focus*2.5-(info.type==='final'&&fight.bossPhase===3?4:0),12,32);
+    const width=clamp(16+data.upgrades.focus*3-(info.type==='final'&&fight.bossPhase===3?4:0),12,36);
     return {position,width,diff:Math.abs(position-50)};
   }
   function soundCue(freq,duration){if(typeof beep==='function')beep(freq,duration)}
@@ -105,7 +113,7 @@
   function upgradesHtml(){
     return UPGRADES.map(u=>{
       const level=data.upgrades[u.id],max=level===u.limit,price=cost(u),available=!max&&data.credits>=price,disabled=fight.phase==='fighting'||!available;
-      return `<button class="hbc-upgrade" type="button" data-hbc-upgrade="${u.id}" ${disabled?'disabled':''}><span class="hbc-up-icon">${u.icon}</span><span class="hbc-up-name"><strong>${u.name} <em>LV.${level}/${u.limit}</em></strong><small>${u.effect}</small></span><span class="hbc-up-price">${max?'MAX':`◈ ${fmt(price)}`}</span></button>`;
+      return `<button class="hbc-upgrade" type="button" data-hbc-upgrade="${u.id}" ${disabled?'disabled':''}><span class="hbc-up-icon">${u.icon}</span><span class="hbc-up-name"><strong>${u.name} <em>LV.${level}/${u.limit}</em></strong><small>${u.effect}</small><small class="hbc-up-effect">${upgradeBenefit(u,level)}${max?' · MAX':` → ${upgradeBenefit(u,level+1)}`}</small></span><span class="hbc-up-price">${max?'MAX':`◈ ${fmt(price)}`}</span></button>`;
     }).join('');
   }
   function resultHtml(){
@@ -120,6 +128,7 @@
   }
   function draw(){
     if(active!=='bag')return;
+    if(impactAnimation){impactAnimation.cancel();impactAnimation=null;}
     const info=bagInfo(),world=WORLDS[info.world],stageNum=info.index+1;
     const completed=data.best.filter(Boolean).length;
     const top=`<div class="hbc-kicker">THE BUREAU / HEAVY BAG / STORY MODE</div>
@@ -149,35 +158,38 @@
   }
   function paint(now){
     if(!canFight()||!fight)return;
-    const info=bagInfo();
-    const remain=fight.phase==='fighting'?Math.max(0,info.time-(now-fight.started)/1000):fight.phase==='ready'?info.time:fight.seconds;
+    const info=bagInfo(),running=fight.phase==='fighting';
+    const remain=running?Math.max(0,info.time-(now-fight.started)/1000):fight.phase==='ready'?info.time:fight.seconds;
     const el=id=>document.getElementById(id);
-    const hp=el('hbcHealth');if(hp)hp.style.width=clamp(100*fight.hp/fight.maxHp,0,100)+'%';
-    const hpText=el('hbcHpText');if(hpText)hpText.textContent=`${fmt(fight.hp)} / ${fmt(fight.maxHp)}`;
-    const time=el('hbcTime');if(time)time.textContent=remain.toFixed(1)+'s';
-    const combo=el('hbcCombo');if(combo)combo.textContent='COMBO ×'+fight.combo;
-    const good=el('hbcPerfect');if(good)good.textContent=String(fight.perfect);
-    const charge=el('hbcCharge');if(charge)charge.textContent=Math.floor(fight.charge)+'%';
-    const fill=el('hbcChargeFill');if(fill)fill.style.width=fight.charge+'%';
-    const feedback=el('hbcFeedback');if(feedback)feedback.textContent=fight.message.toUpperCase();
-    const fin=el('hbcFinisher');if(fin)fin.disabled=fight.charge<100;
-    const attack=el('hbcStrike');if(attack)attack.disabled=fight.phase!=='fighting';
-    const timingData=timing(fight.phase==='fighting'?now-fight.started:0);
-    const zone=el('hbcZone');if(zone)zone.style.width=timingData.width+'%';
-    const pulse=el('hbcPulse');if(pulse)pulse.style.left=timingData.position+'%';
-    const timingText=el('hbcTimingText');if(timingText)timingText.textContent=fight.phase==='fighting'?'Center the moving marker':'Hit the center zone';
-    const boss=el('hbcBossPhase');if(boss)boss.textContent='PHASE '+fight.bossPhase+'/3';
+    // Avoid writes/layout invalidations when only the timer or timing needle moves.
+    const put=(id,value)=>{const node=el(id);if(node&&node.textContent!==value)node.textContent=value;};
+    const setWidth=(id,value)=>{const node=el(id);if(node&&node.style.width!==value)node.style.width=value;};
+    setWidth('hbcHealth',clamp(100*fight.hp/fight.maxHp,0,100)+'%');
+    put('hbcHpText',`${fmt(fight.hp)} / ${fmt(fight.maxHp)}`);
+    put('hbcTime',remain.toFixed(1)+'s');
+    put('hbcCombo','COMBO ×'+fight.combo);
+    put('hbcPerfect',String(fight.perfect));
+    put('hbcCharge',Math.floor(fight.charge)+'%');
+    setWidth('hbcChargeFill',fight.charge+'%');
+    put('hbcFeedback',fight.message.toUpperCase());
+    const fin=el('hbcFinisher');if(fin&&fin.disabled!==(fight.charge<100))fin.disabled=fight.charge<100;
+    const attack=el('hbcStrike');if(attack&&attack.disabled!==!running)attack.disabled=!running;
+    const timingData=timing(running?now-fight.started:0);
+    setWidth('hbcZone',timingData.width+'%');
+    const pulse=el('hbcPulse');if(pulse&&running)pulse.style.left=timingData.position+'%';
+    put('hbcTimingText',running?'Center the moving marker':'Hit the center zone');
+    put('hbcBossPhase','PHASE '+fight.bossPhase+'/3');
   }
   function tick(now){
     loop=0;
     if(!canFight()||!fight||fight.phase!=='fighting')return;
-    if(document.hidden){fight.hiddenAt=now;loop=requestAnimationFrame(tick);return}
+    if(document.hidden){if(!fight.hiddenAt)fight.hiddenAt=now;return} // No rAF loop when hidden.
     const info=bagInfo();
     const remaining=info.time-(now-fight.started)/1000;
     if(remaining<=0){fight.seconds=0;fight.phase='defeat';fight.message='Round expired.';draw();return}
     const phase=info.type==='final'?(fight.hp/fight.maxHp>.67?1:fight.hp/fight.maxHp>.34?2:3):1;
     if(phase!==fight.bossPhase){fight.bossPhase=phase;fight.message='PHASE '+phase+' — ADAPT!';soundCue(320,.12)}
-    if(now-lastPaint>32){paint(now);lastPaint=now}
+    if(now-lastPaint>=PAINT_INTERVAL){paint(now);lastPaint=now}
     loop=requestAnimationFrame(tick);
   }
   function start(){
@@ -185,6 +197,7 @@
     fight=makeFight();
     fight.phase='fighting';
     fight.started=performance.now();
+    lastPaint=0;
     fight.message='GO! FIND THE CENTER.';
     cancelAnimationFrame(loop);loop=0;
     draw();
@@ -198,7 +211,12 @@
     fx.style.left=(38+Math.random()*20)+'%';fx.style.top=(29+Math.random()*15)+'%';
     arena.appendChild(fx);setTimeout(()=>fx.remove(),850);
     const bag=document.getElementById('hbcBag');
-    if(bag){bag.classList.remove('is-hit');void bag.offsetWidth;bag.classList.add('is-hit')}
+    if(bag){
+      if(typeof bag.animate==='function'){
+        if(impactAnimation)impactAnimation.cancel();
+        impactAnimation=bag.animate([{transform:'rotate(-1deg)'},{transform:'rotate(11deg) scale(.975)',offset:.35},{transform:'rotate(-2deg)'}],{duration:280,easing:'ease-out'});
+      }else{bag.classList.remove('is-hit');void bag.offsetWidth;bag.classList.add('is-hit')}
+    }
   }
   function checkEnd(now){
     if(fight.hp>0)return false;
@@ -226,7 +244,7 @@
     const base=(11+data.upgrades.gloves*7)*(1+.035*data.upgrades.technique);
     let damage=0,kind='normal';
     if(finisher){
-      damage=base*(6.4+data.upgrades.finisher*1.55)*(1+fight.combo*.028);
+      damage=base*(6.4+data.upgrades.finisher*2.1)*(1+fight.combo*.028);
       fight.charge=0;
       fight.message='FINISHER!';
       kind='finisher';
@@ -239,7 +257,7 @@
       if(perfect){
         fight.perfect++;fight.combo=clamp(fight.combo+1,0,25);
         fight.charge=clamp(fight.charge+26,0,100);
-        damage=base*(1.85+data.upgrades.technique*.17)*(1+fight.combo*.035);
+        damage=base*(1.85+data.upgrades.technique*.34)*(1+fight.combo*.035);
         fight.message='PERFECT TIMING!';
         kind='perfect';soundCue(560,.055);
       }else if(good){
@@ -303,8 +321,14 @@
   document.addEventListener('visibilitychange',()=>{
     if(!fight||fight.phase!=='fighting')return;
     const now=performance.now();
-    if(document.hidden){fight.hiddenAt=now;}
-    else if(fight.hiddenAt){fight.started+=now-fight.hiddenAt;fight.hiddenAt=0;}
+    if(document.hidden){
+      if(!fight.hiddenAt)fight.hiddenAt=now;
+      if(loop)cancelAnimationFrame(loop);
+      loop=0;
+    }else if(fight.hiddenAt){
+      fight.started+=now-fight.hiddenAt;fight.hiddenAt=0;lastPaint=0;
+      if(!loop)loop=requestAnimationFrame(tick);
+    }
   });
   window.addEventListener('pagehide',save);
   const style=document.createElement('style');
@@ -369,7 +393,7 @@
   .hbc-shop{display:grid;gap:6px}.hbc-upgrade{display:grid;grid-template-columns:31px minmax(0,1fr) auto;align-items:center;gap:9px;padding:10px;border-radius:9px;border:1px solid #8b77584b;background:#232527;color:#f5e4d0;text-align:left;cursor:pointer}
   .hbc-upgrade:not(:disabled):hover{border-color:#e3b47b;background:#372f29}.hbc-upgrade:disabled{opacity:.48;cursor:not-allowed}.hbc-up-icon{font-size:20px}
   .hbc-up-name{min-width:0}.hbc-up-name strong{display:block;font-size:11px;font-weight:700}.hbc-up-name em{font:9px ui-monospace,monospace;color:#c8a37e;font-style:normal}
-  .hbc-up-name small{font-size:10px;color:#a79a8f;display:block;margin-top:2px;line-height:1.3}.hbc-up-price{font:11px ui-monospace,monospace;white-space:nowrap;color:#ecc18c}
+  .hbc-up-name small{font-size:10px;color:#a79a8f;display:block;margin-top:2px;line-height:1.3}.hbc-up-name .hbc-up-effect{color:#eabf85;font-weight:700;margin-top:5px}.hbc-up-price{font:11px ui-monospace,monospace;white-space:nowrap;color:#ecc18c}
   .hbc-aside-hint{font-size:10px;color:#857c75;line-height:1.5;margin:10px 0 0}
   .hbc-road{flex:1}.hbc-map{display:grid;gap:9px;max-height:285px;overflow-y:auto;padding-right:3px}
   .hbc-world-title{display:flex;justify-content:space-between;gap:10px;font:9px ui-monospace,monospace;letter-spacing:.12em;color:#bba187;margin:0 0 5px}
