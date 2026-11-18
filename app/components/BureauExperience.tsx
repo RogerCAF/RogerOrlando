@@ -334,87 +334,76 @@ export default function BureauExperience() {
           height: 52% !important;
         }
 
-        /* Make the EXISTING visitor notebook visible again. Clicking it opens
-           the shared names list and single-signature guestbook already built. */
-        /* The existing names list is now a small ink-and-leather notebook,
-           not a gold sticker floating over the desk. */
+        /* One single R notebook on the right of the desk. This is the
+           visual entry point to the EXISTING shared guestbook — no ARCHIVE
+           volume or second decorative notebook is introduced. */
         .bureau-embed #bureau-guestbook-entry {
           position: absolute !important;
-          left: 17.5% !important;
-          top: 66.8% !important;
-          width: 15.3% !important;
-          height: 10% !important;
-          z-index: 10 !important;
+          left: 75.4% !important;
+          top: 69.5% !important;
+          width: 10.9% !important;
+          height: 7.2% !important;
+          z-index: 11 !important;
           box-sizing: border-box !important;
-          padding: 0 5% 0 5.7% !important;
+          padding: 0 !important;
           display: flex !important;
-          flex-direction: column !important;
           align-items: center !important;
           justify-content: center !important;
-          gap: 5px !important;
-          transform: rotate(-7deg) skewX(-5deg) !important;
-          border: 1px solid #876d53 !important;
-          border-left: 5px solid #422b20 !important;
-          border-radius: 3px 9px 7px 3px !important;
-          background: linear-gradient(150deg,#3c3230,#17191e 48%,#252125 88%,#403229) !important;
-          box-shadow: 2px 2px 0 #b89a78, 0 6px 11px rgba(0,0,0,.19) !important;
-          color: #dfc49b !important;
+          transform: rotate(4deg) skewX(-7deg) !important;
+          transform-origin: 50% 50% !important;
+          border: 1px solid #4c4643 !important;
+          border-left: 5px solid #1a1c22 !important;
+          border-radius: 3px 7px 6px 3px !important;
+          background: linear-gradient(150deg,#39363a 0%,#202127 27%,#13171e 66%,#2b2629 100%) !important;
+          box-shadow: 2px 2px 0 #c2b4a0, 0 4px 0 #29252a, 0 7px 11px rgba(0,0,0,.35) !important;
+          color: #d9c6b1 !important;
           text-shadow: none !important;
           cursor: pointer !important;
           font-family: Georgia,serif !important;
-          transition: filter .15s, transform .15s !important;
+          transition: filter .15s, transform .15s, box-shadow .15s !important;
+          -webkit-tap-highlight-color: transparent !important;
         }
         .bureau-embed #bureau-guestbook-entry::before {
           content: "" !important;
           position: absolute !important;
-          inset: 8% auto 8% 4% !important;
-          width: 2% !important;
-          border-left: 1px solid rgba(230,183,122,.56) !important;
-          border-right: 1px solid rgba(230,183,122,.18) !important;
+          inset: 7% auto 7% 4% !important;
+          width: 2.2% !important;
+          border-left: 1px solid rgba(195,171,141,.46) !important;
+          border-right: 1px solid rgba(195,171,141,.16) !important;
           background: transparent !important;
         }
         .bureau-embed #bureau-guestbook-entry::after {
           content: "" !important;
           position: absolute !important;
-          width: 26% !important;
-          height: 2.4% !important;
-          background: #a64737 !important;
-          left: 48% !important;
-          top: 73% !important;
-          transform: translateX(-50%) !important;
-          opacity: .9 !important;
+          left: 10% !important;
+          right: 5% !important;
+          bottom: 6% !important;
+          height: 1px !important;
+          background: rgba(189,168,145,.35) !important;
+          pointer-events: none !important;
         }
         .bureau-embed #bureau-guestbook-entry strong {
           display: block !important;
-          font: 700 clamp(6px, .74vw, 12px)/1.15 Georgia,serif !important;
-          letter-spacing: .05em !important;
-          white-space: nowrap !important;
-          color: #e4cda9 !important;
+          font: 400 clamp(13px,2.1vw,27px)/1 Georgia,serif !important;
+          color: #d3c3af !important;
+          letter-spacing: -.08em !important;
+          font-style: italic !important;
+          transform: skewX(7deg) !important;
         }
-        .bureau-embed #bureau-guestbook-entry span {
-          font: 500 clamp(5px,.5vw,8px)/1 ui-monospace,monospace !important;
-          letter-spacing: .12em !important;
-          color: #aa9382 !important;
+        .bureau-embed #bureau-guestbook-entry:hover {
+          filter: brightness(1.16) !important;
+          transform: rotate(4deg) skewX(-7deg) translateY(-2px) !important;
         }
-        .bureau-embed #bureau-guestbook-entry:hover,
         .bureau-embed #bureau-guestbook-entry:focus-visible {
-          filter: brightness(1.18) !important;
-          transform: rotate(-5deg) skewX(-5deg) translateY(-2px) !important;
-          outline: 1px solid #a9865f !important;
-          outline-offset: 2px !important;
+          outline: 2px solid #d6bd9a !important;
+          outline-offset: 3px !important;
         }
-        @media(max-width: 680px) {
+        @media(max-width:680px) {
           .bureau-embed #bureau-guestbook-entry {
-            border-width: 1px !important;
-            border-left-width: 3px !important;
-            gap: 1px !important;
-            box-shadow: 1px 1px 0 #c4a47c !important;
+            border-left-width: 2px !important;
+            box-shadow: 1px 1px 0 #c2b4a0, 0 2px 0 #29252a !important;
           }
-          .bureau-embed #bureau-guestbook-entry strong {
-            font-size: 5px !important;
-            letter-spacing: 0 !important;
-          }
-          .bureau-embed #bureau-guestbook-entry span { font-size: 3.5px !important; }
+          .bureau-embed #bureau-guestbook-entry strong { font-size: 10px !important; }
         }
         /* The original illustration itself, with the wooden poster frame
            removed. No painted border, second trace or synthetic outline. */
@@ -716,8 +705,8 @@ export default function BureauExperience() {
         notebook.id = "bureau-guestbook-entry";
         notebook.type = "button";
         notebook.setAttribute("aria-label", "Open de gedeelde namenlijst en teken het gastenboek");
-        notebook.title = "NAMENLIJST / GASTENBOEK";
-        notebook.innerHTML = "<strong>GUESTBOOK</strong><span>NAMENLIJST</span>";
+        notebook.title = "Open het gedeelde gastenboek";
+        notebook.innerHTML = "<strong aria-hidden=\"true\">R</strong>";
         notebook.addEventListener("click", event => {
           event.preventDefault();
           event.stopPropagation();
@@ -803,7 +792,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=clean-cube-bag-poster-v26"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=r-guestbook-v27"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
