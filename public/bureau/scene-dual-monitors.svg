@@ -18,9 +18,8 @@
     <!-- Existing main monitor, with stand replaced by the shared arm -->
     <path d="M434 267 Q433 265 447 267 L1224 282 Q1234 285 1234 298 L1234 534 Q1234 544 1222 545 L440 553 Q429 554 429 543 Z"/>
     <!-- Original leaning tower has been replaced by a straight tower, same location -->
-    <!-- Only actual keyboard and mouse; no lower decorative strokes -->
+    <!-- Preserve the small original desktop object left of the keyboard. -->
     <path d="M519 564 L704 550 L708 618 L521 624 Z"/>
-    <path d="M561 616 L747 593 L1070 595 L1068 625 L613 663 L551 640 Z"/>
-    <path d="M1092 592 Q1122 574 1170 580 L1198 591 L1179 617 L1119 626 Z"/>
+    <!-- Keyboard and mouse are now exact custom geometry, drawn on the same desk plane. -->
   </g>
 </svg>
