@@ -125,11 +125,11 @@ export default function BureauExperience() {
           user-select: none !important;
           background: transparent !important;
         }
-        .bureau-embed .scene > img:not(.bureau-original-ink):not(.bureau-desk-base):not(.bureau-bag-photo):not(.bureau-bag-ink):not(.bureau-screen-crisp):not(.bureau-shelf-front):not(.bureau-bag-edge):not(.bureau-screen-archive):not(.bureau-dual-rig) {
+        .bureau-embed .scene > img:not(.bureau-original-ink):not(.bureau-desk-base):not(.bureau-bag-photo):not(.bureau-bag-ink):not(.bureau-screen-crisp):not(.bureau-shelf-front):not(.bureau-bag-edge):not(.bureau-screen-archive):not(.bureau-dual-rig):not(.bureau-poster-unframed) {
           position: relative;
           z-index: 1;
           /* Flatten the existing art without replacing it. */
-          filter: url("#bureau-original-palette") saturate(.84) !important;
+          filter: saturate(.90) contrast(.98) !important;
         }
         .bureau-embed .scene > img.bureau-original-ink {
           position: absolute !important;
@@ -382,19 +382,24 @@ export default function BureauExperience() {
           }
           .bureau-embed #bureau-guestbook-entry span { font-size: 3.5px !important; }
         }
-        /* No synthetic traced outlines: those stray strokes detached from
-           the illustrated desk on narrow devices. */
-        /* Text-free correction of the original illustrated Fight Camp poster.
-           Only erased lettering is composited; the rest of the art stays intact. */
-        .bureau-embed .bureau-poster-text-clean {
+        /* The original illustration itself, with the wooden poster frame
+           removed. No painted border, second trace or synthetic outline. */
+        .bureau-embed .scene > img.bureau-poster-unframed {
           position: absolute !important;
+          left: 5.74% !important;
+          top: 1.06% !important;
+          width: 16.15% !important;
+          height: 41.45% !important;
           z-index: 4 !important;
+          object-fit: fill !important;
+          filter: none !important;
+          opacity: 1 !important;
+          background: transparent !important;
           pointer-events: none !important;
-          left: 8.0742% !important;
-          top: 29.543% !important;
-          width: 13.6364% !important;
-          height: 9.8831% !important;
-          background: url("/bureau/poster-text-clean.svg") center/100% 100% no-repeat;
+          user-select: none !important;
+          -webkit-mask-image: none !important;
+          mask-image: none !important;
+          clip-path: polygon(1.5% 2%, 99% 0%, 99% 98%, 0% 100%) !important;
         }
         /* Artwork only inside the portfolio. The standalone Bureau retains
            its settings toolbar for visitors who want the full experience. */
@@ -508,18 +513,33 @@ export default function BureauExperience() {
         scene.appendChild(desk);
       }
 
-      // Trace the existing illustrated objects (including the actual Muay Thai
-      // poster and Rubik's Cube) without replacing them or moving hotspots.
-      if (scene && !document.getElementById("bureau-original-ink")) {
-        const ink = document.createElement("img");
-        ink.id = "bureau-original-ink";
-        ink.className = "bureau-original-ink";
-        ink.alt = "";
-        ink.setAttribute("aria-hidden", "true");
-        ink.decoding = "async";
-        ink.draggable = false;
-        ink.src = "/bureau/original-contour-ink.svg?v=soft-ink-v3";
-        scene.appendChild(ink);
+      // Crop the Muay Thai print itself from the original artwork. This
+      // removes the heavy wooden side strips instead of tracing them again.
+      // Do not change the poster hotspot or any scene coordinates.
+      if (scene && !document.getElementById("bureau-unframed-poster")) {
+        const original = scene.querySelector<HTMLImageElement>(":scope > img:not([class])");
+        if (original) {
+          const poster = document.createElement("img");
+          poster.id = "bureau-unframed-poster";
+          poster.className = "bureau-poster-unframed";
+          poster.alt = "";
+          poster.decoding = "async";
+          poster.draggable = false;
+          poster.setAttribute("aria-hidden", "true");
+          scene.appendChild(poster);
+          const drawUnframedArtwork = () => {
+            if (!original.naturalWidth || poster.src) return;
+            const canvas = document.createElement("canvas");
+            canvas.width = 221;
+            canvas.height = 348;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return;
+            ctx.drawImage(original, 124, 34, 221, 348, 0, 0, 221, 348);
+            poster.src = canvas.toDataURL("image/png");
+          };
+          if (original.complete && original.naturalWidth) drawUnframedArtwork();
+          else original.addEventListener("load", drawUnframedArtwork, { once: true });
+        }
       }
 
       // Restore unblurred monitor pixels independently of the flatter shading
@@ -585,30 +605,8 @@ export default function BureauExperience() {
           bagPhoto.setAttribute("aria-hidden", "true");
           scene.appendChild(bagPhoto);
 
-          const bagInk = document.createElement("img");
-          bagInk.id = "bureau-relocated-bag-ink";
-          bagInk.className = "bureau-bag-ink";
-          bagInk.src = "/bureau/original-contour-ink.svg?v=soft-ink-v3";
-          bagInk.alt = "";
-          bagInk.decoding = "async";
-          bagInk.draggable = false;
-          bagInk.setAttribute("aria-hidden", "true");
-          scene.appendChild(bagInk);
-        }
-      }
 
-      // Crisp vector boundary for the moved bag, registered to the exact
-      // same transform as the original bag photo and untouched click region.
-      if (scene && !document.getElementById("bureau-bag-sharp-edge")) {
-        const edge = document.createElement("img");
-        edge.id = "bureau-bag-sharp-edge";
-        edge.className = "bureau-bag-edge";
-        edge.alt = "";
-        edge.decoding = "async";
-        edge.draggable = false;
-        edge.setAttribute("aria-hidden", "true");
-        edge.src = "/bureau/bag-crisp-outline.svg?v=soft-bag-v3";
-        scene.appendChild(edge);
+        }
       }
 
       // Twin monitors and a squared-up case sit in exactly the old hardware
@@ -655,14 +653,6 @@ export default function BureauExperience() {
           document.querySelector<HTMLButtonElement>('.spot[data-open="about"]')?.click();
         });
         scene.appendChild(notebook);
-      }
-
-      if (scene && !document.getElementById("bureau-poster-text-clean")) {
-        const correction = document.createElement("div");
-        correction.id = "bureau-poster-text-clean";
-        correction.className = "bureau-poster-text-clean";
-        correction.setAttribute("aria-hidden", "true");
-        scene.appendChild(correction);
       }
 
       if (!document.getElementById("bureau-original-palette-defs")) {
@@ -742,7 +732,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=soft-outlines-v21"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=unframed-clean-v22"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
