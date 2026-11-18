@@ -4,7 +4,7 @@
        under-desk drawer. The background is fully transparent. -->
   <g fill="white">
     <!-- Existing interactive artwork: keep object positions aligned with hotspots -->
-    <path d="M91 19 L373 7 L373 404 L88 404 Z"/>
+    <!-- The framed poster is excluded here: its unframed print is a separate clean image layer. -->
     <!-- Floating shelf and decorative items, without the painted wall -->
     <path d="M443 174 L1389 182 L1388 217 L1368 237 L447 219 Z"/>
     <path d="M618 171 C630 139 628 93 653 90 L689 89 C716 92 731 142 747 175 L745 188 L613 190 Z"/>
