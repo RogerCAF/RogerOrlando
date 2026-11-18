@@ -91,3 +91,46 @@
 @media(max-width:760px){.hb3-main{grid-template-columns:1fr}.hb3-arena{min-height:450px}.hb3-shop{max-height:unset}.hb3-stats{gap:5px}.hb3-stat{padding:9px}.hb3-stat strong{font-size:17px}}
 @media(max-width:390px){.hb3-stats{grid-template-columns:repeat(3,minmax(0,1fr))}.hb3-stat strong{font-size:15px}.hb3-arena-top{padding:12px 13px 0}.hb3-health{margin-left:13px;margin-right:13px}}
 @media(prefers-reduced-motion:reduce){.hb3-float{animation:none}}
+
+/* Live hbc arena — timing, round control, boss progression. */
+.hbc-game .hb-arena{min-height:440px;gap:2px}
+.hbc-game .hbc-arena-title{font:700 12px ui-monospace,monospace;letter-spacing:.14em;color:#efc492;text-align:center;max-width:95%;margin:0 0 4px}
+.hbc-game .hb-chain{height:31px}
+.hbc-game .hb-bag-art{width:116px;height:184px}
+.hbc-game .hb-bag-art:before{top:35px}
+.hbc-game .hb-bag-art:after{top:64px}
+.hbc-game .hb-hint{font:10px ui-monospace,monospace;letter-spacing:.04em;color:#d9c4a8;text-align:center;padding:0 8px}
+.hbc-game .hbc-timing{width:min(88%,350px);position:relative;z-index:2;margin:9px auto 0}
+.hbc-game .hbc-timing-head{display:flex;justify-content:space-between;gap:10px;font:10px ui-monospace,monospace;color:#efc895;margin-bottom:7px}
+.hbc-game #hbcTime{font-weight:700;font-size:17px;color:#e8c28b}
+.hbc-game #hbcTime.danger{color:#ff796b}
+.hbc-game .hbc-meter{height:22px;border-radius:7px;position:relative;border:1px solid #ddba8663;background:linear-gradient(90deg,#64333b 0 25%,#6b5638 25% 37%,#356e52 37% 63%,#6b5638 63% 75%,#64333b 75% 100%);overflow:hidden}
+.hbc-game .hbc-sweet{position:absolute;inset:0;left:41%;right:41%;background:#a2ffbb24;border-left:1px solid #98ecc0;border-right:1px solid #98ecc0}
+.hbc-game .hbc-needle{position:absolute;left:50%;top:-4px;bottom:-4px;width:4px;z-index:3;background:#fff2d4;box-shadow:0 0 12px #ffe3ad;transform:translateX(-50%);will-change:left}
+.hbc-game .hbc-energy{height:7px;border-radius:8px;margin:10px 0 1px;background:#28353b;overflow:hidden}
+.hbc-game .hbc-energy span{display:block;width:0;height:100%;background:linear-gradient(90deg,#5a95ae,#b4eaf5);transition:width .12s}
+.hbc-game .hbc-action{display:flex;gap:12px;margin:5px 0 0;font:11px ui-monospace,monospace;color:#d4b494}
+.hbc-game .hbc-action b{color:#ffe3b3}
+.hbc-game .hbc-finisher{z-index:2;margin:8px auto!important;font:700 11px ui-monospace,monospace!important;padding:9px 14px!important}
+.hbc-game .hbc-round-overlay{position:absolute;z-index:10;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:25px;background:#091015db;backdrop-filter:blur(4px)}
+.hbc-game .hbc-round-overlay[hidden]{display:none}
+.hbc-game .hbc-round-overlay h2{font:normal clamp(27px,3.5vw,39px) Georgia,serif;color:#ffe0b4;line-height:1.15;max-width:370px}
+.hbc-game .hbc-round-overlay p{font:13px/1.6 ui-sans-serif,system-ui,sans-serif;color:#cfbca3;max-width:340px}
+.hbc-game .hbc-round-overlay .cta{margin:10px auto;background:#e2b17a;color:#13161a;font:700 12px ui-monospace,monospace;padding:13px 18px;border-radius:9px}
+.hbc-game .hbc-route20{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:4px;margin:14px 0}
+.hbc-game .hbc-route20 .hbc-node{min-width:0;font:700 10px ui-monospace,monospace;padding:7px 0;border:1px solid #957a594b;border-radius:6px;text-align:center;background:#202429;color:#938b81}
+.hbc-game .hbc-route20 .hbc-node.done{color:#e7c797;background:#513920;border-color:#b08a5b}
+.hbc-game .hbc-route20 .hbc-node.current{background:#d5a16a;color:#15191d;border-color:#ffdeaf}
+.hbc-game .hbc-tagline{font:italic 13px Georgia,serif;color:#bfb0a0}
+.hbc-game .hbc-boss-track{height:12px}
+.hbc-game .hbc-boss-track span{background:linear-gradient(90deg,#a95741,#f1bf81)}
+.hbc-game .hbc-armor{color:#deb285;font:11px ui-monospace,monospace}
+.hbc-game .hbc-next{width:100%;margin:10px 0}
+.hbc-game .hb-bag:disabled{cursor:default;opacity:.7;animation:none}
+.hbc-end{text-align:center}
+.hbc-end .hbc-trophy{font-size:62px;margin:15px}
+.hbc-end .hbc-ending-line{color:#f4cb94;font:700 14px ui-monospace,monospace;letter-spacing:.15em;margin:20px 0}
+.hbc-end .hbc-route{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:4px}
+.hbc-end .hbc-node{min-width:0;padding:7px 0;border:1px solid #947756;background:#473120;border-radius:5px;font-size:10px;color:#efd19d}
+@media(max-width:740px){.hbc-game .hbc-route20,.hbc-end .hbc-route{grid-template-columns:repeat(10,minmax(0,1fr))}.hbc-game .hb-arena{min-height:415px}.hbc-game .hb-bag-art{height:165px}.hbc-game .hb-hint{font-size:9px}}
+@media(max-width:370px){.hbc-game .hbc-route20,.hbc-end .hbc-route{grid-template-columns:repeat(5,minmax(0,1fr))}}
