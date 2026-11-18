@@ -113,7 +113,7 @@
     if(data.finished&&fight.phase!=='fighting'&&fight.phase!=='victory'&&data.selected===19&&fight.phase==='ready'){
       return `<div class="hbc-final-banner"><span>★ CAMPAIGN COMPLETED ★</span><strong>THE FINAL BAG HAS FALLEN.</strong><p>20 bags. Five locations. Zero resets. Revisit any stage and perfect your records.</p></div>`;
     }
-    if(fight.phase==='ready')return `<p class="hbc-state-intro">${info.index===19?'Three brutal phases. Stay precise. One final victory.':'Beat the bag before the timer runs out. Perfect hits build your finisher.'}</p><button class="hbc-main-btn" type="button" data-hbc-start>START ROUND <span>↗</span></button>`;
+    if(fight.phase==='ready')return `<p class="hbc-state-intro">${info.index===19?'Three brutal phases. Stay precise. One final victory.':'Beat the bag before the timer runs out. Misses deal no damage. Perfect hits charge your finisher.'}</p><button class="hbc-main-btn" type="button" data-hbc-start>START ROUND <span>↗</span></button>`;
     if(fight.phase==='fighting')return `<div class="hbc-fight-actions"><button id="hbcStrike" class="hbc-main-btn" type="button" data-hbc-hit>STRIKE <span>SPACE</span></button><button id="hbcFinisher" class="hbc-special" type="button" data-hbc-finisher disabled>FINISHER <span>F</span></button></div>`;
     if(fight.phase==='victory')return `<div class="hbc-result victory"><div class="hbc-result-tag">ROUND CLEARED · ${fight.stars} STAR${fight.stars!==1?'S':''}</div><h2>${info.index===19?'YOU BEAT THE FINAL BAG.':'BAG DESTROYED.'}</h2><p>+${fmt(fight.reward)} credits · ${fight.perfect} perfect hits · best combo ${fight.highestCombo}</p><div class="hbc-stars">${'★'.repeat(fight.stars)}${'☆'.repeat(3-fight.stars)}</div><div class="hbc-result-buttons">${info.index<19?'<button class="hbc-main-btn" data-hbc-next type="button">NEXT BAG →</button>':'<button class="hbc-main-btn" data-hbc-next type="button">VIEW YOUR VICTORY →</button>'}<button class="hbc-special" type="button" data-hbc-retry>REPLAY</button></div></div>`;
     return `<div class="hbc-result defeat"><div class="hbc-result-tag">ROUND EXPIRED</div><h2>NOT THIS TIME.</h2><p>Upgrade your gear or find a cleaner rhythm. Your campaign progress is safe.</p><div class="hbc-result-buttons"><button class="hbc-main-btn" type="button" data-hbc-retry>TRY AGAIN →</button></div></div>`;
@@ -194,7 +194,7 @@
   function floatDamage(amount,kind){
     const arena=document.querySelector('.hbc-bag-scene');if(!arena)return;
     const fx=document.createElement('div');
-    fx.className='hbc-dmg '+kind;fx.textContent=(kind==='perfect'?'PERFECT · ':kind==='finisher'?'FINISHER · ':'')+fmt(amount);
+    fx.className='hbc-dmg '+kind;fx.textContent=kind==='miss'?'MISS':(kind==='perfect'?'PERFECT · ':kind==='finisher'?'FINISHER · ':'')+fmt(amount);
     fx.style.left=(38+Math.random()*20)+'%';fx.style.top=(29+Math.random()*15)+'%';
     arena.appendChild(fx);setTimeout(()=>fx.remove(),850);
     const bag=document.getElementById('hbcBag');
@@ -247,8 +247,8 @@
         damage=base*1.05*(1+fight.combo*.022);
         fight.message='GOOD HIT';kind='good';soundCue(340,.042);
       }else{
-        fight.combo=0;fight.charge=clamp(fight.charge+4,0,100);
-        damage=base*.44;fight.message='OFF BEAT — COMBO LOST';
+        fight.combo=0; // Missing the timing window never generates finisher energy.
+        damage=0;fight.message='MISS — COMBO LOST';kind='miss';
         soundCue(155,.043);
       }
       fight.highestCombo=Math.max(fight.highestCombo,fight.combo);
@@ -258,7 +258,7 @@
       }
       if(info.type==='final'&&fight.bossPhase===2&&!perfect)damage*=.5;
     }
-    damage=Math.max(1,Math.round(damage));
+    damage=Math.max(0,Math.round(damage));
     fight.hp=Math.max(0,fight.hp-damage);
     hb.total=Math.min(1e35,hb.total+damage);
     if(!finisher)hb.clicks++;
@@ -346,7 +346,7 @@
   .hbc-bag.armored .hbc-bag-body:after{content:'';position:absolute;inset:16px 11px;z-index:0;border:1px solid #ffffff22;border-radius:10px;pointer-events:none}
   .hbc-bag.is-hit{animation:hbc-impact .3s ease-out}.hbc-floor{position:absolute;bottom:0;left:15%;right:15%;height:13px;background:radial-gradient(ellipse,#000b,transparent 75%);z-index:0}
   #hbcFloating{position:absolute;inset:0;pointer-events:none}.hbc-dmg{position:absolute;z-index:7;color:#efddc6;font:900 18px ui-monospace,monospace;text-shadow:0 3px 11px #000;animation:hbc-float .8s forwards}
-  .hbc-dmg.perfect{color:#ffd181;font-size:22px}.hbc-dmg.finisher{color:#ff837c;font-size:25px}
+  .hbc-dmg.perfect{color:#ffd181;font-size:22px}.hbc-dmg.finisher{color:#ff837c;font-size:25px}.hbc-dmg.miss{color:#9da0a3;font-size:17px}
   .hbc-feedback{display:flex;justify-content:space-between;gap:8px;align-items:center;border-top:1px solid #ffffff12;padding-top:10px;font:700 11px ui-monospace,monospace;letter-spacing:.1em;color:#e7c99e}
   #hbcCombo{color:#a4aaa9;white-space:nowrap}.hbc-timing{margin-top:14px}.hbc-timing-head{display:flex;justify-content:space-between;gap:10px;font:10px ui-monospace,monospace;color:#d4c3ad}
   .hbc-timing-head span{color:#998d81}.hbc-timing-rail{height:21px;border:1px solid #93806d55;background:linear-gradient(90deg,#4a2222,#392923 25%,#2c312b 50%,#392923 75%,#4a2222);border-radius:5px;position:relative;overflow:visible;margin-top:9px}
