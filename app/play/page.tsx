@@ -88,6 +88,27 @@ export default function Play() {
     }
   }, [game, ready]);
 
+  // The hero's rotating ornamental rings do not need to animate while users
+  // are solving puzzles further down the page or the tab is in the background.
+  // Resume at the same point on return; never change its visual appearance.
+  useEffect(() => {
+    const art = document.querySelector<HTMLElement>(".rg-art");
+    if (!art || typeof IntersectionObserver === "undefined") return;
+    let onscreen = true;
+    const update = () => art.classList.toggle("rg-art-paused", document.hidden || !onscreen);
+    const observer = new IntersectionObserver(entries => {
+      onscreen = entries[0]?.isIntersecting ?? true;
+      update();
+    }, { rootMargin: "80px 0px", threshold: 0 });
+    observer.observe(art);
+    document.addEventListener("visibilitychange", update);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", update);
+      art.classList.remove("rg-art-paused");
+    };
+  }, []);
+
   const isDone = (id: number) => game.completed.includes(id);
   const unlocked = (id: number) => id === 0 || isDone(id - 1);
   const progress = Math.round(game.completed.length / 4 * 100);
