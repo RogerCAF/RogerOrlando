@@ -933,6 +933,9 @@ export default function BureauExperience() {
   return <>
     <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=transparent-cutout-v30"
       title="The Bureau — interactieve illustratie" loading="eager"
+      // Keep the scene mounted (preserves its interactive state), but stop
+      // rendering the large illustrated iframe under the full-screen game.
+      style={gameOpen ? { display: "none" } : undefined}
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
       <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="The Unfinished Project">
