@@ -1,7 +1,7 @@
 (function heavyBagCampaign() {
   'use strict';
 
-  const KEY = 'the-bureau-heavybag-campaign-v1';
+  const KEY = 'the-bureau-heavybag-arcade-v1';
   const WORLDS = [
     {name:'THE GYM', kicker:'Earn your gloves', accent:'#e9ae76', bags:['Canvas Rookie','Split Seam','Iron Core','Gym Guardian']},
     {name:'THE UNDERGROUND', kicker:'No easy rounds', accent:'#f17965', bags:['Brick Wall','Redline','Night Shift','Pit Boss']},
@@ -25,7 +25,16 @@
     try{d=JSON.parse(localStorage.getItem(KEY)||'null')}catch{}
     if (!d || typeof d!=='object') {
       d=fresh();
-      // An old idle-clicker save is retained, never overwritten or reset.
+      // The old saves remain untouched. Carry forward stages already cleared.
+      try{
+        const previous=JSON.parse(localStorage.getItem('the-bureau-heavybag-campaign-v2')||'null');
+        if(previous && Number.isFinite(+previous.stage) && +previous.stage>0) {
+          const cleared=clamp(Math.floor(+previous.stage),0,20);
+          d.unlocked=clamp(cleared,0,19);d.selected=d.unlocked;
+          for(let i=0;i<cleared;i++)d.best[i]=1;
+          d.finished=cleared===20;
+        }
+      }catch{}
       try{
         const old=JSON.parse(localStorage.getItem('the-bureau-heavybag-v2')||'null');
         if(old && Number(old.total)>0) d.credits=clamp(Math.floor(Math.log10(Number(old.total)+1)*18),0,120);
@@ -34,7 +43,7 @@
     }
     const f=fresh();
     f.unlocked=clamp(Math.floor(Number(d.unlocked)||0),0,19);
-    f.selected=clamp(Math.floor(Number(d.selected)||f.unlocked),0,f.unlocked);
+    f.selected=clamp(Number.isFinite(+d.selected)?Math.floor(+d.selected):f.unlocked,0,f.unlocked);
     f.credits=clamp(Number(d.credits)||0,0,1000000);
     for(const u of UPGRADES)f.upgrades[u.id]=clamp(Math.floor(Number(d.upgrades?.[u.id])||0),0,u.limit);
     if(Array.isArray(d.best)) f.best=d.best.slice(0,20).concat(Array(20).fill(0)).slice(0,20).map(v=>clamp(Math.floor(Number(v)||0),0,3));
