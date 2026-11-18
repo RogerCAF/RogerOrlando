@@ -3,15 +3,28 @@
   "use strict";
   const KEY = "the-bureau-heavybag-campaign-v1";
   const FIGHTS = [
-    {name:"STANDARD ISSUE",tag:"Property of the gym. Not for long.",hp:70,bonus:120,skin:0},
-    {name:"THE SANDBAG",tag:"It has filed a formal complaint.",hp:550,bonus:400,skin:1},
-    {name:"CONCRETE THERAPY",tag:"Talking about feelings was optional.",hp:3600,bonus:1800,skin:2},
-    {name:"THE DEBT COLLECTOR",tag:"He did not come for coffee.",hp:22000,bonus:10000,skin:3},
-    {name:"IRON EGO",tag:"Now with a completely unnecessary ego.",hp:125000,bonus:55000,skin:4},
-    {name:"THE PROBLEM",tag:"This is becoming a workplace incident.",hp:750000,bonus:270000,skin:5},
-    {name:"NO REFUNDS",tag:"All complaints will be ignored.",hp:3500000,bonus:1200000,skin:6},
-    {name:"THE IMPOSSIBLE BAG",tag:"One final bag. Absolutely not meant to break.",hp:15000000,bonus:0,skin:7}
+    {name:"Rookie Canvas",tag:"Time your punches.",hp:65,bonus:95,skin:0,seconds:40,mode:"normal"},
+    {name:"Rhythm Rider",tag:"Keep your rhythm.",hp:105,bonus:139,skin:0,seconds:40,mode:"rhythm"},
+    {name:"Heavy Leather",tag:"Only accurate strikes break armor.",hp:160,bonus:183,skin:0,seconds:43,mode:"armor"},
+    {name:"Gym Guardian",tag:"Precision is everything.",hp:240,bonus:317,skin:0,seconds:49,mode:"precision"},
+    {name:"Back Alley",tag:"Time your punches.",hp:295,bonus:271,skin:1,seconds:40,mode:"rhythm"},
+    {name:"Quickfire",tag:"Keep your rhythm.",hp:365,bonus:315,skin:1,seconds:34,mode:"rush"},
+    {name:"Iron Stitch",tag:"Only accurate strikes break armor.",hp:470,bonus:359,skin:1,seconds:45,mode:"armor"},
+    {name:"The Bouncer",tag:"Precision is everything.",hp:690,bonus:493,skin:1,seconds:54,mode:"shield"},
+    {name:"Steel Core",tag:"Time your punches.",hp:790,bonus:447,skin:2,seconds:45,mode:"armor"},
+    {name:"Broken Clock",tag:"Keep your rhythm.",hp:960,bonus:491,skin:2,seconds:39,mode:"rush"},
+    {name:"Factory Reject",tag:"Only accurate strikes break armor.",hp:1190,bonus:535,skin:2,seconds:47,mode:"regen"},
+    {name:"The Crusher",tag:"Precision is everything.",hp:1460,bonus:669,skin:2,seconds:56,mode:"armor"},
+    {name:"Gold Standard",tag:"Time your punches.",hp:1700,bonus:623,skin:3,seconds:46,mode:"precision"},
+    {name:"Redline",tag:"Keep your rhythm.",hp:1960,bonus:667,skin:3,seconds:42,mode:"rush"},
+    {name:"The Sentinel",tag:"Only accurate strikes break armor.",hp:2290,bonus:711,skin:3,seconds:53,mode:"shield"},
+    {name:"The Champion",tag:"Precision is everything.",hp:2800,bonus:845,skin:3,seconds:60,mode:"regen"},
+    {name:"Last Warning",tag:"Time your punches.",hp:3110,bonus:799,skin:4,seconds:48,mode:"precision"},
+    {name:"The Colossus",tag:"Keep your rhythm.",hp:3600,bonus:843,skin:4,seconds:58,mode:"armor"},
+    {name:"No Mercy",tag:"Only accurate strikes break armor.",hp:4090,bonus:887,skin:4,seconds:56,mode:"shield"},
+    {name:"THE FINAL BAG",tag:"Precision is everything.",hp:4950,bonus:1021,skin:4,seconds:72,mode:"final"}
   ];
+  
   const maxStage = FIGHTS.length;
   function load(){
     try {
@@ -31,6 +44,63 @@
   }
   const game=load();
   let lastSave=0;
+
+  // Skill-based arcade engine. Stages are timed, with a visible moving strike indicator.
+  const ZONES=['THE GYM','UNDERGROUND','THE FACTORY','THE ARENA','FINAL CHAMBER'];
+  const RULES={normal:'Build clean combos.',rhythm:'PERFECT hits charge faster.',armor:'Off-beat punches barely hurt.',precision:'Weak punches do no damage.',rush:'Fast round — no wasting time.',shield:'Shield activates every 3.5 seconds.',regen:'The bag repairs itself.',final:'Three boss phases. No second chances.'};
+  const RUN={status:'ready',aim:.5,combo:0,energy:0,hits:0,perfect:0,last:0,started:0,deadline:0,phase:1};
+  let runFrame=0,lastUI=0,hiddenAt=0;
+  const ui=(id)=>document.getElementById(id);
+  // Disable the clicker's automatic damage/income: money now comes from victories.
+  hbAdvance=function(){return false;};
+  hbPerSecond=function(){return 0;};
+  hbPerHit=function(){
+    const gl=Math.min(15,hbLevel('gloves')),tech=Math.min(12,hbLevel('technique')),power=Math.min(12,hbLevel('power'));
+    return (13+gl*5+tech*4)*Math.pow(1.22,power);
+  };
+  if(hbTickTimer!==null){clearInterval(hbTickTimer);hbTickTimer=null;}
+  function halt(){if(runFrame)cancelAnimationFrame(runFrame);runFrame=0;}
+  function roundReset(){
+    halt();RUN.status='ready';RUN.aim=.5;RUN.combo=0;RUN.energy=0;RUN.hits=0;RUN.perfect=0;RUN.last=0;RUN.started=0;RUN.deadline=0;RUN.phase=1;
+    game.combo=0;game.charge=0;
+  }
+  function endLoss(){
+    halt();RUN.status='lost';game.damage=0;game.combo=0;game.charge=0;save(true);
+    const box=ui('hbcRoundOverlay');if(box){box.hidden=false;box.innerHTML='<h2>TIME IS UP.</h2><p>The bag survived. Improve your timing or buy an upgrade. No progress was lost.</p><button class="cta" id="hbcStart">TRY AGAIN →</button>';}
+    hbRender();beep(130,.14);
+  }
+  function perfectZone(){return .09+Math.min(12,hbLevel('coach'))*.009;}
+  function frameRun(t){
+    runFrame=0;
+    if(RUN.status!=='fighting'||active!=='bag'||document.hidden||!ui('hbcAim'))return;
+    const b=FIGHTS[game.stage];
+    if(t>=RUN.deadline){endLoss();return;}
+    RUN.aim=(Math.sin((t-RUN.started)*Math.PI*2/Math.max(810,1400-game.stage*22))+1)/2;
+    ui('hbcAim').style.left=(RUN.aim*100)+'%';
+    if(b.mode==='regen'&&Math.random()<.028)game.damage=Math.max(0,game.damage-b.hp*.0009);
+    if(b.mode==='final')RUN.phase=game.damage/b.hp>.68?1:game.damage/b.hp>.35?2:3;
+    if(t-lastUI>100){
+      lastUI=t;
+      const clock=ui('hbcTime');if(clock){clock.textContent=Math.max(0,(RUN.deadline-t)/1000).toFixed(1)+'s';clock.classList.toggle('danger',RUN.deadline-t<10000);}
+      const hp=ui('hbcHealth');if(hp)hp.style.width=(100*Math.max(0,b.hp-game.damage)/b.hp)+'%';
+    }
+    runFrame=requestAnimationFrame(frameRun);
+  }
+  function startRound(){
+    if(active!=='bag'||game.stage>=maxStage)return;
+    roundReset();game.damage=0;
+    RUN.status='fighting';RUN.started=performance.now();RUN.deadline=RUN.started+FIGHTS[game.stage].seconds*1000;
+    const box=ui('hbcRoundOverlay');if(box){box.hidden=true;box.innerHTML='';}
+    const punch=ui('hbPunch');if(punch)punch.disabled=false;
+    hbRender();runFrame=requestAnimationFrame(frameRun);beep(540,.06);
+  }
+  function frameFinish(){
+    halt();RUN.status='win';
+    const box=ui('hbcRoundOverlay');if(box){box.hidden=false;box.innerHTML='<h2>BAG DESTROYED.</h2><p>Grade '+(RUN.perfect/Math.max(1,RUN.hits)>.5?'S':RUN.perfect/Math.max(1,RUN.hits)>.27?'A':'B')+' · '+RUN.perfect+' perfect hits. Claim your reward and continue.</p><button class="cta" id="hbcContinue">NEXT BAG →</button>';}
+    const punch=ui('hbPunch');if(punch)punch.disabled=true;
+    hbRender();save(true);beep(740,.13);
+  }
+  
   function save(force){
     const now=Date.now();
     if(!force&&now-lastSave<600)return;
@@ -47,11 +117,12 @@
     }).join("");
   }
   function chapters(){
-    return '<div class="hbc-route">'+FIGHTS.map(function(b,i){
-      let cls=i<game.stage?"done":i===game.stage?"current":"locked";
-      return '<span class="hbc-node '+cls+'" title="Stage '+(i+1)+': '+b.name+'">'+(i<game.stage?'✓':i+1)+'</span>';
-    }).join("")+'</div>';
+    return '<div class="hbc-route hbc-route20">'+FIGHTS.map(function(b,i){
+      let cls=i<game.stage?'done':i===game.stage?'current':'locked';
+      return '<span class="hbc-node '+cls+'" title="'+ZONES[Math.floor(i/4)]+' / '+b.name+'">'+(i<game.stage?'✓':i+1)+'</span>';
+    }).join('')+'</div>';
   }
+  
   function renderImpact(amount,critical,heavy){
     const bag=document.getElementById("hbPunch");
     if(bag){
@@ -76,62 +147,53 @@
     }
   }
   function deal(amount,critical,heavy){
-    if(game.stage>=maxStage)return;
-    const boss=FIGHTS[game.stage];
-    const hit=Math.max(1,Math.floor(amount));
-    game.damage=Math.min(boss.hp,game.damage+hit);
-    hbEarn(hit); // Income still buys the original upgrades; passive income cannot defeat a bag.
+    if(game.stage>=maxStage||RUN.status!=='fighting')return;
+    const b=FIGHTS[game.stage],hit=Math.max(0,Math.round(amount*10)/10);
+    game.damage=Math.min(b.hp,game.damage+hit);
+    hb.total+=hit;hb.clicks++;if(hb.clicks===5)unlock(0);
     renderImpact(hit,critical,heavy);
-    if(game.damage>=boss.hp){
-      game.charge=0;
-      save(true);
-      if(typeof toast==="function")toast("✦ BAG DOWN! Finish the stage to continue.");
-    }else save(false);
-    hbSave();
-    hbScheduleRender();
-  }
-  window.hbHit=function(){
-    if(active!=="bag"||game.stage>=maxStage)return;
-    if(game.damage>=FIGHTS[game.stage].hp)return;
-    const now=Date.now();
-    game.combo=now-game.lastHit<=1800?Math.min(12,game.combo+1):1;
-    game.lastHit=now;
-    game.bestCombo=Math.max(game.bestCombo,game.combo);
-    game.charge=Math.min(6,game.charge+1);
-    const armor=game.stage>=4?.30:game.stage>=2?.12:0;
-    const critical=Math.random()<.07;
-    const comboPower=1+Math.min(1.4,(game.combo-1)*.13);
-    const hit=hbPerHit()*comboPower*(1-armor)*(critical?3:1);
-    deal(hit,critical,false);
-    if(critical||game.combo%3===0)beep(critical?260:110,.045);
-  };
-  function finisher(){
-    if(active!=="bag"||game.stage>=maxStage||game.charge<6)return;
-    if(game.damage>=FIGHTS[game.stage].hp)return;
-    const amount=hbPerHit()*(20+Math.min(game.combo,10)*2)*(1+game.stage*.07);
-    game.charge=0;
-    game.combo=0;
-    deal(amount,true,true);
-    beep(190,.11);
+    hbSave();save(false);
+    if(game.damage>=b.hp){frameFinish();return;}
     hbRender();
   }
-  function advance(){
-    if(active!=="bag"||game.stage>=maxStage||game.damage<FIGHTS[game.stage].hp)return;
-    const defeated=FIGHTS[game.stage];
-    if(defeated.bonus)hbEarn(defeated.bonus);
-    game.stage++;
-    game.damage=0;
-    game.charge=0;
-    game.combo=0;
-    if(game.stage>=maxStage){
-      game.completedAt=game.completedAt||Date.now();
-      game.finishes++;
-      if(typeof toast==="function")toast("🏆 CHAMPION. The Impossible Bag is no more.");
-    }else if(typeof toast==="function")toast("✦ Stage complete. +"+hbNum(defeated.bonus)+" credits.");
-    hbSave(true);
-    save(true);
-    openHeavyBag();
+  
+  window.hbHit=function(){
+    if(active!=='bag'||RUN.status!=='fighting'||game.stage>=maxStage)return;
+    const now=performance.now(),b=FIGHTS[game.stage];
+    if(now>RUN.deadline){endLoss();return;}
+    if(now-RUN.last<240)return;RUN.last=now;RUN.hits++;
+    const diff=Math.abs(RUN.aim-.5),grade=diff<=perfectZone()?'PERFECT':diff<.245?'GOOD':'WEAK';
+    RUN.combo=grade==='WEAK'?0:Math.min(25,RUN.combo+1);
+    RUN.perfect+=grade==='PERFECT'?1:0;
+    RUN.energy=Math.min(100,RUN.energy+(grade==='PERFECT'?(b.mode==='rhythm'?33:26):grade==='GOOD'?14:0));
+    game.combo=RUN.combo;game.charge=Math.floor(RUN.energy/100*6);game.bestCombo=Math.max(game.bestCombo,RUN.combo);
+    let amount=hbPerHit()*(grade==='PERFECT'?1.9:grade==='GOOD'?1:.22)*(1+RUN.combo*(.07+Math.min(12,hbLevel('partner'))*.008));
+    if(b.mode==='armor'&&grade!=='PERFECT')amount*=.32;
+    if(b.mode==='precision'&&grade==='WEAK')amount=0;
+    if(b.mode==='shield'&&Math.floor((now-RUN.started)/3500)%2===1)amount*=grade==='PERFECT'?.65:.22;
+    if(b.mode==='final'&&RUN.phase===2&&grade!=='PERFECT')amount*=.40;
+    if(b.mode==='final'&&RUN.phase===3&&grade==='PERFECT')amount*=1.30;
+    const feedback=ui('hbcFeedback');if(feedback)feedback.textContent=grade+' · '+RUN.combo+'× COMBO';
+    deal(amount,grade==='PERFECT',false);
+    if(grade==='PERFECT')beep(460,.045);
+  };
+  function finisher(){
+    if(active!=='bag'||RUN.status!=='fighting'||RUN.energy<100)return;
+    RUN.energy=0;game.charge=0;
+    deal(hbPerHit()*(8+Math.min(12,hbLevel('gym'))*1.5)*(1+RUN.combo*.04),true,true);
+    beep(200,.12);hbRender();
   }
+  
+  function advance(){
+    if(active!=='bag'||RUN.status!=='win'||game.stage>=maxStage)return;
+    const beaten=FIGHTS[game.stage],grade=RUN.perfect/Math.max(1,RUN.hits)>.5?'S':RUN.perfect/Math.max(1,RUN.hits)>.27?'A':'B';
+    hbEarn(Math.round(beaten.bonus*(grade==='S'?1.4:grade==='A'?1.2:1)));
+    game.stage++;game.damage=0;roundReset();
+    if(game.stage>=maxStage){game.completedAt=Date.now();game.finishes++;toast('🏆 CHAMPION · THE FINAL BAG IS DOWN');}
+    else toast('✦ BAG CLEARED · NEXT: '+FIGHTS[game.stage].name);
+    hbSave(true);save(true);openHeavyBag();
+  }
+  
   function replay(){
     if(active!=="bag"||!game.completedAt||game.stage!==maxStage)return;
     game.stage=maxStage-1;
@@ -148,7 +210,7 @@
     const cleared=game.damage>=boss.hp;
     f("hbCoins",hbNum(hb.coins));
     f("hbClickPower",hbNum(hbPerHit()));
-    f("hbDps",hbNum(hbPerSecond()));
+    f("hbDps",game.bestCombo+"×");
     f("hbClicks",hbNum(hb.clicks));
     f("hbTotal",hbNum(hb.total));
     f("hbRank",HB_RANKS[Math.min(game.stage,HB_RANKS.length-1)]);
@@ -157,16 +219,19 @@
     f("hbcHP",hbNum(Math.max(0,boss.hp-game.damage))+" / "+hbNum(boss.hp)+" HP");
     f("hbcCombo",game.combo+"×");
     f("hbcCharge",game.charge+" / 6");
-    f("hbcPhase",cleared?"STAGE CLEAR":"BAG "+(game.stage+1)+" / "+maxStage);
+    f("hbcPhase",cleared?"STAGE CLEAR":"BAG "+(game.stage+1)+" / "+maxStage+" · "+ZONES[Math.floor(game.stage/4)]);
     f("hbcNextText",game.stage===maxStage-1?"CLAIM THE TITLE":"NEXT BAG");
     const bar=document.getElementById("hbcHealth");
     if(bar)bar.style.width=Math.max(0,100*(boss.hp-game.damage)/boss.hp)+"%";
     const arena=document.getElementById("hbArena");
     if(arena)arena.dataset.tier=String(boss.skin);
     const bag=document.getElementById("hbPunch");
-    if(bag)bag.disabled=cleared;
-    show("hbcFinisher",!cleared&&game.charge>=6);
-    show("hbcContinue",cleared);
+    if(bag)bag.disabled=RUN.status!=='fighting'||cleared;
+    show("hbcFinisher",RUN.status==='fighting'&&RUN.energy>=100);
+    show("hbcContinue",false);
+    f("hbcMode",RULES[boss.mode]);
+    const energy=ui('hbcEnergy');if(energy)energy.style.width=RUN.energy+'%';
+    const overlay=ui('hbcRoundOverlay');if(overlay&&RUN.status==='ready'){overlay.hidden=false;overlay.innerHTML='<h2>'+boss.name+'</h2><p>'+RULES[boss.mode]+' · '+boss.seconds+' seconds. Time your strikes in the green zone.</p><button class="cta" id="hbcStart">START ROUND →</button>';}
     const armor=document.getElementById("hbcArmour");
     if(armor)armor.style.display=game.stage>=2?"":"none";
     for(const u of HB_UPGRADES){
@@ -200,19 +265,20 @@
       return;
     }
     const boss=FIGHTS[game.stage];
+    roundReset();
     modal(mark+'<div class="hb-game hbc-game"><div class="hb-top"><div>'+
-      '<div class="hb-eyebrow">THE BUREAU / ROAD TO THE IMPOSSIBLE</div>'+
-      '<h1>The Heavy Bag</h1><span class="muted small">Eight bags. One championship. No resets.</span>'+
+      '<div class="hb-eyebrow">THE BUREAU / ROAD TO THE FINAL BAG</div>'+
+      '<h1>The Heavy Bag</h1><span class="muted small">20 bags · 5 arenas · 1 final boss · no prestige.</span>'+
       '</div><span class="hb-rank">BELT · <b id="hbRank">Beginner</b></span></div>'+
       (offline>0?'<p class="hb-offline">✦ Offline training: +'+hbNum(offline)+' credits. Only your punches defeat each bag.</p>':"")+
       chapters()+
       '<div class="hb-statbar"><div class="hb-stat"><small>TRAINING CREDITS</small><strong id="hbCoins">0</strong></div>'+
       '<div class="hb-stat"><small>PER PUNCH</small><strong id="hbClickPower">1</strong></div>'+
-      '<div class="hb-stat"><small>PASSIVE / SEC</small><strong id="hbDps">0</strong></div></div>'+
+      '<div class="hb-stat"><small>BEST COMBO</small><strong id="hbDps">0</strong></div></div>'+
       '<div class="hb-play"><div class="hb-arena" id="hbArena" data-tier="'+boss.skin+'">'+
       '<span class="hbc-arena-title" id="hbcBoss">'+boss.name+'</span>'+
       '<span class="hb-chain"></span><button type="button" id="hbPunch" class="hb-bag" aria-label="Punch the heavy bag"><span class="hb-bag-art"></span></button>'+
-      '<div class="hb-hint">TAP TO COMBO · 6 HITS CHARGE A HEAVY STRIKE</div>'+
+      '<div class="hb-hint" id="hbcFeedback">TAP AT THE RIGHT TIME · BUILD YOUR FINISHER</div><div class="hbc-timing"><div class="hbc-timing-head"><span id="hbcMode">PERFECT TIMING</span><span id="hbcTime">0.0s</span></div><div class="hbc-meter"><div class="hbc-sweet"></div><div class="hbc-needle" id="hbcAim"></div></div><div class="hbc-energy"><span id="hbcEnergy"></span></div></div><div class="hbc-round-overlay" id="hbcRoundOverlay"></div>'+
       '<div class="hbc-action"><span>COMBO <b id="hbcCombo">0×</b></span><span>HEAVY <b id="hbcCharge">0 / 6</b></span></div>'+
       '<button type="button" id="hbcFinisher" class="cta hbc-finisher" style="display:none">✦ HEAVY STRIKE</button>'+
       '</div><div class="hb-panel">'+
@@ -231,6 +297,7 @@
     hbRender();
   };
   document.addEventListener("click",function(e){
+    const start=e.target.closest("#hbcStart");if(start){e.preventDefault();startRound();return;}
     const hit=e.target.closest("#hbcFinisher");
     if(hit){e.preventDefault();finisher();return;}
     const next=e.target.closest("#hbcContinue");
@@ -238,7 +305,9 @@
     const again=e.target.closest("#hbcReplay");
     if(again){e.preventDefault();replay();}
   });
-  window.addEventListener("pagehide",function(){save(true);});
+  document.addEventListener('keydown',function(e){if(active!=='bag'||RUN.status!=='fighting'||e.repeat||e.altKey||e.ctrlKey||e.metaKey)return;if(['INPUT','BUTTON','TEXTAREA','SELECT'].includes(e.target.tagName))return;if(e.code==='Space'){e.preventDefault();hbHit();}if(e.key.toLowerCase()==='f'){e.preventDefault();finisher();}});
+  document.addEventListener('visibilitychange',function(){if(RUN.status!=='fighting')return;if(document.hidden){hiddenAt=performance.now();halt();}else if(hiddenAt){const lapse=performance.now()-hiddenAt;RUN.deadline+=lapse;RUN.started+=lapse;hiddenAt=0;runFrame=requestAnimationFrame(frameRun);}});
+  window.addEventListener("pagehide",function(){halt();save(true);});
   document.addEventListener("visibilitychange",function(){if(document.hidden)save(true);});
   const style=document.createElement("style");
   style.textContent=[
