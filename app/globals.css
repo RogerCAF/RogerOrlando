@@ -604,13 +604,13 @@
   .footer .footer-bottom span:last-child {font-size: 8px}
 }
 
-/* Bureau finish: show the real tabletop, not 170px of empty transparent
-   canvas under it. The scene itself stays at its original aspect ratio. */
+/* The approved 16:9 photograph should be visible completely, including
+   the desktop edge, on both desktop and narrow phone screens. */
 .bureau-home-experience {
-  height: clamp(360px, 48vw, 610px);
+  height: clamp(360px, 55vw, 710px);
 }
 @media (max-width: 680px) {
   .bureau-home-experience {
-    height: clamp(185px, 47vw, 315px);
+    height: clamp(185px, 55vw, 300px);
   }
 }
