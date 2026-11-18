@@ -734,6 +734,102 @@ export default function BureauExperience() {
           </defs>`;
         document.body.appendChild(defs);
       }
+      /* The approved photorealistic image is now the SINGLE visual source.
+         All previous SVG/photo/cutout layers remain in the DOM for compatibility
+         with the existing interactions but are never painted. */
+      style.textContent += `
+        .bureau-embed #scene > img:not(.bureau-approved-photo) {
+          display: none !important;
+          visibility: hidden !important;
+        }
+        .bureau-embed #scene > img.bureau-approved-photo {
+          position: absolute !important;
+          inset: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          display: block !important;
+          visibility: visible !important;
+          z-index: 1 !important;
+          object-fit: fill !important;
+          filter: none !important;
+          opacity: 1 !important;
+          border: 0 !important;
+          background: transparent !important;
+          -webkit-mask-image: none !important;
+          mask-image: none !important;
+          clip-path: none !important;
+          pointer-events: none !important;
+          user-select: none !important;
+        }
+        .bureau-embed #bureau-guestbook-entry {
+          left: 82.6% !important;
+          top: 78% !important;
+          width: 14.4% !important;
+          height: 11.8% !important;
+          z-index: 15 !important;
+          transform: none !important;
+          border: 0 !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
+          background: transparent !important;
+          color: transparent !important;
+          text-shadow: none !important;
+          padding: 0 !important;
+          filter: none !important;
+        }
+        .bureau-embed #bureau-guestbook-entry::before,
+        .bureau-embed #bureau-guestbook-entry::after,
+        .bureau-embed #bureau-guestbook-entry strong {
+          display: none !important;
+        }
+        .bureau-embed #bureau-guestbook-entry:hover,
+        .bureau-embed #bureau-guestbook-entry:focus-visible {
+          transform: none !important;
+          filter: none !important;
+          outline: 1px solid rgba(220,197,159,.62) !important;
+          outline-offset: 1px !important;
+        }
+        .bureau-embed .bureau-secondary-display {
+          left: 14.2% !important;
+          top: 31.2% !important;
+          width: 16% !important;
+          height: 38.5% !important;
+          z-index: 12 !important;
+        }
+        .bureau-embed .spot[data-open="bag"] {
+          left: 4.3% !important;
+          top: 11.2% !important;
+          width: 10.5% !important;
+          height: 54.4% !important;
+          z-index: 10 !important;
+        }
+        .bureau-embed .spot[data-open="rubik"] {
+          left: 4.7% !important;
+          top: 72.4% !important;
+          width: 8.4% !important;
+          height: 17.3% !important;
+          z-index: 10 !important;
+        }
+        .bureau-embed .spot[data-open="monitor"],
+        .bureau-embed .spot[data-open="computer"] {
+          left: 31% !important;
+          top: 34% !important;
+          width: 43.7% !important;
+          height: 34.3% !important;
+          z-index: 10 !important;
+        }
+      `;
+      if (scene && !document.getElementById("bureau-approved-photo")) {
+        const approved = document.createElement("img");
+        approved.id = "bureau-approved-photo";
+        approved.className = "bureau-approved-photo";
+        approved.src = "/bureau/bureau-approved-photorealistic.svg?v=approved-photo-28";
+        approved.alt = "The Bureau: werkplek met twee bergschermen, pc, telefoon, bokszak en notitieboek";
+        approved.draggable = false;
+        approved.decoding = "async";
+        scene.insertBefore(approved, scene.firstChild);
+      }
+
       document.getElementById(style.id)?.remove();
       document.head.appendChild(style);
 
@@ -792,7 +888,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=r-guestbook-v27"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=approved-photo-v28"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
