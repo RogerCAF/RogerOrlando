@@ -9,6 +9,11 @@
     {name:'THE ARENA', kicker:'Only contenders remain', accent:'#a9abf8', bags:['Phantom','Blitz','Fortress','The Champion']},
     {name:'THE FINAL BAG', kicker:'One last challenge', accent:'#ed6967', bags:['Blackout','No Mercy','Last Warning','THE FINAL BAG']}
   ];
+  const BOSS_PHASES = [
+    {hint:'PHASE 1 / Precision. Build your combo and charge the finisher.'},
+    {hint:'PHASE 2 / Iron Guard. Good hits are resisted; aim for PERFECT.'},
+    {hint:'PHASE 3 / Redline. Faster timing, smaller window; perfect hits break through.'}
+  ];
   const HEALTH = [75,110,165,240,325,420,570,750,950,1220,1550,1950,2400,3050,3850,4700,5800,7000,8200,12000];
   const TYPE = ['basic','basic','armor','heavy','heavy','speed','guard','armor','armor','guard','speed','heavy','speed','speed','armor','guard','heavy','guard','armor','final'];
   const UPGRADES = [
@@ -86,6 +91,15 @@
       hits:0,perfect:0,charge:0,message:'Find your rhythm.',kind:'',stars:0,reward:0,hiddenAt:0,bossPhase:1};
   }
   function canFight(){return active==='bag' && Boolean(document.querySelector('.hbc'))}
+  function bossPhaseFor(hp,maxHp){const ratio=hp/maxHp;return ratio>2/3?1:ratio>1/3?2:3;}
+  function syncBossPhase(){
+    if(bagInfo().type!=='final'||!fight||fight.hp<=0)return;
+    const next=bossPhaseFor(fight.hp,fight.maxHp);
+    if(next===fight.bossPhase)return;
+    fight.bossPhase=next;
+    fight.message=next===2?'IRON GUARD — AIM FOR PERFECT!':'REDLINE — FINAL PUSH!';
+    soundCue(next===2?310:420,.11);
+  }
   function timing(elapsed){
     const info=bagInfo();
     const modifier=info.type==='speed'?0.72:info.type==='final'?0.81:info.type==='heavy'?1.12:1;
@@ -93,7 +107,7 @@
     const period=(1780-Math.floor(info.world*125))*modifier*phaseSpeed;
     const t=((elapsed%period)+period)%period/period;
     const position=(t<.5?t*2:(1-t)*2)*100;
-    const width=clamp(16+data.upgrades.focus*3-(info.type==='final'&&fight.bossPhase===3?4:0),12,36);
+    const width=clamp(16+data.upgrades.focus*3-(info.type==='final'&&fight.bossPhase===3?6:0),10,36);
     return {position,width,diff:Math.abs(position-50)};
   }
   function soundCue(freq,duration){if(typeof beep==='function')beep(freq,duration)}
@@ -118,12 +132,12 @@
   }
   function resultHtml(){
     const info=bagInfo();
-    if(data.finished&&fight.phase!=='fighting'&&fight.phase!=='victory'&&data.selected===19&&fight.phase==='ready'){
-      return `<div class="hbc-final-banner"><span>★ CAMPAIGN COMPLETED ★</span><strong>THE FINAL BAG HAS FALLEN.</strong><p>20 bags. Five locations. Zero resets. Revisit any stage and perfect your records.</p></div>`;
+    if(data.finished&&fight.phase==='ready'&&data.selected===19){
+      return `<div class="hbc-final-banner"><span>★ UNDISPUTED HEAVY BAG CHAMPION ★</span><strong>🏆 THE FINAL BAG HAS FALLEN.</strong><p>20 bags defeated · 5 locations conquered · Championship permanently saved. Replay any stage to improve your stars.</p></div><button class="hbc-main-btn" type="button" data-hbc-start>REPLAY THE FINAL BOSS <span>↗</span></button>`;
     }
-    if(fight.phase==='ready')return `<p class="hbc-state-intro">${info.index===19?'Three brutal phases. Stay precise. One final victory.':'Beat the bag before the timer runs out. Misses deal no damage. Perfect hits charge your finisher.'}</p><button class="hbc-main-btn" type="button" data-hbc-start>START ROUND <span>↗</span></button>`;
+    if(fight.phase==='ready')return `<p class="hbc-state-intro">${info.index===19?'FINAL BOSS: master precision, break the iron guard, survive Redline.':'Beat the bag before the timer runs out. Misses deal no damage. Perfect hits charge your finisher.'}</p><button class="hbc-main-btn" type="button" data-hbc-start>START ROUND <span>↗</span></button>`;
     if(fight.phase==='fighting')return `<div class="hbc-fight-actions"><button id="hbcStrike" class="hbc-main-btn" type="button" data-hbc-hit>STRIKE <span>SPACE</span></button><button id="hbcFinisher" class="hbc-special" type="button" data-hbc-finisher disabled>FINISHER <span>F</span></button></div>`;
-    if(fight.phase==='victory')return `<div class="hbc-result victory"><div class="hbc-result-tag">ROUND CLEARED · ${fight.stars} STAR${fight.stars!==1?'S':''}</div><h2>${info.index===19?'YOU BEAT THE FINAL BAG.':'BAG DESTROYED.'}</h2><p>+${fmt(fight.reward)} credits · ${fight.perfect} perfect hits · best combo ${fight.highestCombo}</p><div class="hbc-stars">${'★'.repeat(fight.stars)}${'☆'.repeat(3-fight.stars)}</div><div class="hbc-result-buttons">${info.index<19?'<button class="hbc-main-btn" data-hbc-next type="button">NEXT BAG →</button>':'<button class="hbc-main-btn" data-hbc-next type="button">VIEW YOUR VICTORY →</button>'}<button class="hbc-special" type="button" data-hbc-retry>REPLAY</button></div></div>`;
+    if(fight.phase==='victory')return `<div class="hbc-result victory"><div class="hbc-result-tag">${info.index===19?'🏆 CHAMPIONSHIP WON':'ROUND CLEARED'} · ${fight.stars} STAR${fight.stars!==1?'S':''}</div><h2>${info.index===19?'UNDEFEATED. UNDISPUTED.':'BAG DESTROYED.'}</h2><p>+${fmt(fight.reward)} credits · ${fight.perfect} perfect hits · best combo ${fight.highestCombo}</p><div class="hbc-stars">${'★'.repeat(fight.stars)}${'☆'.repeat(3-fight.stars)}</div><div class="hbc-result-buttons">${info.index<19?'<button class="hbc-main-btn" data-hbc-next type="button">NEXT BAG →</button>':'<button class="hbc-main-btn" data-hbc-next type="button">VIEW YOUR VICTORY →</button>'}<button class="hbc-special" type="button" data-hbc-retry>REPLAY</button></div></div>`;
     return `<div class="hbc-result defeat"><div class="hbc-result-tag">ROUND EXPIRED</div><h2>NOT THIS TIME.</h2><p>Upgrade your gear or find a cleaner rhythm. Your campaign progress is safe.</p><div class="hbc-result-buttons"><button class="hbc-main-btn" type="button" data-hbc-retry>TRY AGAIN →</button></div></div>`;
   }
   function draw(){
@@ -140,6 +154,7 @@
         <div class="hbc-bag-name"><span>${world.name}</span><h2>${info.name}</h2></div>
         <div class="hbc-health-label"><span>INTEGRITY</span><strong id="hbcHpText">${fmt(fight.hp)} / ${fmt(fight.maxHp)}</strong></div>
         <div class="hbc-health-rail"><span id="hbcHealth" style="width:100%"></span></div>
+        ${info.type==='final'?'<div class="hbc-boss-phases" aria-label="Final boss phases"><span class="hbc-boss-step active" id="hbcBossStep1">01 · THE TEST</span><span class="hbc-boss-step" id="hbcBossStep2">02 · IRON GUARD</span><span class="hbc-boss-step" id="hbcBossStep3">03 · REDLINE</span></div><div class="hbc-boss-hint" id="hbcBossHint">PHASE 1 / Precision. Build your combo and charge the finisher.</div>':''}
         <div class="hbc-bag-scene"><div class="hbc-halo"></div><div class="hbc-chain"></div><button id="hbcBag" type="button" class="hbc-bag hbc-skin-${info.world} ${info.type==='armor'||info.type==='final'?'armored':''}" aria-label="Punch ${info.name}"><span class="hbc-bag-body"><span class="hbc-bag-mark">THE<br>BUREAU</span><span class="hbc-bag-stripe"></span><span class="hbc-bag-seam"></span></span></button><div class="hbc-floor"></div><div id="hbcFloating" aria-hidden="true"></div></div>
         <div class="hbc-feedback"><strong id="hbcFeedback">FIND YOUR RHYTHM</strong><span id="hbcCombo">COMBO ×0</span></div>
         <div class="hbc-timing"><div class="hbc-timing-head"><strong>TIMING</strong><span id="hbcTimingText">Hit the center zone</span></div><div class="hbc-timing-rail"><div class="hbc-perfect-zone" id="hbcZone"></div><span id="hbcPulse" class="hbc-pulse" style="left:0%"></span></div><div class="hbc-timing-footer"><small>EARLY</small><small>PERFECT</small><small>LATE</small></div></div>
@@ -178,7 +193,14 @@
     setWidth('hbcZone',timingData.width+'%');
     const pulse=el('hbcPulse');if(pulse&&running)pulse.style.left=timingData.position+'%';
     put('hbcTimingText',running?'Center the moving marker':'Hit the center zone');
-    put('hbcBossPhase','PHASE '+fight.bossPhase+'/3');
+    if(info.type==='final'){
+      put('hbcBossHint',BOSS_PHASES[fight.bossPhase-1].hint);
+      for(let i=1;i<=3;i++){
+        const step=el('hbcBossStep'+i);
+        const cls='hbc-boss-step '+(i<fight.bossPhase?'cleared':i===fight.bossPhase?'active':'');
+        if(step&&step.className!==cls)step.className=cls;
+      }
+    }
   }
   function tick(now){
     loop=0;
@@ -187,8 +209,6 @@
     const info=bagInfo();
     const remaining=info.time-(now-fight.started)/1000;
     if(remaining<=0){fight.seconds=0;fight.phase='defeat';fight.message='Round expired.';draw();return}
-    const phase=info.type==='final'?(fight.hp/fight.maxHp>.67?1:fight.hp/fight.maxHp>.34?2:3):1;
-    if(phase!==fight.bossPhase){fight.bossPhase=phase;fight.message='PHASE '+phase+' — ADAPT!';soundCue(320,.12)}
     if(now-lastPaint>=PAINT_INTERVAL){paint(now);lastPaint=now}
     loop=requestAnimationFrame(tick);
   }
@@ -198,7 +218,7 @@
     fight.phase='fighting';
     fight.started=performance.now();
     lastPaint=0;
-    fight.message='GO! FIND THE CENTER.';
+    fight.message=bagInfo().type==='final'?'THE TEST — FIND THE RHYTHM!':'GO! FIND THE CENTER.';
     cancelAnimationFrame(loop);loop=0;
     draw();
     soundCue(630,.09);
@@ -211,7 +231,7 @@
     fx.style.left=(38+Math.random()*20)+'%';fx.style.top=(29+Math.random()*15)+'%';
     arena.appendChild(fx);setTimeout(()=>fx.remove(),850);
     const bag=document.getElementById('hbcBag');
-    if(bag){
+    if(bag&&kind!=='miss'){
       if(typeof bag.animate==='function'){
         if(impactAnimation)impactAnimation.cancel();
         impactAnimation=bag.animate([{transform:'rotate(-1deg)'},{transform:'rotate(11deg) scale(.975)',offset:.35},{transform:'rotate(-2deg)'}],{duration:280,easing:'ease-out'});
@@ -274,10 +294,15 @@
       if(info.type==='guard'&&Math.floor((now-fight.started)/1150)%4===3&&!perfect){
         damage*=.3;fight.message='GUARD UP — WAIT FOR THE OPENING';
       }
-      if(info.type==='final'&&fight.bossPhase===2&&!perfect)damage*=.5;
+      if(info.type==='final'){
+         if(fight.bossPhase===2)damage*=perfect?1.1:.4;
+         if(fight.bossPhase===3)damage*=perfect?1.35:.65;
+       }
     }
+    if(info.type==='final'&&finisher&&fight.bossPhase===3)damage*=1.25;
     damage=Math.max(0,Math.round(damage));
     fight.hp=Math.max(0,fight.hp-damage);
+    if(info.type==='final')syncBossPhase();
     hb.total=Math.min(1e35,hb.total+damage);
     if(!finisher)hb.clicks++;
     hbSave();
@@ -404,7 +429,12 @@
   .hbc-footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font:9px ui-monospace,monospace;letter-spacing:.1em;color:#84786e;margin:14px 0 0}
   .hbc-unlocked,.hbc-final-banner{border:1px solid #d9b16d77;background:#3a291d;padding:9px 12px;border-radius:8px;font:11px ui-monospace,monospace;color:#ffcf8e;margin:0 0 12px}
   .hbc-final-banner strong{display:block;font:800 16px Inter,system-ui,sans-serif;margin:7px 0}.hbc-final-banner p{font:11px Inter,system-ui,sans-serif;line-height:1.6;margin:5px 0}
-  @keyframes hbc-sway{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(1deg)}}@keyframes hbc-impact{0%{transform:rotate(0)}35%{transform:rotate(11deg) scale(.975)}100%{transform:rotate(-2deg)}}
+  .hbc-boss-phases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:10px 0 0}
+   .hbc-boss-step{min-width:0;padding:8px 3px;background:#191c21;border:1px solid #6a5d5955;border-radius:5px;text-align:center;color:#807f85;font:700 clamp(8px,1vw,10px) ui-monospace,monospace;white-space:nowrap}
+   .hbc-boss-step.active{background:#5a2e28;border-color:#eab17c;color:#ffdfa9}
+   .hbc-boss-step.cleared{background:#213b32;border-color:#658675;color:#a4d4b3}
+   .hbc-boss-hint{min-height:25px;padding:6px 0 1px;text-align:center;color:#e6b88e;font:10px/1.5 ui-monospace,monospace}
+   @keyframes hbc-sway{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(1deg)}}@keyframes hbc-impact{0%{transform:rotate(0)}35%{transform:rotate(11deg) scale(.975)}100%{transform:rotate(-2deg)}}
   @keyframes hbc-float{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-65px);opacity:0}}
   @media(max-width:780px){.hbc-layout{grid-template-columns:1fr}.hbc-map{max-height:none}.hbc-road{order:1}.hbc-side-box{padding:12px}.hbc-arena{padding:13px}.hbc-bag-scene{height:210px}.hbc-titleline h1{font-size:30px}}
   @media(max-width:440px){.hbc-titleline{gap:9px}.hbc-titleline h1{font-size:26px}.hbc-credits{padding:9px}.hbc-credits strong{font-size:16px}.hbc-overall{font-size:8px}.hbc-fight-actions{gap:5px}.hbc-main-btn,.hbc-special{font-size:10px!important;padding:13px 9px}.hbc-bag-scene{height:206px}.hbc-world-title small{display:none}}
