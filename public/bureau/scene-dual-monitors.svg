@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1672" height="941" viewBox="0 0 1672 941" preserveAspectRatio="none">
+  <!-- The Bureau / clean object silhouette, based on the original scene coordinates.
+       Only original static objects remain; the punching bag is a separate movable layer. No chair, floor, rug or
+       under-desk drawer. The background is fully transparent. -->
+  <g fill="white">
+    <!-- Existing interactive artwork: keep object positions aligned with hotspots -->
+    <path d="M91 19 L373 7 L373 404 L88 404 Z"/>
+    <!-- Floating shelf and decorative items, without the painted wall -->
+    <path d="M443 174 L1389 182 L1388 217 L1368 237 L447 219 Z"/>
+    <path d="M618 171 C630 139 628 93 653 90 L689 89 C716 92 731 142 747 175 L745 188 L613 190 Z"/>
+    <path d="M784 113 L829 94 L883 106 L884 185 L843 208 L785 186 Z"/>
+    <path d="M916 143 L1064 129 L1072 199 L917 200 Z"/>
+    <path d="M1061 70 L1117 50 L1189 26 L1245 15 L1248 206 L1061 200 Z"/>
+    <path d="M1247 65 Q1258 48 1282 54 L1350 65 Q1361 67 1364 86 L1365 204 L1250 205 Z"/>
+    <!-- Light bar -->
+    <path d="M646 246 Q645 236 660 236 L865 243 L1082 249 L1096 254 L1093 263 L653 261 Z"/>
+    <path d="M838 243 L845 220 L863 221 L870 253 Z"/>
+    <!-- Existing main monitor, with stand replaced by the shared arm -->
+    <path d="M434 267 Q433 265 447 267 L1224 282 Q1234 285 1234 298 L1234 534 Q1234 544 1222 545 L440 553 Q429 554 429 543 Z"/>
+    <!-- Original leaning tower has been replaced by a straight tower, same location -->
+    <!-- Only actual keyboard and mouse; no lower decorative strokes -->
+    <path d="M519 564 L704 550 L708 618 L521 624 Z"/>
+    <path d="M561 616 L747 593 L1070 595 L1068 625 L613 663 L551 640 Z"/>
+    <path d="M1092 592 Q1122 574 1170 580 L1198 591 L1179 617 L1119 626 Z"/>
+  </g>
+</svg>
