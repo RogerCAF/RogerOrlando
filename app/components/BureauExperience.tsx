@@ -618,7 +618,7 @@ export default function BureauExperience() {
         const rig = document.createElement("img");
         rig.id = "bureau-dual-rig";
         rig.className = "bureau-dual-rig";
-        rig.src = "/bureau/dual-screens-upright-pc.svg?v=dual-v1";
+        rig.src = "/bureau/dual-screens-upright-pc.svg?v=frontal-v2";
         rig.alt = "";
         rig.decoding = "async";
         rig.draggable = false;
@@ -742,7 +742,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=dual-screens-arm-v19"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=front-facing-pc-v20"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
