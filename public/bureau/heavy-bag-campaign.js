@@ -160,7 +160,7 @@
     f("hbcPhase",cleared?"STAGE CLEAR":"BAG "+(game.stage+1)+" / "+maxStage);
     f("hbcNextText",game.stage===maxStage-1?"CLAIM THE TITLE":"NEXT BAG");
     const bar=document.getElementById("hbcHealth");
-    if(bar)bar.style.width=Math.min(100,100*game.damage/boss.hp)+"%";
+    if(bar)bar.style.width=Math.max(0,100*(boss.hp-game.damage)/boss.hp)+"%";
     const arena=document.getElementById("hbArena");
     if(arena)arena.dataset.tier=String(boss.skin);
     const bag=document.getElementById("hbPunch");
