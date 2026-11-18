@@ -1,0 +1,365 @@
+(function heavyBagCampaign() {
+  'use strict';
+
+  const KEY = 'the-bureau-heavybag-campaign-v1';
+  const WORLDS = [
+    {name:'THE GYM', kicker:'Earn your gloves', accent:'#e9ae76', bags:['Canvas Rookie','Split Seam','Iron Core','Gym Guardian']},
+    {name:'THE UNDERGROUND', kicker:'No easy rounds', accent:'#f17965', bags:['Brick Wall','Redline','Night Shift','Pit Boss']},
+    {name:'THE FACTORY', kicker:'Steel meets skin', accent:'#e5bb75', bags:['Rivet','Steel Skin','Shock Bag','The Press']},
+    {name:'THE ARENA', kicker:'Only contenders remain', accent:'#a9abf8', bags:['Phantom','Blitz','Fortress','The Champion']},
+    {name:'THE FINAL BAG', kicker:'One last challenge', accent:'#ed6967', bags:['Blackout','No Mercy','Last Warning','THE FINAL BAG']}
+  ];
+  const HEALTH = [75,110,165,240,325,420,570,750,950,1220,1550,1950,2400,3050,3850,4700,5800,7000,8200,12000];
+  const TYPE = ['basic','basic','armor','heavy','heavy','speed','guard','armor','armor','guard','speed','heavy','speed','speed','armor','guard','heavy','guard','armor','final'];
+  const UPGRADES = [
+    {id:'gloves',icon:'🥊',name:'Impact Gloves',effect:'Extra damage on every hit',limit:8,cost:35,step:34},
+    {id:'technique',icon:'⚡',name:'Precision',effect:'Stronger perfect hits',limit:7,cost:45,step:46},
+    {id:'focus',icon:'◎',name:'Focus',effect:'Wider perfect timing zone',limit:6,cost:50,step:59},
+    {id:'finisher',icon:'🔥',name:'Finisher',effect:'More power when meter is full',limit:7,cost:65,step:66}
+  ];
+  const fmt = n => Math.max(0,Math.round(n)).toLocaleString('en-US');
+  const clamp = (n,min,max)=>Math.max(min,Math.min(max,n));
+  const fresh = () => ({selected:0,unlocked:0,credits:0,upgrades:{gloves:0,technique:0,focus:0,finisher:0},best:Array(20).fill(0),wins:0,finished:false});
+  function load() {
+    let d;
+    try{d=JSON.parse(localStorage.getItem(KEY)||'null')}catch{}
+    if (!d || typeof d!=='object') {
+      d=fresh();
+      // An old idle-clicker save is retained, never overwritten or reset.
+      try{
+        const old=JSON.parse(localStorage.getItem('the-bureau-heavybag-v2')||'null');
+        if(old && Number(old.total)>0) d.credits=clamp(Math.floor(Math.log10(Number(old.total)+1)*18),0,120);
+      }catch{}
+      return d;
+    }
+    const f=fresh();
+    f.unlocked=clamp(Math.floor(Number(d.unlocked)||0),0,19);
+    f.selected=clamp(Math.floor(Number(d.selected)||f.unlocked),0,f.unlocked);
+    f.credits=clamp(Number(d.credits)||0,0,1000000);
+    for(const u of UPGRADES)f.upgrades[u.id]=clamp(Math.floor(Number(d.upgrades?.[u.id])||0),0,u.limit);
+    if(Array.isArray(d.best)) f.best=d.best.slice(0,20).concat(Array(20).fill(0)).slice(0,20).map(v=>clamp(Math.floor(Number(v)||0),0,3));
+    f.wins=clamp(Math.floor(Number(d.wins)||0),0,1000000);
+    f.finished=Boolean(d.finished && f.best[19]);
+    return f;
+  }
+  let data=load();
+  let fight=null;
+  let loop=0;
+  let lastPaint=0;
+
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch{}}
+  function cost(u){return Math.ceil(u.cost+u.step*Math.pow(data.upgrades[u.id],1.58))}
+  function bagInfo(index=data.selected){
+    const world=Math.floor(index/4),slot=index%4;
+    return {index,world,slot,name:WORLDS[world].bags[slot],hp:HEALTH[index],type:TYPE[index],time:35+world*7+(index===19?22:0)};
+  }
+  function makeFight(){
+    const info=bagInfo();
+    return {phase:'ready',hp:info.hp,maxHp:info.hp,seconds:info.time,started:0,lastHit:0,combo:0,highestCombo:0,
+      hits:0,perfect:0,charge:0,message:'Find your rhythm.',kind:'',stars:0,reward:0,hiddenAt:0,bossPhase:1};
+  }
+  function canFight(){return active==='bag' && Boolean(document.querySelector('.hbc'))}
+  function timing(elapsed){
+    const info=bagInfo();
+    const modifier=info.type==='speed'?0.72:info.type==='final'?0.81:info.type==='heavy'?1.12:1;
+    const phaseSpeed=info.type==='final' ? (fight.bossPhase===3?0.76:fight.bossPhase===2?0.90:1) : 1;
+    const period=(1780-Math.floor(info.world*125))*modifier*phaseSpeed;
+    const t=((elapsed%period)+period)%period/period;
+    const position=(t<.5?t*2:(1-t)*2)*100;
+    const width=clamp(16+data.upgrades.focus*2.5-(info.type==='final'&&fight.bossPhase===3?4:0),12,32);
+    return {position,width,diff:Math.abs(position-50)};
+  }
+  function soundCue(freq,duration){if(typeof beep==='function')beep(freq,duration)}
+  function changeStage(index){
+    if(index<0||index>data.unlocked||index>19||fight?.phase==='fighting')return;
+    cancelAnimationFrame(loop);loop=0;data.selected=index;save();fight=makeFight();draw();
+  }
+  function stageMap(){
+    return WORLDS.map((world,w)=>{
+      const items=world.bags.map((name,s)=>{
+        const index=w*4+s,locked=index>data.unlocked,selected=index===data.selected,stars=data.best[index]||0;
+        return `<button type="button" class="hbc-level ${selected?'selected':''} ${locked?'locked':''}" data-hbc-stage="${index}" ${locked?'disabled':''} aria-label="Stage ${index+1}: ${name}${locked?', locked':''}"><span>${String(index+1).padStart(2,'0')}</span><strong>${locked?'???':name}</strong><small>${locked?'LOCKED':stars?'★'.repeat(stars)+'☆'.repeat(3-stars):selected?'CURRENT':'OPEN'}</small></button>`;
+      }).join('');
+      return `<div class="hbc-world ${w===Math.floor(data.selected/4)?'current':''}"><div class="hbc-world-title"><span>0${w+1} / ${world.name}</span><small>${world.kicker}</small></div><div class="hbc-levels">${items}</div></div>`;
+    }).join('');
+  }
+  function upgradesHtml(){
+    return UPGRADES.map(u=>{
+      const level=data.upgrades[u.id],max=level===u.limit,price=cost(u),available=!max&&data.credits>=price,disabled=fight.phase==='fighting'||!available;
+      return `<button class="hbc-upgrade" type="button" data-hbc-upgrade="${u.id}" ${disabled?'disabled':''}><span class="hbc-up-icon">${u.icon}</span><span class="hbc-up-name"><strong>${u.name} <em>LV.${level}/${u.limit}</em></strong><small>${u.effect}</small></span><span class="hbc-up-price">${max?'MAX':`◈ ${fmt(price)}`}</span></button>`;
+    }).join('');
+  }
+  function resultHtml(){
+    const info=bagInfo();
+    if(data.finished&&fight.phase!=='fighting'&&fight.phase!=='victory'&&data.selected===19&&fight.phase==='ready'){
+      return `<div class="hbc-final-banner"><span>★ CAMPAIGN COMPLETED ★</span><strong>THE FINAL BAG HAS FALLEN.</strong><p>20 bags. Five locations. Zero resets. Revisit any stage and perfect your records.</p></div>`;
+    }
+    if(fight.phase==='ready')return `<p class="hbc-state-intro">${info.index===19?'Three brutal phases. Stay precise. One final victory.':'Beat the bag before the timer runs out. Perfect hits build your finisher.'}</p><button class="hbc-main-btn" type="button" data-hbc-start>START ROUND <span>↗</span></button>`;
+    if(fight.phase==='fighting')return `<div class="hbc-fight-actions"><button id="hbcStrike" class="hbc-main-btn" type="button" data-hbc-hit>STRIKE <span>SPACE</span></button><button id="hbcFinisher" class="hbc-special" type="button" data-hbc-finisher disabled>FINISHER <span>F</span></button></div>`;
+    if(fight.phase==='victory')return `<div class="hbc-result victory"><div class="hbc-result-tag">ROUND CLEARED · ${fight.stars} STAR${fight.stars!==1?'S':''}</div><h2>${info.index===19?'YOU BEAT THE FINAL BAG.':'BAG DESTROYED.'}</h2><p>+${fmt(fight.reward)} credits · ${fight.perfect} perfect hits · best combo ${fight.highestCombo}</p><div class="hbc-stars">${'★'.repeat(fight.stars)}${'☆'.repeat(3-fight.stars)}</div><div class="hbc-result-buttons">${info.index<19?'<button class="hbc-main-btn" data-hbc-next type="button">NEXT BAG →</button>':'<button class="hbc-main-btn" data-hbc-next type="button">VIEW YOUR VICTORY →</button>'}<button class="hbc-special" type="button" data-hbc-retry>REPLAY</button></div></div>`;
+    return `<div class="hbc-result defeat"><div class="hbc-result-tag">ROUND EXPIRED</div><h2>NOT THIS TIME.</h2><p>Upgrade your gear or find a cleaner rhythm. Your campaign progress is safe.</p><div class="hbc-result-buttons"><button class="hbc-main-btn" type="button" data-hbc-retry>TRY AGAIN →</button></div></div>`;
+  }
+  function draw(){
+    if(active!=='bag')return;
+    const info=bagInfo(),world=WORLDS[info.world],stageNum=info.index+1;
+    const completed=data.best.filter(Boolean).length;
+    const top=`<div class="hbc-kicker">THE BUREAU / HEAVY BAG / STORY MODE</div>
+      <div class="hbc-titleline"><div><h1>THE HEAVY BAG<span class="hbc-dot">.</span></h1><p>20 bags. 5 locations. One final fight.</p></div><div class="hbc-credits"><small>YOUR CREDITS</small><strong>◈ <span id="hbcCredits">${fmt(data.credits)}</span></strong></div></div>
+      <div class="hbc-overall"><span>CAMPAIGN PROGRESS</span><div class="hbc-overall-rail"><span style="width:${completed*5}%"></span></div><b>${completed}/20</b></div>`;
+    const main=`<div class="hbc-layout"><div class="hbc-left">
+      <div class="hbc-arena" style="--hbc-color:${world.accent}">
+        <div class="hbc-arena-header"><span>WORLD 0${info.world+1} · STAGE ${String(info.slot+1).padStart(2,'0')}</span><span>${info.type==='final'?'FINAL BOSS':info.type==='armor'?'ARMORED':info.type==='speed'?'SPEED':info.type==='guard'?'GUARDED':info.type==='heavy'?'HEAVY':'CLASSIC'}</span></div>
+        <div class="hbc-bag-name"><span>${world.name}</span><h2>${info.name}</h2></div>
+        <div class="hbc-health-label"><span>INTEGRITY</span><strong id="hbcHpText">${fmt(fight.hp)} / ${fmt(fight.maxHp)}</strong></div>
+        <div class="hbc-health-rail"><span id="hbcHealth" style="width:100%"></span></div>
+        <div class="hbc-bag-scene"><div class="hbc-halo"></div><div class="hbc-chain"></div><button id="hbcBag" type="button" class="hbc-bag hbc-skin-${info.world} ${info.type==='armor'||info.type==='final'?'armored':''}" aria-label="Punch ${info.name}"><span class="hbc-bag-body"><span class="hbc-bag-mark">THE<br>BUREAU</span><span class="hbc-bag-stripe"></span><span class="hbc-bag-seam"></span></span></button><div class="hbc-floor"></div><div id="hbcFloating" aria-hidden="true"></div></div>
+        <div class="hbc-feedback"><strong id="hbcFeedback">FIND YOUR RHYTHM</strong><span id="hbcCombo">COMBO ×0</span></div>
+        <div class="hbc-timing"><div class="hbc-timing-head"><strong>TIMING</strong><span id="hbcTimingText">Hit the center zone</span></div><div class="hbc-timing-rail"><div class="hbc-perfect-zone" id="hbcZone"></div><span id="hbcPulse" class="hbc-pulse" style="left:0%"></span></div><div class="hbc-timing-footer"><small>EARLY</small><small>PERFECT</small><small>LATE</small></div></div>
+        <div class="hbc-round-stats"><span>TIME <strong id="hbcTime">${info.time.toFixed(1)}s</strong></span><span>PERFECT <strong id="hbcPerfect">0</strong></span><span>FINISHER <strong id="hbcCharge">0%</strong></span></div>
+        <div class="hbc-charge-rail"><span id="hbcChargeFill" style="width:0%"></span></div>
+        <div class="hbc-action-area" id="hbcAction">${resultHtml()}</div>
+      </div></div><div class="hbc-side"><section class="hbc-side-box"><div class="hbc-box-heading"><strong>TRAINING GEAR</strong><small>Permanent upgrades</small></div><div class="hbc-shop">${upgradesHtml()}</div><p class="hbc-aside-hint">Win rounds to earn credits. No idle income. No prestige. No resets.</p></section>
+      <section class="hbc-side-box hbc-road"><div class="hbc-box-heading"><strong>ROAD TO THE FINAL BAG</strong><small>${completed}/20 cleared</small></div><div class="hbc-map">${stageMap()}</div></section></div></div>`;
+    const footer=`<div class="hbc-footer"><span>SPACE · STRIKE &nbsp; / &nbsp; F · FINISHER</span><span>PROGRESS SAVES AUTOMATICALLY ON THIS DEVICE</span></div>`;
+    const html=`<div class="hb-game hbc">${top}${data.finished?`<div class="hbc-unlocked">★ THE FINAL BAG DEFEATED · CAMPAIGN COMPLETE</div>`:''}${main}${footer}</div>`;
+    const host=document.getElementById('content');
+    if(!host)return;
+    if(!document.querySelector('.hbc')) modal(mark+html);
+    else host.innerHTML=mark+html;
+    paint(performance.now());
+  }
+  function paint(now){
+    if(!canFight()||!fight)return;
+    const info=bagInfo();
+    const remain=fight.phase==='fighting'?Math.max(0,info.time-(now-fight.started)/1000):fight.phase==='ready'?info.time:fight.seconds;
+    const el=id=>document.getElementById(id);
+    const hp=el('hbcHealth');if(hp)hp.style.width=clamp(100*fight.hp/fight.maxHp,0,100)+'%';
+    const hpText=el('hbcHpText');if(hpText)hpText.textContent=`${fmt(fight.hp)} / ${fmt(fight.maxHp)}`;
+    const time=el('hbcTime');if(time)time.textContent=remain.toFixed(1)+'s';
+    const combo=el('hbcCombo');if(combo)combo.textContent='COMBO ×'+fight.combo;
+    const good=el('hbcPerfect');if(good)good.textContent=String(fight.perfect);
+    const charge=el('hbcCharge');if(charge)charge.textContent=Math.floor(fight.charge)+'%';
+    const fill=el('hbcChargeFill');if(fill)fill.style.width=fight.charge+'%';
+    const feedback=el('hbcFeedback');if(feedback)feedback.textContent=fight.message.toUpperCase();
+    const fin=el('hbcFinisher');if(fin)fin.disabled=fight.charge<100;
+    const attack=el('hbcStrike');if(attack)attack.disabled=fight.phase!=='fighting';
+    const timingData=timing(fight.phase==='fighting'?now-fight.started:0);
+    const zone=el('hbcZone');if(zone)zone.style.width=timingData.width+'%';
+    const pulse=el('hbcPulse');if(pulse)pulse.style.left=timingData.position+'%';
+    const timingText=el('hbcTimingText');if(timingText)timingText.textContent=fight.phase==='fighting'?'Center the moving marker':'Hit the center zone';
+    const boss=el('hbcBossPhase');if(boss)boss.textContent='PHASE '+fight.bossPhase+'/3';
+  }
+  function tick(now){
+    loop=0;
+    if(!canFight()||!fight||fight.phase!=='fighting')return;
+    if(document.hidden){fight.hiddenAt=now;loop=requestAnimationFrame(tick);return}
+    const info=bagInfo();
+    const remaining=info.time-(now-fight.started)/1000;
+    if(remaining<=0){fight.seconds=0;fight.phase='defeat';fight.message='Round expired.';draw();return}
+    const phase=info.type==='final'?(fight.hp/fight.maxHp>.67?1:fight.hp/fight.maxHp>.34?2:3):1;
+    if(phase!==fight.bossPhase){fight.bossPhase=phase;fight.message='PHASE '+phase+' — ADAPT!';soundCue(320,.12)}
+    if(now-lastPaint>32){paint(now);lastPaint=now}
+    loop=requestAnimationFrame(tick);
+  }
+  function start(){
+    if(!fight||!canFight()||fight.phase==='fighting')return;
+    fight=makeFight();
+    fight.phase='fighting';
+    fight.started=performance.now();
+    fight.message='GO! FIND THE CENTER.';
+    cancelAnimationFrame(loop);loop=0;
+    draw();
+    soundCue(630,.09);
+    loop=requestAnimationFrame(tick);
+  }
+  function floatDamage(amount,kind){
+    const arena=document.querySelector('.hbc-bag-scene');if(!arena)return;
+    const fx=document.createElement('div');
+    fx.className='hbc-dmg '+kind;fx.textContent=(kind==='perfect'?'PERFECT · ':kind==='finisher'?'FINISHER · ':'')+fmt(amount);
+    fx.style.left=(38+Math.random()*20)+'%';fx.style.top=(29+Math.random()*15)+'%';
+    arena.appendChild(fx);setTimeout(()=>fx.remove(),850);
+    const bag=document.getElementById('hbcBag');
+    if(bag){bag.classList.remove('is-hit');void bag.offsetWidth;bag.classList.add('is-hit')}
+  }
+  function checkEnd(now){
+    if(fight.hp>0)return false;
+    fight.hp=0;
+    fight.seconds=Math.max(0,bagInfo().time-(now-fight.started)/1000);
+    fight.phase='victory';
+    const ratio=fight.perfect/Math.max(1,fight.hits);
+    fight.stars=1+(ratio>=.30?1:0)+(ratio>=.55&&fight.seconds>bagInfo().time*.16?1:0);
+    const index=data.selected,previous=data.best[index],first=previous===0;
+    data.best[index]=Math.max(previous,fight.stars);
+    data.unlocked=Math.max(data.unlocked,Math.min(19,index+1));
+    data.wins++;
+    if(index===19)data.finished=true;
+    fight.reward=Math.floor((30+index*27+fight.stars*12)*(first?1:0.28));
+    data.credits+=fight.reward;
+    save();soundCue(index===19?950:720,.19);draw();return true;
+  }
+  function hit(finisher=false){
+    if(!canFight()||!fight||fight.phase!=='fighting')return;
+    const now=performance.now(),info=bagInfo();
+    if(now-fight.lastHit<(finisher?390:205))return;
+    if(finisher&&fight.charge<100)return;
+    fight.lastHit=now;
+    const base=(11+data.upgrades.gloves*7)*(1+.035*data.upgrades.technique);
+    let damage=0,kind='normal';
+    if(finisher){
+      damage=base*(6.4+data.upgrades.finisher*1.55)*(1+fight.combo*.028);
+      fight.charge=0;
+      fight.message='FINISHER!';
+      kind='finisher';
+      soundCue(260,.2);
+    }else{
+      const {diff,width}=timing(now-fight.started);
+      const perfect=diff<=width/2;
+      const good=diff<=width/2+17;
+      fight.hits++;
+      if(perfect){
+        fight.perfect++;fight.combo=clamp(fight.combo+1,0,25);
+        fight.charge=clamp(fight.charge+26,0,100);
+        damage=base*(1.85+data.upgrades.technique*.17)*(1+fight.combo*.035);
+        fight.message='PERFECT TIMING!';
+        kind='perfect';soundCue(560,.055);
+      }else if(good){
+        fight.combo=clamp(fight.combo+1,0,25);fight.charge=clamp(fight.charge+13,0,100);
+        damage=base*1.05*(1+fight.combo*.022);
+        fight.message='GOOD HIT';kind='good';soundCue(340,.042);
+      }else{
+        fight.combo=0;fight.charge=clamp(fight.charge+4,0,100);
+        damage=base*.44;fight.message='OFF BEAT — COMBO LOST';
+        soundCue(155,.043);
+      }
+      fight.highestCombo=Math.max(fight.highestCombo,fight.combo);
+      if(info.type==='armor'&&!perfect)damage*=.62;
+      if(info.type==='guard'&&Math.floor((now-fight.started)/1150)%4===3&&!perfect){
+        damage*=.3;fight.message='GUARD UP — WAIT FOR THE OPENING';
+      }
+      if(info.type==='final'&&fight.bossPhase===2&&!perfect)damage*=.5;
+    }
+    damage=Math.max(1,Math.round(damage));
+    fight.hp=Math.max(0,fight.hp-damage);
+    floatDamage(damage,kind);
+    if(data.selected===0&&fight.hits===5 && typeof unlock==='function')unlock(0);
+    if(checkEnd(now))return;
+    paint(now);
+  }
+  function buy(id){
+    if(!fight||fight.phase==='fighting')return;
+    const u=UPGRADES.find(x=>x.id===id);if(!u)return;
+    const level=data.upgrades[id],price=cost(u);
+    if(level>=u.limit||price>data.credits)return;
+    data.credits-=price;data.upgrades[id]++;save();soundCue(500,.08);draw();
+  }
+  function next(){
+    if(fight?.phase!=='victory')return;
+    if(data.selected===19){fight=makeFight();draw();return}
+    changeStage(Math.min(data.unlocked,data.selected+1));
+  }
+  function retry(){if(fight?.phase==='fighting')return;fight=makeFight();draw()}
+  window.openHeavyBag=function(){cancelAnimationFrame(loop);loop=0;fight=makeFight();draw()};
+  document.addEventListener('click',e=>{
+    if(!e.target.closest('.hbc'))return;
+    const btn=e.target.closest('button');if(!btn||btn.disabled)return;
+    if(btn.hasAttribute('data-hbc-hit')||btn.id==='hbcBag'){if(fight?.phase==='ready')start();else hit();return}
+    if(btn.hasAttribute('data-hbc-finisher')){hit(true);return}
+    if(btn.hasAttribute('data-hbc-start')){start();return}
+    if(btn.hasAttribute('data-hbc-next')){next();return}
+    if(btn.hasAttribute('data-hbc-retry')){retry();return}
+    if(btn.hasAttribute('data-hbc-stage')){changeStage(Number(btn.dataset.hbcStage));return}
+    if(btn.hasAttribute('data-hbc-upgrade'))buy(btn.dataset.hbcUpgrade);
+  });
+  document.addEventListener('keydown',e=>{
+    if(!canFight()||e.repeat||e.ctrlKey||e.metaKey||e.altKey||['INPUT','TEXTAREA','SELECT'].includes(e.target?.tagName))return;
+    if(e.code==='Space'){e.preventDefault();if(fight?.phase==='ready')start();else hit()}
+    if(e.code==='KeyF'){e.preventDefault();hit(true)}
+  });
+  document.addEventListener('visibilitychange',()=>{
+    if(!fight||fight.phase!=='fighting')return;
+    const now=performance.now();
+    if(document.hidden){fight.hiddenAt=now;}
+    else if(fight.hiddenAt){fight.started+=now-fight.hiddenAt;fight.hiddenAt=0;}
+  });
+  window.addEventListener('pagehide',save);
+  const style=document.createElement('style');
+  style.id='heavybag-campaign-styles';
+  style.textContent=`
+  .modal:has(.hbc){width:min(1180px,100%)}.hbc{--hc:#e9ae76;max-width:1120px;margin:auto;color:#f4e9dc;font-family:Inter,ui-sans-serif,system-ui,sans-serif}
+  .hbc *{box-sizing:border-box}.hbc button{font:inherit}.hbc-kicker{font:10px ui-monospace,monospace;letter-spacing:.25em;color:#c8a579}
+  .hbc-titleline{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin:8px 0 18px}
+  .hbc-titleline h1{font:800 clamp(29px,4vw,43px)/1.05 Inter,system-ui,sans-serif;letter-spacing:-.045em;margin:0}
+  .hbc-dot{color:#e8a86b}.hbc-titleline p{font-size:12px;color:#aa9a8b;margin:9px 0 0}
+  .hbc-credits{background:#211c1b;border:1px solid #d4a36a55;border-radius:11px;padding:11px 17px;white-space:nowrap}
+  .hbc-credits small{display:block;font:9px ui-monospace,monospace;letter-spacing:.14em;color:#a99177;margin-bottom:4px}
+  .hbc-credits strong{font:700 21px ui-monospace,monospace;color:#f2c17f}
+  .hbc-overall{display:flex;align-items:center;gap:12px;margin-bottom:17px;font:10px ui-monospace,monospace;letter-spacing:.11em;color:#b5a18b}
+  .hbc-overall-rail{height:6px;flex:1;border-radius:20px;background:#3a3330;overflow:hidden}.hbc-overall-rail>span{display:block;height:100%;background:linear-gradient(90deg,#a86449,#f6c88f);border-radius:20px}
+  .hbc-overall b{color:#ebc49c;font-size:12px}
+  .hbc-layout{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(290px,.78fr);gap:13px}
+  .hbc-arena,.hbc-side-box{border:1px solid #9d775344;border-radius:14px;background:#11161b;overflow:hidden}
+  .hbc-arena{padding:16px;background:radial-gradient(ellipse 80% 45% at 50% 45%,color-mix(in srgb,var(--hbc-color),transparent 91%),transparent),#101418;position:relative}
+  .hbc-arena-header{display:flex;justify-content:space-between;gap:10px;color:#b79976;font:10px ui-monospace,monospace;letter-spacing:.14em}
+  .hbc-arena-header span:last-child{color:#e9c69a}.hbc-bag-name{text-align:center;margin:12px 0 15px}
+  .hbc-bag-name span{font:10px ui-monospace,monospace;letter-spacing:.23em;color:#998b81}.hbc-bag-name h2{margin:5px 0 0;font:800 clamp(23px,3vw,33px) Inter,system-ui,sans-serif;letter-spacing:-.04em}
+  .hbc-health-label{display:flex;justify-content:space-between;font:10px ui-monospace,monospace;color:#c5ab93;letter-spacing:.12em}
+  .hbc-health-rail,.hbc-charge-rail{overflow:hidden;height:9px;border-radius:20px;background:#403332;margin:7px 0 0}
+  .hbc-health-rail span{display:block;height:100%;border-radius:20px;background:linear-gradient(90deg,#b65e4d,#f7a779);transition:width .11s}
+  .hbc-bag-scene{height:230px;position:relative;display:flex;align-items:center;justify-content:flex-start;flex-direction:column;overflow:hidden}
+  .hbc-halo{position:absolute;left:50%;top:42px;transform:translateX(-50%);width:290px;height:180px;background:radial-gradient(ellipse,color-mix(in srgb,var(--hbc-color),transparent 85%),transparent 64%);pointer-events:none}
+  .hbc-chain{height:26px;width:7px;flex-shrink:0;background:repeating-linear-gradient(145deg,#777b7e 0 6px,#1c2729 6px 11px);box-shadow:0 0 9px #0009;z-index:1}
+  .hbc-bag{border:0;background:transparent;padding:0;position:relative;z-index:2;cursor:pointer;touch-action:manipulation;transform-origin:50% -25px;animation:hbc-sway 3.5s ease-in-out infinite}
+  .hbc-bag-body{display:block;width:115px;height:166px;position:relative;border-radius:27px 27px 35px 35px/25px 25px 28px 28px;border:3px solid #0d1113;background:linear-gradient(90deg,#0b1016,#303842 24%,#181f29 50%,#414046 76%,#0a0e13 100%);box-shadow:14px 12px 21px #0008,inset 8px 1px 9px #ffffff14,inset -10px 0 20px #000a;transition:filter .15s}
+  .hbc-bag:focus-visible{outline:2px solid #ffc98e;outline-offset:8px}.hbc-bag:hover .hbc-bag-body{filter:brightness(1.19)}
+  .hbc-bag-mark{position:absolute;top:41px;left:0;width:100%;text-align:center;font:800 15px/1.2 Inter,system-ui,sans-serif;letter-spacing:.17em;color:#f4ca96;text-shadow:0 2px 6px #0008}
+  .hbc-bag-stripe{position:absolute;left:0;right:0;bottom:30px;height:8px;background:linear-gradient(90deg,#8c4c3c,#d9a16a,#91533c)}
+  .hbc-bag-seam{position:absolute;left:15px;right:15px;bottom:19px;border-top:1px dashed #f5d5ad55}
+  .hbc-skin-1 .hbc-bag-body{background:linear-gradient(90deg,#130e10,#5a272c 25%,#27181c 56%,#6d3834 76%,#130c0f)}
+  .hbc-skin-2 .hbc-bag-body{background:linear-gradient(90deg,#111718,#4b5355 22%,#252d30 55%,#77736d 79%,#0a1113)}
+  .hbc-skin-3 .hbc-bag-body{background:linear-gradient(90deg,#151322,#4c435f 25%,#211f36 53%,#636089 77%,#10121f)}
+  .hbc-skin-4 .hbc-bag-body{background:linear-gradient(90deg,#11090c,#59212a 23%,#1c0d13 52%,#882f35 74%,#13060b);box-shadow:12px 14px 27px #ef525036,inset 8px 1px 9px #ffffff14,inset -10px 0 20px #000a}
+  .hbc-bag.armored .hbc-bag-body:after{content:'';position:absolute;inset:16px 11px;z-index:0;border:1px solid #ffffff22;border-radius:10px;pointer-events:none}
+  .hbc-bag.is-hit{animation:hbc-impact .3s ease-out}.hbc-floor{position:absolute;bottom:0;left:15%;right:15%;height:13px;background:radial-gradient(ellipse,#000b,transparent 75%);z-index:0}
+  #hbcFloating{position:absolute;inset:0;pointer-events:none}.hbc-dmg{position:absolute;z-index:7;color:#efddc6;font:900 18px ui-monospace,monospace;text-shadow:0 3px 11px #000;animation:hbc-float .8s forwards}
+  .hbc-dmg.perfect{color:#ffd181;font-size:22px}.hbc-dmg.finisher{color:#ff837c;font-size:25px}
+  .hbc-feedback{display:flex;justify-content:space-between;gap:8px;align-items:center;border-top:1px solid #ffffff12;padding-top:10px;font:700 11px ui-monospace,monospace;letter-spacing:.1em;color:#e7c99e}
+  #hbcCombo{color:#a4aaa9;white-space:nowrap}.hbc-timing{margin-top:14px}.hbc-timing-head{display:flex;justify-content:space-between;gap:10px;font:10px ui-monospace,monospace;color:#d4c3ad}
+  .hbc-timing-head span{color:#998d81}.hbc-timing-rail{height:21px;border:1px solid #93806d55;background:linear-gradient(90deg,#4a2222,#392923 25%,#2c312b 50%,#392923 75%,#4a2222);border-radius:5px;position:relative;overflow:visible;margin-top:9px}
+  .hbc-perfect-zone{position:absolute;left:50%;top:-1px;bottom:-1px;transform:translateX(-50%);background:#6b9d7245;border:1px solid #a6e3a7aa;border-radius:4px;box-shadow:0 0 20px #8cc58a35}
+  .hbc-pulse{position:absolute;top:-7px;bottom:-7px;width:4px;z-index:3;background:#ffe4a9;border-radius:4px;box-shadow:0 0 13px #ffd8a7;transform:translateX(-50%);will-change:left}
+  .hbc-timing-footer{display:flex;justify-content:space-between;margin-top:6px;font:9px ui-monospace,monospace;color:#897e74;letter-spacing:.1em}
+  .hbc-round-stats{display:flex;justify-content:space-between;gap:7px;flex-wrap:wrap;font:10px ui-monospace,monospace;color:#b3a18d;margin-top:17px}
+  .hbc-round-stats strong{color:#f7d0a1;font-size:14px;margin-left:4px}.hbc-charge-rail{height:5px;margin:9px 0 11px;background:#282d2e}
+  .hbc-charge-rail span{display:block;background:linear-gradient(90deg,#c65d54,#f2b075);height:100%;transition:width .1s}
+  .hbc-action-area{min-height:80px}.hbc-state-intro{font-size:12px;color:#ad9d90;line-height:1.5;margin:4px 0 12px;text-align:center}
+  .hbc-main-btn,.hbc-special{border:1px solid #e6b580;border-radius:9px;background:#e9b17b;color:#1e1712;font:800 12px Inter,system-ui,sans-serif!important;letter-spacing:.12em;padding:15px 16px;cursor:pointer;display:inline-flex;justify-content:space-between;align-items:center;gap:10px;transition:background .15s,transform .12s}
+  .hbc-main-btn{width:100%}.hbc-main-btn:not(:disabled):hover{background:#ffce9a;transform:translateY(-1px)}
+  .hbc-fight-actions{display:flex;gap:9px}.hbc-fight-actions .hbc-main-btn{flex:1}.hbc-special{background:#242428;color:#e9b88b;white-space:nowrap;border-color:#c8986555}
+  .hbc-special:disabled{opacity:.42;cursor:not-allowed}.hbc-special:not(:disabled):hover{background:#493126}
+  .hbc-result{text-align:center;padding:5px 0}.hbc-result-tag{font:10px ui-monospace,monospace;letter-spacing:.18em;color:#f1bd7d}
+  .hbc-result h2{font:900 23px Inter,system-ui,sans-serif;letter-spacing:-.03em;margin:8px 0 4px}.hbc-result p{font-size:12px;color:#aaa095;line-height:1.5;margin:4px 0}
+  .hbc-stars{font-size:22px;letter-spacing:.15em;color:#eec28e;margin:8px 0}.hbc-result-buttons{display:flex;gap:8px;margin-top:10px}.hbc-result-buttons .hbc-main-btn{flex:1}
+  .hbc-side{display:flex;flex-direction:column;gap:12px;min-width:0}.hbc-side-box{padding:13px}.hbc-box-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 12px}
+  .hbc-box-heading strong{font:800 11px ui-monospace,monospace;letter-spacing:.12em;color:#f2d2ae}.hbc-box-heading small{font-size:10px;color:#998a7d}
+  .hbc-shop{display:grid;gap:6px}.hbc-upgrade{display:grid;grid-template-columns:31px minmax(0,1fr) auto;align-items:center;gap:9px;padding:10px;border-radius:9px;border:1px solid #8b77584b;background:#232527;color:#f5e4d0;text-align:left;cursor:pointer}
+  .hbc-upgrade:not(:disabled):hover{border-color:#e3b47b;background:#372f29}.hbc-upgrade:disabled{opacity:.48;cursor:not-allowed}.hbc-up-icon{font-size:20px}
+  .hbc-up-name{min-width:0}.hbc-up-name strong{display:block;font-size:11px;font-weight:700}.hbc-up-name em{font:9px ui-monospace,monospace;color:#c8a37e;font-style:normal}
+  .hbc-up-name small{font-size:10px;color:#a79a8f;display:block;margin-top:2px;line-height:1.3}.hbc-up-price{font:11px ui-monospace,monospace;white-space:nowrap;color:#ecc18c}
+  .hbc-aside-hint{font-size:10px;color:#857c75;line-height:1.5;margin:10px 0 0}
+  .hbc-road{flex:1}.hbc-map{display:grid;gap:9px;max-height:285px;overflow-y:auto;padding-right:3px}
+  .hbc-world-title{display:flex;justify-content:space-between;gap:10px;font:9px ui-monospace,monospace;letter-spacing:.12em;color:#bba187;margin:0 0 5px}
+  .hbc-world-title small{color:#777a7b;font-size:9px;letter-spacing:normal}.hbc-levels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+  .hbc-level{min-width:0;border:1px solid #776b594b;background:#1d2327;color:#e2d2bc;border-radius:7px;text-align:left;padding:7px 9px;cursor:pointer;display:grid;grid-template-columns:22px 1fr;gap:2px 4px}
+  .hbc-level span{color:#a78b72;font:9px ui-monospace,monospace}.hbc-level strong{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.hbc-level small{grid-column:2;font:9px ui-monospace,monospace;color:#ddad79}
+  .hbc-level.selected{border-color:#e3b47c;background:#322b27}.hbc-level.locked{opacity:.36;cursor:not-allowed}.hbc-level:not(:disabled):hover{background:#3b302a}
+  .hbc-footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font:9px ui-monospace,monospace;letter-spacing:.1em;color:#84786e;margin:14px 0 0}
+  .hbc-unlocked,.hbc-final-banner{border:1px solid #d9b16d77;background:#3a291d;padding:9px 12px;border-radius:8px;font:11px ui-monospace,monospace;color:#ffcf8e;margin:0 0 12px}
+  .hbc-final-banner strong{display:block;font:800 16px Inter,system-ui,sans-serif;margin:7px 0}.hbc-final-banner p{font:11px Inter,system-ui,sans-serif;line-height:1.6;margin:5px 0}
+  @keyframes hbc-sway{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(1deg)}}@keyframes hbc-impact{0%{transform:rotate(0)}35%{transform:rotate(11deg) scale(.975)}100%{transform:rotate(-2deg)}}
+  @keyframes hbc-float{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-65px);opacity:0}}
+  @media(max-width:780px){.hbc-layout{grid-template-columns:1fr}.hbc-map{max-height:none}.hbc-road{order:1}.hbc-side-box{padding:12px}.hbc-arena{padding:13px}.hbc-bag-scene{height:210px}.hbc-titleline h1{font-size:30px}}
+  @media(max-width:440px){.hbc-titleline{gap:9px}.hbc-titleline h1{font-size:26px}.hbc-credits{padding:9px}.hbc-credits strong{font-size:16px}.hbc-overall{font-size:8px}.hbc-fight-actions{gap:5px}.hbc-main-btn,.hbc-special{font-size:10px!important;padding:13px 9px}.hbc-bag-scene{height:206px}.hbc-world-title small{display:none}}
+  @media(prefers-reduced-motion:reduce){.hbc-bag,.hbc-bag.is-hit,.hbc-dmg{animation:none!important}.hbc-main-btn{transition:none!important}}
+  `;
+  document.head.appendChild(style);
+})();
