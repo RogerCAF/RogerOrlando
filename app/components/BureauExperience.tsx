@@ -534,7 +534,7 @@ export default function BureauExperience() {
             canvas.height = 348;
             const ctx = canvas.getContext("2d");
             if (!ctx) return;
-            ctx.drawImage(original, 124, 34, 221, 348, 0, 0, 221, 348);
+            ctx.drawImage(original, 127, 45, 216, 333, 0, 0, 221, 348);
             poster.src = canvas.toDataURL("image/png");
           };
           if (original.complete && original.naturalWidth) drawUnframedArtwork();
@@ -732,7 +732,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=unframed-clean-v22"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=unframed-clean-v23"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
