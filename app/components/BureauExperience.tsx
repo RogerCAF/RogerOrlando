@@ -73,6 +73,8 @@ export default function BureauExperience() {
           overflow: hidden !important;
         }
         .bureau-embed .scene {
+          background: transparent !important;
+          background-image: none !important;
           width: var(--bureau-art-width, 1200px) !important;
           max-width: none !important;
           flex: 0 0 auto !important;
@@ -864,7 +866,7 @@ export default function BureauExperience() {
         const approved = document.createElement("img");
         approved.id = "bureau-approved-photo";
         approved.className = "bureau-approved-photo";
-        approved.src = "/bureau/bureau-approved-photorealistic.svg?v=approved-photo-28";
+        approved.src = "/bureau/bureau-approved-photorealistic-cutout.svg?v=transparent-cutout-1";
         approved.alt = "The Bureau: werkplek met twee bergschermen, pc, telefoon, bokszak en notitieboek";
         approved.draggable = false;
         approved.decoding = "async";
@@ -929,7 +931,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=approved-photo-v29"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=transparent-cutout-v30"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
