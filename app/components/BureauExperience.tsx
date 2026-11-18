@@ -90,7 +90,7 @@ export default function BureauExperience() {
         }
         .bureau-embed .scene > img {
           -webkit-mask-image: url("/bureau/scene-dual-monitors.svg?v=dual-v1") !important;
-          mask-image: url("/bureau/scene-without-bag.svg?v=bag-v1") !important;
+          mask-image: url("/bureau/scene-dual-monitors.svg?v=dual-v1") !important;
           -webkit-mask-repeat: no-repeat !important;
           mask-repeat: no-repeat !important;
           -webkit-mask-size: 100% 100% !important;
@@ -149,7 +149,7 @@ export default function BureauExperience() {
            is drawn independently with its original ink detail. */
         .bureau-embed .scene > img.bureau-original-ink {
           -webkit-mask-image: url("/bureau/ink-without-bag-tower.svg?v=dual-v1") !important;
-          mask-image: url("/bureau/ink-without-bag.svg?v=bag-v1") !important;
+          mask-image: url("/bureau/ink-without-bag-tower.svg?v=dual-v1") !important;
           -webkit-mask-repeat: no-repeat !important;
           mask-repeat: no-repeat !important;
           -webkit-mask-size: 100% 100% !important;
