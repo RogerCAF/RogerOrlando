@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1672" height="941" viewBox="0 0 1672 941" preserveAspectRatio="none" aria-hidden="true">
+<!-- Only a precision-drawn Rubik's cube, with no rectangular mat, glow or raster backing. -->
+<g stroke-linecap="round"><path d="M789 113 L831 95 L883 108 L843 128 Z" fill="#151921" stroke="#0a1017" stroke-width="2.3" stroke-linejoin="round"/>
+<path d="M790.53 112.95 L803.18 107.52 L819.26 111.85 L806.8 117.46 Z" fill="#efc849" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M804.52 106.94 L817.17 101.51 L833.05 105.64 L820.58 111.25 Z" fill="#f1cd55" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M818.51 100.93 L831.16 95.5 L846.84 99.42 L834.37 105.04 Z" fill="#ecc149" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M808.52 117.94 L820.97 112.31 L837.05 116.63 L824.79 122.45 Z" fill="#f7d65f" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M822.29 111.71 L834.74 106.08 L850.62 110.2 L838.35 116.01 Z" fill="#efc34c" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M836.06 105.47 L848.51 99.84 L864.18 103.77 L851.92 109.59 Z" fill="#f3cc4f" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M826.51 122.93 L838.76 117.09 L854.84 121.42 L842.78 127.44 Z" fill="#dcb443" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M840.06 116.47 L852.31 110.64 L868.19 114.77 L856.12 120.78 Z" fill="#e8be47" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M853.61 110.02 L865.85 104.19 L881.53 108.11 L869.47 114.13 Z" fill="#e0b244" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M789 113 L843 128 L842 204 L789 186 Z" fill="#151921" stroke="#0a1017" stroke-width="2.3" stroke-linejoin="round"/>
+<path d="M789.86 114.41 L806.13 118.94 L806.04 141.23 L789.86 136.42 Z" fill="#2879b8" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M807.85 119.42 L824.13 123.96 L823.93 146.54 L807.75 141.74 Z" fill="#1b67a4" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M825.85 124.44 L842.12 128.98 L841.83 151.86 L825.64 147.06 Z" fill="#2572b3" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M789.86 138.76 L806.03 143.59 L805.93 165.88 L789.85 160.77 Z" fill="#1f699f" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M807.74 144.11 L823.91 148.94 L823.72 171.53 L807.63 166.42 Z" fill="#236fb0" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M825.62 149.46 L841.79 154.29 L841.5 177.18 L825.42 172.07 Z" fill="#1b6199" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M789.85 163.11 L805.92 168.24 L805.83 190.53 L789.85 185.12 Z" fill="#17578c" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M807.62 168.79 L823.7 173.93 L823.5 196.51 L807.52 191.11 Z" fill="#1d679d" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M825.4 174.47 L841.46 179.61 L841.17 202.49 L825.19 197.09 Z" fill="#1761a1" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M843 128 L883 108 L883 185 L842 204 Z" fill="#151921" stroke="#0a1017" stroke-width="2.3" stroke-linejoin="round"/>
+<path d="M843.62 128.9 L855.68 122.87 L855.47 145.87 L843.33 151.8 Z" fill="#da4232" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M856.96 122.23 L869.02 116.22 L868.92 139.31 L856.76 145.24 Z" fill="#e44934" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M870.3 115.58 L882.36 109.55 L882.35 132.75 L870.21 138.68 Z" fill="#cb362b" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M843.3 154.24 L855.45 148.31 L855.25 171.31 L843 177.14 Z" fill="#ce392c" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M856.74 147.68 L868.91 141.77 L868.8 164.86 L856.55 170.69 Z" fill="#f14a35" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M870.2 141.14 L882.35 135.21 L882.35 158.41 L870.1 164.24 Z" fill="#df392d" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M842.97 179.58 L855.23 173.75 L855.02 196.75 L842.68 202.48 Z" fill="#c62c24" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M856.53 173.13 L868.79 167.32 L868.69 190.41 L856.33 196.14 Z" fill="#d73529" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M870.09 166.7 L882.35 160.87 L882.34 184.07 L870 189.8 Z" fill="#cd3027" stroke="#111720" stroke-width="1.6" stroke-linejoin="round"/>
+
+<path d="M789 113 L831 95 L883 108 L883 185 L842 204 L789 186 Z" stroke="#080c13" stroke-width="2.5" stroke-linejoin="round" fill="none"/>
+<path d="M791 113 L831 97 L881 109" stroke="#fff1ac" stroke-opacity=".48" stroke-width=".9" fill="none"/>
+</g></svg>
