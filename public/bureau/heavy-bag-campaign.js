@@ -36,7 +36,7 @@ a.damage=Math.min(FIGHTS[stage].hp,Math.max(0,+d.damage||0));
 if(legacy){
 const oldStage=Math.min(7,Math.max(0,Math.floor(+d.stage||0)));
 const oldHp=[70,550,3600,22000,125000,750000,3500000,15000000][oldStage];
-a.damage=Math.round(Math.min(1,a.damage/oldHp)*FIGHTS[stage].hp);
+a.damage=Math.round(Math.min(1,Math.max(0,+d.damage||0)/oldHp)*FIGHTS[stage].hp);
 }
 }
 for(const skill of SKILLS)a.skills[skill.id]=Math.max(0,Math.min(skill.cap,Math.floor(+d.skills?.[skill.id]||0)));
