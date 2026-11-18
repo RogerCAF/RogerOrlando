@@ -89,8 +89,8 @@ export default function BureauExperience() {
           filter: none !important;
         }
         .bureau-embed .scene > img {
-          -webkit-mask-image: url("/bureau/scene-dual-monitors.svg?v=unframed-v22") !important;
-          mask-image: url("/bureau/scene-dual-monitors.svg?v=unframed-v22") !important;
+          -webkit-mask-image: url("/bureau/scene-dual-monitors.svg?v=desk-aligned-v24") !important;
+          mask-image: url("/bureau/scene-dual-monitors.svg?v=desk-aligned-v24") !important;
           -webkit-mask-repeat: no-repeat !important;
           mask-repeat: no-repeat !important;
           -webkit-mask-size: 100% 100% !important;
@@ -125,7 +125,7 @@ export default function BureauExperience() {
           user-select: none !important;
           background: transparent !important;
         }
-        .bureau-embed .scene > img:not(.bureau-original-ink):not(.bureau-desk-base):not(.bureau-bag-photo):not(.bureau-bag-ink):not(.bureau-screen-crisp):not(.bureau-shelf-front):not(.bureau-bag-edge):not(.bureau-screen-archive):not(.bureau-dual-rig):not(.bureau-poster-unframed) {
+        .bureau-embed .scene > img:not(.bureau-original-ink):not(.bureau-desk-base):not(.bureau-bag-photo):not(.bureau-bag-ink):not(.bureau-screen-crisp):not(.bureau-shelf-front):not(.bureau-bag-edge):not(.bureau-screen-archive):not(.bureau-dual-rig):not(.bureau-poster-unframed):not(.bureau-input-devices) {
           position: relative;
           z-index: 1;
           /* Flatten the existing art without replacing it. */
@@ -233,6 +233,23 @@ export default function BureauExperience() {
           height: 100% !important;
           z-index: 8 !important;
           object-fit: fill !important;
+          background: transparent !important;
+          -webkit-mask-image: none !important;
+          mask-image: none !important;
+          filter: none !important;
+          pointer-events: none !important;
+          user-select: none !important;
+        }
+        /* Keyboard and mouse are one aligned artwork layer, exactly seated
+           on the desk plane. Never apply the original image mask to them. */
+        .bureau-embed .scene > img.bureau-input-devices {
+          position: absolute !important;
+          inset: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          z-index: 9 !important;
+          object-fit: fill !important;
+          opacity: 1 !important;
           background: transparent !important;
           -webkit-mask-image: none !important;
           mask-image: none !important;
@@ -616,12 +633,25 @@ export default function BureauExperience() {
         const rig = document.createElement("img");
         rig.id = "bureau-dual-rig";
         rig.className = "bureau-dual-rig";
-        rig.src = "/bureau/dual-screens-upright-pc.svg?v=soft-rig-v3";
+        rig.src = "/bureau/dual-screens-upright-pc.svg?v=lian-li-front-v24";
         rig.alt = "";
         rig.decoding = "async";
         rig.draggable = false;
         rig.setAttribute("aria-hidden", "true");
         scene.appendChild(rig);
+      }
+      // Replace the old skewed raster keyboard and mouse with one consistent
+      // desk-aligned overlay. Both use the same horizon and touch nothing else.
+      if (scene && !document.getElementById("bureau-input-devices")) {
+        const devices = document.createElement("img");
+        devices.id = "bureau-input-devices";
+        devices.className = "bureau-input-devices";
+        devices.src = "/bureau/desk-keyboard-mouse-aligned.svg?v=aligned-v1";
+        devices.alt = "";
+        devices.decoding = "async";
+        devices.draggable = false;
+        devices.setAttribute("aria-hidden", "true");
+        scene.appendChild(devices);
       }
       if (scene && !document.getElementById("bureau-secondary-display")) {
         const secondary = document.createElement("button");
@@ -732,7 +762,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=unframed-clean-v23"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=aligned-hardware-v24"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
