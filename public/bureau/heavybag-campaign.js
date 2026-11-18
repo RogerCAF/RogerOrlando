@@ -52,6 +52,16 @@
     return f;
   }
   let data=load();
+  // Keep The Bureau's existing Muay Thai challengeboard connected to this arcade campaign.
+  // Poster rewards grant campaign credits; the original mission counters remain available.
+  const oldHbEarn=hbEarn;
+  hbEarn=function(amount){
+    oldHbEarn(amount);
+    if(active==='muay' && Number.isFinite(amount) && amount>0){data.credits=clamp(data.credits+amount,0,1000000);save();}
+  };
+  hbAdvance=function(){return false;};
+  if(hbTickTimer!==null){clearInterval(hbTickTimer);hbTickTimer=null;}
+
   let fight=null;
   let loop=0;
   let lastPaint=0;
@@ -204,6 +214,7 @@
     if(index===19)data.finished=true;
     fight.reward=Math.floor((30+index*27+fight.stars*12)*(first?1:0.28));
     data.credits+=fight.reward;
+    hbEarn(fight.reward);hbSave(true);
     save();soundCue(index===19?950:720,.19);draw();return true;
   }
   function hit(finisher=false){
@@ -249,6 +260,9 @@
     }
     damage=Math.max(1,Math.round(damage));
     fight.hp=Math.max(0,fight.hp-damage);
+    hb.total=Math.min(1e35,hb.total+damage);
+    if(!finisher)hb.clicks++;
+    hbSave();
     floatDamage(damage,kind);
     if(data.selected===0&&fight.hits===5 && typeof unlock==='function')unlock(0);
     if(checkEnd(now))return;
@@ -259,7 +273,9 @@
     const u=UPGRADES.find(x=>x.id===id);if(!u)return;
     const level=data.upgrades[id],price=cost(u);
     if(level>=u.limit||price>data.credits)return;
-    data.credits-=price;data.upgrades[id]++;save();soundCue(500,.08);draw();
+    data.credits-=price;data.upgrades[id]++;
+    if(id==='gloves'||id==='technique')hb.levels[id]=(hb.levels[id]||0)+1;
+    hbSave(true);save();soundCue(500,.08);draw();
   }
   function next(){
     if(fight?.phase!=='victory')return;
