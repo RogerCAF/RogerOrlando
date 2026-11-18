@@ -96,7 +96,7 @@
   }
   function frameFinish(){
     halt();RUN.status='win';
-    const box=ui('hbcRoundOverlay');if(box){box.hidden=false;box.innerHTML='<h2>BAG DESTROYED.</h2><p>Grade '+(RUN.perfect/Math.max(1,RUN.hits)>.5?'S':RUN.perfect/Math.max(1,RUN.hits)>.27?'A':'B')+' · '+RUN.perfect+' perfect hits. Claim your reward and continue.</p><button class="cta" id="hbcContinue">NEXT BAG →</button>';}
+    const box=ui('hbcRoundOverlay');if(box){box.hidden=false;box.innerHTML='<h2>BAG DESTROYED.</h2><p>Grade '+(RUN.perfect/Math.max(1,RUN.hits)>.5?'S':RUN.perfect/Math.max(1,RUN.hits)>.27?'A':'B')+' · '+RUN.perfect+' perfect hits. Claim your reward and continue.</p><button class="cta" id="hbcNextOverlay">NEXT BAG →</button>';}
     const punch=ui('hbPunch');if(punch)punch.disabled=true;
     hbRender();save(true);beep(740,.13);
   }
@@ -113,7 +113,9 @@
   function show(id,visible){const el=document.getElementById(id);if(el)el.style.display=visible?"":"none";}
   function shop(){
     return HB_UPGRADES.map(function(u){
-      return '<button type="button" class="hb-upgrade" data-hb-buy="'+u.id+'"><span class="hb-ico">'+u.icon+'</span><span><strong>'+u.title+' <span class="hb-level">Lv. 0</span></strong><small>'+u.desc+'</small></span><span class="hb-price"></span></button>';
+      const copy={coach:['Focus Training','Widens the PERFECT zone'],partner:['Combo Drills','Boosts timed combo damage'],gym:['Finisher Practice','Powers up the heavy strike']};
+      const title=copy[u.id]?copy[u.id][0]:u.title,description=copy[u.id]?copy[u.id][1]:u.desc;
+      return '<button type="button" class="hb-upgrade" data-hb-buy="'+u.id+'"><span class="hb-ico">'+u.icon+'</span><span><strong>'+title+' <span class="hb-level">Lv. 0</span></strong><small>'+description+'</small></span><span class="hb-price"></span></button>';
     }).join("");
   }
   function chapters(){
@@ -211,6 +213,7 @@
     f("hbCoins",hbNum(hb.coins));
     f("hbClickPower",hbNum(hbPerHit()));
     f("hbDps",game.bestCombo+"×");
+    if(RUN.status==="ready")f("hbcTime",FIGHTS[game.stage].seconds+"s");
     f("hbClicks",hbNum(hb.clicks));
     f("hbTotal",hbNum(hb.total));
     f("hbRank",HB_RANKS[Math.min(game.stage,HB_RANKS.length-1)]);
@@ -255,12 +258,12 @@
       modal(mark+'<div class="hb-game hbc-end">'+
         '<div class="hb-eyebrow">THE BUREAU / CAMPAIGN COMPLETE</div>'+
         '<div class="hbc-trophy">🏆</div>'+
-        '<h1>YOU BROKE THE IMPOSSIBLE.</h1>'+
-        '<p>The final bag is gone. Your trainer has stopped answering your calls.</p>'+
-        '<div class="hbc-ending-line">UNDISPUTED HEAVY BAG CHAMPION</div>'+
+        '<h1>YOU CONQUERED THE FINAL BAG.</h1>'+
+        '<p>All 20 bags defeated. Five arenas conquered. Your champion belt is permanent.</p>'+
+        '<div class="hbc-ending-line">THE BUREAU · UNDISPUTED CHAMPION</div>'+
         chapters()+
         '<div class="hb-tags"><span class="hb-tag">TOTAL TRAINING · '+hbNum(hb.total)+'</span><span class="hb-tag">PUNCHES · '+hbNum(hb.clicks)+'</span><span class="hb-tag">BEST COMBO · '+game.bestCombo+'×</span></div>'+
-        '<p class="hb-achievements">Campaign complete. Your belt and upgrades stay saved on this device. No prestige. No forced reset.</p>'+
+        '<p class="hb-achievements">Campaign complete. Your belt and upgrades stay saved on this device. No prestige and no forced reset.</p>'+
         '<button class="cta" id="hbcReplay">↻ REPLAY THE FINAL BAG</button></div>');
       return;
     }
@@ -300,7 +303,7 @@
     const start=e.target.closest("#hbcStart");if(start){e.preventDefault();startRound();return;}
     const hit=e.target.closest("#hbcFinisher");
     if(hit){e.preventDefault();finisher();return;}
-    const next=e.target.closest("#hbcContinue");
+    const next=e.target.closest("#hbcContinue,#hbcNextOverlay");
     if(next){e.preventDefault();advance();return;}
     const again=e.target.closest("#hbcReplay");
     if(again){e.preventDefault();replay();}
