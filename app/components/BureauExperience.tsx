@@ -141,7 +141,7 @@ export default function BureauExperience() {
           user-select: none !important;
           object-fit: fill !important;
           filter: none !important;
-          opacity: .84 !important;
+          opacity: .74 !important;
           background: transparent !important;
         }
         /* Separate the existing punching bag from the desk. The base scene
@@ -181,7 +181,7 @@ export default function BureauExperience() {
         }
         .bureau-embed .scene > img.bureau-bag-ink {
           z-index: 3 !important;
-          opacity: .91 !important;
+          opacity: .76 !important;
           filter: none !important;
         }
         /* The display uses the original high-quality pixels, but no
@@ -319,8 +319,8 @@ export default function BureauExperience() {
           justify-content: center !important;
           gap: 5px !important;
           transform: rotate(-7deg) skewX(-5deg) !important;
-          border: 2px solid #8f6b48 !important;
-          border-left: 7px solid #422b20 !important;
+          border: 1px solid #876d53 !important;
+          border-left: 5px solid #422b20 !important;
           border-radius: 3px 9px 7px 3px !important;
           background: linear-gradient(150deg,#3c3230,#17191e 48%,#252125 88%,#403229) !important;
           box-shadow: 2px 2px 0 #b89a78, 0 6px 11px rgba(0,0,0,.19) !important;
@@ -504,7 +504,7 @@ export default function BureauExperience() {
         desk.setAttribute("aria-hidden", "true");
         desk.draggable = false;
         desk.decoding = "async";
-        desk.src = "/bureau/desk-surface-clean.svg?v=clean-desk-v2";
+        desk.src = "/bureau/desk-surface-clean.svg?v=soft-desk-v3";
         scene.appendChild(desk);
       }
 
@@ -518,7 +518,7 @@ export default function BureauExperience() {
         ink.setAttribute("aria-hidden", "true");
         ink.decoding = "async";
         ink.draggable = false;
-        ink.src = "/bureau/original-contour-ink.svg?v=clean-ink-v2";
+        ink.src = "/bureau/original-contour-ink.svg?v=soft-ink-v3";
         scene.appendChild(ink);
       }
 
@@ -546,7 +546,7 @@ export default function BureauExperience() {
         const shelf = document.createElement("img");
         shelf.id = "bureau-shelf-front";
         shelf.className = "bureau-shelf-front";
-        shelf.src = "/bureau/shelf-front-finish.svg?v=clean-front-v2";
+        shelf.src = "/bureau/shelf-front-finish.svg?v=soft-shelf-v3";
         shelf.alt = "";
         shelf.decoding = "async";
         shelf.draggable = false;
@@ -588,7 +588,7 @@ export default function BureauExperience() {
           const bagInk = document.createElement("img");
           bagInk.id = "bureau-relocated-bag-ink";
           bagInk.className = "bureau-bag-ink";
-          bagInk.src = "/bureau/original-contour-ink.svg?v=clean-ink-v2";
+          bagInk.src = "/bureau/original-contour-ink.svg?v=soft-ink-v3";
           bagInk.alt = "";
           bagInk.decoding = "async";
           bagInk.draggable = false;
@@ -607,7 +607,7 @@ export default function BureauExperience() {
         edge.decoding = "async";
         edge.draggable = false;
         edge.setAttribute("aria-hidden", "true");
-        edge.src = "/bureau/bag-crisp-outline.svg?v=clean-edge-v2";
+        edge.src = "/bureau/bag-crisp-outline.svg?v=soft-bag-v3";
         scene.appendChild(edge);
       }
 
@@ -618,7 +618,7 @@ export default function BureauExperience() {
         const rig = document.createElement("img");
         rig.id = "bureau-dual-rig";
         rig.className = "bureau-dual-rig";
-        rig.src = "/bureau/dual-screens-upright-pc.svg?v=frontal-v2";
+        rig.src = "/bureau/dual-screens-upright-pc.svg?v=soft-rig-v3";
         rig.alt = "";
         rig.decoding = "async";
         rig.draggable = false;
@@ -742,7 +742,7 @@ export default function BureauExperience() {
   }, [prepareScene]);
 
   return <>
-    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=front-facing-pc-v20"
+    <iframe ref={iframeRef} src="/bureau/index.html?embed=1&scene=soft-outlines-v21"
       title="The Bureau — interactieve illustratie" loading="eager"
       onLoad={prepareScene} allowFullScreen />
     {gameOpen && typeof document !== "undefined" && createPortal(
