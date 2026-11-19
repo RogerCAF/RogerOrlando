@@ -133,6 +133,11 @@
   function changeStage(index){
     if(index<0||index>data.unlocked||index>19||fight?.phase==='fighting')return;
     cancelAnimationFrame(loop);loop=0;data.selected=index;save();fight=makeFight();draw();
+    // One compositor-only transition when moving between stages; no additional render loop.
+    const arena=document.querySelector('.hbc-arena');
+    if(arena && typeof arena.animate==='function' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      arena.animate([{opacity:.7,transform:'translateY(7px)'},{opacity:1,transform:'translateY(0)'}],{duration:240,easing:'ease-out'});
+    }
   }
   function stageMap(){
     return WORLDS.map((world,w)=>{
@@ -156,7 +161,7 @@
     }
     if(fight.phase==='ready')return `<p class="hbc-state-intro">${info.index===19?'FINAL BOSS: master precision, break the iron guard, survive Redline.':MODES[info.type].hint+(info.gate?' LAST STAND activates below half HP.':'')}</p><button class="hbc-main-btn" type="button" data-hbc-start>START ROUND <span>↗</span></button>`;
     if(fight.phase==='fighting')return `<div class="hbc-fight-actions"><button id="hbcStrike" class="hbc-main-btn" type="button" data-hbc-hit>STRIKE <span>SPACE</span></button><button id="hbcFinisher" class="hbc-special" type="button" data-hbc-finisher disabled>FINISHER <span>F</span></button></div>`;
-    if(fight.phase==='victory')return `<div class="hbc-result victory"><div class="hbc-result-tag">${info.index===19?'🏆 CHAMPIONSHIP WON':'ROUND CLEARED'} · ${fight.stars} STAR${fight.stars!==1?'S':''}</div><h2>${info.index===19?'UNDEFEATED. UNDISPUTED.':'BAG DESTROYED.'}</h2><p>+${fmt(fight.reward)} credits · ${fight.perfect} perfect hits · best combo ${fight.highestCombo}</p><div class="hbc-stars">${'★'.repeat(fight.stars)}${'☆'.repeat(3-fight.stars)}</div><div class="hbc-result-buttons">${info.index<19?'<button class="hbc-main-btn" data-hbc-next type="button">NEXT BAG →</button>':'<button class="hbc-main-btn" data-hbc-next type="button">VIEW YOUR VICTORY →</button>'}<button class="hbc-special" type="button" data-hbc-retry>REPLAY</button></div></div>`;
+    if(fight.phase==='victory')return `<div class="hbc-result victory" role="status"><div class="hbc-result-tag">${info.index===19?'🏆 CHAMPIONSHIP WON':fight.firstClear?'STAGE CLEARED':fight.newBest?'★ NEW PERSONAL BEST':'ROUND CLEARED'} · ${fight.stars} STAR${fight.stars!==1?'S':''}</div><h2>${info.index===19?'UNDEFEATED. UNDISPUTED.':'BAG DESTROYED.'}</h2><p>+${fmt(fight.reward)} credits · ${fight.perfect} perfect hits · best combo ${fight.highestCombo}</p><div class="hbc-stars">${'★'.repeat(fight.stars)}${'☆'.repeat(3-fight.stars)}</div><div class="hbc-result-buttons">${info.index<19?'<button class="hbc-main-btn" data-hbc-next type="button">NEXT BAG →</button>':'<button class="hbc-main-btn" data-hbc-next type="button">VIEW YOUR VICTORY →</button>'}<button class="hbc-special" type="button" data-hbc-retry>REPLAY</button></div></div>`;
     return `<div class="hbc-result defeat"><div class="hbc-result-tag">ROUND EXPIRED</div><h2>NOT THIS TIME.</h2><p>Upgrade your gear or find a cleaner rhythm. Your campaign progress is safe.</p><div class="hbc-result-buttons"><button class="hbc-main-btn" type="button" data-hbc-retry>TRY AGAIN →</button></div></div>`;
   }
   function draw(){
@@ -269,6 +274,7 @@
     const ratio=fight.perfect/Math.max(1,fight.hits);
     fight.stars=1+(ratio>=.30?1:0)+(ratio>=.55&&fight.seconds>bagInfo().time*.16?1:0);
     const index=data.selected,previous=data.best[index],first=previous===0;
+    fight.firstClear=first;fight.newBest=!first&&fight.stars>previous;
     data.best[index]=Math.max(previous,fight.stars);
     data.unlocked=Math.max(data.unlocked,Math.min(19,index+1));
     data.wins++;
@@ -455,6 +461,15 @@
   .hbc-result{text-align:center;padding:5px 0}.hbc-result-tag{font:10px ui-monospace,monospace;letter-spacing:.18em;color:#f1bd7d}
   .hbc-result h2{font:900 23px Inter,system-ui,sans-serif;letter-spacing:-.03em;margin:8px 0 4px}.hbc-result p{font-size:12px;color:#aaa095;line-height:1.5;margin:4px 0}
   .hbc-stars{font-size:22px;letter-spacing:.15em;color:#eec28e;margin:8px 0}.hbc-result-buttons{display:flex;gap:8px;margin-top:10px}.hbc-result-buttons .hbc-main-btn{flex:1}
+  /* Step 6: one-time result reveal. Opacity and transform avoid recurring layout/paint work. */
+  .hbc-result.victory{position:relative;isolation:isolate}
+  .hbc-result.victory::before{content:"";position:absolute;left:50%;top:3px;width:min(100%,260px);height:105px;transform:translateX(-50%);background:radial-gradient(ellipse,#f2b27526,transparent 70%);pointer-events:none;z-index:-1}
+  .hbc-result.victory .hbc-result-tag{color:#ffd49f}
+  .hbc-result.victory h2{font-size:clamp(23px,3vw,29px)}
+  @keyframes hbc-win-reveal{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+  .hbc-result.victory .hbc-result-tag,.hbc-result.victory h2,.hbc-result.victory p,.hbc-result.victory .hbc-stars,.hbc-result.victory .hbc-result-buttons{animation:hbc-win-reveal .36s ease-out both}
+  .hbc-result.victory h2{animation-delay:.06s}.hbc-result.victory p{animation-delay:.11s}
+  .hbc-result.victory .hbc-stars{animation-delay:.17s}.hbc-result.victory .hbc-result-buttons{animation-delay:.22s}
   .hbc-side{display:flex;flex-direction:column;gap:12px;min-width:0}.hbc-side-box{padding:13px}.hbc-box-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 12px}
   .hbc-box-heading strong{font:800 11px ui-monospace,monospace;letter-spacing:.12em;color:#f2d2ae}.hbc-box-heading small{font-size:10px;color:#998a7d}
   .hbc-shop{display:grid;gap:6px}.hbc-upgrade{display:grid;grid-template-columns:31px minmax(0,1fr) auto;align-items:center;gap:9px;padding:10px;border-radius:9px;border:1px solid #8b77584b;background:#232527;color:#f5e4d0;text-align:left;cursor:pointer}
@@ -483,7 +498,7 @@
   @keyframes hbc-float{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-65px);opacity:0}}
   @media(max-width:780px){.hbc-layout{grid-template-columns:1fr}.hbc-map{max-height:none}.hbc-road{order:1}.hbc-side-box{padding:12px}.hbc-arena{padding:13px}.hbc-bag-scene{height:210px}.hbc-titleline h1{font-size:30px}}
   @media(max-width:440px){.hbc-titleline{gap:9px}.hbc-titleline h1{font-size:26px}.hbc-credits{padding:9px}.hbc-credits strong{font-size:16px}.hbc-overall{font-size:8px}.hbc-fight-actions{gap:5px}.hbc-main-btn,.hbc-special{font-size:10px!important;padding:13px 9px}.hbc-bag-scene{height:206px}.hbc-world-title small{display:none}}
-  @media(prefers-reduced-motion:reduce){.hbc-bag,.hbc-bag.is-hit,.hbc-dmg{animation:none!important}.hbc-main-btn{transition:none!important}}
+  @media(prefers-reduced-motion:reduce){.hbc-bag,.hbc-bag.is-hit,.hbc-dmg,.hbc-result.victory .hbc-result-tag,.hbc-result.victory h2,.hbc-result.victory p,.hbc-result.victory .hbc-stars,.hbc-result.victory .hbc-result-buttons{animation:none!important}.hbc-main-btn{transition:none!important}}
   `;
   document.head.appendChild(style);
 })();
