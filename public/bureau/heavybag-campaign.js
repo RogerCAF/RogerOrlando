@@ -230,13 +230,22 @@
       }
     }
   }
+  function expireRound(){
+    if(!fight||fight.phase!=='fighting')return;
+    fight.seconds=0;
+    fight.phase='defeat';
+    fight.message='Round expired.';
+    if(loop)cancelAnimationFrame(loop);
+    loop=0;
+    draw();
+  }
   function tick(now){
     loop=0;
     if(!canFight()||!fight||fight.phase!=='fighting')return;
     if(document.hidden){if(!fight.hiddenAt)fight.hiddenAt=now;return} // No rAF loop when hidden.
     const info=bagInfo();
     const remaining=info.time-(now-fight.started)/1000;
-    if(remaining<=0){fight.seconds=0;fight.phase='defeat';fight.message='Round expired.';draw();return}
+    if(remaining<=0){expireRound();return}
     if(now-lastPaint>=PAINT_INTERVAL){paint(now);lastPaint=now}
     loop=requestAnimationFrame(tick);
   }
@@ -287,6 +296,10 @@
   function hit(finisher=false){
     if(!canFight()||!fight||fight.phase!=='fighting')return;
     const now=performance.now(),info=bagInfo();
+    // Ignore punches after the clock expires, including before the next animation frame.
+    // Hidden-tab inputs must not bypass the existing pause/resume logic.
+    if(document.hidden||fight.hiddenAt)return;
+    if(now-fight.started>=info.time*1000){expireRound();return;}
     if(now-fight.lastHit<(finisher?390:205))return;
     if(finisher&&fight.charge<100)return;
     fight.lastHit=now;
