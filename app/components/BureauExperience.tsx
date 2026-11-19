@@ -14,6 +14,8 @@ export default function BureauExperience() {
   const gameRef = useRef<HTMLIFrameElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const [gameOpen, setGameOpen] = useState(false);
+  const [bagOpen, setBagOpen] = useState(false);
+  const bagCloseRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!gameOpen) return;
@@ -35,6 +37,28 @@ export default function BureauExperience() {
     };
   }, [gameOpen]);
 
+  useEffect(() => {
+    if (!bagOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    bagCloseRef.current?.focus({ preventScroll: true });
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setBagOpen(false);
+    };
+    const onMessage = (event: MessageEvent) => {
+      if (event.origin === window.location.origin && event.data?.type === "bureau:close-heavybag") {
+        setBagOpen(false);
+      }
+    };
+    window.addEventListener("message", onMessage);
+    document.addEventListener("keydown", onEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("message", onMessage);
+      document.removeEventListener("keydown", onEscape);
+    };
+  }, [bagOpen]);
+
   const prepareScene = useCallback(() => {
     const frame = iframeRef.current;
     if (!frame) return;
@@ -42,6 +66,21 @@ export default function BureauExperience() {
       const document = frame.contentDocument;
       const window = frame.contentWindow;
       if (!document || !window) return;
+
+      // The approved homepage artwork is an embedded iframe. A regular
+      // in-frame dialog is clipped by that illustration's viewport. Intercept
+      // only Heavy Bag hotspots, then open the existing campaign at page level.
+      if (!document.documentElement.dataset.bureauBagLinkInstalled) {
+        document.addEventListener("click", (event: MouseEvent) => {
+          const target = event.target as Element | null;
+          if (!target?.closest?.('[data-open="bag"], [data-inside="bag"]')) return;
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+          setBagOpen(true);
+        }, true);
+        document.documentElement.dataset.bureauBagLinkInstalled = "1";
+      }
 
       const style = document.createElement("style");
       style.id = "bureau-seamless-portfolio";
@@ -937,6 +976,21 @@ export default function BureauExperience() {
       // rendering the large illustrated iframe under the full-screen game.
       style={gameOpen ? { display: "none" } : undefined}
       onLoad={prepareScene} allowFullScreen />
+    {bagOpen && typeof document !== "undefined" && createPortal(
+      <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="Heavy Bag spel">
+        <header className="bureau-game-chrome">
+          <div className="bureau-game-identity"><span className="bureau-game-signal"/>
+            <span><strong>THE HEAVY BAG</strong><small>THE BUREAU / 20 STAGES / STORY MODE</small></span>
+          </div>
+          <div className="bureau-game-actions">
+            <button ref={bagCloseRef} type="button" onClick={() => setBagOpen(false)}>
+              <ArrowLeft size={16}/><span>TERUG NAAR HET PLAATJE</span><X size={18}/>
+            </button>
+          </div>
+        </header>
+        <iframe className="bureau-game-viewport" src="/bureau/heavybag-play.html"
+          title="Heavy Bag — speel de volledige campagne" allow="fullscreen"/>
+      </div>, document.body)}
     {gameOpen && typeof document !== "undefined" && createPortal(
       <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="The Unfinished Project">
         <header className="bureau-game-chrome">
