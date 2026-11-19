@@ -10,24 +10,24 @@
     {name:'THE FINAL BAG', kicker:'One last challenge', accent:'#ed6967', bags:['Blackout','No Mercy','Last Warning','THE FINAL BAG']}
   ];
   const BOSS_PHASES = [
-    {hint:'PHASE 1 / Precision. Build your combo and charge the finisher.'},
-    {hint:'PHASE 2 / Iron Guard. Good hits are resisted; aim for PERFECT.'},
-    {hint:'PHASE 3 / Redline. Faster timing, smaller window; perfect hits break through.'}
+    {hint:'PHASE 1 / Every tap lands. Build your combo and charge the finisher.'},
+    {hint:'PHASE 2 / Iron Guard. Keep punching to break through.'},
+    {hint:'PHASE 3 / Redline. Keep your combo going for maximum damage.'}
   ];
   const HEALTH = [75,110,165,240,325,420,570,750,950,1220,1550,1950,2400,3050,3850,4700,5800,7000,8200,12000];
   const TYPE = ['basic','basic','armor','heavy','heavy','speed','guard','armor','armor','guard','speed','heavy','speed','speed','armor','guard','heavy','guard','armor','final'];
   const MODES = {
-    basic:{label:'RHYTHM',hint:'Find your timing. Every perfect hit builds momentum.'},
-    armor:{label:'ARMOR BREAK',hint:'Land two perfect hits to crack the shell. Strike while it is exposed.'},
-    speed:{label:'SPEED CHAIN',hint:'Fast needle. Every second consecutive perfect lands bonus damage.'},
-    guard:{label:'GUARD WINDOW',hint:'Watch the shield. Hit during OPEN, or pierce it with a perfect.'},
-    heavy:{label:'CRUSHING BLOWS',hint:'Slower rhythm. Every third consecutive perfect hits extra hard.'},
-    final:{label:'CHAMPIONSHIP',hint:'Three final phases. Adapt and finish the campaign.'}
+    basic:{label:'COMBO',hint:'Every tap lands a punch. Keep your combo going.'},
+    armor:{label:'ARMOR BREAK',hint:'Every fifth punch cracks the shell for bonus damage.'},
+    speed:{label:'SPEED CHAIN',hint:'Every fifth consecutive punch delivers a stronger blow.'},
+    guard:{label:'GUARD BREAK',hint:'Every punch damages the guard. A longer combo hits harder.'},
+    heavy:{label:'CRUSHING BLOWS',hint:'Every third consecutive punch hits extra hard.'},
+    final:{label:'CHAMPIONSHIP',hint:'Three final phases. Every punch counts.'}
   };
   const UPGRADES = [
     {id:'gloves',icon:'🥊',name:'Impact Gloves',effect:'More base power on every strike',limit:8,cost:35,step:34},
-    {id:'technique',icon:'⚡',name:'Precision',effect:'Much stronger perfectly timed hits',limit:7,cost:45,step:46},
-    {id:'focus',icon:'◎',name:'Focus',effect:'A larger perfect-hit timing zone',limit:6,cost:50,step:59},
+    {id:'technique',icon:'⚡',name:'Punch Technique',effect:'More damage on every punch',limit:7,cost:45,step:46},
+    {id:'focus',icon:'◎',name:'Combo Training',effect:'Faster finisher charge per punch',limit:6,cost:50,step:59},
     {id:'finisher',icon:'🔥',name:'Finisher',effect:'Greater damage on a charged finisher',limit:7,cost:65,step:66}
   ];
   const fmt = n => Math.max(0,Math.round(n)).toLocaleString('en-US');
@@ -85,8 +85,8 @@
   function cost(u){return Math.ceil(u.cost+u.step*Math.pow(data.upgrades[u.id],1.58))}
   function upgradeBenefit(u,level){
     if(u.id==='gloves')return `${11+level*7} base power`;
-    if(u.id==='technique')return `×${(1.85+level*.34).toFixed(2)} perfect`;
-    if(u.id==='focus')return `${16+level*3}% timing window`;
+    if(u.id==='technique')return `×${(1+level*.15).toFixed(2)} punch damage`;
+    if(u.id==='focus')return `+${12+level*3}% finisher charge`;
     return `×${(6.4+level*2.1).toFixed(1)} finisher`;
   }
   function bagInfo(index=data.selected){
@@ -96,7 +96,7 @@
   function makeFight(){
     const info=bagInfo();
     return {phase:'ready',hp:info.hp,maxHp:info.hp,seconds:info.time,started:0,lastHit:0,combo:0,highestCombo:0,
-      hits:0,perfect:0,charge:0,message:'Find your rhythm.',kind:'',stars:0,reward:0,hiddenAt:0,bossPhase:1,armorStreak:0,armorOpenHits:0,enraged:false};
+      hits:0,perfect:0,charge:0,message:'Tap the bag to punch.',kind:'',stars:0,reward:0,hiddenAt:0,bossPhase:1,armorStreak:0,armorOpenHits:0,enraged:false};
   }
   function canFight(){return active==='bag' && Boolean(document.querySelector('.hbc'))}
   function bossPhaseFor(hp,maxHp){const ratio=hp/maxHp;return ratio>2/3?1:ratio>1/3?2:3;}
@@ -105,29 +105,17 @@
     const next=bossPhaseFor(fight.hp,fight.maxHp);
     if(next===fight.bossPhase)return;
     fight.bossPhase=next;
-    fight.message=next===2?'IRON GUARD — AIM FOR PERFECT!':'REDLINE — FINAL PUSH!';
+    fight.message=next===2?'IRON GUARD — KEEP PUNCHING!':'REDLINE — FINAL PUSH!';
     soundCue(next===2?310:420,.11);
   }
-  function guardOpen(elapsed){return elapsed%3600>=1750;}
-  function modeState(elapsed){
+  function modeState(){
     const info=bagInfo();
-    if(info.type==='armor')return fight.armorOpenHits>0?'SHELL CRACKED · '+fight.armorOpenHits+' HITS LEFT':'ARMOR · '+fight.armorStreak+'/2 PERFECT';
-    if(info.type==='guard')return guardOpen(elapsed)?'GUARD OPEN · STRIKE!':'GUARD UP · WAIT';
+    if(info.type==='armor')return fight.armorOpenHits>0?'SHELL CRACKED · '+fight.armorOpenHits+' BONUS HITS LEFT':'ARMOR · '+(fight.hits%5)+'/5 PUNCHES';
+    if(info.type==='guard')return 'GUARD BREAK · COMBO '+fight.combo;
     if(info.type==='speed')return 'SPEED CHAIN · '+fight.combo+' COMBO';
     if(info.type==='heavy')return 'POWER COMBO · '+fight.combo+' HITS';
     if(info.type==='final')return 'PHASE '+fight.bossPhase+' OF 3';
-    return 'RHYTHM · BUILD YOUR COMBO';
-  }
-  function timing(elapsed){
-    const info=bagInfo();
-    const modifier=info.type==='speed'?0.72:info.type==='final'?0.81:info.type==='heavy'?1.12:1;
-    const phaseSpeed=info.type==='final' ? (fight.bossPhase===3?0.76:fight.bossPhase===2?0.90:1) : 1;
-    const gateSpeed=info.gate&&fight.enraged?.76:1;
-    const period=(1780-Math.floor(info.world*125))*modifier*phaseSpeed*gateSpeed;
-    const t=((elapsed%period)+period)%period/period;
-    const position=(t<.5?t*2:(1-t)*2)*100;
-    const width=clamp(16+data.upgrades.focus*3-(info.type==='final'&&fight.bossPhase===3?6:0)-(info.gate&&fight.enraged?3:0),10,36);
-    return {position,width,diff:Math.abs(position-50)};
+    return 'COMBO · KEEP PUNCHING';
   }
   function soundCue(freq,duration){if(typeof beep==='function')beep(freq,duration)}
   function changeStage(index){
@@ -159,10 +147,10 @@
     if(data.finished&&fight.phase==='ready'&&data.selected===19){
       return `<div class="hbc-final-banner"><span>★ UNDISPUTED HEAVY BAG CHAMPION ★</span><strong>🏆 THE FINAL BAG HAS FALLEN.</strong><p>20 bags defeated · 5 locations conquered · Championship permanently saved. Replay any stage to improve your stars.</p></div><button class="hbc-main-btn" type="button" data-hbc-start>REPLAY THE FINAL BOSS <span>↗</span></button>`;
     }
-    if(fight.phase==='ready')return `<p class="hbc-state-intro">${info.index===19?'FINAL BOSS: master precision, break the iron guard, survive Redline.':MODES[info.type].hint+(info.gate?' LAST STAND activates below half HP.':'')}</p><button class="hbc-main-btn" type="button" data-hbc-start>START ROUND <span>↗</span></button>`;
+    if(fight.phase==='ready')return `<p class="hbc-state-intro">${info.index===19?'FINAL BOSS: keep punching, break the iron guard, survive Redline.':MODES[info.type].hint+(info.gate?' LAST STAND activates below half HP.':'')}</p><button class="hbc-main-btn" type="button" data-hbc-start>START ROUND <span>↗</span></button>`;
     if(fight.phase==='fighting')return `<div class="hbc-fight-actions"><button id="hbcStrike" class="hbc-main-btn" type="button" data-hbc-hit>STRIKE <span>SPACE</span></button><button id="hbcFinisher" class="hbc-special" type="button" data-hbc-finisher disabled>FINISHER <span>F</span></button></div>`;
-    if(fight.phase==='victory')return `<div class="hbc-result victory" role="status"><div class="hbc-result-tag">${info.index===19?'🏆 CHAMPIONSHIP WON':fight.firstClear?'STAGE CLEARED':fight.newBest?'★ NEW PERSONAL BEST':'ROUND CLEARED'} · ${fight.stars} STAR${fight.stars!==1?'S':''}</div><h2>${info.index===19?'UNDEFEATED. UNDISPUTED.':'BAG DESTROYED.'}</h2><p>+${fmt(fight.reward)} credits · ${fight.perfect} perfect hits · best combo ${fight.highestCombo}</p><div class="hbc-stars">${'★'.repeat(fight.stars)}${'☆'.repeat(3-fight.stars)}</div><div class="hbc-result-buttons">${info.index<19?'<button class="hbc-main-btn" data-hbc-next type="button">NEXT BAG →</button>':'<button class="hbc-main-btn" data-hbc-next type="button">VIEW YOUR VICTORY →</button>'}<button class="hbc-special" type="button" data-hbc-retry>REPLAY</button></div></div>`;
-    return `<div class="hbc-result defeat"><div class="hbc-result-tag">ROUND EXPIRED</div><h2>NOT THIS TIME.</h2><p>Upgrade your gear or find a cleaner rhythm. Your campaign progress is safe.</p><div class="hbc-result-buttons"><button class="hbc-main-btn" type="button" data-hbc-retry>TRY AGAIN →</button></div></div>`;
+    if(fight.phase==='victory')return `<div class="hbc-result victory" role="status"><div class="hbc-result-tag">${info.index===19?'🏆 CHAMPIONSHIP WON':fight.firstClear?'STAGE CLEARED':fight.newBest?'★ NEW PERSONAL BEST':'ROUND CLEARED'} · ${fight.stars} STAR${fight.stars!==1?'S':''}</div><h2>${info.index===19?'UNDEFEATED. UNDISPUTED.':'BAG DESTROYED.'}</h2><p>+${fmt(fight.reward)} credits · ${fight.hits} punches · best combo ${fight.highestCombo}</p><div class="hbc-stars">${'★'.repeat(fight.stars)}${'☆'.repeat(3-fight.stars)}</div><div class="hbc-result-buttons">${info.index<19?'<button class="hbc-main-btn" data-hbc-next type="button">NEXT BAG →</button>':'<button class="hbc-main-btn" data-hbc-next type="button">VIEW YOUR VICTORY →</button>'}<button class="hbc-special" type="button" data-hbc-retry>REPLAY</button></div></div>`;
+    return `<div class="hbc-result defeat"><div class="hbc-result-tag">ROUND EXPIRED</div><h2>NOT THIS TIME.</h2><p>Upgrade your gear and keep punching. Your campaign progress is safe.</p><div class="hbc-result-buttons"><button class="hbc-main-btn" type="button" data-hbc-retry>TRY AGAIN →</button></div></div>`;
   }
   function draw(){
     if(active!=='bag')return;
@@ -182,9 +170,9 @@
         ${info.gate?'<div class="hbc-gate-status" id="hbcGateStatus">★ GATEKEEPER · LAST STAND AT 50% HP</div>':''}
         ${info.type==='final'?'<div class="hbc-boss-phases" aria-label="Final boss phases"><span class="hbc-boss-step active" id="hbcBossStep1">01 · THE TEST</span><span class="hbc-boss-step" id="hbcBossStep2">02 · IRON GUARD</span><span class="hbc-boss-step" id="hbcBossStep3">03 · REDLINE</span></div><div class="hbc-boss-hint" id="hbcBossHint">PHASE 1 / Precision. Build your combo and charge the finisher.</div>':''}
         <div class="hbc-bag-scene"><div class="hbc-halo"></div><div class="hbc-chain"></div><button id="hbcBag" type="button" class="hbc-bag hbc-skin-${info.world} ${info.type==='armor'||info.type==='final'?'armored':''}" aria-label="Punch ${info.name}"><span class="hbc-bag-body"><span class="hbc-bag-mark">THE<br>BUREAU</span><span class="hbc-bag-stripe"></span><span class="hbc-bag-seam"></span></span></button><div class="hbc-floor"></div><div id="hbcFloating" aria-hidden="true"></div></div>
-        <div class="hbc-feedback"><strong id="hbcFeedback">FIND YOUR RHYTHM</strong><span id="hbcCombo">COMBO ×0</span></div>
-        <div class="hbc-timing"><div class="hbc-timing-head"><strong>TIMING</strong><span id="hbcTimingText">Hit the center zone</span></div><div class="hbc-timing-rail"><div class="hbc-perfect-zone" id="hbcZone"></div><span id="hbcPulse" class="hbc-pulse" style="left:0%"></span></div><div class="hbc-timing-footer"><small>EARLY</small><small>PERFECT</small><small>LATE</small></div></div>
-        <div class="hbc-round-stats"><span>TIME <strong id="hbcTime">${info.time.toFixed(1)}s</strong></span><span>PERFECT <strong id="hbcPerfect">0</strong></span><span>FINISHER <strong id="hbcCharge">0%</strong></span></div>
+        <div class="hbc-feedback"><strong id="hbcFeedback">TAP THE BAG TO PUNCH</strong><span id="hbcCombo">COMBO ×0</span></div>
+        <div class="hbc-tap-hint">EVERY TAP = ONE PUNCH · NO TIMING</div>
+        <div class="hbc-round-stats"><span>TIME <strong id="hbcTime">${info.time.toFixed(1)}s</strong></span><span>HITS <strong id="hbcPerfect">0</strong></span><span>FINISHER <strong id="hbcCharge">0%</strong></span></div>
         <div class="hbc-charge-rail"><span id="hbcChargeFill" style="width:0%"></span></div>
         <div class="hbc-action-area" id="hbcAction">${resultHtml()}</div>
       </div></div><div class="hbc-side"><section class="hbc-side-box"><div class="hbc-box-heading"><strong>TRAINING GEAR</strong><small>Permanent upgrades</small></div><div class="hbc-shop">${upgradesHtml()}</div><p class="hbc-aside-hint">Win rounds to earn credits. No idle income. No prestige. No resets.</p></section>
@@ -209,18 +197,14 @@
     put('hbcHpText',`${fmt(fight.hp)} / ${fmt(fight.maxHp)}`);
     put('hbcTime',remain.toFixed(1)+'s');
     put('hbcCombo','COMBO ×'+fight.combo);
-    put('hbcPerfect',String(fight.perfect));
+    put('hbcPerfect',String(fight.hits));
     put('hbcCharge',Math.floor(fight.charge)+'%');
     setWidth('hbcChargeFill',fight.charge+'%');
     put('hbcFeedback',fight.message.toUpperCase());
     const fin=el('hbcFinisher');if(fin&&fin.disabled!==(fight.charge<100))fin.disabled=fight.charge<100;
     const attack=el('hbcStrike');if(attack&&attack.disabled!==!running)attack.disabled=!running;
-    const timingData=timing(running?now-fight.started:0);
-    setWidth('hbcZone',timingData.width+'%');
-    const pulse=el('hbcPulse');if(pulse&&running)pulse.style.left=timingData.position+'%';
-    put('hbcTimingText',running?'Center the moving marker':'Hit the center zone');
-    if(info.type!=='final')put('hbcModeStatus',modeState(running?now-fight.started:0));
-    if(info.gate)put('hbcGateStatus',fight.enraged?'★ LAST STAND · FASTER TIMING':'★ GATEKEEPER · LAST STAND AT 50% HP');
+    if(info.type!=='final')put('hbcModeStatus',modeState());
+    if(info.gate)put('hbcGateStatus',fight.enraged?'★ LAST STAND · KEEP PUNCHING':'★ GATEKEEPER · LAST STAND AT 50% HP');
     if(info.type==='final'){
       put('hbcBossHint',BOSS_PHASES[fight.bossPhase-1].hint);
       for(let i=1;i<=3;i++){
@@ -255,7 +239,7 @@
     fight.phase='fighting';
     fight.started=performance.now();
     lastPaint=0;
-    fight.message=bagInfo().type==='final'?'THE TEST — FIND THE RHYTHM!':'GO! FIND THE CENTER.';
+    fight.message='GO! EVERY TAP IS A PUNCH.';
     cancelAnimationFrame(loop);loop=0;
     draw();
     soundCue(630,.09);
@@ -264,7 +248,7 @@
   function floatDamage(amount,kind){
     const arena=document.querySelector('.hbc-bag-scene');if(!arena)return;
     const fx=document.createElement('div');
-    fx.className='hbc-dmg '+kind;fx.textContent=kind==='miss'?'MISS':(kind==='perfect'?'PERFECT · ':kind==='finisher'?'FINISHER · ':'')+fmt(amount);
+    fx.className='hbc-dmg '+kind;fx.textContent=(kind==='finisher'?'FINISHER · ':'')+fmt(amount);
     fx.style.left=(38+Math.random()*20)+'%';fx.style.top=(29+Math.random()*15)+'%';
     arena.appendChild(fx);setTimeout(()=>fx.remove(),850);
     const bag=document.getElementById('hbcBag');
@@ -280,8 +264,7 @@
     fight.hp=0;
     fight.seconds=Math.max(0,bagInfo().time-(now-fight.started)/1000);
     fight.phase='victory';
-    const ratio=fight.perfect/Math.max(1,fight.hits);
-    fight.stars=1+(ratio>=.30?1:0)+(ratio>=.55&&fight.seconds>bagInfo().time*.16?1:0);
+    fight.stars=1+(fight.highestCombo>=5?1:0)+(fight.highestCombo>=5&&fight.seconds>bagInfo().time*.3?1:0);
     const index=data.selected,previous=data.best[index],first=previous===0;
     fight.firstClear=first;fight.newBest=!first&&fight.stars>previous;
     data.best[index]=Math.max(previous,fight.stars);
@@ -296,14 +279,11 @@
   function hit(finisher=false){
     if(!canFight()||!fight||fight.phase!=='fighting')return;
     const now=performance.now(),info=bagInfo();
-    // Ignore punches after the clock expires, including before the next animation frame.
-    // Hidden-tab inputs must not bypass the existing pause/resume logic.
+    // A round still has a clock, but punching has no delay or timing window.
     if(document.hidden||fight.hiddenAt)return;
     if(now-fight.started>=info.time*1000){expireRound();return;}
-    if(now-fight.lastHit<(finisher?390:205))return;
     if(finisher&&fight.charge<100)return;
-    fight.lastHit=now;
-    const base=(11+data.upgrades.gloves*7)*(1+.035*data.upgrades.technique);
+    const base=(11+data.upgrades.gloves*7)*(1+.15*data.upgrades.technique);
     let damage=0,kind='normal';
     if(finisher){
       damage=base*(6.4+data.upgrades.finisher*2.1)*(1+fight.combo*.028);
@@ -312,55 +292,37 @@
       kind='finisher';
       soundCue(260,.2);
     }else{
-      const {diff,width}=timing(now-fight.started);
-      const perfect=diff<=width/2;
-      const good=diff<=width/2+17;
+      // Every tap registers one hit, regardless of its timing.
+      fight.combo=now-fight.lastHit<=1800?clamp(fight.combo+1,1,25):1;
+      fight.lastHit=now;
       fight.hits++;
-      if(perfect){
-        fight.perfect++;fight.combo=clamp(fight.combo+1,0,25);
-        fight.charge=clamp(fight.charge+26,0,100);
-        damage=base*(1.85+data.upgrades.technique*.34)*(1+fight.combo*.035);
-        fight.message='PERFECT TIMING!';
-        kind='perfect';soundCue(560,.055);
-      }else if(good){
-        fight.combo=clamp(fight.combo+1,0,25);fight.charge=clamp(fight.charge+13,0,100);
-        damage=base*1.05*(1+fight.combo*.022);
-        fight.message='GOOD HIT';kind='good';soundCue(340,.042);
-      }else{
-        fight.combo=0; // Missing the timing window never generates finisher energy.
-        damage=0;fight.message='MISS — COMBO LOST';kind='miss';
-        soundCue(155,.043);
-      }
       fight.highestCombo=Math.max(fight.highestCombo,fight.combo);
+      fight.charge=clamp(fight.charge+12+data.upgrades.focus*3,0,100);
+      damage=base*(1+fight.combo*.035);
+      fight.message='SOLID HIT!';
       if(info.type==='armor'){
-        if(perfect){
-          fight.armorStreak++;
-          if(fight.armorStreak>=2&&fight.armorOpenHits===0){
-            fight.armorOpenHits=3;fight.armorStreak=0;fight.message='SHELL CRACKED — STRIKE NOW!';
-          }
-        }else{fight.armorStreak=0;}
-        if(fight.armorOpenHits>0&&kind!=='miss'){
-          damage*=1.25;fight.armorOpenHits--;
-        }else if(!perfect)damage*=.4;
+        if(fight.hits%5===0){fight.armorOpenHits=3;fight.message='SHELL CRACKED!';}
+        if(fight.armorOpenHits>0){damage*=1.3;fight.armorOpenHits--;}
+        else damage*=.75;
       }
-      if(info.type==='speed'&&perfect&&fight.combo%2===0){damage*=1.6;fight.message='SPEED CHAIN!';}
-      if(info.type==='heavy'&&perfect&&fight.combo%3===0){damage*=2.0;fight.message='CRUSHING BLOW!';}
-      if(info.type==='guard'&&kind!=='miss'){
-        if(guardOpen(now-fight.started)){damage*=1.3;fight.message='GUARD OPEN — BONUS DAMAGE!';}
-        else if(!perfect){damage*=.2;fight.message='GUARD UP — WAIT FOR OPEN';}
-        else{fight.message='PERFECT — GUARD PIERCED!';}
+      if(info.type==='speed'&&fight.combo%5===0){damage*=1.5;fight.message='SPEED CHAIN!';}
+      if(info.type==='heavy'&&fight.combo%3===0){damage*=2;fight.message='CRUSHING BLOW!';}
+      if(info.type==='guard'){
+        damage*=.75+Math.min(15,fight.combo)*.05;
+        if(fight.combo>=10)fight.message='GUARD BROKEN!';
       }
       if(info.type==='final'){
-         if(fight.bossPhase===2)damage*=perfect?1.1:.4;
-         if(fight.bossPhase===3)damage*=perfect?1.35:.65;
-       }
+        if(fight.bossPhase===2)damage*=.85;
+        if(fight.bossPhase===3)damage*=.9;
+      }
+      soundCue(340,.035);
     }
     if(info.type==='final'&&finisher&&fight.bossPhase===3)damage*=1.25;
-    damage=Math.max(0,Math.round(damage));
+    damage=Math.max(1,Math.round(damage));
     fight.hp=Math.max(0,fight.hp-damage);
     if(info.gate&&!fight.enraged&&fight.hp>0&&fight.hp<=fight.maxHp/2){
       fight.enraged=true;
-      fight.message='★ LAST STAND — FASTER RHYTHM!';
+      fight.message='★ LAST STAND — KEEP PUNCHING!';
       soundCue(430,.10);
     }
     if(info.type==='final')syncBossPhase();
@@ -391,7 +353,7 @@
   document.addEventListener('click',e=>{
     if(!e.target.closest('.hbc'))return;
     const btn=e.target.closest('button');if(!btn||btn.disabled)return;
-    if(btn.hasAttribute('data-hbc-hit')||btn.id==='hbcBag'){if(fight?.phase==='ready')start();else hit();return}
+    if(btn.hasAttribute('data-hbc-hit')||btn.id==='hbcBag'){if(fight?.phase==='ready')start();if(fight?.phase==='fighting')hit();return}
     if(btn.hasAttribute('data-hbc-finisher')){hit(true);return}
     if(btn.hasAttribute('data-hbc-start')){start();return}
     if(btn.hasAttribute('data-hbc-next')){next();return}
@@ -401,7 +363,7 @@
   });
   document.addEventListener('keydown',e=>{
     if(!canFight()||e.repeat||e.ctrlKey||e.metaKey||e.altKey||['INPUT','TEXTAREA','SELECT'].includes(e.target?.tagName))return;
-    if(e.code==='Space'){e.preventDefault();if(fight?.phase==='ready')start();else hit()}
+    if(e.code==='Space'){e.preventDefault();if(fight?.phase==='ready')start();if(fight?.phase==='fighting')hit()}
     if(e.code==='KeyF'){e.preventDefault();hit(true)}
   });
   document.addEventListener('visibilitychange',()=>{
@@ -458,7 +420,7 @@
   #hbcFloating{position:absolute;inset:0;pointer-events:none}.hbc-dmg{position:absolute;z-index:7;color:#efddc6;font:900 18px ui-monospace,monospace;text-shadow:0 3px 11px #000;animation:hbc-float .8s forwards}
   .hbc-dmg.perfect{color:#ffd181;font-size:22px}.hbc-dmg.finisher{color:#ff837c;font-size:25px}.hbc-dmg.miss{color:#9da0a3;font-size:17px}
   .hbc-feedback{display:flex;justify-content:space-between;gap:8px;align-items:center;border-top:1px solid #ffffff12;padding-top:10px;font:700 11px ui-monospace,monospace;letter-spacing:.1em;color:#e7c99e}
-  #hbcCombo{color:#a4aaa9;white-space:nowrap}.hbc-timing{margin-top:14px}.hbc-timing-head{display:flex;justify-content:space-between;gap:10px;font:10px ui-monospace,monospace;color:#d4c3ad}
+  #hbcCombo{color:#a4aaa9;white-space:nowrap}.hbc-tap-hint{margin-top:12px;text-align:center;font:10px ui-monospace,monospace;letter-spacing:.11em;color:#cbb297}.hbc-timing-head{display:flex;justify-content:space-between;gap:10px;font:10px ui-monospace,monospace;color:#d4c3ad}
   .hbc-timing-head span{color:#998d81}.hbc-timing-rail{height:21px;border:1px solid #93806d55;background:linear-gradient(90deg,#4a2222,#392923 25%,#2c312b 50%,#392923 75%,#4a2222);border-radius:5px;position:relative;overflow:visible;margin-top:9px}
   .hbc-perfect-zone{position:absolute;left:50%;top:-1px;bottom:-1px;transform:translateX(-50%);background:#6b9d7245;border:1px solid #a6e3a7aa;border-radius:4px;box-shadow:0 0 20px #8cc58a35}
   .hbc-pulse{position:absolute;top:-7px;bottom:-7px;width:4px;z-index:3;background:#ffe4a9;border-radius:4px;box-shadow:0 0 13px #ffd8a7;transform:translateX(-50%);will-change:left}
