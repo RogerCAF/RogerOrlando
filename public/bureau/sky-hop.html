@@ -45,9 +45,16 @@ button:focus-visible{outline:3px solid #f9d598;outline-offset:3px}
 @media(max-width:770px){.layout{grid-template-columns:1fr}.board{max-width:min(100%,420px)}.sidebar{width:100%;max-width:620px;margin:auto}.scores{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.scores li{padding:8px 6px}.scores li:nth-child(odd){border-right:1px solid #ffffff10}}
 @media(max-width:390px){main{gap:8px;padding:9px}.sidebar-head{padding:13px}.sidebar-head h2{font-size:20px}.scores li{font-size:10px;gap:5px;grid-template-columns:19px minmax(0,1fr) auto}.scores .points{font-size:13px}.dialog{padding:16px}}
 @media(prefers-reduced-motion:reduce){.board,.dialog{scroll-behavior:auto}}
+
+.keyboard-strip{display:flex;align-items:center;flex-wrap:wrap;gap:8px 13px;padding:12px 14px;border:1px solid #b89c7055;border-radius:10px;background:#1a2939;color:#bbc9d7;font:750 10px/1.4 ui-monospace,monospace}
+.keyboard-strip strong{color:#f0c38e;letter-spacing:.1em}
+.keyboard-strip span{display:inline-flex;align-items:center;gap:5px}
+.keyboard-strip kbd{display:inline-flex;align-items:center;justify-content:center;min-width:32px;height:26px;padding:0 7px;border:1px solid #8193a6;border-bottom-width:3px;border-radius:5px;background:#293b50;color:#fff0d5;font:850 11px ui-monospace,monospace}
+@media(max-width:480px){.keyboard-strip{gap:7px;padding:9px;font-size:9px}.keyboard-strip kbd{height:23px;min-width:26px;padding:0 5px;font-size:10px}}
 </style></head>
 <body><main>
 <header><div class="brand"><small>THE BUREAU / PHONE ARCADE</small><h1>SNUFFY BIRD<span>.</span></h1></div><div class="record"><small>YOUR BEST</small><b id="best">0</b></div></header>
+<div class="keyboard-strip" aria-label="PC besturing Snuffy Bird"><strong>⌨ PC CONTROLS</strong><span><kbd>SPACE</kbd> / <kbd>↑</kbd> vlieg</span><span><kbd>P</kbd> pauze</span><span>MUIS / TOUCH = tik om te vliegen</span></div>
 <div class="layout">
 <section class="board" aria-label="Snuffy Bird game"><canvas id="game" width="420" height="680" role="button" tabindex="0" aria-label="Tap or press space to flap and avoid the gates"></canvas><div class="hud"><b id="score">0</b></div>
 <div class="overlay" id="overlay"><div class="dialog"><div class="eyebrow" id="eyebrow">ONE MORE TRY</div><h2 id="title">Keep it flying.</h2><p id="desc">Tap, click or press SPACE to hop. Thread the gaps between the towers. How far can you get?</p><div class="result" id="result"></div><div class="field"><label for="nickname">PLAYER NAME / TOP 10</label><input id="nickname" maxlength="12" value="PLAYER" autocomplete="off" spellcheck="false" aria-label="Name for local high score"></div><button class="primary" type="button" id="start">START FLIGHT →</button><span class="tip">SPACE / ↑ / TAP TO HOP · P TO PAUSE</span></div></div></section>
