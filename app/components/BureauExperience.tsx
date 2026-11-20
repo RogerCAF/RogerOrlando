@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowLeft, Maximize2, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Box, Dumbbell, Gamepad2, LockKeyhole, Maximize2, Swords, X } from "lucide-react";
 import "./bureau-game.css";
 
 /**
@@ -18,6 +18,8 @@ export default function BureauExperience() {
   const bagCloseRef = useRef<HTMLButtonElement>(null);
   const [rubikOpen, setRubikOpen] = useState(false);
   const rubikCloseRef = useRef<HTMLButtonElement>(null);
+  const [arcadeOpen, setArcadeOpen] = useState(false);
+  const arcadeCloseRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!gameOpen) return;
@@ -85,6 +87,27 @@ export default function BureauExperience() {
     };
   }, [rubikOpen]);
 
+  useEffect(() => {
+    if (!arcadeOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    arcadeCloseRef.current?.focus({ preventScroll: true });
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setArcadeOpen(false);
+    };
+    document.addEventListener("keydown", onEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onEscape);
+    };
+  }, [arcadeOpen]);
+
+  // Keep Fight Camp attached to its original Bureau poster interaction.
+  const openFightCamp = useCallback(() => {
+    setArcadeOpen(false);
+    iframeRef.current?.contentDocument?.querySelector<HTMLButtonElement>('.spot[data-open="muay"]')?.click();
+  }, []);
+
   const prepareScene = useCallback(() => {
     const frame = iframeRef.current;
     if (!frame) return;
@@ -100,12 +123,14 @@ export default function BureauExperience() {
           const target = event.target as Element | null;
           const isBag = !!target?.closest?.('[data-open="bag"], [data-inside="bag"]');
           const isRubik = !!target?.closest?.('[data-open="rubik"], [data-inside="rubik"]');
-          if (!isBag && !isRubik) return;
+          const isArcade = !!target?.closest?.('[data-open="projects"], [data-open="monitor"], [data-open="computer"]');
+          if (!isBag && !isRubik && !isArcade) return;
           event.preventDefault();
           event.stopPropagation();
           event.stopImmediatePropagation();
           if (isRubik) setRubikOpen(true);
-          else setBagOpen(true);
+          else if (isBag) setBagOpen(true);
+          else setArcadeOpen(true);
         }, true);
         document.documentElement.dataset.bureauBagLinkInstalled = "1";
       }
@@ -564,7 +589,18 @@ export default function BureauExperience() {
         appWindow.__bureauGameObserver?.disconnect();
         const addToDesktop = () => {
           const icons = gameContent.querySelector(".desktop-icons");
-          if (!icons || icons.querySelector("#bureau-unfinished-os-app")) return;
+          if (!icons) return;
+          // Projects already have a dedicated, richer section on the website.
+          // Keep the secret game, never remove Unfinished.exe.
+          icons.querySelectorAll<HTMLElement>("button, a, [role='button']").forEach(icon => {
+            const title = (icon.getAttribute("aria-label") || icon.getAttribute("title") || icon.textContent || "").trim().toLowerCase().replace(/\\s+/g, " ");
+            if (["projects", "projecten", "projects.exe", "projecten.exe"].includes(title) || icon.dataset.open === "projects") {
+              icon.hidden = true;
+              icon.style.display = "none";
+              icon.tabIndex = -1;
+            }
+          });
+          if (icons.querySelector("#bureau-unfinished-os-app")) return;
           const app = document.createElement("button");
           app.type = "button";
           app.id = "bureau-unfinished-os-app";
@@ -757,12 +793,12 @@ export default function BureauExperience() {
         secondary.type = "button";
         secondary.id = "bureau-secondary-display";
         secondary.className = "bureau-secondary-display";
-        secondary.setAttribute("aria-label", "Open Bureau OS via het tweede scherm");
-        secondary.title = "TWEEDE SCHERM / BUREAU OS";
+        secondary.setAttribute("aria-label", "Open Bureau Arcade via het tweede scherm");
+        secondary.title = "TWEEDE SCHERM / BUREAU ARCADE";
         secondary.addEventListener("click", (event) => {
           event.preventDefault();
           event.stopPropagation();
-          document.querySelector<HTMLButtonElement>('.spot[data-open="projects"]')?.click();
+          setArcadeOpen(true);
         });
         scene.appendChild(secondary);
       }
@@ -895,6 +931,12 @@ export default function BureauExperience() {
           width: 43.8% !important;
           height: 33.7% !important;
           z-index: 10 !important;
+          cursor: pointer !important;
+        }
+        .bureau-embed .desktop-icons [data-open="projects"],
+        .bureau-embed .desktop-icons [data-action="projects"],
+        .bureau-embed .desktop-icons [hidden] {
+          display: none !important;
         }
         .bureau-embed .spot[data-open="muay"] {
           left: 17.1% !important;
@@ -1002,8 +1044,53 @@ export default function BureauExperience() {
       title="The Bureau — interactieve illustratie" loading="eager"
       // Keep the scene mounted (preserves its interactive state), but stop
       // rendering the large illustrated iframe under the full-screen game.
-      style={gameOpen || bagOpen || rubikOpen ? { display: "none" } : undefined}
+      style={gameOpen || bagOpen || rubikOpen || arcadeOpen ? { display: "none" } : undefined}
       onLoad={prepareScene} allowFullScreen />
+    {arcadeOpen && typeof document !== "undefined" && createPortal(
+      <div className="bureau-arcade-overlay" role="dialog" aria-modal="true" aria-labelledby="bureau-arcade-heading">
+        <div className="bureau-arcade-shell">
+          <header className="bureau-arcade-head">
+            <div className="bureau-arcade-brand"><Gamepad2 size={21} aria-hidden="true"/><span>THE BUREAU <em>/ ARCADE</em></span></div>
+            <button type="button" className="bureau-arcade-close" ref={arcadeCloseRef} onClick={() => setArcadeOpen(false)} aria-label="Sluit de arcade en ga terug naar het bureau"><X size={19}/></button>
+          </header>
+          <div className="bureau-arcade-intro">
+            <span>INTERACTIVE EXPERIENCES / 04</span>
+            <h2 id="bureau-arcade-heading">Pick a challenge<span>.</span></h2>
+            <p>Geen dubbele projecten of overvolle menu’s. Alleen kleine ervaringen, verstopt in het bureau.</p>
+          </div>
+          <div className="bureau-arcade-grid">
+            <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setBagOpen(true);}}>
+              <span className="bureau-arcade-card-index">01 / IDLE BOXING</span>
+              <Dumbbell className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
+              <strong>HEAVY BAG</strong>
+              <span>Bouw van je eerste punch een complete boksschool.</span>
+              <em>START TRAINING <ArrowRight size={15} aria-hidden="true"/></em>
+            </button>
+            <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setRubikOpen(true);}}>
+              <span className="bureau-arcade-card-index">02 / 90-SECOND RUN</span>
+              <Box className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
+              <strong>CUBE SURVIVOR</strong>
+              <span>Ontwijk, verzamel XP en bouw zes wapens tegelijk op.</span>
+              <em>PLAY SURVIVOR <ArrowRight size={15} aria-hidden="true"/></em>
+            </button>
+            <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setGameOpen(true);}}>
+              <span className="bureau-arcade-card-index">03 / SECRET FILE 030</span>
+              <LockKeyhole className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
+              <strong>UNFINISHED PROJECT</strong>
+              <span>Ontgrendel het verhaal achter de verborgen systeemproeven.</span>
+              <em>OPEN SECRET FILE <ArrowRight size={15} aria-hidden="true"/></em>
+            </button>
+            <button className="bureau-arcade-card" type="button" onClick={openFightCamp}>
+              <span className="bureau-arcade-card-index">04 / FIGHT CAMP</span>
+              <Swords className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
+              <strong>FIGHT CAMP</strong>
+              <span>Ontdek de vechtsportervaring achter de poster.</span>
+              <em>EXPLORE CAMP <ArrowRight size={15} aria-hidden="true"/></em>
+            </button>
+          </div>
+          <footer className="bureau-arcade-foot">TIP / De bokszak, Rubik's Cube en de poster werken ook direct vanaf het bureau.</footer>
+        </div>
+      </div>, document.body)}
     {bagOpen && typeof document !== "undefined" && createPortal(
       <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="Heavy Bag spel">
         <header className="bureau-game-chrome">
