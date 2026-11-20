@@ -84,3 +84,8 @@
  .bureau-phone-app{min-height:186px}
  .bureau-phone-app strong{margin:6px 0 4px}
 }
+
+
+/* Deliberately fixed phone-display clock — part of the Bureau experience, not live local time. */
+.bureau-phone-topline .bureau-phone-clock{display:inline-flex;align-items:center;justify-content:center;margin-left:auto;white-space:nowrap;color:#e9f0f4;font:900 13px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.015em;font-variant-numeric:tabular-nums;text-shadow:0 1px 2px #000a}
+@media(max-width:600px){.bureau-phone-topline .bureau-phone-clock{font-size:12px}}
