@@ -90,7 +90,7 @@ function read(){
      var prior=JSON.parse(localStorage.getItem(LEGACY)||"null");
      if(prior&&typeof prior==="object"){
        d.credits+=safeNum(prior.credits,0,5000);
-       d.legacyStages=safeNum(prior.unlocked,0,19)+1;
+       d.legacyStages=Math.max(Math.floor(safeNum(prior.unlocked,0,19)),Array.isArray(prior.best)?prior.best.filter(function(v){return Number(v)>0}).length:0);
      }
    }catch(e){}
    return d;
