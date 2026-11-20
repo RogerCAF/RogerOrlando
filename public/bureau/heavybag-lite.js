@@ -94,7 +94,7 @@ function header(){
  '<div class="hbl-stat"><small>CREDITS</small><strong id="hbl-credits">0</strong></div>'+
  '<div class="hbl-stat"><small>AUTO / SEC</small><strong id="hbl-rate" class="green">0</strong></div>'+
  '<div class="hbl-stat"><small>HELPERS</small><strong id="hbl-boxers">0</strong></div>'+
- '<div class="hbl-stat"><small>YOUR PUNCHES</small><strong id="hbl-punches">0</strong></div>'+
+ '<div class="hbl-stat hbl-stat-punches"><small>TOTAL HITS</small><strong id="hbl-punches">0</strong></div>'+
  '</div><div class="hbl-notice" id="hbl-notice" hidden><span id="hbl-notice-text"></span><button type="button" data-action="dismiss" aria-label="Dismiss message">✕</button></div>';
 }
 function bag(){
@@ -102,12 +102,12 @@ function bag(){
  return '<div class="hbl-arena" data-chapter="'+state.chapter+'">'+
  '<div class="hbl-arena-top"><span>GYM '+String(state.chapter+1).padStart(2,"0")+' / 05</span><span>'+(auto?'● TRAINING ACTIVE':'● MANUAL TRAINING')+'</span></div>'+
  '<h2>'+gym.name+'</h2><p class="subtitle">'+gym.desc+'</p>'+
- '<div class="hbl-stage"><div class="hbl-chain"></div>'+
+ '<div class="hbl-stage"><div class="hbl-stage-glow" aria-hidden="true"></div><div class="hbl-chain"></div>'+
  '<button id="hbl-bag" class="hbl-bag" data-action="punch" type="button" aria-label="Punch the heavy bag and earn credits">'+
- '<span class="hbl-bag-body"><span class="hbl-bag-logo">HEAVY<br>BAG</span><span class="hbl-bag-band"></span></span></button>'+
+ '<span class="hbl-bag-body"><span class="hbl-bag-stitch" aria-hidden="true"></span><span class="hbl-bag-logo">HEAVY<br>BAG</span><span class="hbl-bag-band"></span></span></button>'+
  '<span class="hbl-shadow"></span><span class="hbl-pop" id="hbl-pop" aria-hidden="true"></span></div>'+
- '<div class="hbl-bag-caption">TAP THE BAG · <span id="hbl-value">+1 credit per punch</span></div>'+
- '<div class="hbl-auto'+(auto?' on':'')+'" id="hbl-auto"><i></i><span>'+(auto?'AUTO TRAINING ACTIVE · YOUR BOXERS EARN WHILE YOU ARE AWAY':'NO AUTO TRAINING YET · PUNCH 25 TIMES TO HIRE A ROOKIE')+'</span></div></div>';
+ '<div class="hbl-bag-caption"><strong>HIT TO EARN</strong><span id="hbl-value">+1 credit per punch</span></div>'+
+ '<div class="hbl-auto'+(auto?' on':'')+'" id="hbl-auto"><i></i><span>'+(auto?'AUTO TRAINING ACTIVE · YOUR TEAM EARNS WHILE YOU ARE AWAY':'NO AUTO TRAINING YET · PUNCH 25 TIMES TO HIRE A ROOKIE')+'</span></div></div>';
 }
 function objective(){
  const gym=GYMS[state.chapter];
@@ -130,10 +130,10 @@ function shopBoxers(){
    const locked=b.chapter>state.chapter,p=price(i);
    rows+='<div class="hbl-item'+(locked?' hbl-locked':'')+'"><span class="hbl-symbol">'+b.icon+'</span>'+
    '<div><strong>'+b.name+(state.counts[i]?' ×'+state.counts[i]:'')+'</strong>'+
-   '<small>'+(locked?'Unlock in gym '+(b.chapter+1):fmt(b.income)+' credits/sec each · '+b.detail)+'</small></div>'+
+   '<small>'+(locked?'AVAILABLE AT GYM '+(b.chapter+1):'+'+fmt(b.income)+'/SEC EACH')+'</small></div>'+
    '<button class="hbl-buy" type="button" data-action="hire" data-index="'+i+'"'+(locked||state.credits+1e-7<p?' disabled':'')+'>'+(locked?'LOCKED':fmt(p)+' C')+'</button></div>';
  });
- return '<div class="hbl-panel"><div class="hbl-panel-head"><h3>AUTOMATIC TRAINING</h3><small>'+count()+' WORKING</small></div><div class="hbl-shop">'+rows+'</div></div>';
+ return '<div class="hbl-panel hbl-shop-panel"><div class="hbl-panel-head"><h3>AUTO TRAINING</h3><small>'+count()+' ACTIVE</small></div><div class="hbl-shop">'+rows+'</div></div>';
 }
 function shopGear(){
  let rows="";
@@ -144,17 +144,17 @@ function shopGear(){
    '<div><strong>'+g.name+'</strong><small>'+g.detail+'</small></div>'+
    '<button class="hbl-buy'+(done?' hbl-bought':'')+'" data-action="gear" data-index="'+i+'" type="button"'+(done||locked||state.credits+1e-7<g.cost?' disabled':'')+'>'+(done?'OWNED':locked?'LOCKED':fmt(g.cost)+' C')+'</button></div>';
  });
- return '<div class="hbl-panel"><div class="hbl-panel-head"><h3>PUNCH UPGRADES</h3><small>PERMANENT PUNCH POWER</small></div><div class="hbl-shop">'+rows+'</div></div>';
+ return '<div class="hbl-panel hbl-shop-panel"><div class="hbl-panel-head"><h3>PUNCH POWER</h3><small>PERMANENT</small></div><div class="hbl-shop">'+rows+'</div></div>';
 }
 function journey(){
- return '<div class="hbl-panel"><div class="hbl-panel-head"><h3>ROAD TO CHAMPION</h3><small>NO PRESTIGE</small></div>'+
+ return '<div class="hbl-panel hbl-journey"><div class="hbl-panel-head"><h3>ROAD TO CHAMPION</h3><small>5 GYMS</small></div>'+
  '<div class="hbl-timeline">'+
  ['BASEMENT','LOCAL','FACTORY','ELITE','CHAMPION'].map((name,i)=>'<div class="hbl-step '+(i<state.chapter?'done':i===state.chapter?'active':'')+'"><b>'+(i<state.chapter?'✓':String(i+1).padStart(2,"0"))+'</b>'+name+'</div>').join("")+
- '</div><p class="hbl-small">Progress is permanent. New gyms unlock more helpers and punch upgrades.</p></div>';
+ '</div></div>';
 }
 function render(){
  const root=$("content");if(!root)return;
- root.innerHTML='<div class="hbl">'+header()+'<main class="hbl-layout"><div class="hbl-left">'+bag()+objective()+'</div><div class="hbl-right">'+shopBoxers()+shopGear()+journey()+'</div></main>'+
+ root.innerHTML='<div class="hbl">'+header()+'<main class="hbl-layout"><div class="hbl-left">'+bag()+objective()+'</div><div class="hbl-right">'+shopBoxers()+shopGear()+'</div></main>'+journey()+
  '<footer class="hbl-footer"><span>UP TO 8 HOURS OFFLINE EARNINGS · SAVED ON THIS DEVICE</span>'+
  '<div><button type="button" id="hbl-sound" class="hbl-reset" data-action="sound">SOUND '+(soundOn?'ON':'OFF')+'</button> &nbsp;·&nbsp; <button type="button" class="hbl-reset" data-action="reset">RESTART FROM ZERO</button></div></footer></div>';
  sync();
@@ -166,7 +166,7 @@ function goalStats(){
  if(state.champion)return{label:"COMPLETE",fraction:1};
  const current=rate(),target=GYMS[state.chapter].goal;
  if(state.chapter<4)return{label:fmt(current)+" / "+fmt(target)+" / SEC",fraction:clamp(current/target,0,1)};
- const one=clamp(current/target,0,1),two=clamp(state.earned/12000000,0,1),three=state.counts[4]?1:0;
+ const one=clamp(current/target,0,1),two=clamp(state.earned/12000000,0,1),three=state.counts[5]?1:0;
  return{label:fmt(current)+" / "+fmt(target)+" / SEC",fraction:(one+two+three)/3};
 }
 function sync(){
