@@ -835,13 +835,13 @@ export default function BureauExperience() {
         const phoneSpot = scene.querySelector<HTMLElement>('.spot[data-open="arcade"], .spot[data-open="phone"]');
         if (phoneSpot) {
           phoneSpot.setAttribute("aria-label", "Open de twee spellen op de telefoon");
-          phoneSpot.title = "PHONE ARCADE / SKY HOP & CURVE CLASH";
+          phoneSpot.title = "PHONE ARCADE / SKY HOP & AGTUNG DIE KURVE";
         } else if (!document.getElementById("bureau-phone-entry")) {
           const phone = document.createElement("button");
           phone.type = "button";
           phone.id = "bureau-phone-entry";
           phone.setAttribute("aria-label", "Open de twee spellen op de telefoon");
-          phone.title = "PHONE ARCADE / SKY HOP & CURVE CLASH";
+          phone.title = "PHONE ARCADE / SKY HOP & AGTUNG DIE KURVE";
           scene.appendChild(phone);
         }
       }
@@ -1142,7 +1142,7 @@ export default function BureauExperience() {
               <button type="button" onClick={() => setPhoneMode("curve")} className="bureau-phone-app bureau-phone-curve">
                 <span className="bureau-phone-app-symbol"><Route size={35} strokeWidth={1.65} aria-hidden="true"/></span>
                 <span className="bureau-phone-app-type"><UsersRound size={13} aria-hidden="true"/> LOCAL MULTIPLAYER / 2–5</span>
-                <strong>CURVE CLASH</strong>
+                <strong>AGTUNG DIE KURVE</strong>
                 <span>Stuur je lijn langs de muren en elkaar. Laatste speler over wint.</span>
                 <em>PLAY TOGETHER <ArrowRight size={15} aria-hidden="true"/></em>
               </button>
@@ -1153,10 +1153,10 @@ export default function BureauExperience() {
         </section>
       </div>, document.body)}
     {(phoneMode === "sky" || phoneMode === "curve") && typeof document !== "undefined" && createPortal(
-      <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label={phoneMode === "sky" ? "Sky Hop game" : "Curve Clash multiplayer game"}>
+      <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label={phoneMode === "sky" ? "Sky Hop game" : "Agtung die Kurve multiplayer game"}>
         <header className="bureau-game-chrome">
           <div className="bureau-game-identity"><span className="bureau-game-signal"/>
-            <span><strong>{phoneMode === "sky" ? "SKY HOP" : "CURVE CLASH"}</strong><small>{phoneMode === "sky" ? "THE BUREAU / PHONE / TOP 10" : "THE BUREAU / PHONE / LOCAL 5 PLAYER"}</small></span>
+            <span><strong>{phoneMode === "sky" ? "SKY HOP" : "AGTUNG DIE KURVE"}</strong><small>{phoneMode === "sky" ? "THE BUREAU / PHONE / TOP 10" : "THE BUREAU / PHONE / LOCAL 5 PLAYER"}</small></span>
           </div>
           <div className="bureau-game-actions">
             <a href={phoneMode === "sky" ? "/bureau/sky-hop.html" : "/bureau/curve-clash.html"} target="_blank" rel="noopener noreferrer" aria-label="Open dit spel in een nieuw tabblad" title="Open game apart"><Maximize2 size={17}/></a>
@@ -1165,7 +1165,7 @@ export default function BureauExperience() {
             </button>
           </div>
         </header>
-        <iframe className="bureau-game-viewport" src={phoneMode === "sky" ? "/bureau/sky-hop.html" : "/bureau/curve-clash.html"} title={phoneMode === "sky" ? "Sky Hop — single player" : "Curve Clash — local multiplayer"} allow="fullscreen"/>
+        <iframe className="bureau-game-viewport" src={phoneMode === "sky" ? "/bureau/sky-hop.html" : "/bureau/curve-clash.html"} title={phoneMode === "sky" ? "Sky Hop — single player" : "Agtung die Kurve — local multiplayer"} allow="fullscreen"/>
       </div>, document.body)}
     {terminalOpen && typeof document !== "undefined" && createPortal(
       <BureauTerminal
