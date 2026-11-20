@@ -117,7 +117,7 @@ function addFX(x,y,color,size=10,life=.28,kind="spark"){
 function addEnemy(type,x,y){
  if(game.enemies.length>=MAX_ENEMIES)return;
  let size=type==="tank"?20:type==="runner"?11:15;
- let hp=(type==="tank"?76:type==="runner"?23:40)*(1+game.t*.008);
+ let hp=(type==="tank"?65:type==="runner"?17:27)*(1+game.t*.008);
  let speed=(type==="runner"?108:type==="tank"?43:69)*(1+game.t*.0024);
  game.enemies.push({type,x,y,size,hp,max:hp,speed,flash:0,knockX:0,knockY:0,hitDelay:0});
 }
@@ -294,7 +294,7 @@ function collect(dt){
 function damagePlayer(amount){
  const p=game.player;
  if(p.inv>0||mode!=="playing")return;
- p.hp=Math.max(0,p.hp-amount);p.inv=.68;game.hitFlash=.2;game.screenShake=6;
+ p.hp=Math.max(0,p.hp-amount);p.inv=.95;game.hitFlash=.2;game.screenShake=6;
  sound(165,.10,"sawtooth",.05);
  if(p.hp<=0)finish(false);
 }
@@ -316,14 +316,14 @@ function updateEnemies(dt){
   enemy.x+=dx/dis*enemy.speed*dt+enemy.knockX*dt;
   enemy.y+=dy/dis*enemy.speed*dt+enemy.knockY*dt;
   enemy.knockX*=Math.exp(-8*dt);enemy.knockY*=Math.exp(-8*dt);
-  if(dis<enemy.size+16)damagePlayer(enemy.type==="tank"?18:enemy.type==="runner"?11:12);
+  if(dis<enemy.size+16)damagePlayer(enemy.type==="tank"?13:enemy.type==="runner"?8:9);
  }
  if(game.boss&&game.boss.hp>0){
   const b=game.boss;b.flash=Math.max(0,b.flash-dt);
   let dx=p.x-b.x,dy=p.y-b.y,d=Math.hypot(dx,dy)||1;
   b.x+=dx/d*b.speed*dt+b.knockX*dt;b.y+=dy/d*b.speed*dt+b.knockY*dt;
   b.knockX*=Math.exp(-7*dt);b.knockY*=Math.exp(-7*dt);
-  if(d<b.size+14)damagePlayer(20);
+  if(d<b.size+14)damagePlayer(17);
   b.cooldown-=dt;
   if(b.cooldown<=0){
    b.cooldown=1.55;
@@ -336,7 +336,7 @@ function updateEnemies(dt){
  }
  for(let i=game.shots.length-1;i>=0;i--){
   let s=game.shots[i];s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;
-  if(dist2(s.x,s.y,p.x,p.y)<(20*20)){damagePlayer(9);game.shots.splice(i,1)}
+  if(dist2(s.x,s.y,p.x,p.y)<(20*20)){damagePlayer(7);game.shots.splice(i,1)}
   else if(s.life<=0||s.x<-20||s.x>w+20||s.y<-20||s.y>h+20)game.shots.splice(i,1);
  }
 }
@@ -381,7 +381,7 @@ function simulate(dt){
  updateMovement(dt);
  game.spawn-=dt;
  if(!game.bossSpawned&&game.t<80&&game.spawn<=0&&game.enemies.length<MAX_ENEMIES){
-  spawnEnemy();game.spawn=Math.max(.29,.94-game.t*.006)+rand(-.1,.12);
+  spawnEnemy();game.spawn=Math.max(.36,1.13-game.t*.0067)+rand(-.09,.13);
  }
  if(game.t>=80&&!game.bossSpawned)spawnBoss();
  updateEnemies(dt);if(mode!=="playing")return;
