@@ -876,8 +876,8 @@ export default function BureauExperience() {
 
       const posterSpot = scene?.querySelector<HTMLElement>('.spot[data-open="muay"]');
       if (posterSpot) {
-        posterSpot.setAttribute("aria-label", "Start Fight Camp: 30 seconden Muay Thai-reactie-uitdaging");
-        posterSpot.title = "FIGHT CAMP / POSTER CHALLENGE";
+        posterSpot.setAttribute("aria-label", "Interactieve Fight Camp-poster: start de Muay Thai-reactie-uitdaging van 30 seconden");
+        posterSpot.title = "FIGHT CAMP / LIVING POSTER / 30 SEC";
       }
 
       // Display a deliberate 16:20 on the desk phone too, not only in
@@ -1143,6 +1143,88 @@ export default function BureauExperience() {
           pointer-events: none !important;
         }
       `;
+
+      // Replace the inert print in the approved desk photograph with a living
+      // Fight Camp poster. Use the same scene-relative footprint and leave
+      // the invisible Muay Thai hotspot above it for mouse/touch/keyboard.
+      style.textContent += `
+        .bureau-embed #scene > .bureau-kinetic-poster {
+          position: absolute !important;
+          left: 17.65% !important;
+          top: 7.65% !important;
+          width: 18.25% !important;
+          height: 27.45% !important;
+          z-index: 9 !important;
+          display: block !important;
+          overflow: hidden !important;
+          pointer-events: none !important;
+          user-select: none !important;
+          background: #121118 url("/bureau/poster-kinetic-fight.svg?v=kinetic-1") center / 100% 100% no-repeat !important;
+          border: 1px solid rgba(235,179,119,.55) !important;
+          border-radius: 1px !important;
+          clip-path: polygon(.5% .3%, 99.6% .2%, 100% 99.4%, 0% 99.8%) !important;
+          transform: translateZ(0) !important;
+          transform-origin: 52% 48% !important;
+          filter: saturate(.92) contrast(1.06) !important;
+          box-shadow: inset 0 0 0 2px #0b1015, 0 4px 17px #0009 !important;
+          transition: filter .24s ease, transform .3s cubic-bezier(.2,.85,.2,1) !important;
+        }
+        .bureau-embed .bureau-kinetic-poster::before {
+          content: "" !important;
+          position: absolute !important;
+          inset: -65% !important;
+          z-index: 1 !important;
+          background: linear-gradient(100deg, transparent 39%, rgba(255,197,131,.035) 45%, rgba(255,213,154,.27) 50%, rgba(255,193,124,.035) 55%, transparent 62%) !important;
+          mix-blend-mode: screen !important;
+          transform: translateX(-85%) rotate(11deg) !important;
+          animation: bureau-poster-shimmer 7.8s ease-in-out infinite !important;
+        }
+        .bureau-embed .bureau-kinetic-poster::after {
+          content: "ENTER THE RING ↗" !important;
+          position: absolute !important;
+          z-index: 2 !important;
+          bottom: 10% !important;
+          left: 7% !important;
+          width: 86% !important;
+          padding: 7px 1px !important;
+          box-sizing: border-box !important;
+          border: 1px solid #edc18d !important;
+          border-radius: 1px !important;
+          background: rgba(12,14,20,.95) !important;
+          color: #f9d7a3 !important;
+          font: 800 clamp(7px, .74vw, 11px)/1.2 ui-monospace, monospace !important;
+          letter-spacing: .08em !important;
+          text-align: center !important;
+          opacity: 0 !important;
+          transform: translateY(6px) !important;
+          transition: opacity .22s ease, transform .22s ease !important;
+        }
+        .bureau-embed #scene:has(.spot[data-open="muay"]:is(:hover,:focus-visible)) > .bureau-kinetic-poster {
+          transform: translateY(-1.3%) scale(1.035) rotate(-.35deg) !important;
+          filter: saturate(1.17) brightness(1.16) contrast(1.08) !important;
+        }
+        .bureau-embed #scene:has(.spot[data-open="muay"]:is(:hover,:focus-visible)) > .bureau-kinetic-poster::after {
+          opacity: 1 !important;
+          transform: translateY(0) !important;
+        }
+        .bureau-embed .spot[data-open="muay"]::after {
+          display: none !important;
+        }
+        @keyframes bureau-poster-shimmer {
+          0%, 16% { transform: translateX(-85%) rotate(11deg); opacity: 0; }
+          22% { opacity: .8; }
+          38%, 100% { transform: translateX(86%) rotate(11deg); opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .bureau-embed .bureau-kinetic-poster,
+          .bureau-embed .bureau-kinetic-poster::before,
+          .bureau-embed .bureau-kinetic-poster::after {
+            animation: none !important;
+            transition: none !important;
+          }
+        }
+      `;
+
       if (scene && !document.getElementById("bureau-approved-photo")) {
         const approved = document.createElement("img");
         approved.id = "bureau-approved-photo";
@@ -1152,6 +1234,15 @@ export default function BureauExperience() {
         approved.draggable = false;
         approved.decoding = "async";
         scene.insertBefore(approved, scene.firstChild);
+      }
+
+
+      if (scene && !document.getElementById("bureau-kinetic-poster")) {
+        const livingPoster = document.createElement("div");
+        livingPoster.id = "bureau-kinetic-poster";
+        livingPoster.className = "bureau-kinetic-poster";
+        livingPoster.setAttribute("aria-hidden", "true");
+        scene.appendChild(livingPoster);
       }
 
       document.getElementById(style.id)?.remove();
