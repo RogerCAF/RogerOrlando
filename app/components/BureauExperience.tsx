@@ -874,6 +874,17 @@ export default function BureauExperience() {
         }
       }
 
+      // Display a deliberate 16:20 on the desk phone too, not only in
+      // its full-size app launcher. A separate noninteractive label preserves
+      // the approved photo and lets the same fixed clock survive resizes.
+      if (scene && !document.getElementById("bureau-physical-phone-clock")) {
+        const phoneClock = document.createElement("span");
+        phoneClock.id = "bureau-physical-phone-clock";
+        phoneClock.textContent = "16:20";
+        phoneClock.setAttribute("aria-hidden", "true");
+        scene.appendChild(phoneClock);
+      }
+
       // The notebook was already a hidden hotspot; make its visitor list
       // discoverable without introducing any unrelated items.
       if (scene && !document.getElementById("bureau-guestbook-entry")) {
@@ -1027,10 +1038,10 @@ export default function BureauExperience() {
         .bureau-embed .spot[data-open="phone"],
         .bureau-embed #bureau-phone-entry {
           position: absolute !important;
-          left: 70.1% !important;
-          top: 62.8% !important;
-          width: 7.3% !important;
-          height: 17.4% !important;
+          left: 14.9% !important;
+          top: 69.7% !important;
+          width: 7.4% !important;
+          height: 8.6% !important;
           z-index: 16 !important;
           cursor: pointer !important;
           background: transparent !important;
@@ -1049,11 +1060,34 @@ export default function BureauExperience() {
           .bureau-embed .spot[data-open="arcade"],
           .bureau-embed .spot[data-open="phone"],
           .bureau-embed #bureau-phone-entry {
-            left: 67.7% !important;
-            top: 60.9% !important;
-            width: 12% !important;
-            height: 21.2% !important;
+            left: 12.5% !important;
+            top: 67.5% !important;
+            width: 12.5% !important;
+            height: 14.4% !important;
           }
+        }
+        /* 16:20 is printed on the actual small phone screen, above the
+           artwork without changing the photograph or intercepting taps. */
+        .bureau-embed #bureau-physical-phone-clock {
+          position: absolute !important;
+          left: 16.7% !important;
+          top: 72.1% !important;
+          width: 4.35% !important;
+          height: auto !important;
+          z-index: 18 !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          color: #f9e2b3 !important;
+          background: transparent !important;
+          text-align: center !important;
+          white-space: nowrap !important;
+          font: 900 clamp(5px,.78vw,12px)/1 ui-monospace,Consolas,monospace !important;
+          letter-spacing: .02em !important;
+          text-shadow: 0 0 5px #ffce876e,0 1px 2px #000 !important;
+          transform: rotate(15deg) skewX(-7deg) !important;
+          transform-origin: center !important;
+          pointer-events: none !important;
+          user-select: none !important;
         }
         .bureau-embed .spot[data-open="keyboard"] {
           left: 31.6% !important;
