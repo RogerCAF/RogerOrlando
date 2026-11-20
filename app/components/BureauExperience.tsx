@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight, Bird, Box, Dumbbell, Gamepad2, LockKeyhole, Maximize2, Route, Smartphone, Swords, Trophy, UsersRound, X } from "lucide-react";
 import "./bureau-game.css";
+import "./bureau-phone.css";
 import BureauTerminal from "./BureauTerminal";
 
 /**
