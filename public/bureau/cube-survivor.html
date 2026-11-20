@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1118">
+<meta name="color-scheme" content="dark">
+<title>Cube Survivor — Color Arsenal | The Bureau</title>
+<link rel="stylesheet" href="/bureau/cube-survivor.css?v=arsenal-1">
+</head>
+<body>
+<main>
+ <header>
+  <div>
+   <div class="logo-top">THE BUREAU / RUBIK ARCADE</div>
+   <h1>CUBE SURVIVOR<span>.</span></h1>
+   <div class="hint top-hint">COLOR ARSENAL / 90-SECOND ROGUELITE</div>
+  </div>
+  <div class="header-buttons">
+   <button id="sound" type="button" class="icon-btn" aria-label="Enable sound" aria-pressed="false">♪ OFF</button>
+   <button id="pause" type="button" class="icon-btn" aria-label="Pause game">Ⅱ PAUSE</button>
+  </div>
+ </header>
+ <section class="stats" aria-label="Run stats">
+  <div class="stat"><small>TIME</small><b id="time">01:30</b></div>
+  <div class="stat"><small>HEALTH</small><b class="hp" id="hp">100</b></div>
+  <div class="stat"><small>SCORE</small><b id="score">0</b></div>
+  <div class="stat"><small>LEVEL</small><b id="level">1</b></div>
+  <div class="stat"><small>BEST</small><b id="best">0</b></div>
+ </section>
+ <div class="shell">
+  <section class="game-area" aria-label="Cube Survivor arcade arena">
+   <canvas id="arena" tabindex="0" aria-label="Move the Rubik's Cube with WASD or arrow keys, or drag on the arena. Weapons fire automatically."></canvas>
+   <div id="boss" class="boss-indicator" hidden><span>THE CORRUPTED CUBE</span><div class="meter"><div id="boss-bar"></div></div></div>
+   <div class="backdrop" id="overlay">
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+     <div class="kicker" id="dialog-kicker">THE BUREAU / COLOR ARSENAL</div>
+     <h2 id="dialog-title">SIX COLORS. SIX WEAPONS.</h2>
+     <p id="dialog-description">You are the Rubik's Cube. Dodge incoming enemies while your weapons fire automatically. Switch between colors, collect XP and survive until the final boss.</p>
+     <div id="dialog-score" class="big-number" hidden></div>
+     <div id="upgrade-choices" class="choices" hidden></div>
+     <button class="cta" id="dialog-action" type="button">START RUN →</button>
+     <p class="mini" id="dialog-footnote">Desktop: WASD / arrows + keys 1–6. Mobile: drag anywhere on the arena + tap a color.</p>
+    </div>
+   </div>
+  </section>
+  <div class="xp-meter" aria-label="Experience progress"><div id="xp-progress"></div></div>
+  <div class="control-bar">
+   <div class="weapon-tabs" id="weapons" aria-label="Select weapon color">
+    <button type="button" class="weapon" data-weapon="0" style="--w:#eeeeea" aria-pressed="true"><span class="tone"></span><small>PISTOLS</small><em>1</em></button>
+    <button type="button" class="weapon locked" data-weapon="1" style="--w:#e05251" aria-pressed="false" disabled><span class="tone"></span><small>SHOTGUN</small><em>2</em></button>
+    <button type="button" class="weapon locked" data-weapon="2" style="--w:#f0c448" aria-pressed="false" disabled><span class="tone"></span><small>GATLING</small><em>3</em></button>
+    <button type="button" class="weapon locked" data-weapon="3" style="--w:#ec904b" aria-pressed="false" disabled><span class="tone"></span><small>BAZOOKA</small><em>4</em></button>
+    <button type="button" class="weapon locked" data-weapon="4" style="--w:#538fe1" aria-pressed="false" disabled><span class="tone"></span><small>RAY GUN</small><em>5</em></button>
+    <button type="button" class="weapon locked" data-weapon="5" style="--w:#4fbf85" aria-pressed="false" disabled><span class="tone"></span><small>SEEKERS</small><em>6</em></button>
+   </div>
+   <div class="bar-right"><strong id="weapon-name">DUAL PISTOLS</strong><small id="weapon-hint">Precise auto-targeting cube bullets.</small></div>
+  </div>
+  <div class="fusion" id="fusion" role="status">FUSION READY · switch colors to discover combos</div>
+ </div>
+ <div class="instructions">
+  <span>MOVE: WASD / ARROWS · WEAPONS: 1–6 · PAUSE: P</span>
+  <span class="mobile-hint">MOBILE: DRAG TO MOVE · TAP A COLOR</span>
+  <span>30 FPS TARGET · 2D CANVAS · NO GAME ENGINE</span>
+ </div>
+</main>
+<script src="/bureau/cube-survivor.js?v=arsenal-1"></script>
+</body>
+</html>
