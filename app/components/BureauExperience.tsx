@@ -874,6 +874,12 @@ export default function BureauExperience() {
         }
       }
 
+      const posterSpot = scene?.querySelector<HTMLElement>('.spot[data-open="muay"]');
+      if (posterSpot) {
+        posterSpot.setAttribute("aria-label", "Start Fight Camp: 30 seconden Muay Thai-reactie-uitdaging");
+        posterSpot.title = "FIGHT CAMP / POSTER CHALLENGE";
+      }
+
       // Display a deliberate 16:20 on the desk phone too, not only in
       // its full-size app launcher. A separate noninteractive label preserves
       // the approved photo and lets the same fixed clock survive resizes.
@@ -1026,6 +1032,36 @@ export default function BureauExperience() {
           width: 18.3% !important;
           height: 30.3% !important;
           z-index: 10 !important;
+        }
+        /* The original print stays untouched; a small hover/focus hint
+           shows that the poster hides a real playable challenge. */
+        .bureau-embed .spot[data-open="muay"] {
+          cursor: pointer !important;
+        }
+        .bureau-embed .spot[data-open="muay"]::after {
+          content: "FIGHT CAMP  ↗" !important;
+          position: absolute !important;
+          left: 8% !important;
+          bottom: 4% !important;
+          display: block !important;
+          width: 84% !important;
+          padding: 9px 3px !important;
+          border: 1px solid #f5c686 !important;
+          border-radius: 3px !important;
+          background: #141013df !important;
+          color: #ffdcaa !important;
+          text-align: center !important;
+          font: 900 clamp(8px,.8vw,12px)/1.2 ui-monospace,monospace !important;
+          letter-spacing: .12em !important;
+          opacity: 0 !important;
+          transform: translateY(5px) !important;
+          transition: opacity .16s,transform .16s !important;
+          pointer-events: none !important;
+        }
+        .bureau-embed .spot[data-open="muay"]:hover::after,
+        .bureau-embed .spot[data-open="muay"]:focus-visible::after {
+          opacity: 1 !important;
+          transform: translateY(0) !important;
         }
         .bureau-embed .spot[data-open="pc"] {
           left: 75.8% !important;
@@ -1297,7 +1333,7 @@ export default function BureauExperience() {
       <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="Fight Camp — interactieve posteruitdaging">
         <header className="bureau-game-chrome">
           <div className="bureau-game-identity"><span className="bureau-game-signal"/>
-            <span><strong>FIGHT CAMP / THE POSTER CHALLENGE</strong><small>THE BUREAU / 30 SECOND FOCUS-MITTS TRIAL</small></span>
+            <span><strong>FIGHT CAMP / THE POSTER CHALLENGE</strong><small>THE BUREAU / 30 SECOND MUAY THAI CHALLENGE</small></span>
           </div>
           <div className="bureau-game-actions">
             <a href="/bureau/fight-camp.html" target="_blank" rel="noopener noreferrer" aria-label="Open Fight Camp in apart tabblad" title="Open apart"><Maximize2 size={17}/></a>
