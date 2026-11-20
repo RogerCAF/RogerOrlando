@@ -22,3 +22,14 @@
 .bureau-reaction-scores small{font:600 11px/1.4 system-ui,sans-serif;color:#aeb8c4}
 @media(max-width:620px){.bureau-standalone{padding:11px}.bureau-standalone-eyebrow{padding:5px 2px 12px;font-size:9px}.bureau-standalone .rg-ten-section{margin:0}.bureau-standalone .rg-ten-head{padding:19px 17px}.bureau-standalone .rg-ten-head h2{font-size:29px}.bureau-standalone .rg-ten-readout>strong{font-size:clamp(30px,8vw,46px)}.bureau-standalone .rg-ten-button{width:min(240px,62vw);height:min(240px,62vw)}.bureau-reaction{padding:19px 14px;border-radius:13px}.bureau-reaction-intro{font-size:12px}.bureau-reaction-target{min-height:210px}.bureau-reaction-target strong{font-size:clamp(28px,7.5vw,41px)}}
 @media(prefers-reduced-motion:reduce){.bureau-reaction-target{transition:none}}
+
+
+/* Shared always-visible desktop keyboard legends for the phone mini-games. */
+.bureau-arcade-key-guide{display:flex;align-items:center;flex-wrap:wrap;gap:9px 16px;margin:0 0 19px;padding:12px 15px;border:1px solid #ba966c66;border-radius:9px;background:#26303b;color:#b7c4d1;font:750 10px/1.6 ui-monospace,monospace}
+.bureau-arcade-key-guide strong{color:#f2c68c;font-weight:900;letter-spacing:.1em}
+.bureau-arcade-key-guide span{display:inline-flex;align-items:center;flex-wrap:wrap;gap:5px}
+.bureau-arcade-key-guide kbd{display:inline-flex;align-items:center;justify-content:center;min-width:35px;height:27px;padding:0 7px;border:1px solid #8d9bac;border-bottom-width:3px;border-radius:6px;background:#344453;color:#fff2dc;font:900 11px ui-monospace,monospace}
+.bureau-standalone .rg-ten-head{border-bottom:0;padding-bottom:18px}
+.bureau-standalone .rg-ten-section>.bureau-arcade-key-guide{margin:0 clamp(15px,3vw,38px) 22px}
+.bureau-reaction-target:focus-visible{outline:2px solid #f2c68c;outline-offset:3px}
+@media(max-width:620px){.bureau-arcade-key-guide{gap:8px 12px;padding:10px;font-size:9px}.bureau-arcade-key-guide kbd{min-width:27px;height:24px;font-size:10px;padding:0 5px}.bureau-standalone .rg-ten-section>.bureau-arcade-key-guide{margin:0 15px 14px}}
