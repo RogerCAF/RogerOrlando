@@ -53,7 +53,8 @@ function read(){
  d.lastTick=safe(s.lastTick,0,Date.now());
  return d;
 }
-let state=read(),booted=false,timer=0,ticks=0,notice="",audioCtx=null,soundOn=false,combo=0,lastPunchAt=0,lastSaveAt=0,dirty=false,lastPointerTapAt=0,bagAnimation=null,popAnimation=null;
+let savedSound;try{savedSound=localStorage.getItem("the-bureau-heavybag-sound-v1")}catch(e){}
+let state=read(),booted=false,timer=0,ticks=0,notice="",audioCtx=null,soundOn=savedSound!=="off",combo=0,lastPunchAt=0,lastSaveAt=0,dirty=false,lastPointerTapAt=0,bagAnimation=null,popAnimation=null,noiseBuffer=null;
 function count(){return state.counts.reduce((n,v)=>n+v,0)}
 function rate(){
  let total=0;
@@ -102,11 +103,12 @@ function bag(){
  return '<div class="hbl-arena" data-chapter="'+state.chapter+'">'+
  '<div class="hbl-arena-top"><span>GYM '+String(state.chapter+1).padStart(2,"0")+' / 05</span><span>'+(auto?'● TRAINING ACTIVE':'● MANUAL TRAINING')+'</span></div>'+
  '<h2>'+gym.name+'</h2><p class="subtitle">'+gym.desc+'</p>'+
- '<div class="hbl-stage"><div class="hbl-stage-glow" aria-hidden="true"></div><div class="hbl-chain"></div>'+
+ '<div class="hbl-stage" id="hbl-stage"><div class="hbl-stage-glow" aria-hidden="true"></div><span class="hbl-impact-flash" id="hbl-impact-flash" aria-hidden="true"></span><span class="hbl-impact-ring" id="hbl-impact-ring" aria-hidden="true"></span><span class="hbl-impact-word" id="hbl-impact-word" aria-hidden="true"></span><div class="hbl-chain"></div>'+
  '<button id="hbl-bag" class="hbl-bag" data-action="punch" type="button" aria-label="Punch the heavy bag and earn credits">'+
  '<span class="hbl-bag-body"><span class="hbl-bag-stitch" aria-hidden="true"></span><span class="hbl-bag-logo">HEAVY<br>BAG</span><span class="hbl-bag-band"></span></span></button>'+
  '<span class="hbl-shadow"></span><span class="hbl-pop" id="hbl-pop" aria-hidden="true"></span></div>'+
  '<div class="hbl-bag-caption"><strong>HIT TO EARN</strong><span id="hbl-value">+1 credit per punch</span><b id="hbl-combo" class="hbl-combo" hidden></b></div>'+
+ '<div class="hbl-fury"><div class="hbl-fury-top"><span id="hbl-fury-title">BUILD YOUR COMBO</span><b id="hbl-fury-hits">POWER SHOT IN 8</b></div><div class="hbl-fury-track"><span id="hbl-fury-fill"></span></div><small>SPACE / CLICK / TAP TO PUNCH · CHAIN 8 HITS FOR A POWER SHOT</small></div>'+
  '<div class="hbl-auto'+(auto?' on':'')+'" id="hbl-auto"><i></i><span>'+(auto?'AUTO TRAINING ACTIVE · YOUR TEAM EARNS WHILE YOU ARE AWAY':'NO AUTO TRAINING YET · 12 CREDITS TO HIRE YOUR FIRST ROOKIE')+'</span></div></div>';
 }
 function objective(){
@@ -201,6 +203,12 @@ function sync(){
  updateText("hbl-punches",fmt(state.punches));
  updateText("hbl-value","+"+fmt(punchValue())+" base / hit");
  const comboBadge=$("hbl-combo");if(comboBadge){const active=combo>1&&Date.now()-lastPunchAt<1350;comboBadge.hidden=!active;if(active)comboBadge.textContent="×"+Math.min(5,1+Math.floor((combo-1)/5))+" COMBO";}
+ const heat=$("hbl-fury-fill"),title=$("hbl-fury-title"),hits=$("hbl-fury-hits");
+ const activeChain=combo>0&&Date.now()-lastPunchAt<1300;
+ const progress=activeChain?combo%8:0;
+ if(heat)heat.style.width=((progress/8)*100).toFixed(1)+"%";
+ if(title)title.textContent=activeChain?"COMBO / "+Math.min(combo,999)+" HITS":"BUILD YOUR COMBO";
+ if(hits)hits.textContent=activeChain&&combo%8===0?"POWER SHOT!":"POWER SHOT IN "+(8-progress);
  const g=goalStats();
  updateText("hbl-goal-count",g.label);
  const bar=$("hbl-goal-progress");if(bar)bar.style.width=(g.fraction*100).toFixed(1)+"%";
@@ -238,55 +246,73 @@ function sync(){
   b.closest(".hbl-item")?.classList.toggle("hbl-affordable",!done&&!locked&&afford);
  }
 }
-function impact(amount,automatic){
- if(automatic)return;
- const bag=$("hbl-bag"),pop=$("hbl-pop");
- if(bag){
-  if(typeof bag.animate==="function"){
-   bagAnimation?.cancel?.();
-   bagAnimation=bag.animate([{transform:"rotate(0deg) scale(1)"},{transform:"rotate(7deg) scale(.975)",offset:.25},{transform:"rotate(-3deg) scale(1.012)",offset:.65},{transform:"rotate(0deg) scale(1)"}],
-    {duration:180,easing:"cubic-bezier(.18,.7,.2,1)"});
-  }else{
-   bag.classList.remove("impact");bag.classList.add("impact");
-  }
- }
- if(pop){
-  pop.textContent="+"+fmt(amount);
-  if(typeof pop.animate==="function"){
-   popAnimation?.cancel?.();
-   popAnimation=pop.animate([{opacity:1,transform:"translateY(0) scale(.92)"},{opacity:0,transform:"translateY(-55px) scale(1.1)"}],
-    {duration:340,easing:"ease-out"});
-  }else{pop.classList.remove("show");pop.classList.add("show")}
+function impact(amount,finisher){
+ const bag=$("hbl-bag"),pop=$("hbl-pop"),stage=$("hbl-stage"),flash=$("hbl-impact-flash"),ring=$("hbl-impact-ring"),word=$("hbl-impact-word");
+ if(!bag||!stage)return;
+ const dir=state.punches%2?1:-1;
+ if(bag.animate){
+  bagAnimation?.cancel?.();
+  bagAnimation=bag.animate([
+   {transform:"rotate(0) scale(1)",offset:0},
+   {transform:"translateX("+(-12*dir)+"px) rotate("+(-dir*(finisher?13:8))+"deg) scale("+(finisher?.92:.955)+")",offset:.12},
+   {transform:"translateX("+(4*dir)+"px) rotate("+(4*dir)+"deg) scale(1.025)",offset:.60},
+   {transform:"rotate(0) scale(1)",offset:1}
+  ],{duration:finisher?260:172,easing:"cubic-bezier(.15,.85,.3,1)"});
+ }else{bag.classList.remove("impact");void bag.offsetWidth;bag.classList.add("impact")}
+ const arena=stage.closest(".hbl-arena");
+ if(arena?.animate)arena.animate([
+  {transform:"translateX(0)"},{transform:"translateX("+((finisher?5:2)*dir)+"px)",offset:.28},{transform:"translateX("+(-2*dir)+"px)",offset:.6},{transform:"translateX(0)"}
+ ],{duration:finisher?170:95,easing:"ease-out"});
+ const fx=(el,frames,ms)=>{if(el?.animate){el.getAnimations().forEach(a=>a.cancel());el.animate(frames,{duration:ms,easing:"ease-out",fill:"both"})}};
+ fx(flash,[{opacity:finisher?.7:.38},{opacity:0}],finisher?220:110);
+ fx(ring,[{opacity:1,transform:"translate(-50%,-50%) scale(.3)"},{opacity:0,transform:"translate(-50%,-50%) scale("+(finisher?2:1.45)+")"}],finisher?310:195);
+ if(word){word.textContent=finisher?"POWER SHOT!":"THWACK!";word.classList.toggle("is-finisher",finisher);
+ fx(word,[{opacity:0,transform:"translate(-50%,-50%) scale(.7)"},{opacity:1,transform:"translate(-50%,-60%) scale(1.1)",offset:.2},{opacity:0,transform:"translate(-50%,-92%) scale(1)"}],finisher?420:285)}
+ if(pop){pop.textContent=(finisher?"CRITICAL ":"")+"+"+fmt(amount);pop.classList.toggle("is-finisher",finisher);
+  if(pop.animate){popAnimation?.cancel?.();popAnimation=pop.animate([
+   {opacity:1,transform:"translateY(0) scale("+(finisher?1.25:1)+")"},{opacity:0,transform:"translateY(-65px) scale(.96)"}
+  ],{duration:finisher?455:325,easing:"ease-out",fill:"both"})}
+  else{pop.classList.remove("show");void pop.offsetWidth;pop.classList.add("show")}}
+ if(window.matchMedia?.("(prefers-reduced-motion: reduce)").matches)return;
+ for(let i=0;i<(finisher?11:5);i++){
+  const dot=document.createElement("i");dot.className="hbl-spark";
+  dot.style.left=(50+(Math.random()-.5)*8)+"%";dot.style.top=(48+(Math.random()-.5)*10)+"%";
+  dot.style.setProperty("--dx",Math.round((Math.random()-.5)*(finisher?195:110))+"px");
+  dot.style.setProperty("--dy",Math.round((Math.random()-.5)*(finisher?160:105))+"px");
+  stage.appendChild(dot);setTimeout(()=>dot.remove(),410);
  }
 }
-function sound(){
+function sound(finisher){
  if(!soundOn)return;
  try{
-  const AC=window.AudioContext||window.webkitAudioContext;
-  if(!AC)return;
+  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
   if(!audioCtx)audioCtx=new AC();
   if(audioCtx.state==="suspended")audioCtx.resume().catch(()=>{});
-  const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-  o.type="triangle";o.frequency.setValueAtTime(130,audioCtx.currentTime);
-  o.frequency.exponentialRampToValueAtTime(65,audioCtx.currentTime+.085);
-  g.gain.setValueAtTime(.022,audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.09);
-  o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.09);
+  const t=audioCtx.currentTime;
+  if(!noiseBuffer){noiseBuffer=audioCtx.createBuffer(1,Math.round(audioCtx.sampleRate*.09),audioCtx.sampleRate);
+   const d=noiseBuffer.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2.4)}
+  const n=audioCtx.createBufferSource(),f=audioCtx.createBiquadFilter(),g=audioCtx.createGain();
+  n.buffer=noiseBuffer;f.type="bandpass";f.frequency.value=finisher?1250:850;f.Q.value=.7;
+  g.gain.setValueAtTime(finisher?.09:.060,t);g.gain.exponentialRampToValueAtTime(.0001,t+.095);
+  n.connect(f);f.connect(g);g.connect(audioCtx.destination);n.start(t);n.stop(t+.09);
+  const o=audioCtx.createOscillator(),bass=audioCtx.createGain();o.type="sine";
+  o.frequency.setValueAtTime(finisher?185:145,t);o.frequency.exponentialRampToValueAtTime(64,t+.11);
+  bass.gain.setValueAtTime(finisher?.105:.06,t);bass.gain.exponentialRampToValueAtTime(.0001,t+.13);
+  o.connect(bass);bass.connect(audioCtx.destination);o.start(t);o.stop(t+.135);
  }catch(e){}
 }
 function punch(){
  settle(Date.now());
  const now=Date.now();
- combo=now-lastPunchAt<1100?Math.min(combo+1,25):1;
- lastPunchAt=now;
+ combo=now-lastPunchAt<1300?Math.min(combo+1,999):1;lastPunchAt=now;
+ const finisher=combo%8===0;
  const multiplier=1+Math.min(4,Math.floor((combo-1)/5));
- const amount=punchValue()*multiplier;
+ const amount=punchValue()*multiplier*(finisher?3:1);
  earn(amount);state.punches++;dirty=true;
- sound();try{navigator.vibrate?.(10)}catch(e){}
- impact(amount,false);
- const grown=milestones();
- if(grown)render();else sync();
- if(grown||state.punches===1||state.punches%4===0||Date.now()-lastSaveAt>1200)save();
+ sound(finisher);try{navigator.vibrate?.(finisher?[10,15,20]:8)}catch(e){}
+ impact(amount,finisher);
+ const grown=milestones();if(grown)render();else sync();
+ if(grown||finisher||state.punches===1||state.punches%4===0||Date.now()-lastSaveAt>1200)save();
 }
 function hire(i){
  if(!Number.isInteger(i)||i<0||i>=BOXERS.length||BOXERS[i].chapter>state.chapter)return;
@@ -344,13 +370,20 @@ document.addEventListener("click",event=>{
  else if(action==="hire")hire(Number(btn.getAttribute("data-index")));
  else if(action==="gear")buyGear(Number(btn.getAttribute("data-index")));
  else if(action==="dismiss"){notice="";sync()}
- else if(action==="sound"){soundOn=!soundOn;render()}
+ else if(action==="sound"){soundOn=!soundOn;try{localStorage.setItem("the-bureau-heavybag-sound-v1",soundOn?"on":"off")}catch(e){}render()}
  else if(action==="reset"){
   if(window.confirm("Restart Heavy Bag from zero? This resets only this new Idle Boxing save.")){
    state=fresh();combo=0;lastPunchAt=0;notice="NEW START · 12 CREDITS TO YOUR FIRST ROOKIE";
    save();render();
   }
  }
+});
+document.addEventListener("keydown",event=>{
+ if(event.code!=="Space"||event.repeat||!booted)return;
+ const el=event.target;
+ if(el instanceof HTMLInputElement||el instanceof HTMLTextAreaElement||el instanceof HTMLSelectElement||el?.isContentEditable)return;
+ if(el instanceof HTMLElement&&el.closest("button:not(#hbl-bag),a"))return;
+ event.preventDefault();punch();
 });
 document.addEventListener("visibilitychange",()=>{
  if(!booted)return;
