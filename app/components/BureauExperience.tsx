@@ -33,6 +33,8 @@ export default function BureauExperience() {
   const [phoneMode, setPhoneMode] = useState<null | "menu" | PhoneGame>(null);
   const phoneCloseRef = useRef<HTMLButtonElement>(null);
   const [terminalOpen, setTerminalOpen] = useState(false);
+  const [posterOpen, setPosterOpen] = useState(false);
+  const posterCloseRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!gameOpen) return;
@@ -132,11 +134,27 @@ export default function BureauExperience() {
     };
   }, [phoneMode]);
 
-  // Keep Fight Camp attached to its original Bureau poster interaction.
+  // The original illustrated poster now launches its own playable 30-second
+  // focus-mitts trial. No change to the poster artwork or click boundaries.
   const openFightCamp = useCallback(() => {
     setArcadeOpen(false);
-    iframeRef.current?.contentDocument?.querySelector<HTMLButtonElement>('.spot[data-open="muay"]')?.click();
+    setPosterOpen(true);
   }, []);
+
+  useEffect(() => {
+    if (!posterOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    posterCloseRef.current?.focus({ preventScroll: true });
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { event.preventDefault(); setPosterOpen(false); }
+    };
+    document.addEventListener("keydown", onEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onEscape);
+    };
+  }, [posterOpen]);
 
   const prepareScene = useCallback(() => {
     const frame = iframeRef.current;
@@ -156,11 +174,13 @@ export default function BureauExperience() {
           const isArcade = !!target?.closest?.('[data-open="projects"], [data-open="monitor"], [data-open="computer"]');
           const isKeyboard = !!target?.closest?.('[data-open="keyboard"], [data-inside="keyboard"]');
           const isPhone = !!target?.closest?.('[data-open="phone"], [data-inside="phone"], [data-open="arcade"], [data-inside="arcade"], #bureau-phone-entry');
-          if (!isBag && !isRubik && !isArcade && !isKeyboard && !isPhone) return;
+          const isPoster = !!target?.closest?.('[data-open="muay"], [data-inside="muay"]');
+          if (!isBag && !isRubik && !isArcade && !isKeyboard && !isPhone && !isPoster) return;
           event.preventDefault();
           event.stopPropagation();
           event.stopImmediatePropagation();
           if (isPhone) setPhoneMode("menu");
+          else if (isPoster) setPosterOpen(true);
           else if (isKeyboard) setTerminalOpen(true);
           else if (isRubik) setRubikOpen(true);
           else if (isBag) setBagOpen(true);
@@ -1126,13 +1146,13 @@ export default function BureauExperience() {
       title="The Bureau — interactieve illustratie" loading="eager"
       // Keep the scene mounted (preserves its interactive state), but stop
       // rendering the large illustrated iframe under the full-screen game.
-      style={gameOpen || bagOpen || rubikOpen || arcadeOpen || terminalOpen || phoneMode ? { display: "none" } : undefined}
+      style={gameOpen || bagOpen || rubikOpen || arcadeOpen || posterOpen || terminalOpen || phoneMode ? { display: "none" } : undefined}
       onLoad={prepareScene} allowFullScreen />
     {phoneMode === "menu" && typeof document !== "undefined" && createPortal(
       <div className="bureau-phone-overlay" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) setPhoneMode(null); }}>
         <section className="bureau-phone-device" role="dialog" aria-modal="true" aria-labelledby="bureau-phone-heading">
           <div className="bureau-phone-notch" aria-hidden="true"><span/></div>
-          <div className="bureau-phone-topline"><span><Smartphone size={13} aria-hidden="true"/> THE BUREAU / PHONE</span><button ref={phoneCloseRef} type="button" aria-label="Sluit de telefoon" onClick={() => setPhoneMode(null)}><X size={17}/></button></div>
+          <div className="bureau-phone-topline"><span><Smartphone size={13} aria-hidden="true"/> THE BUREAU / PHONE</span><time className="bureau-phone-clock" dateTime="16:20">16:20</time><button ref={phoneCloseRef} type="button" aria-label="Sluit de telefoon" onClick={() => setPhoneMode(null)}><X size={17}/></button></div>
           <div className="bureau-phone-home">
             <div className="bureau-phone-intro">
               <span>POCKET ARCADE / 04 GAMES</span>
@@ -1232,12 +1252,27 @@ export default function BureauExperience() {
               <span className="bureau-arcade-card-index">04 / FIGHT CAMP</span>
               <Swords className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
               <strong>FIGHT CAMP</strong>
-              <span>Ontdek de vechtsportervaring achter de poster.</span>
+              <span>De poster komt tot leven: speel een 30 seconden reflex- en combo-uitdaging.</span>
               <em>EXPLORE CAMP <ArrowRight size={15} aria-hidden="true"/></em>
             </button>
           </div>
           <footer className="bureau-arcade-foot">TIP / De bokszak, Rubik's Cube en de poster werken ook direct vanaf het bureau.</footer>
         </div>
+      </div>, document.body)}
+    {posterOpen && typeof document !== "undefined" && createPortal(
+      <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="Fight Camp — interactieve posteruitdaging">
+        <header className="bureau-game-chrome">
+          <div className="bureau-game-identity"><span className="bureau-game-signal"/>
+            <span><strong>FIGHT CAMP / THE POSTER CHALLENGE</strong><small>THE BUREAU / 30 SECOND FOCUS-MITTS TRIAL</small></span>
+          </div>
+          <div className="bureau-game-actions">
+            <a href="/bureau/fight-camp.html" target="_blank" rel="noopener noreferrer" aria-label="Open Fight Camp in apart tabblad" title="Open apart"><Maximize2 size={17}/></a>
+            <button ref={posterCloseRef} type="button" onClick={() => setPosterOpen(false)}>
+              <ArrowLeft size={16}/><span>TERUG NAAR HET BUREAU</span><X size={18}/>
+            </button>
+          </div>
+        </header>
+        <iframe className="bureau-game-viewport" src="/bureau/fight-camp.html" title="Fight Camp — 30 second focus mitts" allow="fullscreen"/>
       </div>, document.body)}
     {bagOpen && typeof document !== "undefined" && createPortal(
       <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="Heavy Bag spel">
