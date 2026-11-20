@@ -1151,7 +1151,7 @@ export default function BureauExperience() {
                 <span className="bureau-phone-app-symbol"><Route size={35} strokeWidth={1.65} aria-hidden="true"/></span>
                 <span className="bureau-phone-app-type"><UsersRound size={13} aria-hidden="true"/> LOCAL MULTIPLAYER / 2–5</span>
                 <strong>AGTUNG DIE KURVE</strong>
-                <span>Stuur je lijn langs de muren en elkaar. Laatste speler over wint.</span>
+                <span>Speel met 2–5 spelers op één toetsenbord of op eigen computers via een kamercode.</span>
                 <em>PLAY TOGETHER <ArrowRight size={15} aria-hidden="true"/></em>
               </button>
               <button type="button" onClick={() => setPhoneMode("reaction")} className="bureau-phone-app bureau-phone-reaction">
