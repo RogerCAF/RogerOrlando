@@ -593,7 +593,7 @@ export default function BureauExperience() {
           // Projects already have a dedicated, richer section on the website.
           // Keep the secret game, never remove Unfinished.exe.
           icons.querySelectorAll<HTMLElement>("button, a, [role='button']").forEach(icon => {
-            const title = (icon.getAttribute("aria-label") || icon.getAttribute("title") || icon.textContent || "").trim().toLowerCase().replace(/\\s+/g, " ");
+            const title = (icon.getAttribute("aria-label") || icon.getAttribute("title") || icon.textContent || "").trim().toLowerCase().replace(/\s+/g, " ");
             if (["projects", "projecten", "projects.exe", "projecten.exe"].includes(title) || icon.dataset.open === "projects") {
               icon.hidden = true;
               icon.style.display = "none";
@@ -1056,7 +1056,7 @@ export default function BureauExperience() {
           <div className="bureau-arcade-intro">
             <span>INTERACTIVE EXPERIENCES / 04</span>
             <h2 id="bureau-arcade-heading">Pick a challenge<span>.</span></h2>
-            <p>Geen dubbele projecten of overvolle menu’s. Alleen kleine ervaringen, verstopt in het bureau.</p>
+            <p>Vier korte ervaringen. Kies er één of ontdek ze via de objecten op het bureau.</p>
           </div>
           <div className="bureau-arcade-grid">
             <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setBagOpen(true);}}>
@@ -1098,6 +1098,7 @@ export default function BureauExperience() {
             <span><strong>THE HEAVY BAG</strong><small>THE BUREAU / IDLE BOXING / ROAD TO CHAMPION</small></span>
           </div>
           <div className="bureau-game-actions">
+            <a href="/bureau/heavybag-play.html" target="_blank" rel="noopener noreferrer" aria-label="Open Heavy Bag in een nieuw tabblad" title="Open game apart"><Maximize2 size={17}/></a>
             <button ref={bagCloseRef} type="button" onClick={() => setBagOpen(false)}>
               <ArrowLeft size={16}/><span>TERUG NAAR HET PLAATJE</span><X size={18}/>
             </button>
