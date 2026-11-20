@@ -1,6 +1,6 @@
 /* HEAVY BAG — IDLE BOXING
- * First 25 credits are earned by actual punches. Automatic earnings start only
- * after buying the first Rookie. Event-driven DOM, 1 Hz stats, no game loop.
+ * Fast tap feedback, escalating combo power and early idle momentum.
+ * Interval only updates balances; visuals animate on player input.
  * Existing arcade/idle save data is intentionally kept under its original keys.
  */
 (function(){
@@ -8,24 +8,24 @@
 const KEY="the-bureau-heavybag-lite-v1";
 const LIMIT_MS=8*60*60*1000,MAX_CREDITS=1e15;
 const GYMS=[
- {name:"THE BASEMENT",desc:"One bag. No shortcuts.",goal:3,bonus:75},
- {name:"THE LOCAL CLUB",desc:"Your first real boxing gym.",goal:45,bonus:700},
- {name:"THE FIGHT FACTORY",desc:"The gym starts to grow.",goal:450,bonus:13000},
- {name:"THE ELITE GYM",desc:"Train with the best.",goal:4500,bonus:250000},
+ {name:"THE BASEMENT",desc:"One bag. No shortcuts.",goal:6,bonus:120},
+ {name:"THE LOCAL CLUB",desc:"Your first real boxing gym.",goal:60,bonus:1200},
+ {name:"THE FIGHT FACTORY",desc:"The gym starts to grow.",goal:650,bonus:16000},
+ {name:"THE ELITE GYM",desc:"Train with the best.",goal:5500,bonus:300000},
  {name:"THE CHAMPIONSHIP",desc:"Build the world's best boxing club.",goal:35000,bonus:0}
 ];
 const BOXERS=[
- {name:"Rookie",icon:"🥊",income:1,cost:25,chapter:0,detail:"Your first helper."},
- {name:"Pad Holder",icon:"✋",income:5,cost:140,chapter:1,detail:"Keeps the drills moving."},
- {name:"Sparring Partner",icon:"⚡",income:25,cost:900,chapter:1,detail:"Trains alongside you."},
- {name:"Coach",icon:"★",income:160,cost:7500,chapter:2,detail:"Runs the training sessions."},
- {name:"Fight Camp",icon:"◆",income:1100,cost:65000,chapter:3,detail:"A full camp working for you."},
- {name:"Arena Deal",icon:"🏆",income:6500,cost:550000,chapter:4,detail:"The biggest stage."}
+ {name:"Rookie",icon:"🥊",income:2,cost:12,chapter:0,detail:"Your first helper."},
+ {name:"Pad Holder",icon:"✋",income:12,cost:90,chapter:1,detail:"Keeps the drills moving."},
+ {name:"Sparring Partner",icon:"⚡",income:65,cost:650,chapter:1,detail:"Trains alongside you."},
+ {name:"Coach",icon:"★",income:360,cost:5800,chapter:2,detail:"Runs the training sessions."},
+ {name:"Fight Camp",icon:"◆",income:2600,cost:52000,chapter:3,detail:"A full camp working for you."},
+ {name:"Arena Deal",icon:"🏆",income:16500,cost:460000,chapter:4,detail:"The biggest stage."}
 ];
 const GEAR=[
- {name:"Hand Wraps",icon:"▤",cost:80,bonus:1,chapter:0,detail:"+1 credit per punch"},
- {name:"Pro Gloves",icon:"🥊",cost:850,bonus:4,chapter:1,detail:"+4 credits per punch"},
- {name:"Power Punch",icon:"⚡",cost:12000,bonus:20,chapter:2,detail:"+20 credits per punch"}
+ {name:"Hand Wraps",icon:"▤",cost:36,bonus:2,chapter:0,detail:"+2 credits per punch"},
+ {name:"Pro Gloves",icon:"🥊",cost:390,bonus:6,chapter:1,detail:"+6 credits per punch"},
+ {name:"Power Punch",icon:"⚡",cost:4800,bonus:25,chapter:2,detail:"+25 credits per punch"}
 ];
 const $=id=>document.getElementById(id);
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
@@ -53,7 +53,7 @@ function read(){
  d.lastTick=safe(s.lastTick,0,Date.now());
  return d;
 }
-let state=read(),booted=false,timer=0,ticks=0,notice="",audioCtx=null,soundOn=false;
+let state=read(),booted=false,timer=0,ticks=0,notice="",audioCtx=null,soundOn=false,combo=0,lastPunchAt=0,lastSaveAt=0;
 function count(){return state.counts.reduce((n,v)=>n+v,0)}
 function rate(){
  let total=0;
@@ -61,7 +61,7 @@ function rate(){
  return Math.min(1e12,total);
 }
 function punchValue(){return 1+GEAR.reduce((sum,g,i)=>sum+(state.gear[i]?g.bonus:0),0)}
-function price(i){return Math.min(MAX_CREDITS,Math.ceil(BOXERS[i].cost*Math.pow(1.18,state.counts[i])))}
+function price(i){return Math.min(MAX_CREDITS,Math.ceil(BOXERS[i].cost*Math.pow(1.16,state.counts[i])))}
 function earn(n){if(n>0&&Number.isFinite(n)){state.credits=Math.min(MAX_CREDITS,state.credits+n);state.earned=Math.min(MAX_CREDITS,state.earned+n)}}
 function settle(now){
  const elapsed=clamp(now-state.lastTick,0,LIMIT_MS);
@@ -106,8 +106,8 @@ function bag(){
  '<button id="hbl-bag" class="hbl-bag" data-action="punch" type="button" aria-label="Punch the heavy bag and earn credits">'+
  '<span class="hbl-bag-body"><span class="hbl-bag-stitch" aria-hidden="true"></span><span class="hbl-bag-logo">HEAVY<br>BAG</span><span class="hbl-bag-band"></span></span></button>'+
  '<span class="hbl-shadow"></span><span class="hbl-pop" id="hbl-pop" aria-hidden="true"></span></div>'+
- '<div class="hbl-bag-caption"><strong>HIT TO EARN</strong><span id="hbl-value">+1 credit per punch</span></div>'+
- '<div class="hbl-auto'+(auto?' on':'')+'" id="hbl-auto"><i></i><span>'+(auto?'AUTO TRAINING ACTIVE · YOUR TEAM EARNS WHILE YOU ARE AWAY':'NO AUTO TRAINING YET · PUNCH 25 TIMES TO HIRE A ROOKIE')+'</span></div></div>';
+ '<div class="hbl-bag-caption"><strong>HIT TO EARN</strong><span id="hbl-value">+1 credit per punch</span><b id="hbl-combo" class="hbl-combo" hidden></b></div>'+
+ '<div class="hbl-auto'+(auto?' on':'')+'" id="hbl-auto"><i></i><span>'+(auto?'AUTO TRAINING ACTIVE · YOUR TEAM EARNS WHILE YOU ARE AWAY':'NO AUTO TRAINING YET · 12 CREDITS TO HIRE YOUR FIRST ROOKIE')+'</span></div></div>';
 }
 function objective(){
  const gym=GYMS[state.chapter];
@@ -175,7 +175,8 @@ function sync(){
  updateText("hbl-rate","+"+fmt(rate()));
  updateText("hbl-boxers",fmt(count()));
  updateText("hbl-punches",fmt(state.punches));
- updateText("hbl-value","+"+fmt(punchValue())+" credit"+(punchValue()===1?"":"s")+" per punch");
+ updateText("hbl-value","+"+fmt(punchValue())+" base / hit");
+ const comboBadge=$("hbl-combo");if(comboBadge){const active=combo>1&&Date.now()-lastPunchAt<1350;comboBadge.hidden=!active;if(active)comboBadge.textContent="×"+Math.min(5,1+Math.floor((combo-1)/5))+" COMBO";}
  const g=goalStats();
  updateText("hbl-goal-count",g.label);
  const bar=$("hbl-goal-progress");if(bar)bar.style.width=(g.fraction*100).toFixed(1)+"%";
@@ -186,20 +187,36 @@ function sync(){
  if(n){n.hidden=!notice;if(notice)updateText("hbl-notice-text",notice)}
  for(const b of document.querySelectorAll("[data-action='hire']")){
   const i=Number(b.getAttribute("data-index"));
-  b.disabled=BOXERS[i].chapter>state.chapter||state.credits+1e-7<price(i);
+  const locked=BOXERS[i].chapter>state.chapter,p=price(i),afford=state.credits+1e-7>=p;
+  b.disabled=locked||!afford;
+  b.textContent=locked?"LOCKED":fmt(p)+" C";
+  b.closest(".hbl-item")?.classList.toggle("hbl-affordable",!locked&&afford);
  }
  for(const b of document.querySelectorAll("[data-action='gear']")){
   const i=Number(b.getAttribute("data-index"));
-  b.disabled=state.gear[i]||GEAR[i].chapter>state.chapter||state.credits+1e-7<GEAR[i].cost;
+  const locked=GEAR[i].chapter>state.chapter,done=state.gear[i],afford=state.credits+1e-7>=GEAR[i].cost;
+  b.disabled=done||locked||!afford;
+  b.textContent=done?"OWNED":locked?"LOCKED":fmt(GEAR[i].cost)+" C";
+  b.closest(".hbl-item")?.classList.toggle("hbl-affordable",!done&&!locked&&afford);
  }
 }
 function impact(amount,automatic){
+ if(automatic)return;
  const bag=$("hbl-bag"),pop=$("hbl-pop");
- if(!bag)return;
- bag.classList.remove("impact");void bag.offsetWidth;bag.classList.add("impact");
- if(!automatic&&pop){
+ if(bag){
+  if(typeof bag.animate==="function"){
+   bag.animate([{transform:"rotate(0deg) scale(1)"},{transform:"rotate(7deg) scale(.975)",offset:.25},{transform:"rotate(-3deg) scale(1.012)",offset:.65},{transform:"rotate(0deg) scale(1)"}],
+    {duration:205,easing:"cubic-bezier(.18,.7,.2,1)"});
+  }else{
+   bag.classList.remove("impact");bag.classList.add("impact");
+  }
+ }
+ if(pop){
   pop.textContent="+"+fmt(amount);
-  pop.classList.remove("show");void pop.offsetWidth;pop.classList.add("show");
+  if(typeof pop.animate==="function"){
+   pop.animate([{opacity:1,transform:"translateY(0) scale(.92)"},{opacity:0,transform:"translateY(-55px) scale(1.1)"}],
+    {duration:420,easing:"ease-out"});
+  }else{pop.classList.remove("show");pop.classList.add("show")}
  }
 }
 function sound(){
@@ -219,13 +236,17 @@ function sound(){
 }
 function punch(){
  settle(Date.now());
- const amount=punchValue();
+ const now=Date.now();
+ combo=now-lastPunchAt<1100?Math.min(combo+1,25):1;
+ lastPunchAt=now;
+ const multiplier=1+Math.min(4,Math.floor((combo-1)/5));
+ const amount=punchValue()*multiplier;
  earn(amount);state.punches++;
  sound();try{navigator.vibrate?.(10)}catch(e){}
  impact(amount,false);
  const grown=milestones();
  if(grown)render();else sync();
- if(state.punches<=30||state.punches%5===0||grown)save();
+ if(grown||Date.now()-lastSaveAt>3000){save();lastSaveAt=Date.now()}
 }
 function hire(i){
  if(!Number.isInteger(i)||i<0||i>=BOXERS.length||BOXERS[i].chapter>state.chapter)return;
@@ -254,10 +275,9 @@ function tick(){
  const grown=milestones();
  if(grown)render();
  else sync();
- if(count()>0&&++ticks%3===0)impact(0,true);
- if(ticks%15===0||grown)save();
+ if(++ticks%75===0||grown){save();lastSaveAt=Date.now()}
 }
-function startTimer(){if(!timer&&!document.hidden)timer=setInterval(tick,1000)}
+function startTimer(){if(!timer&&!document.hidden)timer=setInterval(tick,200)}
 function stopTimer(){if(timer){clearInterval(timer);timer=0}}
 function boot(){
  if(booted)return;
@@ -280,7 +300,7 @@ document.addEventListener("click",event=>{
  else if(action==="sound"){soundOn=!soundOn;render()}
  else if(action==="reset"){
   if(window.confirm("Restart Heavy Bag from zero? This resets only this new Idle Boxing save.")){
-   state=fresh();notice="NEW START · 25 PUNCHES TO YOUR FIRST ROOKIE";
+   state=fresh();combo=0;lastPunchAt=0;notice="NEW START · 12 CREDITS TO YOUR FIRST ROOKIE";
    save();render();
   }
  }
