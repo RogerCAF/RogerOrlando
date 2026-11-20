@@ -50,12 +50,39 @@ button:focus-visible,select:focus-visible{outline:2px solid #f6d098;outline-offs
 @media(max-width:540px){header{gap:7px}.tag{font-size:8px}h1{font-size:clamp(20px,5.2vw,26px)}.topbar{gap:6px}.scoreboards{gap:3px}.player-stat{padding:6px 3px;flex-direction:column;gap:3px}.player-stat b{font-size:16px}.player-stat .label{font-size:8px}.player-stat .dot{width:6px;height:6px}.controls{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.control{padding:7px}.control-head small{font-size:8px}.turn{height:42px}.dialog{padding:13px}.dialog h2{font-size:25px}.dialog p{font-size:11px;line-height:1.35}.arena-meta{font-size:8px;left:7px;top:5px}.controls-head{font-size:10px}}
 @media(max-width:390px){main{padding:7px}.brand small{font-size:8px}h1{font-size:26px}.dialog .select-row{margin:8px 0}.dialog{padding:11px}.dialog p{margin:5px auto 8px}.dialog h2{margin:6px 0}.turn{height:39px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+
+.pc-keyboard-guide{margin:0 0 12px;padding:12px 15px;border:1px solid #d0a36a55;border-radius:12px;background:linear-gradient(110deg,#222736,#141e2c)}
+.pc-guide-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+.pc-guide-head strong,.dialog-keyboard-head{font:900 10px ui-monospace,monospace;color:#edc28d;letter-spacing:.1em}
+.pc-guide-head span{font:600 10px ui-monospace,monospace;color:#a7b8c8}
+.pc-guide-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.pc-key-player{min-width:0;display:flex;align-items:flex-start;flex-direction:column;gap:8px;padding:10px;border:1px solid color-mix(in srgb,var(--p),transparent 65%);border-radius:8px;background:#0a121d}
+.pc-key-player-name{font:850 10px ui-monospace,monospace;color:var(--p)}
+.pc-key-pair{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pc-key-action{display:inline-flex;align-items:center;gap:4px;font:750 9px ui-monospace,monospace;color:#98a7b8}
+.pc-key-action kbd,.pc-keyboard-footer kbd,.dialog-keyboard-footer kbd{display:inline-flex;justify-content:center;align-items:center;min-width:29px;height:27px;padding:0 5px;border:1px solid #708095;border-bottom-width:3px;border-radius:6px;background:#253447;color:#fdf4e9;font:850 13px ui-monospace,monospace}
+.pc-keyboard-footer{margin-top:9px;color:#aeb8c7;font:600 10px/1.6 ui-monospace,monospace}
+.pc-keyboard-footer kbd,.dialog-keyboard-footer kbd{min-width:23px;height:23px;font-size:10px;border-bottom-width:2px}
+.dialog-keyboard{margin:10px 0 15px;text-align:left}
+.dialog-keyboard-head{margin-bottom:8px}
+.dialog-keyboard .pc-guide-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.dialog-keyboard .pc-key-player{padding:7px;gap:5px}
+.dialog-keyboard .pc-key-player-name{font-size:8px}
+.dialog-keyboard .pc-key-pair{gap:4px}
+.dialog-keyboard .pc-key-action{font-size:8px}
+.dialog-keyboard .pc-key-action kbd{min-width:23px;height:22px;font-size:11px;padding:0 4px}
+.dialog-keyboard-footer{margin-top:8px;color:#b2c0d0;font:700 9px/1.6 ui-monospace,monospace}
+.turn{display:flex;justify-content:center;align-items:center;gap:8px;font-size:19px}
+.turn kbd{min-width:28px;padding:4px 5px;border:1px solid #ffffff30;border-bottom-width:2px;border-radius:5px;background:#142032;color:#e9f3f8;font:900 12px ui-monospace,monospace}
+@media(max-width:900px){.pc-guide-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:540px){.pc-keyboard-guide{padding:10px}.pc-guide-head{flex-wrap:wrap;gap:5px}.pc-guide-grid,.dialog-keyboard .pc-guide-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.pc-key-player{padding:7px;gap:6px}.pc-guide-head strong,.pc-guide-head span{font-size:9px}.pc-keyboard-footer{font-size:9px}}
 </style></head>
 <body><main>
 <header><div class="brand"><small>THE BUREAU / PHONE ARCADE / LOCAL MULTIPLAYER</small><h1>AGTUNG DIE KURVE<span>.</span></h1></div><span class="tag">UP TO 5 PLAYERS<br>FIRST TO 5 POINTS</span></header>
+<section class="pc-keyboard-guide" aria-label="PC toetsen per speler"><div class="pc-guide-head"><strong>⌨ PC KEYBOARD / WHO CONTROLS WHAT?</strong><span>Houd links of rechts ingedrukt om te sturen</span></div><div class="pc-guide-grid" id="keyboardGuide"></div><div class="pc-keyboard-footer"><kbd>SPACE</kbd> start / volgende ronde &nbsp;·&nbsp; <kbd>P</kbd> pauze &nbsp;·&nbsp; loslaten = rechtdoor</div></section>
 <div class="topbar"><div class="scoreboards" id="scores"></div></div>
 <section class="game-wrap" aria-label="Agtung die Kurve shared arena"><canvas id="arena" width="960" height="620" aria-label="Agtung die Kurve arena. Hold your player's left or right keys to steer and avoid walls and trails."></canvas><div class="arena-meta"><span>ROUND <strong id="round">1</strong></span><span id="status">WAITING FOR PLAYERS</span></div>
-<div class="overlay" id="overlay"><div class="dialog"><span class="kicker" id="kicker">ONE SCREEN / FIVE RIVALS</span><h2 id="title">Don't hit the curve.</h2><p id="description">All players move automatically and leave a trail. Hold LEFT or RIGHT to steer. Touch a wall or a trail and you're out. Last survivor scores a point.</p><div class="select-row" id="selectRow"><label for="count">PLAYERS</label><select id="count" aria-label="Number of local players"><option value="2">2 PLAYERS</option><option value="3">3 PLAYERS</option><option value="4">4 PLAYERS</option><option selected value="5">5 PLAYERS</option></select></div><button id="action" class="primary" type="button">START MATCH →</button><p class="legend">Mouse and touch: hold the on-screen arrows. Desktop: use each player's keyboard pair. Random gaps appear in the trails.</p></div></div>
+<div class="overlay" id="overlay"><div class="dialog"><span class="kicker" id="kicker">ONE SCREEN / FIVE RIVALS</span><h2 id="title">Don't hit the curve.</h2><p id="description">All players move automatically and leave a trail. Hold LEFT or RIGHT to steer. Touch a wall or a trail and you're out. Last survivor scores a point.</p><div class="select-row" id="selectRow"><label for="count">PLAYERS</label><select id="count" aria-label="Number of local players"><option selected value="2">2 PLAYERS</option><option value="3">3 PLAYERS</option><option value="4">4 PLAYERS</option><option value="5">5 PLAYERS</option></select></div><div class="dialog-keyboard" aria-label="Toetsen van de spelers"><div class="dialog-keyboard-head">⌨ ONE COMPUTER / ONE KEYBOARD / NO ACCOUNTS</div><div class="pc-guide-grid" id="dialogKeyboard"></div><div class="dialog-keyboard-footer"><kbd>SPACE</kbd> starten / volgende ronde &nbsp;·&nbsp; <kbd>P</kbd> pauze</div></div><button id="action" class="primary" type="button">START LOCAL MATCH →</button><p class="legend">Speel samen op één PC. Kies 2–5 spelers en start direct zonder accounts. Houd je toetsen ingedrukt om te sturen.</p></div></div>
 </section>
 <div class="controls-head"><strong>PLAYER CONTROLS</strong><span>Hold to turn · release to go straight</span></div>
 <div class="controls" id="controls"></div>
@@ -73,7 +100,7 @@ const CONFIG=[
  {id:5,name:"PURPLE",color:"#c1a0ff",left:"v",right:"n",keys:"V / N"}
 ];
 const held=new Set(),pointers=new Map();
-let players=[],count=5,round=1,mode="menu",stamp=1,clock=0,countdown=3.3,last=0,raf=0,winner=null;
+let players=[],count=2,round=1,mode="menu",stamp=1,clock=0,countdown=3.3,last=0,raf=0,winner=null;
 function clearInput(){held.clear();pointers.clear();document.querySelectorAll(".turn.held").forEach(b=>b.classList.remove("held"))}
 function scoreboard(){
  const root=$("scores");root.replaceChildren();
@@ -92,7 +119,7 @@ function buildControls(){
   const keys=document.createElement("small");keys.textContent=cfg.keys;label.append(name,keys);
   const buttons=document.createElement("div");buttons.className="control-buttons";
   for(const [direction,key] of [["left",cfg.left],["right",cfg.right]]){
-   const button=document.createElement("button");button.className="turn";button.type="button";button.textContent=direction==="left"?"↶":"↷";
+   const button=document.createElement("button");button.className="turn";button.type="button";const arrow=document.createElement("span");arrow.textContent=direction==="left"?"↶":"↷";arrow.setAttribute("aria-hidden","true");const cap=document.createElement("kbd");cap.textContent=key==="arrowleft"?"←":key==="arrowright"?"→":key.toUpperCase();cap.setAttribute("aria-hidden","true");button.append(arrow,cap);
    button.dataset.key=key;button.setAttribute("aria-label","Player "+cfg.id+" turn "+direction);
    button.addEventListener("pointerdown",e=>{e.preventDefault();button.setPointerCapture(e.pointerId);pointers.set(e.pointerId,key);button.classList.add("held")});
    const release=e=>{if(pointers.get(e.pointerId)===key)pointers.delete(e.pointerId);button.classList.remove("held")};
@@ -102,7 +129,23 @@ function buildControls(){
   el.append(label,buttons);root.append(el);
  });
 }
-function chooseCount(){count=Number($("count").value)||5;buildControls();players=CONFIG.slice(0,count).map(cfg=>({...cfg,points:0,alive:true,x:0,y:0,a:0,gapDelay:4,gapLeft:0}));scoreboard()}
+function renderKeyboardGuides(){
+ for(const id of ["keyboardGuide","dialogKeyboard"]){
+  const root=$(id);if(!root)continue;root.replaceChildren();
+  for(const cfg of CONFIG.slice(0,count)){
+   const player=document.createElement("div");player.className="pc-key-player";player.style.setProperty("--p",cfg.color);
+   const name=document.createElement("span");name.className="pc-key-player-name";name.textContent="P"+cfg.id+" "+cfg.name;
+   const pair=document.createElement("div");pair.className="pc-key-pair";
+   for(const [side,key] of [["LINKS",cfg.left],["RECHTS",cfg.right]]){
+    const group=document.createElement("span");group.className="pc-key-action";
+    const cap=document.createElement("kbd");cap.textContent=key==="arrowleft"?"←":key==="arrowright"?"→":key.toUpperCase();
+    group.append(cap,document.createTextNode(side));pair.append(group);
+   }
+   player.append(name,pair);root.append(player);
+  }
+ }
+}
+function chooseCount(){count=Number($("count").value)||2;buildControls();renderKeyboardGuides();players=CONFIG.slice(0,count).map(cfg=>({...cfg,points:0,alive:true,x:0,y:0,a:0,gapDelay:4,gapLeft:0}));scoreboard()}
 function spawnPositions(){
  const out=[];
  for(const p of players){
