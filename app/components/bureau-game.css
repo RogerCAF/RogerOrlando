@@ -16,3 +16,49 @@
 @media(max-width:670px){.bureau-game-chrome{min-height:61px;padding:9px 12px;gap:8px}.bureau-game-identity{gap:8px}.bureau-game-identity strong{font-size:10px;letter-spacing:0}.bureau-game-identity small{font-size:7px;letter-spacing:.03em}.bureau-game-actions{gap:6px}.bureau-game-encrypted,.bureau-game-actions>button>span{display:none}.bureau-game-actions>button{min-width:43px;padding:0 8px}.bureau-game-actions>a{width:37px;height:39px}}
 @keyframes bureau-game-arrival{from{opacity:.4;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){.bureau-game-overlay{animation:none}}
+
+/* The Bureau Arcade — the monitors lead to playable experiences, not a duplicate portfolio. */
+.bureau-arcade-overlay{position:fixed;inset:0;z-index:2147483001;display:flex;align-items:center;justify-content:center;padding:clamp(10px,3vw,32px);overflow-y:auto;overscroll-behavior:contain;background:rgba(5,8,11,.94);color:#f5e9d8;animation:bureau-game-arrival .24s ease-out both}
+.bureau-arcade-shell{width:min(100%,890px);max-height:calc(100dvh - 26px);overflow:auto;overscroll-behavior:contain;border:1px solid rgba(208,164,101,.3);border-radius:18px;background:linear-gradient(150deg,#191d23 0%,#101418 68%,#0d1217 100%);box-shadow:0 30px 100px #000b,0 0 0 1px #ffffff09 inset}
+.bureau-arcade-head{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:17px clamp(17px,3vw,27px);border-bottom:1px solid #ffffff14}
+.bureau-arcade-brand{display:flex;align-items:center;gap:10px;color:#e9c392;font:850 12px ui-monospace,monospace;letter-spacing:.13em}
+.bureau-arcade-brand svg{color:#d8a86a}
+.bureau-arcade-brand em{font-style:normal;color:#9ca6ad}
+.bureau-arcade-close{display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;border:1px solid #ffffff27;border-radius:9px;background:#22272e;color:#f3e8d9;cursor:pointer;transition:border-color .15s,background-color .15s}
+.bureau-arcade-close:hover{background:#34363a;border-color:#d0a06a}
+.bureau-arcade-intro{padding:27px clamp(17px,3.5vw,33px) 20px}
+.bureau-arcade-intro>span{font:850 10px ui-monospace,monospace;letter-spacing:.18em;color:#c59b66}
+.bureau-arcade-intro h2{font:900 clamp(29px,4vw,45px)/1.08 system-ui,-apple-system,sans-serif;letter-spacing:-.065em;margin:11px 0 9px;color:#fff3e1}
+.bureau-arcade-intro h2 span{color:#d99e65}
+.bureau-arcade-intro p{max-width:550px;color:#a2abb1;font:400 13px/1.65 system-ui,-apple-system,sans-serif;margin:0}
+.bureau-arcade-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;padding:0 clamp(17px,3.5vw,33px) 22px}
+.bureau-arcade-card{min-width:0;display:flex;flex-direction:column;align-items:flex-start;position:relative;min-height:202px;padding:18px 19px;text-align:left;border:1px solid #ffffff1c;border-radius:12px;background:linear-gradient(140deg,#22282e 0%,#1a1f25 100%);color:inherit;cursor:pointer;transition:border-color .17s,background-color .17s,transform .17s,box-shadow .17s}
+.bureau-arcade-card:hover{transform:translateY(-3px);border-color:#d9ae78a3;box-shadow:0 12px 28px #0007}
+.bureau-arcade-card:active{transform:translateY(1px)}
+.bureau-arcade-card-index{font:850 9px ui-monospace,monospace;letter-spacing:.13em;color:#c7a177}
+.bureau-arcade-card-icon{position:absolute;right:18px;top:17px;color:#dab180;opacity:.85}
+.bureau-arcade-card strong{font:900 clamp(17px,2.1vw,21px)/1.1 system-ui,-apple-system,sans-serif;letter-spacing:-.03em;margin:36px 0 7px;color:#f7ead9}
+.bureau-arcade-card>span:not(.bureau-arcade-card-index){font:400 11px/1.5 system-ui,-apple-system,sans-serif;color:#a5afb7;max-width:27ch}
+.bureau-arcade-card em{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:16px;font:850 10px ui-monospace,monospace;letter-spacing:.06em;color:#f3bf84;font-style:normal}
+.bureau-arcade-card em svg{transition:transform .15s}
+.bureau-arcade-card:hover em svg{transform:translateX(4px)}
+.bureau-arcade-card:focus-visible,.bureau-arcade-close:focus-visible{outline:2px solid #ffd19a;outline-offset:3px}
+.bureau-arcade-foot{border-top:1px solid #ffffff10;padding:15px clamp(17px,3.5vw,33px) 19px;font:600 10px/1.5 ui-monospace,monospace;letter-spacing:.035em;color:#82909c}
+@media(max-width:620px){
+ .bureau-arcade-overlay{padding:6px;align-items:center}
+ .bureau-arcade-shell{max-height:calc(100dvh - 12px);border-radius:12px}
+ .bureau-arcade-head{padding:10px 13px}
+ .bureau-arcade-brand{font-size:11px;letter-spacing:.05em}
+ .bureau-arcade-intro{padding:16px 15px 15px}
+ .bureau-arcade-intro h2{font-size:30px;margin:6px 0}
+ .bureau-arcade-intro p{font-size:11px}
+ .bureau-arcade-grid{grid-template-columns:1fr;gap:8px;padding:0 12px 12px}
+ .bureau-arcade-card{min-height:119px;padding:12px 14px;border-radius:9px}
+ .bureau-arcade-card-index{font-size:8px}
+ .bureau-arcade-card-icon{top:13px;right:15px;width:25px;height:25px}
+ .bureau-arcade-card strong{margin:12px 0 3px;font-size:17px}
+ .bureau-arcade-card>span:not(.bureau-arcade-card-index){font-size:10px;max-width:90%}
+ .bureau-arcade-card em{padding-top:8px;font-size:9px}
+ .bureau-arcade-foot{padding:12px 15px 14px;font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){.bureau-arcade-overlay{animation:none}.bureau-arcade-card,.bureau-arcade-card em svg,.bureau-arcade-close{transition:none}}
