@@ -47,6 +47,9 @@ function setRole(which){
  $("playControls").hidden=role==="menu";
  if(which==="menu"){showGame(false);return}
  showGame(true);
+ // Joining via Enter leaves focus in the now-hidden room-code input on some browsers.
+ $("roomInput").blur();
+ $("arena").focus({preventScroll:true});
 }
 function updateLobby(){
  const count=1+[...peers.values()].filter(p=>p.dc?.readyState==="open").length;
