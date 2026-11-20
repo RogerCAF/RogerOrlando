@@ -280,6 +280,7 @@ function showUpgrade(){
 function levelCheck(){
  if(game.xp<game.nextXP)return;
  game.xp-=game.nextXP;game.lvl++;game.nextXP=5+Math.floor(game.lvl*2.5);
+ game.player.hp=Math.min(game.player.max,game.player.hp+12);
  showUpgrade();sound(780,.12,"sine",.05);
 }
 function collect(dt){
