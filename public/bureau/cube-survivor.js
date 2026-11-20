@@ -15,7 +15,7 @@ const WPN=[
  {name:"SEEKER LAUNCHER",hint:"Homing cube missiles find their own targets.",color:"#4fbf85",rate:1.5}
 ];
 const RECORD="the-bureau-cube-survivor-v1";
-const MAX_ENEMIES=25,MAX_BULLETS=70,MAX_DROPS=90,MAX_FX=66,MAX_SHOTS=22;
+const MAX_ENEMIES=25,MAX_BULLETS=84,MAX_DROPS=90,MAX_FX=66,MAX_SHOTS=22;
 const TWO_PI=Math.PI*2, RUN_TIME=90;
 let w=860,h=500,scale=1,mode="menu",raf=0,lastFrame=0,uiClock=0,soundOn=false,audio=null,lastSound=0;
 let game=null;
@@ -31,8 +31,9 @@ function createState(){
  let second=1+Math.floor(Math.random()*5);
  const initialRanks=[1,0,0,0,0,0];initialRanks[second]=1;
  return {t:0,player:{x:w/2,y:h/2,hp:100,max:100,speed:191,inv:0},
-  score:0,kills:0,lvl:1,xp:0,nextXP:5,active:0,unlocked:[0,second],ranks:initialRanks,
-  fire:0,spun:0,hitCount:0,lastWeapon:0,fusion:{kind:"",until:0},
+  score:0,kills:0,lvl:1,xp:0,nextXP:5,unlocked:[0,second],ranks:initialRanks,
+  cooldowns:[0,.7,.7,1.1,1.3,.9],spun:0,hitCount:0,
+  fusion:{kind:"",until:0},fusionNext:12,fusionIndex:0,
   enemies:[],bullets:[],drops:[],fx:[],shots:[],beams:[],
   spawn:0.5,boss:null,bossSpawned:false, speedBonus:0,notice:"",noticeUntil:0,hitFlash:0,screenShake:0};
 }
@@ -131,7 +132,7 @@ function spawnBoss(){
  if(game.bossSpawned)return;
  game.bossSpawned=true;
  let x=game.player.x<w*.5?w+58:-58;
- game.boss={x,y:h/2,hp:340,max:340,size:39,speed:45,cooldown:1.35,flash:0,knockX:0,knockY:0};
+ game.boss={x,y:h/2,hp:1150,max:1150,size:39,speed:45,cooldown:1.35,flash:0,knockX:0,knockY:0};
  game.enemies.length=Math.min(game.enemies.length,14);
  showNotice("⚠ THE CORRUPTED CUBE HAS ARRIVED",3);
  $("boss").hidden=false;
@@ -152,13 +153,19 @@ function addBullet(x,y,angle,speed,damage,color,kind="normal",life=1.6,extra={})
  game.bullets.push(Object.assign({x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,r:kind==="rocket"?8:kind==="seeker"?6:4,damage,color,kind,life,angle,pierce:0},extra));
 }
 function validFusion(k){return game.fusion.kind===k&&game.fusion.until>game.t}
-function switchWeapon(i){
- if(!game||mode!=="playing"||!game.unlocked.includes(i)||i===game.active)return;
- const old=game.active;game.lastWeapon=old;game.active=i;game.spun=0;game.fire=Math.min(game.fire,.13);
- const combo=old+"-"+i;
- const pairs={"4-1":"PRISM SHATTER","3-2":"BULLET STORM","5-3":"SWARM BOMB","0-4":"PRECISION BEAM"};
- if(pairs[combo]){game.fusion={kind:combo,until:game.t+2.25};showNotice("COLOR FUSION · "+pairs[combo],1.6);sound(780,.12,"triangle")}
- refreshUI();
+function updateFusion(){
+ if(game.t<game.fusionNext)return;
+ game.fusionNext=game.t+11;
+ const pairs=[{a:4,b:1,key:"4-1",name:"PRISM SHATTER"},
+  {a:3,b:2,key:"3-2",name:"BULLET STORM"},
+  {a:5,b:3,key:"5-3",name:"SWARM BOMB"},
+  {a:0,b:4,key:"0-4",name:"PRECISION BEAM"}]
+  .filter(c=>game.unlocked.includes(c.a)&&game.unlocked.includes(c.b));
+ if(!pairs.length)return;
+ const chosen=pairs[game.fusionIndex++%pairs.length];
+ game.fusion={kind:chosen.key,until:game.t+3};
+ showNotice("AUTO FUSION · "+chosen.name,2);
+ sound(780,.12,"triangle");
 }
 function hurt(enemy,damage,dx=0,dy=0){
  if(enemy.hp<=0)return;
@@ -190,17 +197,18 @@ function explosion(x,y,r,damage,color){
   if(d<r+e.size)hurt(e,damage*(1-Math.min(.65,d/(r+e.size)*.55)),dx/d*25,dy/d*25);
  }
 }
-function attack(){
+function attack(i){
  const p=game.player,target=nearest(p.x,p.y);
  if(!target)return;
- let aim=Math.atan2(target.y-p.y,target.x-p.x);
- const i=game.active,rank=Math.max(1,game.ranks[i]),power=1+(rank-1)*.3;
- const x=p.x+Math.cos(aim)*22,y=p.y+Math.sin(aim)*22;
+ const mount=-Math.PI/2+i*TWO_PI/6;
+ const x=p.x+Math.cos(mount)*26,y=p.y+Math.sin(mount)*26;
+ const aim=Math.atan2(target.y-y,target.x-x);
+ const rank=Math.max(1,game.ranks[i]),power=1+(rank-1)*.25;
  if(i===0){
   const crit=++game.hitCount%5===0;
   addBullet(x,y,aim,430,(crit?23:11)*power,WPN[i].color,"normal",1.45,{crit});
   if(rank>=3)addBullet(x,y,aim+rand(-.09,.09),420,(crit?18:9)*power,WPN[i].color,"normal",1.45,{crit});
-  game.fire=WPN[i].rate*(1-(rank-1)*.075);
+  game.cooldowns[i]=WPN[i].rate*(1-(rank-1)*.075);
   sound(245,.045,"square");
  }else if(i===1){
   const bonus=(validFusion("4-1")?2:0)+(rank>=2?1:0);
@@ -208,19 +216,19 @@ function attack(){
    let count=5+bonus;
    addBullet(x,y,aim+(j-(count-1)/2)*.145+rand(-.03,.03),370,9*power,WPN[i].color,"pellet",.37);
   }
-  game.fire=WPN[i].rate*(1-(rank-1)*.07);
+  game.cooldowns[i]=WPN[i].rate*(1-(rank-1)*.07);
   sound(135,.09,"sawtooth",.05);
  }else if(i===2){
   let spread=rand(-.095,.095);
   addBullet(x,y,aim+spread,470,5*power,WPN[i].color,"normal",1.3);
   if(rank>=4)addBullet(x,y,aim-spread,460,4*power,WPN[i].color,"normal",1.25);
   if(validFusion("3-2"))addBullet(x,y,aim+rand(-.22,.22),430,4*power,WPN[i].color,"normal",1.2);
-  game.fire=clamp(.155-game.spun*.038, .069, .16)*(1-(rank-1)*.065);
+  game.cooldowns[i]=clamp(.155-game.spun*.038, .069, .16)*(1-(rank-1)*.065);
   sound(360,.025,"square",.013);
  }else if(i===3){
   addBullet(x,y,aim,285,33*power,WPN[i].color,"rocket",2.3,{splash:56+rank*7,splashDamage:27*power});
   if(validFusion("5-3"))for(let j=0;j<2;j++)addBullet(x,y,aim+(j===0?-.25:.25),210,16*power,WPN[5].color,"seeker",2.6,{splash:0});
-  game.fire=WPN[i].rate*(1-(rank-1)*.07);
+  game.cooldowns[i]=WPN[i].rate*(1-(rank-1)*.07);
   sound(95,.13,"sawtooth",.046);
  }else if(i===4){
   let len=Math.max(w,h)*1.5,dx=Math.cos(aim),dy=Math.sin(aim);
@@ -231,11 +239,11 @@ function attack(){
    let px=e.x-x,py=e.y-y,along=px*dx+py*dy,side=Math.abs(px*dy-py*dx);
    if(along>0&&along<len&&side<beamWidth+e.size)hurt(e,51*power*(validFusion("0-4")?1.5:1),dx*10,dy*10);
   }
-  game.fire=WPN[i].rate*(1-(rank-1)*.065);
+  game.cooldowns[i]=WPN[i].rate*(1-(rank-1)*.065);
   sound(580,.16,"sine",.037);
  }else{
   for(let j=0;j<(rank>=3?3:2);j++)addBullet(x,y,aim+(j===0?-.19:.19),245,20*power,WPN[i].color,"seeker",3.2);
-  game.fire=WPN[i].rate*(1-(rank-1)*.065);
+  game.cooldowns[i]=WPN[i].rate*(1-(rank-1)*.065);
   sound(440,.08,"triangle");
  }
 }
@@ -245,7 +253,7 @@ function upgradeOptions(){
   if(game.unlocked.includes(i)){
    if(game.ranks[i]<4)pool.push({kind:"boost",index:i,title:WPN[i].name+" LV."+(game.ranks[i]+1),
     description:i===0?"Faster, harder pistol fire.":i===1?"Stronger close-range cube spread.":i===2?"Higher bullet damage and more sustained fire.":i===3?"Bigger explosions and heavier rockets.":i===4?"Stronger beam damage and penetration.":"Additional seeker strength and better lock-on.",color:WPN[i].color});
-  }else if(game.unlocked.length<4){
+  }else if(game.unlocked.length<6){
    pool.push({kind:"unlock",index:i,title:"UNLOCK "+WPN[i].name,description:WPN[i].hint,color:WPN[i].color});
   }
  }
@@ -259,7 +267,7 @@ function upgradeOptions(){
 }
 function award(option){
  if(mode!=="upgrade")return;
- if(option.kind==="unlock"){game.unlocked.push(option.index);game.ranks[option.index]=1;game.active=option.index;game.fire=0;game.spun=0}
+ if(option.kind==="unlock"){game.unlocked.push(option.index);game.ranks[option.index]=1;game.cooldowns[option.index]=.22}
  else if(option.kind==="boost")game.ranks[option.index]++;
  else if(option.kind==="heal")game.player.hp=Math.min(game.player.max,game.player.hp+32);
  else if(option.kind==="speed"){game.speedBonus++;game.player.speed*=1.10}
@@ -271,7 +279,7 @@ function showUpgrade(){
  if(mode!=="playing")return;
  setMode("upgrade");keys.clear();touch.active=false;
  const opts=upgradeOptions();
- setOverlay("LEVEL "+game.lvl+" / CHOOSE ONE","YOUR CUBE EVOLVES.","Pick a weapon or upgrade. The arena is paused until you decide.",null,"","Up to four colors per run · Your upgrades last until the run ends.");
+ setOverlay("LEVEL "+game.lvl+" / CHOOSE ONE","YOUR CUBE EVOLVES.","Pick a weapon or upgrade. The arena is paused until you decide.",null,"","All six colors can be equipped together · Every unlocked gun fires automatically.");
  const holder=$("upgrade-choices");holder.innerHTML="";holder.hidden=false;
  for(const opt of opts){
   let b=document.createElement("button");b.type="button";b.className="choice";
@@ -391,9 +399,16 @@ function simulate(dt){
  }
  if(game.t>=80&&!game.bossSpawned)spawnBoss();
  updateEnemies(dt);if(mode!=="playing")return;
- game.spun=game.active===2?Math.min(2.5,game.spun+dt):Math.max(0,game.spun-dt*3);
- game.fire-=dt;
- if(game.fire<=0){attack()}
+ game.spun=game.unlocked.includes(2)?Math.min(2.5,game.spun+dt):0;
+ updateFusion();
+ for(const i of game.unlocked){
+  game.cooldowns[i]-=dt;
+  if(game.cooldowns[i]<=0){
+   if(nearest(game.player.x,game.player.y))attack(i);
+   else game.cooldowns[i]=.12;
+   if(mode!=="playing")return;
+  }
+ }
  updateBullets(dt);if(mode!=="playing")return;
  for(let i=game.fx.length-1;i>=0;i--){game.fx[i].life-=dt;if(game.fx[i].life<=0)game.fx.splice(i,1)}
  for(let i=game.beams.length-1;i>=0;i--){game.beams[i].life-=dt;if(game.beams[i].life<=0)game.beams.splice(i,1)}
@@ -550,10 +565,9 @@ function frame(ts){
 const keyMap={arrowup:1,arrowdown:1,arrowleft:1,arrowright:1,w:1,a:1,s:1,d:1};
 document.addEventListener("keydown",function(e){
  const key=e.key.toLowerCase();
- if(keyMap[key]||key===" "||key==="p"||key==="1"||key==="2"||key==="3"||key==="4"||key==="5"||key==="6")e.preventDefault();
+ if(keyMap[key]||key===" "||key==="p")e.preventDefault();
  if(key==="p"){if(mode==="playing")pause();else if(mode==="paused")resume();return}
  if(mode!=="playing")return;
- if(key>="1"&&key<="6"){switchWeapon(Number(key)-1);return}
  keys.add(key);
 });
 document.addEventListener("keyup",function(e){keys.delete(e.key.toLowerCase())});
@@ -573,7 +587,6 @@ canvas.addEventListener("pointermove",function(e){
 });
 function release(e){if(e.pointerId!==touch.id)return;touch.active=false;touch.dx=0;touch.dy=0}
 canvas.addEventListener("pointerup",release);canvas.addEventListener("pointercancel",release);canvas.addEventListener("lostpointercapture",release);
-$("weapons").addEventListener("click",function(e){const b=e.target.closest("button[data-weapon]");if(b)switchWeapon(Number(b.dataset.weapon))});
 $("pause").addEventListener("click",function(){if(mode==="playing")pause();else if(mode==="paused")resume()});
 $("sound").addEventListener("click",function(){soundOn=!soundOn;$("sound").textContent=soundOn?"♪ ON":"♪ OFF";$("sound").setAttribute("aria-pressed",String(soundOn));$("sound").setAttribute("aria-label",soundOn?"Disable sound":"Enable sound");if(soundOn)sound(500,.07,"sine")});
 window.addEventListener("pagehide",function(){if(mode==="playing")pause("GAME AUTO-PAUSED");cancelAnimationFrame(raf);raf=0;keys.clear();touch.active=false});
