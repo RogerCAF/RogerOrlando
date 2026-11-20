@@ -259,15 +259,12 @@ function newPositions(){
  }
 }
 function startMatch(){
- if(role!=="host"||phase!=="lobby"&&phase!=="matchend")return;
- if(phase==="lobby"){
-  const ids=[1,...[...peers.values()].filter(p=>p.dc?.readyState==="open").map(p=>p.slot)].sort((a,b)=>a-b);
-  if(ids.length<2){message("Er moet minstens één gast verbonden zijn.","bad");return}
-  players=ids.map(id=>({id,color:COLORS[id-1],x:0,y:0,a:0,alive:true,points:0,gapDelay:4,gapLeft:0}));
-  points=[0,0,0,0,0];round=1;
- }else{
-  points=[0,0,0,0,0];players.forEach(p=>p.points=0);round=1;
- }
+ if(role!=="host"||(phase!=="lobby"&&phase!=="matchend"))return;
+ const ids=[1,...[...peers.values()].filter(p=>p.dc?.readyState==="open").map(p=>p.slot)].sort((a,b)=>a-b);
+ if(ids.length<2){message("Er moet minstens één gast verbonden zijn.","bad");return}
+ // Rebuild the roster for a rematch, including only still-connected computers.
+ players=ids.map(id=>({id,color:COLORS[id-1],x:0,y:0,a:0,alive:true,points:0,gapDelay:4,gapLeft:0}));
+ points=[0,0,0,0,0];round=1;
  initRound();
 }
 function initRound(){
