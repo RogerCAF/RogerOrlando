@@ -16,6 +16,8 @@ export default function BureauExperience() {
   const [gameOpen, setGameOpen] = useState(false);
   const [bagOpen, setBagOpen] = useState(false);
   const bagCloseRef = useRef<HTMLButtonElement>(null);
+  const [rubikOpen, setRubikOpen] = useState(false);
+  const rubikCloseRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!gameOpen) return;
@@ -59,6 +61,30 @@ export default function BureauExperience() {
     };
   }, [bagOpen]);
 
+  // Keep the cube game outside the Bureau artwork iframe, without changing the
+  // original Rubik illustration, hotspot position or other scene interactions.
+  useEffect(() => {
+    if (!rubikOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    rubikCloseRef.current?.focus({ preventScroll: true });
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setRubikOpen(false);
+    };
+    const onMessage = (event: MessageEvent) => {
+      if (event.origin === window.location.origin &&
+          event.source instanceof Window &&
+          event.data?.type === "bureau:close-cube-survivor") setRubikOpen(false);
+    };
+    document.addEventListener("keydown", onEscape);
+    window.addEventListener("message", onMessage);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onEscape);
+      window.removeEventListener("message", onMessage);
+    };
+  }, [rubikOpen]);
+
   const prepareScene = useCallback(() => {
     const frame = iframeRef.current;
     if (!frame) return;
@@ -67,17 +93,19 @@ export default function BureauExperience() {
       const window = frame.contentWindow;
       if (!document || !window) return;
 
-      // The approved homepage artwork is an embedded iframe. A regular
-      // in-frame dialog is clipped by that illustration's viewport. Intercept
-      // only Heavy Bag hotspots, then open the existing campaign at page level.
+      // The approved homepage artwork is an embedded iframe. Full-screen
+      // games open in page-level portals so the illustration stays untouched.
       if (!document.documentElement.dataset.bureauBagLinkInstalled) {
         document.addEventListener("click", (event: MouseEvent) => {
           const target = event.target as Element | null;
-          if (!target?.closest?.('[data-open="bag"], [data-inside="bag"]')) return;
+          const isBag = !!target?.closest?.('[data-open="bag"], [data-inside="bag"]');
+          const isRubik = !!target?.closest?.('[data-open="rubik"], [data-inside="rubik"]');
+          if (!isBag && !isRubik) return;
           event.preventDefault();
           event.stopPropagation();
           event.stopImmediatePropagation();
-          setBagOpen(true);
+          if (isRubik) setRubikOpen(true);
+          else setBagOpen(true);
         }, true);
         document.documentElement.dataset.bureauBagLinkInstalled = "1";
       }
@@ -974,7 +1002,7 @@ export default function BureauExperience() {
       title="The Bureau — interactieve illustratie" loading="eager"
       // Keep the scene mounted (preserves its interactive state), but stop
       // rendering the large illustrated iframe under the full-screen game.
-      style={gameOpen ? { display: "none" } : undefined}
+      style={gameOpen || bagOpen || rubikOpen ? { display: "none" } : undefined}
       onLoad={prepareScene} allowFullScreen />
     {bagOpen && typeof document !== "undefined" && createPortal(
       <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="Heavy Bag spel">
@@ -990,6 +1018,23 @@ export default function BureauExperience() {
         </header>
         <iframe className="bureau-game-viewport" src="/bureau/heavybag-play.html"
           title="Heavy Bag — speel de volledige campagne" allow="fullscreen"/>
+      </div>, document.body)}
+    {rubikOpen && typeof document !== "undefined" && createPortal(
+      <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="Cube Survivor spel">
+        <header className="bureau-game-chrome">
+          <div className="bureau-game-identity"><span className="bureau-game-signal"/>
+            <span><strong>CUBE SURVIVOR</strong><small>THE BUREAU / COLOR ARSENAL / 90 SECONDS</small></span>
+          </div>
+          <div className="bureau-game-actions">
+            <a href="/bureau/cube-survivor.html" target="_blank" rel="noopener noreferrer"
+              aria-label="Open Cube Survivor in een nieuw tabblad" title="Open game apart"><Maximize2 size={17}/></a>
+            <button ref={rubikCloseRef} type="button" onClick={() => setRubikOpen(false)}>
+              <ArrowLeft size={16}/><span>TERUG NAAR HET PLAATJE</span><X size={18}/>
+            </button>
+          </div>
+        </header>
+        <iframe className="bureau-game-viewport" src="/bureau/cube-survivor.html"
+          title="Cube Survivor — Color Arsenal" allow="fullscreen"/>
       </div>, document.body)}
     {gameOpen && typeof document !== "undefined" && createPortal(
       <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="The Unfinished Project">
