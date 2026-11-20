@@ -57,6 +57,19 @@ export default function MongoReactionGame() {
     }
   }, [changePhase]);
 
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.repeat || (event.code !== "Space" && event.code !== "Enter")) return;
+      const target = event.target;
+      if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement ||
+          (target instanceof HTMLElement && target.isContentEditable)) return;
+      event.preventDefault(); // Prevent scrolling and the native focused-button click.
+      tap();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [tap]);
+
   const label = phase === "waiting" ? "WAIT FOR GREEN…"
     : phase === "go" ? "TAP NOW!"
     : phase === "early" ? "TOO EARLY!"
@@ -74,7 +87,8 @@ export default function MongoReactionGame() {
       <section className="bureau-reaction">
         <div className="bureau-reaction-kicker">REACTION TIME / PERSONAL BEST</div>
         <h1>Dr. Mongo’s Reaction Game<span style={{color:"#d6b589"}}>.</span></h1>
-        <p className="bureau-reaction-intro">Wacht tot het vlak groen wordt en tik zo snel mogelijk. Te vroeg drukken telt niet. Je snelste tijd blijft op dit apparaat bewaard.</p>
+        <p className="bureau-reaction-intro">Wacht tot het vlak groen wordt en reageer zo snel mogelijk. Te vroeg drukken telt niet. Je snelste tijd blijft op dit apparaat bewaard.</p>
+        <div className="bureau-arcade-key-guide"><strong>⌨ PC CONTROLS</strong><span><kbd>SPACE</kbd> of <kbd>ENTER</kbd> starten / reageren</span><span>MUIS OF TOUCH: klik op het vlak</span></div>
         <button className={`bureau-reaction-target ${phase}`} type="button" onClick={tap} aria-label={hint}>
           <strong aria-live="polite">{label}</strong><span>{hint.toUpperCase()}</span>
         </button>
