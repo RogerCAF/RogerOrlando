@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="dark">
-  <title>Heavy Bag — The Bureau</title>
+  <title>Heavy Bag — Road to Champion | The Bureau</title>
+  <link rel="stylesheet" href="/bureau/heavybag-idle.css?v=20261120-idle1">
   <style>
     :root{color-scheme:dark}
     *{box-sizing:border-box}
@@ -16,10 +17,9 @@
   </style>
 </head>
 <body>
-  <main id="content" aria-label="Heavy Bag arcade campaign"></main>
+  <main id="content" aria-label="Heavy Bag — Road to Champion idle game"></main>
   <script>
-    // The campaign already owns its progression and save data. This lightweight
-    // standalone host avoids reloading the Bureau's multi-megabyte artwork.
+    // Standalone lightweight host; the new idle campaign owns its save data.
     // All artwork and hotspot coordinates on the homepage remain untouched.
     let active = 'bag';
     let hbEarn = function(){};
@@ -47,7 +47,7 @@
       }catch{}
     }
   </script>
-  <script src="/bureau/heavybag-campaign.js?v=20261119-tappunch"></script>
+  <script src="/bureau/heavybag-idle.js?v=20261120-idle1"></script>
   <script>if(typeof window.openHeavyBag==='function')window.openHeavyBag();</script>
 </body>
 </html>
