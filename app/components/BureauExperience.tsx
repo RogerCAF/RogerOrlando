@@ -1016,6 +1016,17 @@ export default function BureauExperience() {
           outline: 2px solid rgba(228,180,115,.85) !important;
           outline-offset: 2px !important;
         }
+        @media (max-width: 680px) {
+          /* Minimum ~44px phone target on small screens without moving its artwork. */
+          .bureau-embed .spot[data-open="arcade"],
+          .bureau-embed .spot[data-open="phone"],
+          .bureau-embed #bureau-phone-entry {
+            left: 67.7% !important;
+            top: 60.9% !important;
+            width: 12% !important;
+            height: 21.2% !important;
+          }
+        }
         .bureau-embed .spot[data-open="keyboard"] {
           left: 31.6% !important;
           top: 76.7% !important;
