@@ -38,6 +38,7 @@ h1 span{color:#e6b680}
 .panel{border:1px solid #354456;border-radius:13px;background:#131b29;padding:16px;margin-bottom:12px}
 .panel-head{display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
 .panel-head strong{font:850 11px ui-monospace,monospace;color:#dfb87e;letter-spacing:.08em}
+.room-badge{font:800 9px ui-monospace,monospace;letter-spacing:.04em;color:#8ca4ba}
 .code{font:950 clamp(25px,4vw,43px)/1 ui-monospace,monospace;letter-spacing:.18em;color:#ffdcab}
 .info-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .info-row input{flex:1;min-width:180px;padding:12px;border:1px solid #41516a;border-radius:7px;background:#0d1522;color:#a9b7c8;font-size:11px}
@@ -96,7 +97,7 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:960/620;touch-action:no
  <p class="status" id="statusMessage" role="status">Maak een kamer en deel de link. Iedereen gebruikt zijn eigen toetsenbord.</p>
  <section id="gameShell" hidden>
   <div class="panel" id="lobby">
-   <div class="panel-head"><strong>JULLIE KAMER · <span id="memberCount">1</span> / 5 SPELERS</strong><span class="code" id="roomCode">------</span></div>
+   <div class="panel-head"><strong>JULLIE KAMER · <span id="memberCount">1</span> / 5 SPELERS</strong><span id="roomBadge" class="room-badge"></span><span class="code" id="roomCode">------</span></div>
    <div id="roomDetails" hidden>
     <div class="info-row"><input type="text" readonly id="roomLink" aria-label="Uitnodigingslink"><button type="button" id="copyLink" class="secondary">KOPIEER LINK</button><button type="button" id="copyCode" class="secondary">KOPIEER CODE</button></div>
     <p class="helper">Open deze link op een andere computer. De host blijft op deze pagina en start het spel.</p>
