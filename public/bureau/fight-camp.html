@@ -32,8 +32,8 @@ h1 span{color:#e4a86e}
 @keyframes mitt-snap{0%{transform:rotate(-6deg) scale(1)}20%{transform:rotate(-13deg) translateX(16px) scale(.92);filter:brightness(1.9)}55%{transform:rotate(0) translateX(-5px) scale(1.02)}100%{transform:rotate(-6deg) scale(1)}}
 @keyframes mitt-error{0%,100%{transform:rotate(-6deg)}25%{transform:rotate(-1deg) translateX(-8px)}75%{transform:rotate(-9deg) translateX(8px)}}
 .mitt[data-cue="JAB"]{box-shadow:0 0 0 3px #9ec6ff9b,0 0 35px #79a9ff40,20px 30px 30px #000b,inset -18px -22px 27px #0008}
-.mitt[data-cue="CROSS"]{box-shadow:0 0 0 3px #ffc08baf,0 0 35px #ff9b5955,20px 30px 30px #000b,inset -18px -22px 27px #0008}
-.mitt[data-cue="HOOK"]{box-shadow:0 0 0 3px #fa98a89b,0 0 35px #e35f6b40,20px 30px 30px #000b,inset -18px -22px 27px #0008}
+.mitt[data-cue="KNEE"]{box-shadow:0 0 0 3px #ffc08baf,0 0 35px #ff9b5955,20px 30px 30px #000b,inset -18px -22px 27px #0008}
+.mitt[data-cue="KICK"]{box-shadow:0 0 0 3px #fa98a89b,0 0 35px #e35f6b40,20px 30px 30px #000b,inset -18px -22px 27px #0008}
 .mitt.hit[data-cue]{filter:brightness(1.6)}
 .feedback{height:44px;display:grid;place-items:center;color:#ffdfab;font:950 clamp(18px,3vw,31px) system-ui,-apple-system,sans-serif;letter-spacing:.035em;text-shadow:0 3px 7px #000c}
 .feedback.good{color:#b4f1c1}.feedback.bad{color:#ff9c9c}
@@ -42,7 +42,7 @@ h1 span{color:#e4a86e}
 .strike kbd{display:grid;place-items:center;width:29px;height:29px;border:1px solid #edc48d;border-bottom-width:3px;border-radius:5px;background:#2b3948;color:#ffdda9;font:900 14px ui-monospace,monospace}
 .strike:hover{background:#41302d;border-color:#ffcc8b}
 .strike:active{transform:scale(.97)}
-.strike[data-move="JAB"]{border-color:#8aa8cb6b}.strike[data-move="HOOK"]{border-color:#ba7c8b7d}
+.strike[data-move="JAB"]{border-color:#8aa8cb6b}.strike[data-move="KICK"]{border-color:#ba7c8b7d}
 .sidebar{display:flex;flex-direction:column;gap:12px}
 .stat-panel,.info-panel{padding:20px;border:1px solid var(--line);border-radius:13px;background:#171b22}
 .stat-panel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
@@ -72,7 +72,7 @@ h1 span{color:#e4a86e}
 @media(prefers-reduced-motion:reduce){.mitt.hit,.mitt.miss{animation:none}.progress>span{transition:none}}
 </style></head>
 <body><main>
- <div class="top"><div><div class="kicker">THE BUREAU / THE POSTER THAT FIGHTS BACK</div><h1>FIGHT CAMP<span>.</span></h1><p class="intro">Een poster aan de muur. Een verborgen training van 30 seconden. Lees de opening, raak de juiste mitt en bouw een perfecte combo. Niet sneller klikken, maar scherper reageren.</p></div><div class="record"><span>PERSONAL BEST</span><b id="best">0</b></div></div>
+ <div class="top"><div><div class="kicker">THE BUREAU / THE POSTER THAT FIGHTS BACK</div><h1>FIGHT CAMP<span>.</span></h1><p class="intro">Een poster aan de muur. Een verborgen Muay Thai-training van 30 seconden. Reageer op de opening: jab, knee of kick. Snelheid én precisie bepalen je score. Niet sneller klikken, maar scherper reageren.</p></div><div class="record"><span>PERSONAL BEST</span><b id="best">0</b></div></div>
  <div class="layout"><section class="board">
   <div class="board-header"><span>THE POSTER / ROUND 01</span><span class="round" id="boardStatus">READY TO FIGHT</span></div>
   <div class="mitt-scene">
@@ -84,17 +84,17 @@ h1 span{color:#e4a86e}
  <aside class="sidebar">
   <div class="stat-panel"><div><span>TIME LEFT</span><strong id="time">30.0</strong></div><div><span>POINTS</span><strong id="score">0</strong></div><div><span>COMBO</span><strong id="combo">0</strong></div><div><span>HIT RATE</span><strong id="accuracy">100%</strong></div></div>
   <div class="info-panel"><span class="kicker">THE COACH'S INSTRUCTIONS</span><h2>Follow the rhythm.<br>Don't guess.</h2><p>Bij elke opening verschijnt een stoot. Raak precies de goede toets voordat de opening sluit. Verkeerde stoten breken je combo.</p>
-   <div class="key-row"><kbd>A</kbd> JAB — snelle voorhand</div><div class="key-row"><kbd>S</kbd> CROSS — harde rechter</div><div class="key-row"><kbd>D</kbd> HOOK — de hoek</div>
+   <div class="key-row"><kbd>A</kbd> JAB — snelle voorhand</div><div class="key-row"><kbd>S</kbd> KNEE — kniestoot</div><div class="key-row"><kbd>D</kbd> KICK — trap</div>
    <div class="progress"><span id="progress"></span></div>
    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:18px"><span class="kicker">TRAINING AUDIO</span><button id="sound" class="sound" type="button">SOUND ON</button></div>
   </div>
  </aside></div>
- <div class="play-buttons"><button type="button" class="strike" data-move="JAB"><kbd>A</kbd>JAB</button><button type="button" class="strike" data-move="CROSS"><kbd>S</kbd>CROSS</button><button type="button" class="strike" data-move="HOOK"><kbd>D</kbd>HOOK</button></div>
+ <div class="play-buttons"><button type="button" class="strike" data-move="JAB"><kbd>A</kbd>JAB</button><button type="button" class="strike" data-move="KNEE"><kbd>S</kbd>KNEE</button><button type="button" class="strike" data-move="KICK"><kbd>D</kbd>KICK</button></div>
 </main>
 <script>
 (()=>{
 "use strict";
-const $=id=>document.getElementById(id),MOVES=["JAB","CROSS","HOOK"],KEYS={KeyA:"JAB",KeyS:"CROSS",KeyD:"HOOK"},STORAGE="bureau-fightcamp-reflex-best-v1";
+const $=id=>document.getElementById(id),MOVES=["JAB","KNEE","KICK"],KEYS={KeyA:"JAB",KeyS:"KNEE",KeyD:"KICK"},STORAGE="bureau-fightcamp-reflex-best-v1";
 let phase="idle",score=0,best=0,combo=0,perfect=0,hits=0,misses=0,cue="",previous="",cueAt=0,roundStart=0,nextCue=0,lastDraw=0,raf=0,soundOn=true,audio=null;
 const DURATION=30000;
 try{best=Math.max(0,Math.min(1e9,Number(localStorage.getItem(STORAGE))||0))}catch{}
@@ -116,7 +116,7 @@ function showCue(){
  let i=Math.floor(Math.random()*3),next=MOVES[i];
  if(next===previous)next=MOVES[(i+1+Math.floor(Math.random()*2))%3];
  previous=cue=next;cueAt=performance.now();nextCue=0;
- $("cue").textContent=next;$("cueKey").textContent="PRESS "+({JAB:"A",CROSS:"S",HOOK:"D"}[next]);
+ $("cue").textContent=next;$("cueKey").textContent="PRESS "+({JAB:"A",KNEE:"S",KICK:"D"}[next]);
  $("mitt").dataset.cue=next;$("mitt").classList.remove("hit","miss");feedback("HIT THE OPENING");
 }
 function cueLimit(){return Math.max(850,1750-Math.floor(hits/6)*90)}
