@@ -180,7 +180,7 @@ function sync(){
  updateText("hbl-goal-count",g.label);
  const bar=$("hbl-goal-progress");if(bar)bar.style.width=(g.fraction*100).toFixed(1)+"%";
  if(state.chapter===4&&!state.champion){
-  updateText("hbl-goal-help","Sign an Arena Deal ("+(state.counts[4]?"✓":"○")+") · Earn "+fmt(state.earned)+" / 12M total credits · Reach 35K/sec.");
+  updateText("hbl-goal-help","Sign an Arena Deal ("+(state.counts[5]?"✓":"○")+") · Earn "+fmt(state.earned)+" / 12M total credits · Reach 35K/sec.");
  }
  const n=$("hbl-notice");
  if(n){n.hidden=!notice;if(notice)updateText("hbl-notice-text",notice)}
