@@ -29,8 +29,9 @@ function dist2(a,b,c,d){let x=a-c,y=b-d;return x*x+y*y}
 function fmt(v){return Math.floor(v).toLocaleString("en-US")}
 function createState(){
  let second=1+Math.floor(Math.random()*5);
+ const initialRanks=[1,0,0,0,0,0];initialRanks[second]=1;
  return {t:0,player:{x:w/2,y:h/2,hp:100,max:100,speed:191,inv:0},
-  score:0,kills:0,lvl:1,xp:0,nextXP:5,active:0,unlocked:[0,second],ranks:[1,0,0,0,0,0],
+  score:0,kills:0,lvl:1,xp:0,nextXP:5,active:0,unlocked:[0,second],ranks:initialRanks,
   fire:0,spun:0,hitCount:0,lastWeapon:0,fusion:{kind:"",until:0},
   enemies:[],bullets:[],drops:[],fx:[],shots:[],beams:[],
   spawn:0.5,boss:null,bossSpawned:false, speedBonus:0,notice:"",noticeUntil:0,hitFlash:0,screenShake:0};
@@ -198,10 +199,11 @@ function attack(){
  if(i===0){
   const crit=++game.hitCount%5===0;
   addBullet(x,y,aim,430,(crit?23:11)*power,WPN[i].color,"normal",1.45,{crit});
+  if(rank>=3)addBullet(x,y,aim+rand(-.09,.09),420,(crit?18:9)*power,WPN[i].color,"normal",1.45,{crit});
   game.fire=WPN[i].rate*(1-(rank-1)*.075);
   sound(245,.045,"square");
  }else if(i===1){
-  const bonus=validFusion("4-1")?2:0;
+  const bonus=(validFusion("4-1")?2:0)+(rank>=2?1:0);
   for(let j=0;j<5+bonus;j++){
    let count=5+bonus;
    addBullet(x,y,aim+(j-(count-1)/2)*.145+rand(-.03,.03),370,9*power,WPN[i].color,"pellet",.37);
@@ -211,6 +213,7 @@ function attack(){
  }else if(i===2){
   let spread=rand(-.095,.095);
   addBullet(x,y,aim+spread,470,5*power,WPN[i].color,"normal",1.3);
+  if(rank>=4)addBullet(x,y,aim-spread,460,4*power,WPN[i].color,"normal",1.25);
   if(validFusion("3-2"))addBullet(x,y,aim+rand(-.22,.22),430,4*power,WPN[i].color,"normal",1.2);
   game.fire=clamp(.155-game.spun*.038, .069, .16)*(1-(rank-1)*.065);
   sound(360,.025,"square",.013);
@@ -505,7 +508,8 @@ function draw(){
 function refreshUI(){
  const g=game;
  $("best").textContent=fmt(records.best);
- $("time").textContent=g?("0"+Math.floor(Math.max(0,RUN_TIME-g.t)/60)).slice(-2)+":"+("0"+Math.ceil(Math.max(0,RUN_TIME-g.t)%60)).slice(-2):"01:30";
+ const left=g?Math.ceil(Math.max(0,RUN_TIME-g.t)):90;
+ $("time").textContent=String(Math.floor(left/60)).padStart(2,"0")+":"+String(left%60).padStart(2,"0");
  $("hp").textContent=g?Math.ceil(g.player.hp):"100";
  $("hp").classList.toggle("critical",!!g&&g.player.hp<35);
  $("score").textContent=g?fmt(g.score):"0";$("level").textContent=g?g.lvl:"1";
@@ -566,7 +570,7 @@ canvas.addEventListener("pointerup",release);canvas.addEventListener("pointercan
 $("weapons").addEventListener("click",function(e){const b=e.target.closest("button[data-weapon]");if(b)switchWeapon(Number(b.dataset.weapon))});
 $("pause").addEventListener("click",function(){if(mode==="playing")pause();else if(mode==="paused")resume()});
 $("sound").addEventListener("click",function(){soundOn=!soundOn;$("sound").textContent=soundOn?"♪ ON":"♪ OFF";$("sound").setAttribute("aria-pressed",String(soundOn));$("sound").setAttribute("aria-label",soundOn?"Disable sound":"Enable sound");if(soundOn)sound(500,.07,"sine")});
-window.addEventListener("pagehide",function(){cancelAnimationFrame(raf);raf=0;keys.clear();touch.active=false});
+window.addEventListener("pagehide",function(){if(mode==="playing")pause("GAME AUTO-PAUSED");cancelAnimationFrame(raf);raf=0;keys.clear();touch.active=false});
 window.addEventListener("resize",resize,{passive:true});
 setOverlay("THE BUREAU / COLOR ARSENAL","SIX COLORS. SIX WEAPONS.","You are the Rubik's Cube. Dodge enemies while your weapons fire automatically. Switch colors, collect XP and defeat the final boss.",start,"START RUN →","WASD / arrows to move · 1–6 to switch colors. On touchscreens, drag to move and tap color buttons.");
 resize();refreshUI();
