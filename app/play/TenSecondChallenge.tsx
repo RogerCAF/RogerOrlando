@@ -66,6 +66,27 @@ export default function TenSecondChallenge() {
     try { localStorage.setItem(STORE, JSON.stringify(next)); } catch { /* Still playable without localStorage. */ }
   }, []);
 
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.repeat) return;
+      const target = event.target;
+      // Keep the Blind Mode checkbox and other form controls accessible.
+      if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement ||
+          (target instanceof HTMLElement && target.isContentEditable)) return;
+      if (event.code === "Space" || event.code === "Enter") {
+        event.preventDefault(); // Also prevents the focused button from activating twice.
+        if (phaseRef.current === "running") stop();
+        else start();
+      }
+      if (event.code === "KeyB") {
+        event.preventDefault();
+        setShowTime(previous => { displayRef.current = !previous; return !previous; });
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [start, stop]);
+
   const best = attempts.length ? attempts.reduce((a,b) =>
     Math.abs(a.time - TARGET) <= Math.abs(b.time - TARGET) ? a : b
   ) : null;
@@ -78,6 +99,7 @@ export default function TenSecondChallenge() {
       <p>Klik op START om de timer te starten en op STOP wanneer je denkt dat precies 10.00 seconden voorbij zijn. Je beste score en laatste pogingen blijven op dit apparaat bewaard.</p></div>
       <span className="rg-ten-edition">ARCADE / 002</span>
     </div>
+    <div className="bureau-arcade-key-guide"><strong>⌨ PC CONTROLS</strong><span><kbd>SPACE</kbd> of <kbd>ENTER</kbd> start / stop</span><span><kbd>B</kbd> blind mode</span><span>MUIS / TOUCH: rode knop</span></div>
     <div className="rg-ten-layout">
       <div className="rg-ten-play">
         <div className="rg-ten-readout" aria-live="off"><small>{phase === "running" ? "TIMER ACTIVE" : phase === "result" ? "YOUR LAST TIME" : "READY TO PLAY"}</small>
