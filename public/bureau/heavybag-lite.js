@@ -53,7 +53,7 @@ function read(){
  d.lastTick=safe(s.lastTick,0,Date.now());
  return d;
 }
-let state=read(),booted=false,timer=0,ticks=0,notice="",audioCtx=null,soundOn=false,combo=0,lastPunchAt=0,lastSaveAt=0;
+let state=read(),booted=false,timer=0,ticks=0,notice="",audioCtx=null,soundOn=false,combo=0,lastPunchAt=0,lastSaveAt=0,dirty=false;
 function count(){return state.counts.reduce((n,v)=>n+v,0)}
 function rate(){
  let total=0;
@@ -70,7 +70,7 @@ function settle(now){
  state.lastTick=now;
  return gained;
 }
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));dirty=false;lastSaveAt=Date.now()}catch(e){}}
 function milestones(){
  let changed=false,unlocked=[];
  for(let j=0;j<5;j++){
@@ -241,12 +241,12 @@ function punch(){
  lastPunchAt=now;
  const multiplier=1+Math.min(4,Math.floor((combo-1)/5));
  const amount=punchValue()*multiplier;
- earn(amount);state.punches++;
+ earn(amount);state.punches++;dirty=true;
  sound();try{navigator.vibrate?.(10)}catch(e){}
  impact(amount,false);
  const grown=milestones();
  if(grown)render();else sync();
- if(grown||Date.now()-lastSaveAt>3000){save();lastSaveAt=Date.now()}
+ if(grown||state.punches===1||state.punches%4===0||Date.now()-lastSaveAt>1200)save();
 }
 function hire(i){
  if(!Number.isInteger(i)||i<0||i>=BOXERS.length||BOXERS[i].chapter>state.chapter)return;
@@ -275,7 +275,7 @@ function tick(){
  const grown=milestones();
  if(grown)render();
  else sync();
- if(++ticks%75===0||grown){save();lastSaveAt=Date.now()}
+ if(grown||(dirty&&now-lastSaveAt>1200)||++ticks%75===0)save();
 }
 function startTimer(){if(!timer&&!document.hidden)timer=setInterval(tick,200)}
 function stopTimer(){if(timer){clearInterval(timer);timer=0}}
