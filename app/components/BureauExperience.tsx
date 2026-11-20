@@ -835,13 +835,13 @@ export default function BureauExperience() {
         const phoneSpot = scene.querySelector<HTMLElement>('.spot[data-open="arcade"], .spot[data-open="phone"]');
         if (phoneSpot) {
           phoneSpot.setAttribute("aria-label", "Open de twee spellen op de telefoon");
-          phoneSpot.title = "PHONE ARCADE / FLAP RUSH & AGTUNG DIE KURVE";
+          phoneSpot.title = "PHONE ARCADE / SNUFFY BIRD & AGTUNG DIE KURVE";
         } else if (!document.getElementById("bureau-phone-entry")) {
           const phone = document.createElement("button");
           phone.type = "button";
           phone.id = "bureau-phone-entry";
           phone.setAttribute("aria-label", "Open de twee spellen op de telefoon");
-          phone.title = "PHONE ARCADE / FLAP RUSH & AGTUNG DIE KURVE";
+          phone.title = "PHONE ARCADE / SNUFFY BIRD & AGTUNG DIE KURVE";
           scene.appendChild(phone);
         }
       }
@@ -1135,7 +1135,7 @@ export default function BureauExperience() {
               <button type="button" onClick={() => setPhoneMode("sky")} className="bureau-phone-app bureau-phone-sky">
                 <span className="bureau-phone-app-symbol"><Bird size={35} strokeWidth={1.65} aria-hidden="true"/></span>
                 <span className="bureau-phone-app-type"><Trophy size={13} aria-hidden="true"/> SINGLE PLAYER / TOP 10</span>
-                <strong>FLAP RUSH</strong>
+                <strong>SNUFFY BIRD</strong>
                 <span>Tap om te vliegen, ontwijk de obstakels en verbreek de hoogste scores.</span>
                 <em>PLAY NOW <ArrowRight size={15} aria-hidden="true"/></em>
               </button>
@@ -1153,10 +1153,10 @@ export default function BureauExperience() {
         </section>
       </div>, document.body)}
     {(phoneMode === "sky" || phoneMode === "curve") && typeof document !== "undefined" && createPortal(
-      <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label={phoneMode === "sky" ? "Flap Rush game" : "Agtung die Kurve multiplayer game"}>
+      <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label={phoneMode === "sky" ? "Snuffy Bird game" : "Agtung die Kurve multiplayer game"}>
         <header className="bureau-game-chrome">
           <div className="bureau-game-identity"><span className="bureau-game-signal"/>
-            <span><strong>{phoneMode === "sky" ? "FLAP RUSH" : "AGTUNG DIE KURVE"}</strong><small>{phoneMode === "sky" ? "THE BUREAU / PHONE / TOP 10" : "THE BUREAU / PHONE / LOCAL 5 PLAYER"}</small></span>
+            <span><strong>{phoneMode === "sky" ? "SNUFFY BIRD" : "AGTUNG DIE KURVE"}</strong><small>{phoneMode === "sky" ? "THE BUREAU / PHONE / TOP 10" : "THE BUREAU / PHONE / LOCAL 5 PLAYER"}</small></span>
           </div>
           <div className="bureau-game-actions">
             <a href={phoneMode === "sky" ? "/bureau/sky-hop.html" : "/bureau/curve-clash.html"} target="_blank" rel="noopener noreferrer" aria-label="Open dit spel in een nieuw tabblad" title="Open game apart"><Maximize2 size={17}/></a>
@@ -1165,7 +1165,7 @@ export default function BureauExperience() {
             </button>
           </div>
         </header>
-        <iframe className="bureau-game-viewport" src={phoneMode === "sky" ? "/bureau/sky-hop.html" : "/bureau/curve-clash.html"} title={phoneMode === "sky" ? "Flap Rush — single player" : "Agtung die Kurve — local multiplayer"} allow="fullscreen"/>
+        <iframe className="bureau-game-viewport" src={phoneMode === "sky" ? "/bureau/sky-hop.html" : "/bureau/curve-clash.html"} title={phoneMode === "sky" ? "Snuffy Bird — single player" : "Agtung die Kurve — local multiplayer"} allow="fullscreen"/>
       </div>, document.body)}
     {terminalOpen && typeof document !== "undefined" && createPortal(
       <BureauTerminal
