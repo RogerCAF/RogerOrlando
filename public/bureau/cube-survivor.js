@@ -7,7 +7,7 @@
 const $=id=>document.getElementById(id), canvas=$("arena"),ctx=canvas.getContext("2d",{alpha:false});
 if(!ctx){$("dialog-title").textContent="CANVAS UNAVAILABLE";$("dialog-description").textContent="Your browser does not support this game.";return}
 const WPN=[
- {name:"DUAL PISTOLS",hint:"Twin precision cube bullets · every fifth hit is critical.",color:"#eeeeea",rate:.37},
+ {name:"DUAL PISTOLS",hint:"Twin precision cube bullets · every fifth shot is critical.",color:"#eeeeea",rate:.37},
  {name:"CUBE SHOTGUN",hint:"Five block pellets · powerful up close.",color:"#e05251",rate:.81},
  {name:"GATLING GUN",hint:"Spins up to an unstoppable stream of tiny cubes.",color:"#f0c448",rate:.14},
  {name:"CUBEZOOKA",hint:"A heavy rocket that explodes into cube fragments.",color:"#ec904b",rate:2.05},
@@ -252,6 +252,9 @@ function upgradeOptions(){
  if(game.player.hp<game.player.max*.85)pool.push({kind:"heal",title:"FIELD REPAIR",description:"Recover 32 health points.",color:"#b4e7af"});
  if(game.speedBonus<3)pool.push({kind:"speed",title:"CUBE THRUSTERS",description:"Increase movement speed by 10%.",color:"#f1c48a"});
  pool.sort(()=>Math.random()-.5);
+ // Never trap highly upgraded runs in an empty upgrade menu.
+ if(pool.length<3)pool.push({kind:"cache",title:"CUBE CACHE",description:"Bank 600 bonus points and recover 15 HP.",color:"#f1c48a"});
+ if(pool.length<3)pool.push({kind:"repair",title:"FIELD REPAIR+",description:"Recover 30 health points.",color:"#b4e7af"});
  return pool.slice(0,3);
 }
 function award(option){
@@ -260,6 +263,8 @@ function award(option){
  else if(option.kind==="boost")game.ranks[option.index]++;
  else if(option.kind==="heal")game.player.hp=Math.min(game.player.max,game.player.hp+32);
  else if(option.kind==="speed"){game.speedBonus++;game.player.speed*=1.10}
+ else if(option.kind==="cache"){game.score+=600;game.player.hp=Math.min(game.player.max,game.player.hp+15)}
+ else if(option.kind==="repair"){game.player.hp=Math.min(game.player.max,game.player.hp+30)}
  $("overlay").hidden=true;setMode("playing");showNotice(option.title+" · UPGRADED",1.4);refreshUI();beginFrame();
 }
 function showUpgrade(){
