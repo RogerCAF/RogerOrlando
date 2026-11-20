@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowLeft, ArrowRight, Bird, Box, Dumbbell, Gamepad2, LockKeyhole, Maximize2, Route, Smartphone, Swords, Trophy, UsersRound, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bird, Box, Dumbbell, Gamepad2, LockKeyhole, Maximize2, Route, Smartphone, Swords, Timer, Trophy, UsersRound, X, Zap } from "lucide-react";
 import "./bureau-game.css";
 import "./bureau-phone.css";
 import BureauTerminal from "./BureauTerminal";
@@ -25,6 +25,8 @@ export default function BureauExperience() {
   const [phoneMode, setPhoneMode] = useState<null | "menu" | "sky" | "curve">(null);
   const phoneCloseRef = useRef<HTMLButtonElement>(null);
   const [terminalOpen, setTerminalOpen] = useState(false);
+  const [classicGame, setClassicGame] = useState<null | "reaction" | "ten">(null);
+  const classicCloseRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!gameOpen) return;
@@ -106,6 +108,25 @@ export default function BureauExperience() {
       document.removeEventListener("keydown", onEscape);
     };
   }, [arcadeOpen]);
+
+  useEffect(() => {
+    if (!classicGame) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    classicCloseRef.current?.focus({ preventScroll: true });
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setClassicGame(null);
+        setArcadeOpen(true);
+      }
+    };
+    document.addEventListener("keydown", onEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onEscape);
+    };
+  }, [classicGame]);
 
   useEffect(() => {
     if (!phoneMode) return;
@@ -1118,7 +1139,7 @@ export default function BureauExperience() {
       title="The Bureau — interactieve illustratie" loading="eager"
       // Keep the scene mounted (preserves its interactive state), but stop
       // rendering the large illustrated iframe under the full-screen game.
-      style={gameOpen || bagOpen || rubikOpen || arcadeOpen || terminalOpen || phoneMode ? { display: "none" } : undefined}
+      style={gameOpen || bagOpen || rubikOpen || arcadeOpen || classicGame || terminalOpen || phoneMode ? { display: "none" } : undefined}
       onLoad={prepareScene} allowFullScreen />
     {phoneMode === "menu" && typeof document !== "undefined" && createPortal(
       <div className="bureau-phone-overlay" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) setPhoneMode(null); }}>
@@ -1167,6 +1188,24 @@ export default function BureauExperience() {
         </header>
         <iframe className="bureau-game-viewport" src={phoneMode === "sky" ? "/bureau/sky-hop.html" : "/bureau/curve-clash.html"} title={phoneMode === "sky" ? "Snuffy Bird — single player" : "Agtung die Kurve — local multiplayer"} allow="fullscreen"/>
       </div>, document.body)}
+    {classicGame && typeof document !== "undefined" && createPortal(
+      <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label={classicGame === "reaction" ? "Dr. Mongo’s Reaction Game" : "The Button 10:00"}>
+        <header className="bureau-game-chrome">
+          <div className="bureau-game-identity"><span className="bureau-game-signal"/>
+            <span><strong>{classicGame === "reaction" ? "DR. MONGO’S REACTION GAME" : "THE BUTTON 10:00"}</strong>
+              <small>THE BUREAU / ARCADE / {classicGame === "reaction" ? "REACTION TIME" : "TEN SECOND CHALLENGE"}</small>
+            </span>
+          </div>
+          <div className="bureau-game-actions">
+            <a href={classicGame === "reaction" ? "/arcade/reaction" : "/arcade/ten"} target="_blank" rel="noopener noreferrer" aria-label="Open dit spel in een nieuw tabblad" title="Open game apart"><Maximize2 size={17}/></a>
+            <button ref={classicCloseRef} type="button" onClick={() => { setClassicGame(null); setArcadeOpen(true); }}>
+              <ArrowLeft size={16}/><span>TERUG NAAR ARCADE</span><X size={18}/>
+            </button>
+          </div>
+        </header>
+        <iframe className="bureau-game-viewport" src={classicGame === "reaction" ? "/arcade/reaction" : "/arcade/ten"}
+          title={classicGame === "reaction" ? "Dr. Mongo’s Reaction Game" : "The Button 10:00"} allow="fullscreen"/>
+      </div>, document.body)}
     {terminalOpen && typeof document !== "undefined" && createPortal(
       <BureauTerminal
         onClose={() => setTerminalOpen(false)}
@@ -1180,9 +1219,9 @@ export default function BureauExperience() {
             <button type="button" className="bureau-arcade-close" ref={arcadeCloseRef} onClick={() => setArcadeOpen(false)} aria-label="Sluit de arcade en ga terug naar het bureau"><X size={19}/></button>
           </header>
           <div className="bureau-arcade-intro">
-            <span>INTERACTIVE EXPERIENCES / 04</span>
+            <span>INTERACTIVE EXPERIENCES / 06</span>
             <h2 id="bureau-arcade-heading">Pick a challenge<span>.</span></h2>
-            <p>Vier korte ervaringen. Kies er één of ontdek ze via de objecten op het bureau.</p>
+            <p>Zes korte ervaringen. Kies er één of ontdek ze via de objecten op het bureau.</p>
           </div>
           <div className="bureau-arcade-grid">
             <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setBagOpen(true);}}>
@@ -1199,15 +1238,29 @@ export default function BureauExperience() {
               <span>Ontwijk, verzamel XP en bouw zes wapens tegelijk op.</span>
               <em>PLAY SURVIVOR <ArrowRight size={15} aria-hidden="true"/></em>
             </button>
+            <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setClassicGame("reaction");}}>
+              <span className="bureau-arcade-card-index">03 / REACTION TIME</span>
+              <Zap className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
+              <strong>DR. MONGO’S REACTION GAME</strong>
+              <span>Wacht tot het vlak groen wordt. Hoe snel reageer jij?</span>
+              <em>TEST YOUR REFLEXES <ArrowRight size={15} aria-hidden="true"/></em>
+            </button>
+            <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setClassicGame("ten");}}>
+              <span className="bureau-arcade-card-index">04 / TIMING CHALLENGE</span>
+              <Timer className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
+              <strong>THE BUTTON 10:00</strong>
+              <span>Stop de rode knop zo dicht mogelijk bij 10.00 seconden.</span>
+              <em>PLAY THE BUTTON <ArrowRight size={15} aria-hidden="true"/></em>
+            </button>
             <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setGameOpen(true);}}>
-              <span className="bureau-arcade-card-index">03 / SECRET FILE 030</span>
+              <span className="bureau-arcade-card-index">05 / SECRET FILE 030</span>
               <LockKeyhole className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
               <strong>UNFINISHED PROJECT</strong>
               <span>Ontgrendel het verhaal achter de verborgen systeemproeven.</span>
               <em>OPEN SECRET FILE <ArrowRight size={15} aria-hidden="true"/></em>
             </button>
             <button className="bureau-arcade-card" type="button" onClick={openFightCamp}>
-              <span className="bureau-arcade-card-index">04 / FIGHT CAMP</span>
+              <span className="bureau-arcade-card-index">06 / FIGHT CAMP</span>
               <Swords className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
               <strong>FIGHT CAMP</strong>
               <span>Ontdek de vechtsportervaring achter de poster.</span>
