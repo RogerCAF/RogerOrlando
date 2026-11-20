@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowLeft, ArrowRight, Box, Dumbbell, Gamepad2, LockKeyhole, Maximize2, Swords, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bird, Box, Dumbbell, Gamepad2, LockKeyhole, Maximize2, Route, Smartphone, Swords, Trophy, UsersRound, X } from "lucide-react";
 import "./bureau-game.css";
 import BureauTerminal from "./BureauTerminal";
 
@@ -21,6 +21,8 @@ export default function BureauExperience() {
   const rubikCloseRef = useRef<HTMLButtonElement>(null);
   const [arcadeOpen, setArcadeOpen] = useState(false);
   const arcadeCloseRef = useRef<HTMLButtonElement>(null);
+  const [phoneMode, setPhoneMode] = useState<null | "menu" | "sky" | "curve">(null);
+  const phoneCloseRef = useRef<HTMLButtonElement>(null);
   const [terminalOpen, setTerminalOpen] = useState(false);
 
   useEffect(() => {
@@ -104,6 +106,23 @@ export default function BureauExperience() {
     };
   }, [arcadeOpen]);
 
+  useEffect(() => {
+    if (!phoneMode) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    phoneCloseRef.current?.focus({ preventScroll: true });
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      setPhoneMode(current => current === "menu" ? null : "menu");
+    };
+    document.addEventListener("keydown", onEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onEscape);
+    };
+  }, [phoneMode]);
+
   // Keep Fight Camp attached to its original Bureau poster interaction.
   const openFightCamp = useCallback(() => {
     setArcadeOpen(false);
@@ -127,11 +146,13 @@ export default function BureauExperience() {
           const isRubik = !!target?.closest?.('[data-open="rubik"], [data-inside="rubik"]');
           const isArcade = !!target?.closest?.('[data-open="projects"], [data-open="monitor"], [data-open="computer"]');
           const isKeyboard = !!target?.closest?.('[data-open="keyboard"], [data-inside="keyboard"]');
-          if (!isBag && !isRubik && !isArcade && !isKeyboard) return;
+          const isPhone = !!target?.closest?.('[data-open="phone"], [data-inside="phone"], [data-open="arcade"], [data-inside="arcade"], #bureau-phone-entry');
+          if (!isBag && !isRubik && !isArcade && !isKeyboard && !isPhone) return;
           event.preventDefault();
           event.stopPropagation();
           event.stopImmediatePropagation();
-          if (isKeyboard) setTerminalOpen(true);
+          if (isPhone) setPhoneMode("menu");
+          else if (isKeyboard) setTerminalOpen(true);
           else if (isRubik) setRubikOpen(true);
           else if (isBag) setBagOpen(true);
           else setArcadeOpen(true);
@@ -807,6 +828,23 @@ export default function BureauExperience() {
         scene.appendChild(secondary);
       }
 
+      // The original "arcade" hotspot sits on the phone in the approved artwork.
+      // Keep it transparent and give the depicted phone its own two-game launcher.
+      if (scene) {
+        const phoneSpot = scene.querySelector<HTMLElement>('.spot[data-open="arcade"], .spot[data-open="phone"]');
+        if (phoneSpot) {
+          phoneSpot.setAttribute("aria-label", "Open de twee spellen op de telefoon");
+          phoneSpot.title = "PHONE ARCADE / SKY HOP & CURVE CLASH";
+        } else if (!document.getElementById("bureau-phone-entry")) {
+          const phone = document.createElement("button");
+          phone.type = "button";
+          phone.id = "bureau-phone-entry";
+          phone.setAttribute("aria-label", "Open de twee spellen op de telefoon");
+          phone.title = "PHONE ARCADE / SKY HOP & CURVE CLASH";
+          scene.appendChild(phone);
+        }
+      }
+
       // The notebook was already a hidden hotspot; make its visitor list
       // discoverable without introducing any unrelated items.
       if (scene && !document.getElementById("bureau-guestbook-entry")) {
@@ -956,12 +994,26 @@ export default function BureauExperience() {
           height: 50% !important;
           z-index: 11 !important;
         }
-        .bureau-embed .spot[data-open="arcade"] {
+        .bureau-embed .spot[data-open="arcade"],
+        .bureau-embed .spot[data-open="phone"],
+        .bureau-embed #bureau-phone-entry {
+          position: absolute !important;
           left: 70.1% !important;
           top: 62.8% !important;
           width: 7.3% !important;
           height: 17.4% !important;
-          z-index: 13 !important;
+          z-index: 16 !important;
+          cursor: pointer !important;
+          background: transparent !important;
+          border: 0 !important;
+          padding: 0 !important;
+          touch-action: manipulation !important;
+        }
+        .bureau-embed #bureau-phone-entry:focus-visible,
+        .bureau-embed .spot[data-open="arcade"]:focus-visible,
+        .bureau-embed .spot[data-open="phone"]:focus-visible {
+          outline: 2px solid rgba(228,180,115,.85) !important;
+          outline-offset: 2px !important;
         }
         .bureau-embed .spot[data-open="keyboard"] {
           left: 31.6% !important;
@@ -1054,8 +1106,55 @@ export default function BureauExperience() {
       title="The Bureau — interactieve illustratie" loading="eager"
       // Keep the scene mounted (preserves its interactive state), but stop
       // rendering the large illustrated iframe under the full-screen game.
-      style={gameOpen || bagOpen || rubikOpen || arcadeOpen || terminalOpen ? { display: "none" } : undefined}
+      style={gameOpen || bagOpen || rubikOpen || arcadeOpen || terminalOpen || phoneMode ? { display: "none" } : undefined}
       onLoad={prepareScene} allowFullScreen />
+    {phoneMode === "menu" && typeof document !== "undefined" && createPortal(
+      <div className="bureau-phone-overlay" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) setPhoneMode(null); }}>
+        <section className="bureau-phone-device" role="dialog" aria-modal="true" aria-labelledby="bureau-phone-heading">
+          <div className="bureau-phone-notch" aria-hidden="true"><span/></div>
+          <div className="bureau-phone-topline"><span><Smartphone size={13} aria-hidden="true"/> THE BUREAU / PHONE</span><button ref={phoneCloseRef} type="button" aria-label="Sluit de telefoon" onClick={() => setPhoneMode(null)}><X size={17}/></button></div>
+          <div className="bureau-phone-home">
+            <div className="bureau-phone-intro">
+              <span>POCKET ARCADE / 02 GAMES</span>
+              <h2 id="bureau-phone-heading">Pick up &amp; play<span>.</span></h2>
+              <p>Twee verrassingen verstopt in de telefoon op het bureau.</p>
+            </div>
+            <div className="bureau-phone-apps">
+              <button type="button" onClick={() => setPhoneMode("sky")} className="bureau-phone-app bureau-phone-sky">
+                <span className="bureau-phone-app-symbol"><Bird size={35} strokeWidth={1.65} aria-hidden="true"/></span>
+                <span className="bureau-phone-app-type"><Trophy size={13} aria-hidden="true"/> SINGLE PLAYER / TOP 10</span>
+                <strong>SKY HOP</strong>
+                <span>Tap om te vliegen, ontwijk de obstakels en verbreek de hoogste scores.</span>
+                <em>PLAY NOW <ArrowRight size={15} aria-hidden="true"/></em>
+              </button>
+              <button type="button" onClick={() => setPhoneMode("curve")} className="bureau-phone-app bureau-phone-curve">
+                <span className="bureau-phone-app-symbol"><Route size={35} strokeWidth={1.65} aria-hidden="true"/></span>
+                <span className="bureau-phone-app-type"><UsersRound size={13} aria-hidden="true"/> LOCAL MULTIPLAYER / 2–5</span>
+                <strong>CURVE CLASH</strong>
+                <span>Stuur je lijn langs de muren en elkaar. Laatste speler over wint.</span>
+                <em>PLAY TOGETHER <ArrowRight size={15} aria-hidden="true"/></em>
+              </button>
+            </div>
+            <div className="bureau-phone-hint">NO DOWNLOADS · PLAY DIRECTLY IN YOUR BROWSER</div>
+          </div>
+          <div className="bureau-phone-homebar" aria-hidden="true"/>
+        </section>
+      </div>, document.body)}
+    {(phoneMode === "sky" || phoneMode === "curve") && typeof document !== "undefined" && createPortal(
+      <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label={phoneMode === "sky" ? "Sky Hop game" : "Curve Clash multiplayer game"}>
+        <header className="bureau-game-chrome">
+          <div className="bureau-game-identity"><span className="bureau-game-signal"/>
+            <span><strong>{phoneMode === "sky" ? "SKY HOP" : "CURVE CLASH"}</strong><small>{phoneMode === "sky" ? "THE BUREAU / PHONE / TOP 10" : "THE BUREAU / PHONE / LOCAL 5 PLAYER"}</small></span>
+          </div>
+          <div className="bureau-game-actions">
+            <a href={phoneMode === "sky" ? "/bureau/sky-hop.html" : "/bureau/curve-clash.html"} target="_blank" rel="noopener noreferrer" aria-label="Open dit spel in een nieuw tabblad" title="Open game apart"><Maximize2 size={17}/></a>
+            <button ref={phoneCloseRef} type="button" onClick={() => setPhoneMode("menu")}>
+              <ArrowLeft size={16}/><span>TERUG NAAR DE TELEFOON</span><X size={18}/>
+            </button>
+          </div>
+        </header>
+        <iframe className="bureau-game-viewport" src={phoneMode === "sky" ? "/bureau/sky-hop.html" : "/bureau/curve-clash.html"} title={phoneMode === "sky" ? "Sky Hop — single player" : "Curve Clash — local multiplayer"} allow="fullscreen"/>
+      </div>, document.body)}
     {terminalOpen && typeof document !== "undefined" && createPortal(
       <BureauTerminal
         onClose={() => setTerminalOpen(false)}
