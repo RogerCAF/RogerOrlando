@@ -465,16 +465,71 @@ function drawBoss(b){
  ctx.fillStyle="#ffd0c6";ctx.fillRect(-15,-7,10,6);ctx.fillRect(7,-7,10,6);ctx.fillRect(-10,12,20,4);
  ctx.restore();
 }
-function drawGun(p,target){
- const i=game.active;let aim=target?Math.atan2(target.y-p.y,target.x-p.x):0;
- ctx.save();ctx.translate(p.x,p.y);ctx.rotate(aim);ctx.translate(15,0);
- ctx.fillStyle="#22282c";ctx.strokeStyle="#e6c9a5";ctx.lineWidth=1.4;
- if(i===0){ctx.fillRect(0,-12,21,5);ctx.fillRect(0,7,21,5);ctx.strokeRect(0,-12,21,5);ctx.strokeRect(0,7,21,5)}
- if(i===1){ctx.fillRect(0,-11,26,22);ctx.strokeRect(0,-11,26,22);ctx.fillStyle=WPN[i].color;ctx.fillRect(19,-9,7,18)}
- if(i===2){ctx.fillRect(0,-10,27,20);ctx.strokeRect(0,-10,27,20);for(let j=-1;j<=1;j++){ctx.fillStyle="#e8bd65";ctx.fillRect(16,j*5-2,17,3)}}
- if(i===3){ctx.fillRect(0,-9,33,18);ctx.strokeRect(0,-9,33,18);ctx.fillStyle="#b77344";ctx.fillRect(26,-11,9,22)}
- if(i===4){ctx.fillStyle="#577cbb";ctx.fillRect(0,-6,32,12);ctx.strokeRect(0,-6,32,12);ctx.fillStyle="#a1dbf7";ctx.fillRect(23,-3,9,6)}
- if(i===5){ctx.fillRect(0,-12,29,24);ctx.strokeRect(0,-12,29,24);ctx.fillStyle="#52ba8d";ctx.fillRect(25,-9,5,7);ctx.fillRect(25,3,5,7)}
+// Six recognizable compact weapon models, drawn with native 2D vector primitives.
+// Gun mounts share the same position used by each gun's muzzle calculation.
+function drawGunMount(p,target,i){
+ const slot=-Math.PI/2+i*TWO_PI/6;
+ const x=p.x+Math.cos(slot)*27,y=p.y+Math.sin(slot)*27;
+ const aim=target?Math.atan2(target.y-y,target.x-x):slot;
+ const color=WPN[i].color;
+ ctx.save();ctx.translate(x,y);ctx.rotate(aim);
+ // Steel mounting socket, rim light and color-coded hardpoint.
+ ctx.shadowColor=color;ctx.shadowBlur=4;
+ ctx.fillStyle="#15232d";ctx.fillRect(-8,-8,15,16);ctx.shadowBlur=0;
+ ctx.strokeStyle="#9aa9b0";ctx.lineWidth=1.3;ctx.strokeRect(-8,-8,15,16);
+ ctx.fillStyle=color;ctx.fillRect(-6,-5,4,10);
+ ctx.strokeStyle="#9daeba";ctx.lineWidth=1;
+ if(i===0){
+  // White: paired chrome sidearms with separate grips and muzzle holes.
+  for(const y0 of [-7,3]){
+   ctx.fillStyle="#7f919c";ctx.fillRect(1,y0,19,6);
+   ctx.fillStyle="#edf4ee";ctx.fillRect(5,y0,13,1.5);
+   ctx.fillStyle="#151c26";ctx.fillRect(18,y0+1,6,4);
+  }
+  ctx.fillStyle="#c7d3d8";ctx.fillRect(-4,-4,8,8);
+ }else if(i===1){
+  // Red: heavy twin-barrel shotgun with a bright sliding pump.
+  ctx.fillStyle="#52616c";ctx.fillRect(0,-8,25,16);ctx.strokeRect(0,-8,25,16);
+  ctx.fillStyle="#111b23";ctx.fillRect(21,-6,7,5);ctx.fillRect(21,1,7,5);
+  ctx.fillStyle="#ea6a63";ctx.fillRect(8,-10,8,20);
+  ctx.fillStyle="#ffb7a6";ctx.fillRect(10,-10,2,20);
+ }else if(i===2){
+  // Yellow: motor-driven three-barrel gatling.
+  ctx.fillStyle="#6c747b";ctx.fillRect(-1,-9,16,18);
+  for(let k=-1;k<=1;k++){
+   ctx.fillStyle="#ffce63";ctx.fillRect(12,k*5-2,19,3);
+   ctx.fillStyle="#202932";ctx.fillRect(27,k*5-2,5,3);
+  }
+  ctx.fillStyle="#c99b38";ctx.fillRect(15,-10,6,20);
+  ctx.fillStyle="#27333c";ctx.fillRect(17,-8,2,16);
+ }else if(i===3){
+  // Orange: broad rocket tube with thick copper nozzle and rear grip.
+  ctx.fillStyle="#5d686d";ctx.fillRect(-2,-10,29,20);ctx.strokeRect(-2,-10,29,20);
+  ctx.fillStyle="#e8a365";ctx.fillRect(16,-12,12,24);
+  ctx.fillStyle="#202b33";ctx.fillRect(26,-9,6,18);
+  ctx.fillStyle="#ffe1ac";ctx.fillRect(7,-5,11,3);
+  ctx.fillStyle="#344451";ctx.fillRect(-5,9,9,9);
+ }else if(i===4){
+  // Blue: futuristic luminous beam core with prismatic muzzle.
+  ctx.fillStyle="#3d5079";ctx.fillRect(0,-7,26,14);ctx.strokeRect(0,-7,26,14);
+  ctx.fillStyle="#6dbbfb";ctx.fillRect(5,-4,18,8);
+  ctx.fillStyle="#e0f8ff";ctx.fillRect(20,-3,8,6);
+  ctx.strokeStyle="#77c2ff";ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(18,-10);ctx.lineTo(31,0);ctx.lineTo(18,10);ctx.stroke();
+ }else{
+  // Green: dual smart-missile pods with illuminated seeker tips.
+  ctx.fillStyle="#416658";ctx.fillRect(-1,-11,24,22);ctx.strokeRect(-1,-11,24,22);
+  for(const y0 of [-7,3]){
+   ctx.fillStyle="#1d2c32";ctx.fillRect(13,y0,16,7);
+   ctx.fillStyle="#85eaba";ctx.fillRect(25,y0+1,4,5);
+  }
+  ctx.fillStyle="#b3e6c8";ctx.fillRect(4,-3,8,6);
+ }
+ // Low-cost muzzle flash only immediately after firing.
+ if(game.cooldowns[i]>.01&&game.cooldowns[i]<.07){
+  ctx.globalAlpha=.65;ctx.fillStyle=color;
+  ctx.beginPath();ctx.moveTo(31,0);ctx.lineTo(37,-5);ctx.lineTo(39,0);ctx.lineTo(37,5);ctx.closePath();ctx.fill();
+ }
  ctx.restore();
 }
 function draw(){
@@ -512,7 +567,8 @@ function draw(){
  const p=game.player;
  ctx.save();if(p.inv>0&&Math.floor(p.inv*12)%2===0)ctx.globalAlpha=.5;
  const target=nearest(p.x,p.y);
- drawGun(p,target);hero(p.x,p.y,game.active,20);
+ for(const i of game.unlocked)drawGunMount(p,target,i);
+ hero(p.x,p.y,Math.floor(game.t/1.8)%6,20);
  ctx.restore();
  if(touch.active){
   ctx.save();ctx.strokeStyle="#f1c48878";ctx.lineWidth=2;ctx.beginPath();ctx.arc(touch.x,touch.y,35,0,TWO_PI);ctx.stroke();
@@ -537,18 +593,21 @@ function refreshUI(){
  $("xp-progress").style.width=g?(clamp(g.xp/g.nextXP,0,1)*100).toFixed(1)+"%":"0%";
  $("pause").textContent=mode==="paused"?"▶ RESUME":"Ⅱ PAUSE";
  $("pause").disabled=mode==="menu"||mode==="upgrade"||mode==="ended";
- for(const btn of $("weapons").querySelectorAll("button")){
-  const i=Number(btn.dataset.weapon),unlocked=!!g&&g.unlocked.includes(i);
-  btn.disabled=!unlocked;btn.classList.toggle("locked",!unlocked);
-  btn.setAttribute("aria-pressed",String(!!g&&g.active===i));
-  btn.title=unlocked?WPN[i].name+" level "+g.ranks[i]:"Unlock through an XP upgrade";
+ for(const slot of $("weapons").querySelectorAll("[data-weapon]")){
+  const i=Number(slot.dataset.weapon),unlocked=!!g&&g.unlocked.includes(i);
+  slot.classList.toggle("locked",!unlocked);
+  slot.classList.toggle("equipped",unlocked);
+  slot.setAttribute("aria-label",WPN[i].name+(unlocked?" firing automatically at level "+g.ranks[i]:" not yet unlocked"));
+  slot.title=unlocked?WPN[i].name+" · level "+g.ranks[i]+" · automatic fire":"Unlock through an XP upgrade";
+  const level=slot.querySelector("em");if(level)level.textContent=unlocked?"LV"+g.ranks[i]:"—";
  }
- $("weapon-name").textContent=g?WPN[g.active].name:"DUAL PISTOLS";
- $("weapon-hint").textContent=g?WPN[g.active].hint:WPN[0].hint;
+ const count=g?g.unlocked.length:0;
+ $("weapon-name").textContent=count+" / 6 WEAPONS ACTIVE";
+ $("weapon-hint").textContent="Every equipped gun fires simultaneously · No switching.";
  const active=!!g&&g.fusion.until>g.t;
  const f=$("fusion");f.classList.toggle("active",active);
- f.textContent=active?"COLOR FUSION · "+({"4-1":"PRISM SHATTER","3-2":"BULLET STORM","5-3":"SWARM BOMB","0-4":"PRECISION BEAM"}[g.fusion.kind]||"SPECIAL")+" · "+Math.max(0,g.fusion.until-g.t).toFixed(1)+"s":
-  "FUSION READY · switch colors to discover combos";
+ f.textContent=active?"AUTO FUSION · "+({"4-1":"PRISM SHATTER","3-2":"BULLET STORM","5-3":"SWARM BOMB","0-4":"PRECISION BEAM"}[g.fusion.kind]||"SPECIAL")+" · "+Math.max(0,g.fusion.until-g.t).toFixed(1)+"s":
+  "ALL UNLOCKED WEAPONS FIRE TOGETHER · FUSIONS TRIGGER AUTOMATICALLY";
  $("boss").hidden=!g||!g.boss||g.boss.hp<=0;
  if(g&&g.boss)$("boss-bar").style.width=clamp(g.boss.hp/g.boss.max*100,0,100)+"%";
 }
@@ -591,6 +650,6 @@ $("pause").addEventListener("click",function(){if(mode==="playing")pause();else 
 $("sound").addEventListener("click",function(){soundOn=!soundOn;$("sound").textContent=soundOn?"♪ ON":"♪ OFF";$("sound").setAttribute("aria-pressed",String(soundOn));$("sound").setAttribute("aria-label",soundOn?"Disable sound":"Enable sound");if(soundOn)sound(500,.07,"sine")});
 window.addEventListener("pagehide",function(){if(mode==="playing")pause("GAME AUTO-PAUSED");cancelAnimationFrame(raf);raf=0;keys.clear();touch.active=false});
 window.addEventListener("resize",resize,{passive:true});
-setOverlay("THE BUREAU / COLOR ARSENAL","SIX COLORS. SIX WEAPONS.","You are the Rubik's Cube. Dodge enemies while your weapons fire automatically. Switch colors, collect XP and defeat the final boss.",start,"START RUN →","WASD / arrows to move · 1–6 to switch colors. On touchscreens, drag to move and tap color buttons.");
+setOverlay("THE BUREAU / COLOR ARSENAL","SIX COLORS. SIX WEAPONS.","You are the Rubik's Cube. Every weapon you unlock fires at once. Collect XP, build up all six weapons and defeat the final boss.",start,"START RUN →","WASD / arrows to move · all equipped guns fire together. On touchscreens, drag to move.");
 resize();refreshUI();
 })();
