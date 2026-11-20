@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight, Box, Dumbbell, Gamepad2, LockKeyhole, Maximize2, Swords, X } from "lucide-react";
 import "./bureau-game.css";
+import BureauTerminal from "./BureauTerminal";
 
 /**
  * Same-origin Bureau embed. Keep the original interactive artwork and hotspots,
@@ -20,6 +21,7 @@ export default function BureauExperience() {
   const rubikCloseRef = useRef<HTMLButtonElement>(null);
   const [arcadeOpen, setArcadeOpen] = useState(false);
   const arcadeCloseRef = useRef<HTMLButtonElement>(null);
+  const [terminalOpen, setTerminalOpen] = useState(false);
 
   useEffect(() => {
     if (!gameOpen) return;
@@ -124,11 +126,13 @@ export default function BureauExperience() {
           const isBag = !!target?.closest?.('[data-open="bag"], [data-inside="bag"]');
           const isRubik = !!target?.closest?.('[data-open="rubik"], [data-inside="rubik"]');
           const isArcade = !!target?.closest?.('[data-open="projects"], [data-open="monitor"], [data-open="computer"]');
-          if (!isBag && !isRubik && !isArcade) return;
+          const isKeyboard = !!target?.closest?.('[data-open="keyboard"], [data-inside="keyboard"]');
+          if (!isBag && !isRubik && !isArcade && !isKeyboard) return;
           event.preventDefault();
           event.stopPropagation();
           event.stopImmediatePropagation();
-          if (isRubik) setRubikOpen(true);
+          if (isKeyboard) setTerminalOpen(true);
+          else if (isRubik) setRubikOpen(true);
           else if (isBag) setBagOpen(true);
           else setArcadeOpen(true);
         }, true);
@@ -964,7 +968,13 @@ export default function BureauExperience() {
           top: 76.7% !important;
           width: 28.9% !important;
           height: 9.3% !important;
-          z-index: 10 !important;
+          z-index: 14 !important;
+          cursor: text !important;
+          touch-action: manipulation !important;
+        }
+        .bureau-embed .spot[data-open="keyboard"]:focus-visible {
+          outline: 2px solid rgba(228,180,115,.75) !important;
+          outline-offset: 2px !important;
         }
         .bureau-embed .spot[data-open="about"],
         .bureau-embed .spot[data-open="archive"] {
@@ -1044,8 +1054,13 @@ export default function BureauExperience() {
       title="The Bureau — interactieve illustratie" loading="eager"
       // Keep the scene mounted (preserves its interactive state), but stop
       // rendering the large illustrated iframe under the full-screen game.
-      style={gameOpen || bagOpen || rubikOpen || arcadeOpen ? { display: "none" } : undefined}
+      style={gameOpen || bagOpen || rubikOpen || arcadeOpen || terminalOpen ? { display: "none" } : undefined}
       onLoad={prepareScene} allowFullScreen />
+    {terminalOpen && typeof document !== "undefined" && createPortal(
+      <BureauTerminal
+        onClose={() => setTerminalOpen(false)}
+        onLaunchSecret={() => { setTerminalOpen(false); setGameOpen(true); }}
+      />, document.body)}
     {arcadeOpen && typeof document !== "undefined" && createPortal(
       <div className="bureau-arcade-overlay" role="dialog" aria-modal="true" aria-labelledby="bureau-arcade-heading">
         <div className="bureau-arcade-shell">
