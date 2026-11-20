@@ -355,7 +355,7 @@ document.addEventListener("click",event=>{
 document.addEventListener("visibilitychange",()=>{
  if(!booted)return;
  if(document.hidden){settle(Date.now());save();stopTimer()}
- else {tick();startTimer()}
+ else {tick();save();startTimer()}
 });
 window.addEventListener("pagehide",()=>{if(!booted)return;settle(Date.now());save();stopTimer()});
 })();
