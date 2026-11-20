@@ -14,7 +14,7 @@ trail.width=W;trail.height=H;
 const map=new Uint32Array(W*H);
 let role="menu",room="",secret="",slot=0,phase="lobby",round=1,points=[0,0,0,0,0],players=[],countdown=3.25,clock=0,stamp=1;
 let last=0,frameId=0,sendAt=0,segments=[],held={left:false,right:false},myConnected=false,joinPeer="";
-const peers=new Map(),channels=new Map(),attempted=new Set();
+const peers=new Map(),attempted=new Set();
 let guestPc=null,guestChannel=null,joinStarted=0,alive=true,roomPoll=0,answerPoll=0,connectWatch=0;
 const urlRoom=new URLSearchParams(location.search).get("room")||"";
 const safeCode=v=>String(v||"").toUpperCase().replace(/[^A-Z2-9]/g,"").slice(0,6);
@@ -337,7 +337,7 @@ function finishRound(){
  const title=winner?"P"+winner.id+" WINT DE MATCH!":lastOne?"P"+lastOne.id+" WINT DE RONDE!":"RONDE VOORBIJ";
  $("arenaStatus").textContent=winner?"MATCH COMPLETE":"ROUND COMPLETE";
  const subtitle=winner?"Eerste speler met 5 punten.":lastOne?"Laatste speler over verdient een punt.":"Niemand overleefde deze ronde.";
- renderScores();showResult(title,subtitle,role==="host"?"Druk op de knop of SPA TIE voor de volgende ronde.":"Wacht tot de host doorgaat.");
+ renderScores();showResult(title,subtitle,role==="host"?"Druk op de knop of SPATIE voor de volgende ronde.":"Wacht tot de host doorgaat.");
  sendAll({t:"result",phase,title,subtitle,scores:points,players:positions()});
  held={left:false,right:false};
 }
