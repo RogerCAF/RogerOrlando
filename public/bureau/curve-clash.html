@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#070c14"><title>Curve Clash — 5 Player Local Arcade</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#070c14"><title>Agtung die Kurve — 5 Player Local Arcade</title>
 <style>
 :root{color-scheme:dark;font-family:Inter,system-ui,-apple-system,sans-serif;background:#080e18;color:#f3f1ed}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;overscroll-behavior-x:none}
@@ -8,7 +8,7 @@ button,select{font:inherit}button{cursor:pointer;touch-action:manipulation}
 main{max-width:1230px;margin:0 auto;padding:clamp(9px,2vw,20px)}
 header{display:flex;justify-content:space-between;align-items:center;gap:13px;margin-bottom:11px}
 .brand small{font:800 10px ui-monospace,monospace;color:#99a3bc;letter-spacing:.14em}
-h1{font-weight:950;font-size:clamp(25px,4vw,42px);line-height:1.05;letter-spacing:-.055em;margin:4px 0 0}
+h1{font-weight:950;font-size:clamp(22px,3.8vw,38px);line-height:1.05;letter-spacing:-.055em;margin:4px 0 0}
 h1 span{color:#e9bb7e}.tag{font:800 11px ui-monospace,monospace;letter-spacing:.1em;color:#dbb381;text-align:right}
 .topbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:10px}
 .scoreboards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;flex:1}
@@ -47,14 +47,14 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:960/620;touch-action:no
 .footer-note{margin:14px 0;color:#8e9fb1;font:650 10px/1.6 ui-monospace,monospace;text-align:center}
 button:focus-visible,select:focus-visible{outline:2px solid #f6d098;outline-offset:2px}
 @media(max-width:850px){.scoreboards{grid-template-columns:repeat(5,minmax(0,1fr))}.player-stat{padding:7px}.player-stat .label{font-size:9px;gap:4px}.player-stat b{font-size:18px}.controls{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:540px){.tag{font-size:9px}.topbar{gap:6px}.scoreboards{gap:3px}.player-stat{padding:6px 3px;flex-direction:column;gap:3px}.player-stat b{font-size:16px}.player-stat .label{font-size:8px}.player-stat .dot{width:6px;height:6px}.controls{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.control{padding:7px}.control-head small{font-size:8px}.turn{height:42px}.dialog{padding:13px}.dialog h2{font-size:25px}.dialog p{font-size:11px;line-height:1.35}.arena-meta{font-size:8px;left:7px;top:5px}.controls-head{font-size:10px}}
+@media(max-width:540px){header{gap:7px}.tag{font-size:8px}h1{font-size:clamp(20px,5.2vw,26px)}.topbar{gap:6px}.scoreboards{gap:3px}.player-stat{padding:6px 3px;flex-direction:column;gap:3px}.player-stat b{font-size:16px}.player-stat .label{font-size:8px}.player-stat .dot{width:6px;height:6px}.controls{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.control{padding:7px}.control-head small{font-size:8px}.turn{height:42px}.dialog{padding:13px}.dialog h2{font-size:25px}.dialog p{font-size:11px;line-height:1.35}.arena-meta{font-size:8px;left:7px;top:5px}.controls-head{font-size:10px}}
 @media(max-width:390px){main{padding:7px}.brand small{font-size:8px}h1{font-size:26px}.dialog .select-row{margin:8px 0}.dialog{padding:11px}.dialog p{margin:5px auto 8px}.dialog h2{margin:6px 0}.turn{height:39px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
 </style></head>
 <body><main>
-<header><div class="brand"><small>THE BUREAU / PHONE ARCADE / LOCAL MULTIPLAYER</small><h1>CURVE CLASH<span>.</span></h1></div><span class="tag">UP TO 5 PLAYERS<br>FIRST TO 5 POINTS</span></header>
+<header><div class="brand"><small>THE BUREAU / PHONE ARCADE / LOCAL MULTIPLAYER</small><h1>AGTUNG DIE KURVE<span>.</span></h1></div><span class="tag">UP TO 5 PLAYERS<br>FIRST TO 5 POINTS</span></header>
 <div class="topbar"><div class="scoreboards" id="scores"></div></div>
-<section class="game-wrap" aria-label="Curve Clash shared arena"><canvas id="arena" width="960" height="620" aria-label="Curve Clash arena. Hold your player's left or right keys to steer and avoid walls and trails."></canvas><div class="arena-meta"><span>ROUND <strong id="round">1</strong></span><span id="status">WAITING FOR PLAYERS</span></div>
+<section class="game-wrap" aria-label="Agtung die Kurve shared arena"><canvas id="arena" width="960" height="620" aria-label="Agtung die Kurve arena. Hold your player's left or right keys to steer and avoid walls and trails."></canvas><div class="arena-meta"><span>ROUND <strong id="round">1</strong></span><span id="status">WAITING FOR PLAYERS</span></div>
 <div class="overlay" id="overlay"><div class="dialog"><span class="kicker" id="kicker">ONE SCREEN / FIVE RIVALS</span><h2 id="title">Don't hit the curve.</h2><p id="description">All players move automatically and leave a trail. Hold LEFT or RIGHT to steer. Touch a wall or a trail and you're out. Last survivor scores a point.</p><div class="select-row" id="selectRow"><label for="count">PLAYERS</label><select id="count" aria-label="Number of local players"><option value="2">2 PLAYERS</option><option value="3">3 PLAYERS</option><option value="4">4 PLAYERS</option><option selected value="5">5 PLAYERS</option></select></div><button id="action" class="primary" type="button">START MATCH →</button><p class="legend">Mouse and touch: hold the on-screen arrows. Desktop: use each player's keyboard pair. Random gaps appear in the trails.</p></div></div>
 </section>
 <div class="controls-head"><strong>PLAYER CONTROLS</strong><span>Hold to turn · release to go straight</span></div>
