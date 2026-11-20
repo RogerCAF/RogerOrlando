@@ -1,0 +1,48 @@
+/* Two original games live behind the physical phone hotspot in The Bureau. */
+.bureau-phone-overlay{position:fixed;inset:0;z-index:2147483002;display:flex;align-items:center;justify-content:center;padding:clamp(8px,2vw,24px);overflow-y:auto;overscroll-behavior:contain;background:rgba(4,8,14,.9);animation:bureau-game-arrival .22s ease-out both}
+.bureau-phone-device{position:relative;width:min(100%,390px);max-height:calc(100dvh - 16px);min-height:min(620px,calc(100dvh - 16px));display:flex;flex-direction:column;overflow:hidden;border:5px solid #353d4b;border-radius:35px;background:#111a2d;color:#f5f6fa;box-shadow:0 0 0 2px #0b1119,0 28px 90px #000d,0 0 0 1px #a5adb341 inset}
+.bureau-phone-notch{position:absolute;left:50%;top:-2px;transform:translateX(-50%);width:95px;height:18px;z-index:4;border-radius:0 0 16px 16px;background:#070b12;display:flex;align-items:center;justify-content:center}
+.bureau-phone-notch span{width:40px;height:4px;border-radius:4px;background:#2f4050}
+.bureau-phone-topline{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px;flex:0 0 auto;padding:23px 17px 10px;background:#101827}
+.bureau-phone-topline>span{display:flex;align-items:center;gap:8px;color:#a5b4c5;font:750 10px ui-monospace,monospace;letter-spacing:.09em}
+.bureau-phone-topline>span svg{color:#e9ba7b}
+.bureau-phone-topline button{display:grid;place-items:center;flex:0 0 33px;width:33px;height:33px;border:1px solid #ffffff26;border-radius:9px;background:#263144;color:#f5ece2;cursor:pointer}
+.bureau-phone-topline button:hover{background:#38485a}
+.bureau-phone-home{position:relative;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:9px 17px 16px;background:radial-gradient(ellipse at 80% 0,#31516e54,transparent 46%),linear-gradient(150deg,#111d2f,#0b1220 77%);scrollbar-width:thin;scrollbar-color:#495a66 #121b2a}
+.bureau-phone-intro{padding:9px 0 20px}
+.bureau-phone-intro>span{display:block;color:#edb879;font:850 9px ui-monospace,monospace;letter-spacing:.16em}
+.bureau-phone-intro h2{font:900 32px/1.05 system-ui,-apple-system,sans-serif;letter-spacing:-.065em;margin:10px 0 7px}
+.bureau-phone-intro h2 span{color:#f1bc7a}
+.bureau-phone-intro p{margin:0;color:#9eafc1;font:400 11px/1.55 system-ui,-apple-system,sans-serif}
+.bureau-phone-apps{display:flex;flex-direction:column;gap:11px}
+.bureau-phone-app{position:relative;display:flex;flex-direction:column;align-items:flex-start;min-height:190px;width:100%;text-align:left;padding:16px 17px;border:1px solid #ffffff2e;border-radius:15px;background:linear-gradient(125deg,#263d55,#15263d);color:#f7f1e8;cursor:pointer;box-shadow:0 9px 22px #0004;transition:transform .16s,border-color .16s,background .16s}
+.bureau-phone-app:hover{transform:translateY(-2px);border-color:#e9be8da1}
+.bureau-phone-app:active{transform:translateY(1px)}
+.bureau-phone-app-symbol{position:absolute;right:17px;top:17px;display:grid;place-items:center;width:56px;height:56px;border:1px solid #f9d6a046;border-radius:15px;background:#f0b97419;color:#f3c98a}
+.bureau-phone-app-type{display:flex;align-items:center;gap:6px;color:#e3bf90;font:800 9px ui-monospace,monospace;letter-spacing:.055em;padding-right:59px}
+.bureau-phone-app strong{font:950 24px system-ui,-apple-system,sans-serif;letter-spacing:-.05em;line-height:1;margin:32px 0 7px}
+.bureau-phone-app>span:not(.bureau-phone-app-symbol):not(.bureau-phone-app-type){font:400 11px/1.5 system-ui,-apple-system,sans-serif;color:#c1cbd3;max-width:34ch}
+.bureau-phone-app em{display:flex;align-items:center;gap:7px;font:850 10px ui-monospace,monospace;letter-spacing:.07em;color:#f5cf94;margin-top:13px;font-style:normal}
+.bureau-phone-curve{background:linear-gradient(125deg,#282c4d,#171a32)}
+.bureau-phone-curve .bureau-phone-app-symbol{background:#a598fa16;color:#d4beff;border-color:#bea6ff5e}
+.bureau-phone-curve .bureau-phone-app-type{color:#c3b5f9}
+.bureau-phone-curve em{color:#d0c3ff}
+.bureau-phone-hint{font:650 9px/1.5 ui-monospace,monospace;color:#8295a9;text-align:center;letter-spacing:.045em;padding:19px 3px 3px}
+.bureau-phone-homebar{height:24px;display:grid;place-items:center;background:#0a111e;flex:0 0 auto}
+.bureau-phone-homebar:after{content:"";width:110px;height:4px;border-radius:4px;background:#637284}
+.bureau-phone-topline button:focus-visible,.bureau-phone-app:focus-visible{outline:2px solid #f6c990;outline-offset:3px}
+@media(max-width:600px){
+ .bureau-phone-overlay{padding:5px}
+ .bureau-phone-device{width:min(100%,370px);max-height:calc(100dvh - 10px);min-height:min(560px,calc(100dvh - 10px));border-radius:27px}
+ .bureau-phone-topline{padding-top:19px}
+ .bureau-phone-home{padding:7px 13px 10px}
+ .bureau-phone-intro{padding:8px 2px 13px}
+ .bureau-phone-intro h2{font-size:28px}
+ .bureau-phone-app{min-height:171px;padding:13px 14px}
+ .bureau-phone-app strong{font-size:22px;margin-top:28px}
+ .bureau-phone-app-symbol{width:47px;height:47px}
+ .bureau-phone-app-symbol svg{width:29px;height:29px}
+ .bureau-phone-homebar{height:20px}
+}
+@media(max-height:570px){.bureau-phone-device{min-height:0}.bureau-phone-home{padding-bottom:8px}.bureau-phone-intro{padding-bottom:9px}.bureau-phone-app{min-height:148px}.bureau-phone-app strong{margin-top:19px}.bureau-phone-hint{padding-top:9px}}
+@media(prefers-reduced-motion:reduce){.bureau-phone-overlay{animation:none}.bureau-phone-app{transition:none}}
