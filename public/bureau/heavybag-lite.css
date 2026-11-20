@@ -254,3 +254,24 @@ html,body{background:#0b0e12;color:#f5efe6}
 @media(prefers-reduced-motion:reduce){
  .hbl-quick-button,.hbl-quick-track>span{transition:none}
 }
+
+
+/* Heavy Bag — instant impact, controlled snap, satisfying finisher feedback. */
+.hbl-bag{cursor:crosshair;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.hbl-bag-body{transition:filter 55ms linear}
+.hbl-bag:active .hbl-bag-body{filter:brightness(1.38) saturate(1.15)}
+.hbl-impact-flash{position:absolute;z-index:4;left:50%;top:50%;width:min(55%,260px);height:57%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(ellipse,#fffbe3a8 0%,#ffc27070 17%,#ff8d3123 46%,transparent 70%);opacity:0;pointer-events:none;mix-blend-mode:screen}
+.hbl-impact-ring{position:absolute;z-index:4;left:50%;top:48%;width:120px;aspect-ratio:1;border:3px solid #ffda9b;border-radius:50%;box-shadow:0 0 24px #ffc569aa,inset 0 0 19px #ffc56955;opacity:0;transform:translate(-50%,-50%) scale(.3);pointer-events:none}
+.hbl-impact-word{position:absolute;z-index:5;top:46%;left:50%;width:100%;color:#fff3cd;text-align:center;font:1000 clamp(29px,5vw,51px)/1 system-ui,-apple-system,sans-serif;letter-spacing:-.05em;text-shadow:0 3px 1px #6e3110,0 8px 19px #000c;opacity:0;transform:translate(-50%,-50%);pointer-events:none}
+.hbl-impact-word.is-finisher{font-size:clamp(32px,5.5vw,61px);color:#ffe07e;text-shadow:0 3px 1px #a8461a,0 0 35px #ffa429bd,0 9px 20px #000d}
+.hbl-spark{position:absolute;z-index:5;width:clamp(5px,1vw,9px);height:clamp(5px,1vw,9px);border-radius:2px;transform:rotate(45deg);pointer-events:none;background:#ffe6b6;box-shadow:0 0 12px #ffd08d;animation:hbl-spark-fly .38s cubic-bezier(.14,.7,.22,1) both}
+@keyframes hbl-spark-fly{0%{opacity:1;transform:translate(0,0) rotate(45deg) scale(1.1)}80%{opacity:.85}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(170deg) scale(.1)}}
+.hbl-pop.is-finisher{color:#ffe69b;filter:drop-shadow(0 0 10px #f8b446);font-size:clamp(21px,3vw,32px)}
+.hbl-fury{margin:8px 0 0;padding:10px 11px;border:1px solid #9766366e;border-radius:9px;background:linear-gradient(115deg,#29221d,#1a1e22)}
+.hbl-fury-top{display:flex;justify-content:space-between;gap:10px;align-items:center;color:#f3d2a0;font:900 10px ui-monospace,monospace;letter-spacing:.09em}
+.hbl-fury-top b{font-weight:900;color:#ffbc66}
+.hbl-fury-track{height:8px;margin-top:9px;overflow:hidden;border-radius:20px;background:#0b0d11;box-shadow:inset 0 0 0 1px #ffffff15}
+.hbl-fury-track span{display:block;height:100%;width:0%;background:linear-gradient(90deg,#d87138 0%,#ffb563 70%,#fff5cb 100%);box-shadow:0 0 13px #ffa43e;transition:width 85ms linear}
+.hbl-fury small{display:block;color:#949aa0;font:750 9px/1.4 ui-monospace,monospace;margin-top:7px;letter-spacing:.045em}
+@media(max-width:570px){.hbl-fury{padding:9px}.hbl-fury-top{font-size:9px}.hbl-fury small{font-size:8px}.hbl-impact-ring{width:90px}}
+@media(prefers-reduced-motion:reduce){.hbl-spark{display:none}.hbl-fury-track span{transition:none}}
