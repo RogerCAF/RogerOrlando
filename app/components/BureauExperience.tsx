@@ -3,6 +3,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight, Bird, Box, Dumbbell, Gamepad2, LockKeyhole, Maximize2, Route, Smartphone, Swords, Timer, Trophy, UsersRound, X, Zap } from "lucide-react";
+
+type PhoneGame = "sky" | "curve" | "reaction" | "ten";
+const phoneGameDetails: Record<PhoneGame, { title: string; subtitle: string; url: string }> = {
+  sky: { title: "SNUFFY BIRD", subtitle: "THE BUREAU / PHONE / TOP 10", url: "/bureau/sky-hop.html" },
+  curve: { title: "AGTUNG DIE KURVE", subtitle: "THE BUREAU / PHONE / LOCAL MULTIPLAYER", url: "/bureau/curve-clash.html" },
+  reaction: { title: "DR. MONGO’S REACTION GAME", subtitle: "THE BUREAU / PHONE / REFLEX TEST", url: "/arcade/reaction" },
+  ten: { title: "THE BUTTON 10:00", subtitle: "THE BUREAU / PHONE / TIMING CHALLENGE", url: "/arcade/ten" },
+};
 import "./bureau-game.css";
 import "./bureau-phone.css";
 import BureauTerminal from "./BureauTerminal";
@@ -22,11 +30,9 @@ export default function BureauExperience() {
   const rubikCloseRef = useRef<HTMLButtonElement>(null);
   const [arcadeOpen, setArcadeOpen] = useState(false);
   const arcadeCloseRef = useRef<HTMLButtonElement>(null);
-  const [phoneMode, setPhoneMode] = useState<null | "menu" | "sky" | "curve">(null);
+  const [phoneMode, setPhoneMode] = useState<null | "menu" | PhoneGame>(null);
   const phoneCloseRef = useRef<HTMLButtonElement>(null);
   const [terminalOpen, setTerminalOpen] = useState(false);
-  const [classicGame, setClassicGame] = useState<null | "reaction" | "ten">(null);
-  const classicCloseRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!gameOpen) return;
@@ -108,25 +114,6 @@ export default function BureauExperience() {
       document.removeEventListener("keydown", onEscape);
     };
   }, [arcadeOpen]);
-
-  useEffect(() => {
-    if (!classicGame) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    classicCloseRef.current?.focus({ preventScroll: true });
-    const onEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        setClassicGame(null);
-        setArcadeOpen(true);
-      }
-    };
-    document.addEventListener("keydown", onEscape);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", onEscape);
-    };
-  }, [classicGame]);
 
   useEffect(() => {
     if (!phoneMode) return;
@@ -855,14 +842,14 @@ export default function BureauExperience() {
       if (scene) {
         const phoneSpot = scene.querySelector<HTMLElement>('.spot[data-open="arcade"], .spot[data-open="phone"]');
         if (phoneSpot) {
-          phoneSpot.setAttribute("aria-label", "Open de twee spellen op de telefoon");
-          phoneSpot.title = "PHONE ARCADE / SNUFFY BIRD & AGTUNG DIE KURVE";
+          phoneSpot.setAttribute("aria-label", "Open de vier spellen op de telefoon");
+          phoneSpot.title = "PHONE ARCADE / 4 GAMES";
         } else if (!document.getElementById("bureau-phone-entry")) {
           const phone = document.createElement("button");
           phone.type = "button";
           phone.id = "bureau-phone-entry";
-          phone.setAttribute("aria-label", "Open de twee spellen op de telefoon");
-          phone.title = "PHONE ARCADE / SNUFFY BIRD & AGTUNG DIE KURVE";
+          phone.setAttribute("aria-label", "Open de vier spellen op de telefoon");
+          phone.title = "PHONE ARCADE / 4 GAMES";
           scene.appendChild(phone);
         }
       }
@@ -1139,7 +1126,7 @@ export default function BureauExperience() {
       title="The Bureau — interactieve illustratie" loading="eager"
       // Keep the scene mounted (preserves its interactive state), but stop
       // rendering the large illustrated iframe under the full-screen game.
-      style={gameOpen || bagOpen || rubikOpen || arcadeOpen || classicGame || terminalOpen || phoneMode ? { display: "none" } : undefined}
+      style={gameOpen || bagOpen || rubikOpen || arcadeOpen || terminalOpen || phoneMode ? { display: "none" } : undefined}
       onLoad={prepareScene} allowFullScreen />
     {phoneMode === "menu" && typeof document !== "undefined" && createPortal(
       <div className="bureau-phone-overlay" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) setPhoneMode(null); }}>
@@ -1148,9 +1135,9 @@ export default function BureauExperience() {
           <div className="bureau-phone-topline"><span><Smartphone size={13} aria-hidden="true"/> THE BUREAU / PHONE</span><button ref={phoneCloseRef} type="button" aria-label="Sluit de telefoon" onClick={() => setPhoneMode(null)}><X size={17}/></button></div>
           <div className="bureau-phone-home">
             <div className="bureau-phone-intro">
-              <span>POCKET ARCADE / 02 GAMES</span>
+              <span>POCKET ARCADE / 04 GAMES</span>
               <h2 id="bureau-phone-heading">Pick up &amp; play<span>.</span></h2>
-              <p>Twee verrassingen verstopt in de telefoon op het bureau.</p>
+              <p>Vier mini-games in de telefoon op het bureau. Tik een spel om direct te beginnen.</p>
             </div>
             <div className="bureau-phone-apps">
               <button type="button" onClick={() => setPhoneMode("sky")} className="bureau-phone-app bureau-phone-sky">
@@ -1167,44 +1154,40 @@ export default function BureauExperience() {
                 <span>Stuur je lijn langs de muren en elkaar. Laatste speler over wint.</span>
                 <em>PLAY TOGETHER <ArrowRight size={15} aria-hidden="true"/></em>
               </button>
+              <button type="button" onClick={() => setPhoneMode("reaction")} className="bureau-phone-app bureau-phone-reaction">
+                <span className="bureau-phone-app-symbol"><Zap size={35} strokeWidth={1.65} aria-hidden="true"/></span>
+                <span className="bureau-phone-app-type"><Trophy size={13} aria-hidden="true"/> REFLEX / PERSONAL BEST</span>
+                <strong>DR. MONGO’S REACTION GAME</strong>
+                <span>Wacht op groen en tik zo snel mogelijk.</span>
+                <em>PLAY NOW <ArrowRight size={15} aria-hidden="true"/></em>
+              </button>
+              <button type="button" onClick={() => setPhoneMode("ten")} className="bureau-phone-app bureau-phone-ten">
+                <span className="bureau-phone-app-symbol"><Timer size={35} strokeWidth={1.65} aria-hidden="true"/></span>
+                <span className="bureau-phone-app-type"><Trophy size={13} aria-hidden="true"/> TIMING / PERSONAL BEST</span>
+                <strong>THE BUTTON 10:00</strong>
+                <span>Stop de rode knop op exact 10.00 seconden.</span>
+                <em>PLAY NOW <ArrowRight size={15} aria-hidden="true"/></em>
+              </button>
             </div>
             <div className="bureau-phone-hint">NO DOWNLOADS · PLAY DIRECTLY IN YOUR BROWSER</div>
           </div>
           <div className="bureau-phone-homebar" aria-hidden="true"/>
         </section>
       </div>, document.body)}
-    {(phoneMode === "sky" || phoneMode === "curve") && typeof document !== "undefined" && createPortal(
-      <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label={phoneMode === "sky" ? "Snuffy Bird game" : "Agtung die Kurve multiplayer game"}>
+    {phoneMode && phoneMode !== "menu" && typeof document !== "undefined" && createPortal(
+      <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label={phoneGameDetails[phoneMode].title}>
         <header className="bureau-game-chrome">
           <div className="bureau-game-identity"><span className="bureau-game-signal"/>
-            <span><strong>{phoneMode === "sky" ? "SNUFFY BIRD" : "AGTUNG DIE KURVE"}</strong><small>{phoneMode === "sky" ? "THE BUREAU / PHONE / TOP 10" : "THE BUREAU / PHONE / LOCAL 5 PLAYER"}</small></span>
+            <span><strong>{phoneGameDetails[phoneMode].title}</strong><small>{phoneGameDetails[phoneMode].subtitle}</small></span>
           </div>
           <div className="bureau-game-actions">
-            <a href={phoneMode === "sky" ? "/bureau/sky-hop.html" : "/bureau/curve-clash.html"} target="_blank" rel="noopener noreferrer" aria-label="Open dit spel in een nieuw tabblad" title="Open game apart"><Maximize2 size={17}/></a>
+            <a href={phoneGameDetails[phoneMode].url} target="_blank" rel="noopener noreferrer" aria-label="Open dit spel in een nieuw tabblad" title="Open game apart"><Maximize2 size={17}/></a>
             <button ref={phoneCloseRef} type="button" onClick={() => setPhoneMode("menu")}>
               <ArrowLeft size={16}/><span>TERUG NAAR DE TELEFOON</span><X size={18}/>
             </button>
           </div>
         </header>
-        <iframe className="bureau-game-viewport" src={phoneMode === "sky" ? "/bureau/sky-hop.html" : "/bureau/curve-clash.html"} title={phoneMode === "sky" ? "Snuffy Bird — single player" : "Agtung die Kurve — local multiplayer"} allow="fullscreen"/>
-      </div>, document.body)}
-    {classicGame && typeof document !== "undefined" && createPortal(
-      <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label={classicGame === "reaction" ? "Dr. Mongo’s Reaction Game" : "The Button 10:00"}>
-        <header className="bureau-game-chrome">
-          <div className="bureau-game-identity"><span className="bureau-game-signal"/>
-            <span><strong>{classicGame === "reaction" ? "DR. MONGO’S REACTION GAME" : "THE BUTTON 10:00"}</strong>
-              <small>THE BUREAU / ARCADE / {classicGame === "reaction" ? "REACTION TIME" : "TEN SECOND CHALLENGE"}</small>
-            </span>
-          </div>
-          <div className="bureau-game-actions">
-            <a href={classicGame === "reaction" ? "/arcade/reaction" : "/arcade/ten"} target="_blank" rel="noopener noreferrer" aria-label="Open dit spel in een nieuw tabblad" title="Open game apart"><Maximize2 size={17}/></a>
-            <button ref={classicCloseRef} type="button" onClick={() => { setClassicGame(null); setArcadeOpen(true); }}>
-              <ArrowLeft size={16}/><span>TERUG NAAR ARCADE</span><X size={18}/>
-            </button>
-          </div>
-        </header>
-        <iframe className="bureau-game-viewport" src={classicGame === "reaction" ? "/arcade/reaction" : "/arcade/ten"}
-          title={classicGame === "reaction" ? "Dr. Mongo’s Reaction Game" : "The Button 10:00"} allow="fullscreen"/>
+        <iframe className="bureau-game-viewport" src={phoneGameDetails[phoneMode].url} title={phoneGameDetails[phoneMode].title} allow="fullscreen"/>
       </div>, document.body)}
     {terminalOpen && typeof document !== "undefined" && createPortal(
       <BureauTerminal
@@ -1219,9 +1202,9 @@ export default function BureauExperience() {
             <button type="button" className="bureau-arcade-close" ref={arcadeCloseRef} onClick={() => setArcadeOpen(false)} aria-label="Sluit de arcade en ga terug naar het bureau"><X size={19}/></button>
           </header>
           <div className="bureau-arcade-intro">
-            <span>INTERACTIVE EXPERIENCES / 06</span>
+            <span>INTERACTIVE EXPERIENCES / 04</span>
             <h2 id="bureau-arcade-heading">Pick a challenge<span>.</span></h2>
-            <p>Zes korte ervaringen. Kies er één of ontdek ze via de objecten op het bureau.</p>
+            <p>Vier korte ervaringen. Kies er één of ontdek ze via de objecten op het bureau.</p>
           </div>
           <div className="bureau-arcade-grid">
             <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setBagOpen(true);}}>
@@ -1238,29 +1221,15 @@ export default function BureauExperience() {
               <span>Ontwijk, verzamel XP en bouw zes wapens tegelijk op.</span>
               <em>PLAY SURVIVOR <ArrowRight size={15} aria-hidden="true"/></em>
             </button>
-            <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setClassicGame("reaction");}}>
-              <span className="bureau-arcade-card-index">03 / REACTION TIME</span>
-              <Zap className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
-              <strong>DR. MONGO’S REACTION GAME</strong>
-              <span>Wacht tot het vlak groen wordt. Hoe snel reageer jij?</span>
-              <em>TEST YOUR REFLEXES <ArrowRight size={15} aria-hidden="true"/></em>
-            </button>
-            <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setClassicGame("ten");}}>
-              <span className="bureau-arcade-card-index">04 / TIMING CHALLENGE</span>
-              <Timer className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
-              <strong>THE BUTTON 10:00</strong>
-              <span>Stop de rode knop zo dicht mogelijk bij 10.00 seconden.</span>
-              <em>PLAY THE BUTTON <ArrowRight size={15} aria-hidden="true"/></em>
-            </button>
             <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setGameOpen(true);}}>
-              <span className="bureau-arcade-card-index">05 / SECRET FILE 030</span>
+              <span className="bureau-arcade-card-index">03 / SECRET FILE 030</span>
               <LockKeyhole className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
               <strong>UNFINISHED PROJECT</strong>
               <span>Ontgrendel het verhaal achter de verborgen systeemproeven.</span>
               <em>OPEN SECRET FILE <ArrowRight size={15} aria-hidden="true"/></em>
             </button>
             <button className="bureau-arcade-card" type="button" onClick={openFightCamp}>
-              <span className="bureau-arcade-card-index">06 / FIGHT CAMP</span>
+              <span className="bureau-arcade-card-index">04 / FIGHT CAMP</span>
               <Swords className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
               <strong>FIGHT CAMP</strong>
               <span>Ontdek de vechtsportervaring achter de poster.</span>
