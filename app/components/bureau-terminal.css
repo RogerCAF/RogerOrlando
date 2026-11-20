@@ -1,0 +1,57 @@
+/* Hidden terminal experience — opened by the keyboard hotspot, not extra UI clutter. */
+.bureau-terminal-overlay{position:fixed;inset:0;z-index:2147483002;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:clamp(9px,3vw,30px);background:rgba(4,7,11,.91);color:#e8ece9;animation:bureau-game-arrival .2s ease-out both}
+.bureau-terminal{position:relative;display:flex;flex-direction:column;width:min(100%,790px);max-height:min(760px,calc(100dvh - 20px));min-height:min(590px,calc(100dvh - 20px));overflow:hidden;border:1px solid #b48b5c83;border-radius:14px;background:#0d1116;box-shadow:0 30px 110px #000c,0 0 0 1px #ffffff09 inset;font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}
+.bureau-terminal button{font:inherit;cursor:pointer;touch-action:manipulation}
+.bureau-terminal button:focus-visible,.bureau-terminal input:focus-visible{outline:2px solid #eab97e;outline-offset:2px}
+.bureau-terminal-header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex:0 0 auto;padding:13px 18px;border-bottom:1px solid #ffffff18;background:linear-gradient(115deg,#20262a,#121a20)}
+.bureau-terminal-header-title{display:flex;align-items:center;gap:11px;color:#e6b77f}
+.bureau-terminal-header-title>div{display:flex;flex-direction:column;gap:2px}
+.bureau-terminal-header-title strong{font-size:13px;letter-spacing:.16em;line-height:1.1}
+.bureau-terminal-header-title small{font-size:9px;letter-spacing:.09em;color:#83959f}
+.bureau-terminal-header-actions{display:flex;align-items:center;gap:15px}
+.bureau-terminal-status{display:flex;align-items:center;gap:7px;font-size:9px;letter-spacing:.08em;color:#91c7ae}
+.bureau-terminal-status i{width:6px;height:6px;border-radius:50%;background:#75cfa1;box-shadow:0 0 10px #75cfa1}
+.bureau-terminal-close{display:grid;place-items:center;width:37px;height:37px;border-radius:8px;border:1px solid #ffffff2c;background:#273038;color:#ececea;transition:background .14s}
+.bureau-terminal-close:hover{background:#3b4448}
+.bureau-terminal-screen{position:relative;display:flex;flex-direction:column;min-height:0;flex:1;padding:17px clamp(15px,3vw,27px) 20px;background:radial-gradient(ellipse at 60% 85%,#22403515,transparent 66%),#0c1316}
+.bureau-terminal-grid{position:absolute;inset:0;pointer-events:none;opacity:.13;background-image:linear-gradient(#77938025 1px,transparent 1px);background-size:100% 4px}
+.bureau-terminal-meta{display:flex;justify-content:space-between;gap:12px;position:relative;border-bottom:1px solid #ffffff14;padding-bottom:10px;font-size:9px;letter-spacing:.1em;color:#697d86}
+.bureau-terminal-feed{display:flex;flex-direction:column;gap:8px;flex:1;min-height:140px;overflow-y:auto;overscroll-behavior:contain;position:relative;padding:20px 4px 12px 0;scrollbar-color:#566057 #111b1b;scrollbar-width:thin}
+.bureau-terminal-line{font:500 clamp(11px,1.7vw,13px)/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere;letter-spacing:.005em;margin:0}
+.bureau-terminal-system{color:#d0d8d4}
+.bureau-terminal-input{color:#e9bc87}
+.bureau-terminal-success{color:#83ddaa;font-weight:750}
+.bureau-terminal-muted{color:#82959e}
+.bureau-terminal-error{color:#ed9287}
+.bureau-terminal-easteregg{position:relative;margin:5px 0 12px;border:1px solid #e7bd7163;border-radius:6px;padding:10px 12px;text-align:center;font-size:10px;font-weight:800;letter-spacing:.085em;color:#f0c689;background:#47311938}
+.bureau-terminal-unlock{position:relative;display:flex;justify-content:center;align-items:center;gap:10px;width:fit-content;max-width:100%;margin:9px 0 12px;padding:11px 14px;border:1px solid #95cb9b6e;border-radius:7px;color:#a1e1ad;background:#1b392c7d;font-weight:850;letter-spacing:.03em;transition:background .15s}
+.bureau-terminal-unlock:hover{background:#2c4f3c}
+.bureau-terminal-form{position:relative;display:flex;align-items:center;gap:10px;margin-top:auto;padding:11px 11px 11px 14px;border:1px solid #77957b57;border-radius:8px;background:#15211e}
+.bureau-terminal-form:focus-within{border-color:#8bd3a3a8}
+.bureau-terminal-prompt{flex:0 0 auto;color:#d7a972;font:800 11px ui-monospace,monospace;white-space:nowrap}
+.bureau-terminal-form input{min-width:0;flex:1;box-sizing:border-box;background:transparent;color:#f7f3ed;border:none;outline:none!important;font:12px ui-monospace,monospace;letter-spacing:0}
+.bureau-terminal-form input::placeholder{color:#66777a}
+.bureau-terminal-run{display:grid;place-items:center;flex:0 0 39px;height:37px;padding:0;border:none;border-radius:6px;color:#14201a;background:#b2d6ad;transition:background .14s}
+.bureau-terminal-run:hover{background:#d5ecc8}
+.bureau-terminal-footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 14px;flex:0 0 auto;border-top:1px solid #ffffff14;padding:11px 18px;background:#10191e;color:#647983;font-size:9px;letter-spacing:.07em}
+.bureau-terminal-matrix .bureau-terminal-screen{background-color:#08160f;background-image:repeating-linear-gradient(90deg,#163b1b14 0px,#163b1b14 1px,transparent 1px,transparent 35px),linear-gradient(145deg,#04120a,#112819)}
+.bureau-terminal-matrix .bureau-terminal-header{background:#102119}
+.bureau-terminal-matrix .bureau-terminal-header-title,.bureau-terminal-matrix .bureau-terminal-prompt{color:#94e0a8}
+.bureau-terminal-matrix .bureau-terminal-line{filter:drop-shadow(0 0 3px #63e6912a)}
+.bureau-terminal-matrix .bureau-terminal-form{background:#132d1c}
+@media(max-width:640px){
+ .bureau-terminal-overlay{padding:6px;align-items:center}
+ .bureau-terminal{max-height:calc(100dvh - 12px);min-height:min(520px,calc(100dvh - 12px));border-radius:10px}
+ .bureau-terminal-header{padding:10px 12px}
+ .bureau-terminal-status{display:none}
+ .bureau-terminal-screen{padding:12px 12px 15px}
+ .bureau-terminal-meta{font-size:8px}
+ .bureau-terminal-feed{gap:6px;padding-top:14px}
+ .bureau-terminal-prompt{font-size:10px}
+ .bureau-terminal-form{padding:7px 7px 7px 10px;gap:6px}
+ .bureau-terminal-form input{font-size:12px}
+ .bureau-terminal-footer{padding:10px 12px;font-size:8px}
+ .bureau-terminal-footer span:last-child{display:none}
+}
+@media(max-width:370px){.bureau-terminal-prompt{font-size:9px}.bureau-terminal-header-title small{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.bureau-terminal-overlay{animation:none}.bureau-terminal button{transition:none}}
