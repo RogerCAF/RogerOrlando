@@ -614,20 +614,3 @@
     height: clamp(185px, 55vw, 300px);
   }
 }
-
-
-/* Clearly visible game shortcuts. Keep the approved Bureau artwork untouched. */
-.bureau-quickplay{display:flex;align-items:center;justify-content:space-between;gap:18px;width:min(100%,1510px);margin:0 auto;padding:15px clamp(16px,3vw,40px);background:#151b24;border-top:1px solid #ffffff24;border-bottom:1px solid #b08a5a50;color:#f4ede2}
-.bureau-quickplay-title{display:inline-flex;align-items:center;gap:9px;white-space:nowrap;font:800 10px ui-monospace,monospace;letter-spacing:.09em;color:#e1b989}
-.bureau-quickplay-title>span:not(.bureau-quickplay-dot){color:#75808b}
-.bureau-quickplay-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#d6b589;box-shadow:0 0 0 4px #d6b58914}
-.bureau-quickplay-links{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px}
-.bureau-quickplay-links a{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;min-height:39px;padding:10px 13px;border:1px solid #c49c6e60;border-radius:5px;background:#202630;color:#eed7b9;font:800 10px/1.3 ui-monospace,monospace;letter-spacing:.025em;transition:background .16s,border-color .16s}
-.bureau-quickplay-links a:hover{background:#32343a;border-color:#e5bc86}
-.bureau-quickplay-links a:focus-visible{outline:2px solid #f4cc94;outline-offset:2px}
-.bureau-quickplay-links a svg{flex-shrink:0}
-.bureau-quickplay-links a.bureau-quickplay-all{background:#d5b083;border-color:#d5b083;color:#15181d}
-.bureau-quickplay-links a.bureau-quickplay-all:hover{background:#f0ca9a;border-color:#f0ca9a}
-@media(max-width:1080px){.bureau-quickplay{flex-wrap:wrap;gap:11px}.bureau-quickplay-links{width:100%;justify-content:flex-start}}
-@media(max-width:680px){.bureau-quickplay{display:block;padding:12px}.bureau-quickplay-title{font-size:10px;margin-bottom:12px}.bureau-quickplay-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.bureau-quickplay-links a{min-height:48px;padding:9px 10px;font-size:9px;overflow-wrap:anywhere}.bureau-quickplay-links a.bureau-quickplay-all{grid-column:1/-1;justify-content:center;min-height:38px}}
-@media(prefers-reduced-motion:reduce){.bureau-quickplay-links a{transition:none}}
