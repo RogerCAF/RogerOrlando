@@ -22,39 +22,3 @@
 .bureau-reaction-scores small{font:600 11px/1.4 system-ui,sans-serif;color:#aeb8c4}
 @media(max-width:620px){.bureau-standalone{padding:11px}.bureau-standalone-eyebrow{padding:5px 2px 12px;font-size:9px}.bureau-standalone .rg-ten-section{margin:0}.bureau-standalone .rg-ten-head{padding:19px 17px}.bureau-standalone .rg-ten-head h2{font-size:29px}.bureau-standalone .rg-ten-readout>strong{font-size:clamp(30px,8vw,46px)}.bureau-standalone .rg-ten-button{width:min(240px,62vw);height:min(240px,62vw)}.bureau-reaction{padding:19px 14px;border-radius:13px}.bureau-reaction-intro{font-size:12px}.bureau-reaction-target{min-height:210px}.bureau-reaction-target strong{font-size:clamp(28px,7.5vw,41px)}}
 @media(prefers-reduced-motion:reduce){.bureau-reaction-target{transition:none}}
-
-
-/* Bureau games index: legible direct launcher on mobile and desktop. */
-.bureau-catalog{min-height:100dvh;background:radial-gradient(ellipse at 85% 1%,#272532 0%,transparent 39%),linear-gradient(#0c1117,#11151d);color:#f4f0e8;font-family:system-ui,-apple-system,sans-serif}
-.bureau-catalog *{box-sizing:border-box}
-.bureau-catalog-wrap{width:min(1180px,calc(100% - 40px));margin:auto}
-.bureau-catalog-nav{min-height:88px;display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid #ffffff1b}
-.bureau-catalog-nav>a,.bureau-catalog-nav>span{display:inline-flex;align-items:center;gap:9px;font:800 10px ui-monospace,monospace;letter-spacing:.12em;color:#e6c092}
-.bureau-catalog-nav>span{color:#899ba7}
-.bureau-catalog-nav>a:hover,.bureau-catalog-footer a:hover{color:#fff6e8}
-.bureau-catalog-hero{padding:clamp(32px,7vw,80px) 0 40px}
-.bureau-catalog-kicker{font:800 10px ui-monospace,monospace;color:#d7b481;letter-spacing:.18em}
-.bureau-catalog-hero h1{font:850 clamp(44px,7vw,84px)/1.05 system-ui,-apple-system,sans-serif;letter-spacing:-.065em;margin:15px 0 14px}
-.bureau-catalog-hero h1 em{font:italic 500 1em Georgia,serif;color:#d9b88a;letter-spacing:-.06em}
-.bureau-catalog-hero p{font:400 14px/1.8 system-ui,-apple-system,sans-serif;color:#a9b2bf;max-width:550px;margin:0}
-.bureau-catalog-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:20px 0 19px;border-top:1px solid #ffffff1c}
-.bureau-catalog-section-head h2{font:800 22px system-ui,-apple-system,sans-serif;letter-spacing:-.03em;margin:0}
-.bureau-catalog-section-head>span{font:750 9px ui-monospace,monospace;color:#81909d;letter-spacing:.1em}
-.bureau-catalog-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.bureau-catalog-card{display:flex;flex-direction:column;min-width:0;min-height:214px;padding:23px;border:1px solid #ffffff24;border-radius:12px;background:linear-gradient(144deg,#20262d,#151b22);transition:background .16s,transform .16s,border-color .16s}
-.bureau-catalog-card.is-featured{border-color:#a78b646b;background:radial-gradient(ellipse at 95% 0%,#53402d72,transparent 54%),linear-gradient(144deg,#25262b,#161c23)}
-.bureau-catalog-card:hover{transform:translateY(-3px);border-color:#d0aa78;box-shadow:0 18px 44px #0005}
-.bureau-catalog-card:focus-visible{outline:2px solid #f5ce94;outline-offset:4px}
-.bureau-catalog-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;color:#bda37f}
-.bureau-catalog-card-top span{font:800 9px/1.5 ui-monospace,monospace;letter-spacing:.095em}
-.bureau-catalog-card-top svg{flex-shrink:0;color:#e2b881}
-.bureau-catalog-card strong{font:850 clamp(19px,2.35vw,27px)/1.15 system-ui,-apple-system,sans-serif;letter-spacing:-.04em;margin:31px 0 8px;color:#fff2df}
-.bureau-catalog-card p{font:400 12px/1.65 system-ui,-apple-system,sans-serif;color:#a8b3bd;margin:0 0 20px}
-.bureau-catalog-play{display:inline-flex;align-items:center;gap:8px;margin-top:auto;color:#edbb7c;font:850 10px ui-monospace,monospace;letter-spacing:.11em}
-.bureau-catalog-phone-head{margin-top:54px}
-.bureau-catalog-phone-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-.bureau-catalog-footer{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:30px 0 50px;margin-top:48px;border-top:1px solid #ffffff1b;font:750 10px ui-monospace,monospace;color:#84929d;letter-spacing:.08em}
-.bureau-catalog-footer a{display:inline-flex;align-items:center;gap:8px;color:#d6b589}
-@media(max-width:790px){.bureau-catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:540px){.bureau-catalog-wrap{width:calc(100% - 24px)}.bureau-catalog-nav{min-height:62px}.bureau-catalog-nav>a,.bureau-catalog-nav>span{font-size:8px;letter-spacing:.03em}.bureau-catalog-hero{padding:37px 0 29px}.bureau-catalog-hero p{font-size:12px}.bureau-catalog-section-head h2{font-size:20px}.bureau-catalog-section-head>span{font-size:8px;text-align:right}.bureau-catalog-grid,.bureau-catalog-phone-grid{grid-template-columns:1fr;gap:8px}.bureau-catalog-card{min-height:143px;padding:15px 17px}.bureau-catalog-card strong{font-size:23px;margin:12px 0 5px}.bureau-catalog-card p{font-size:11px;margin-bottom:11px}.bureau-catalog-phone-head{margin-top:35px}.bureau-catalog-footer{font-size:8px;flex-wrap:wrap}}
-@media(prefers-reduced-motion:reduce){.bureau-catalog-card{transition:none}}
