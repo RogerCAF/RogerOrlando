@@ -208,3 +208,49 @@ html,body{background:#0b0e12;color:#f5efe6}
 .hbl-notice{animation:hbl-notice-in .22s ease-out}
 @keyframes hbl-notice-in{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){.hbl-item,.hbl-buy,.hbl-notice{transition:none;animation:none}}
+
+
+/* Mobile-first progression controls. Kept inside the iframe viewport. */
+.hbl-quick{display:none}
+.hbl-quick[hidden]{display:none!important}
+@media(max-width:850px){
+ body{padding-bottom:90px}
+ .hbl-quick{
+  position:fixed;display:grid;grid-template-columns:minmax(0,1fr) auto;
+  left:10px;right:10px;bottom:calc(8px + env(safe-area-inset-bottom,0px));
+  z-index:20;gap:4px 12px;align-items:center;
+  padding:10px 12px 13px;max-width:640px;margin-inline:auto;
+  background:#161a1ef2;
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border:1px solid #b18a5668;border-radius:13px;
+  box-shadow:0 6px 30px #000a,0 0 0 1px #ffffff09 inset
+ }
+ .hbl-quick-info{min-width:0;display:grid;gap:2px}
+ .hbl-quick-info small{color:#bd976c;font:750 9px ui-monospace,monospace;letter-spacing:.09em}
+ .hbl-quick-info strong{font-size:13px;font-weight:850;color:#f6e7d6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .hbl-quick-info>span{font:10px ui-monospace,monospace;color:#a8aeb4}
+ .hbl-quick-button{align-self:center;min-width:106px;min-height:41px;padding:10px 12px;font-size:11px;font-weight:900;letter-spacing:.04em;border-radius:8px;background:#3b332b;border:1px solid #a9875d;color:#d9c7b3;transition:background-color .12s,transform .1s}
+ .hbl-quick.ready{border-color:#f1c183a8}
+ .hbl-quick.ready .hbl-quick-button{background:#f2b970;color:#2b1a0d;box-shadow:0 3px 0 #7d4a22}
+ .hbl-quick.ready .hbl-quick-button:active{transform:translateY(2px);box-shadow:none}
+ .hbl-quick-button:disabled{opacity:1;cursor:default}
+ .hbl-quick-track{grid-column:1/-1;display:block;width:100%;height:3px;background:#45403c;border-radius:6px;overflow:hidden;margin-top:3px}
+ .hbl-quick-track>span{display:block;width:0;height:100%;background:linear-gradient(90deg,#bc824d,#ffd18b);border-radius:6px;transition:width .2s linear}
+}
+@media(max-width:570px){
+ .hbl-head{margin-bottom:10px}
+ .hbl-head h1{font-size:32px}
+ .hbl-head p{margin-top:5px}
+ .hbl-stats{margin-bottom:8px}
+ .hbl-arena h2{margin:7px 0 3px}
+ .hbl-stage{height:clamp(310px,41vh,342px);padding-top:8px}
+ .hbl-chain{height:39px}
+ .hbl-bag-body{width:min(52vw,190px);height:min(69vw,257px)}
+ .hbl-bag-logo{font-size:clamp(24px,7vw,31px)}
+ .hbl-bag-band{bottom:48px}
+ .hbl-quick{left:8px;right:8px}
+ .hbl-bag:active .hbl-bag-body{filter:brightness(1.13)}
+}
+@media(prefers-reduced-motion:reduce){
+ .hbl-quick-button,.hbl-quick-track>span{transition:none}
+}
