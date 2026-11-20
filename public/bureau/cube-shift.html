@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Cube Shift — The Bureau</title>
+<style>
+:root{--bg:#0c1015;--panel:#181d24;--line:#393c43;--muted:#a5a4a5;--text:#f5ecdf;--gold:#f0bd82}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif}
+body{background:radial-gradient(ellipse 65% 55% at 50% -17%,#55453439,transparent),#0c1015}
+button{font:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:2px solid #ffe0af;outline-offset:3px}
+button:disabled{cursor:not-allowed;opacity:.36}
+button:not(:disabled){cursor:pointer}
+main{max-width:1030px;margin:0 auto;padding:clamp(14px,2vw,28px) clamp(12px,3vw,28px) 36px}
+.eyebrow{font:700 10px ui-monospace,SFMono-Regular,monospace;letter-spacing:.23em;color:#c6aa86}
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px}
+.top h1{font-size:clamp(33px,5vw,51px);letter-spacing:-.06em;line-height:1;margin:8px 0 8px;font-weight:900}
+.top h1 span{color:var(--gold)}
+.sub{margin:0;font-size:13px;color:#aca399;line-height:1.5}
+.pill{border:1px solid #87694e77;border-radius:40px;background:#33281f;color:#e8c59b;padding:9px 12px;font:700 10px ui-monospace,monospace;letter-spacing:.09em;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:0 0 14px}
+.stat{min-width:0;background:#181e23;border:1px solid #554c425e;border-radius:10px;padding:12px 14px}
+.stat small{display:block;font:700 9px ui-monospace,monospace;letter-spacing:.16em;color:#a69b8b;margin-bottom:6px}
+.stat strong{display:block;font:800 clamp(18px,3vw,27px) ui-monospace,monospace;color:#f9dfbb;font-variant-numeric:tabular-nums}
+.stat strong.cool{color:#d0e5bf}
+.layout{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(250px,.82fr);gap:13px;align-items:start}
+.stage,.panel{background:#151a20;border:1px solid #5f514367;border-radius:16px;padding:clamp(12px,2vw,20px)}
+.stage{background:radial-gradient(ellipse 72% 52% at 50% 32%,#785c4430,transparent),#13191d}
+.stage-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:14px;font:700 10px ui-monospace,monospace;letter-spacing:.09em;color:#d4b797}
+.stage-head span:last-child{color:#aeb5af}
+.board-frame{position:relative;max-width:470px;margin:0 auto;padding:4px}
+.board{--arrow:34px;display:grid;grid-template-columns:var(--arrow) repeat(5,minmax(0,1fr)) var(--arrow);grid-template-rows:var(--arrow) repeat(5,minmax(0,1fr)) var(--arrow);gap:5px;width:100%;aspect-ratio:1}
+.corner{pointer-events:none}
+.shift{padding:0;display:grid;place-items:center;background:#242a2d;border:1px solid #6655456e;color:#d6b38e;border-radius:6px;line-height:1;font-size:19px;user-select:none}
+.shift:not(:disabled):active{background:#6b4c33;color:#fff2d9}
+.shift:not(:disabled):hover{border-color:#e8b779;background:#3b332d}
+.cell{min-width:0;min-height:0;position:relative;display:grid;place-items:center;border-radius:8px;border:2px solid #0d1317;box-shadow:inset 0 2px 3px #ffffff3b,inset 0 -5px 6px #0004,0 3px 0 #0007;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+.cell:after{content:"";position:absolute;left:11%;top:9%;right:11%;height:26%;border-radius:7px;background:linear-gradient(#fff6,transparent);opacity:.40;pointer-events:none}
+.cell[data-color="0"]{background:#e46a65}
+.cell[data-color="1"]{background:#efbc65}
+.cell[data-color="2"]{background:#5aba96}
+.cell[data-color="3"]{background:#699add}
+.cell[data-color="4"]{background:#a287d4}
+.cell.burst{animation:pop .17s ease-out forwards}
+.cell.fresh{animation:appear .22s ease-out both}
+@keyframes pop{to{transform:scale(.18);opacity:.12}}
+@keyframes appear{from{transform:translateY(-11px) scale(.8);opacity:.3}to{transform:translateY(0) scale(1);opacity:1}}
+.board-busy .shift{pointer-events:none;opacity:.4}
+.board-busy .cell{pointer-events:none}
+.feedback{margin:13px auto 0;text-align:center;min-height:34px;color:#d8c3a8;font:800 13px ui-monospace,monospace;letter-spacing:.035em}
+.feedback.hot{color:#ffe19c}
+.hint{text-align:center;color:#9f9c94;font:11px/1.5 ui-monospace,monospace;margin:4px 0 0}
+.panel h2{font-size:13px;letter-spacing:.11em;margin:0 0 13px;color:#f2d7b7}
+.goal{padding:12px;background:#25282b;border:1px solid #73624d55;border-radius:10px;margin-bottom:10px}
+.goal-head{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.goal-head strong{font-size:12px}
+.goal-head span{font:800 12px ui-monospace,monospace;color:#edc48e}
+.track{height:7px;border-radius:100px;background:#474038;overflow:hidden;margin-top:11px}
+.track span{display:block;height:100%;width:0;background:linear-gradient(90deg,#b87350,#efc98e);border-radius:100px;transition:width .15s}
+.goal p{color:#a9a097;font-size:11px;line-height:1.5;margin:8px 0 0}
+.steps{display:grid;gap:12px;margin:12px 0 19px}
+.step{display:flex;gap:10px;align-items:flex-start}
+.step i{width:22px;height:22px;flex-shrink:0;border-radius:7px;background:#39312b;color:#ecc38d;display:grid;place-items:center;font:800 11px ui-monospace,monospace;font-style:normal}
+.step strong{display:block;font-size:12px}
+.step p{font-size:11px;line-height:1.45;color:#a79d95;margin:4px 0 0}
+.ranks{border-top:1px solid #55463677;padding-top:13px;margin-top:4px}
+.ranks-head{display:flex;justify-content:space-between;font:700 10px ui-monospace,monospace;color:#d7c4ab;margin-bottom:9px;letter-spacing:.09em}
+.rank{display:flex;justify-content:space-between;font-size:11px;color:#938b84;padding:7px 0;border-top:1px solid #ffffff0a}
+.rank.active{color:#f4d5aa;font-weight:750}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:1px solid #f1bb80;background:#e1a972;color:#241811;border-radius:9px;padding:13px;font-size:12px;font-weight:850;letter-spacing:.08em;margin-top:16px}
+.btn:hover{background:#ffd09b}
+.record{font:10px ui-monospace,monospace;color:#948779;text-align:center;line-height:1.5;margin-top:10px}
+.dialog-backdrop{position:fixed;inset:0;z-index:20;background:#070a0bd9;display:flex;align-items:center;justify-content:center;padding:16px}
+.dialog-backdrop[hidden]{display:none}
+.dialog{max-width:360px;width:100%;padding:25px 22px;background:#1c2226;border:1px solid #e2ad7e8c;border-radius:17px;text-align:center;box-shadow:0 22px 70px #000b}
+.dialog .over{font:800 11px ui-monospace,monospace;letter-spacing:.19em;color:#e9bd89}
+.dialog h2{font:900 35px ui-sans-serif,system-ui;letter-spacing:-.04em;margin:11px 0}
+.dialog .final-score{font:900 38px ui-monospace,monospace;color:#ffe0b1}
+.dialog p{color:#b6a89c;font-size:12px;line-height:1.6}
+.dialog .btn{margin-top:21px}
+@media(max-width:700px){.layout{grid-template-columns:1fr}.stage{padding:12px}.panel{padding:14px}.board-frame{max-width:450px}.steps{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.step{display:block}.step i{margin-bottom:6px}.top{margin-bottom:13px}.stats{gap:6px;margin-bottom:10px}.stat{padding:10px 8px}.stat small{font-size:8px}.stat strong{font-size:20px}}
+@media(max-width:385px){.board{--arrow:26px;gap:3px}.shift{font-size:16px;border-radius:5px}.cell{border-radius:6px}.steps{grid-template-columns:1fr}.step{display:flex}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+ <header class="top">
+  <div><div class="eyebrow">THE BUREAU / MINI ARCADE</div><h1>CUBE SHIFT<span>.</span></h1><p class="sub">Slide a line. Connect colors. Chase one more combo.</p></div>
+  <span class="pill" id="rank-pill">ROOKIE</span>
+ </header>
+ <section class="stats" aria-label="Game statistics">
+  <div class="stat"><small>SCORE</small><strong id="score">0</strong></div>
+  <div class="stat"><small>BEST</small><strong id="best">0</strong></div>
+  <div class="stat"><small>MOVES</small><strong id="moves">25</strong></div>
+  <div class="stat"><small>MAX CHAIN</small><strong class="cool" id="chain">0×</strong></div>
+ </section>
+ <div class="layout">
+  <section class="stage" aria-label="Playfield">
+   <div class="stage-head"><span>THE COLOR GRID / 5 × 5</span><span>25 STARTING MOVES</span></div>
+   <div class="board-frame"><div class="board" id="board" role="group" aria-label="Shift rows or columns using arrows, or swipe on the colored tiles"></div></div>
+   <div class="feedback" id="feedback" role="status" aria-live="polite">MAKE YOUR FIRST MOVE</div>
+   <p class="hint">Swipe a row or column, or use the arrows around the grid.</p>
+  </section>
+  <aside class="panel">
+   <h2>YOUR NEXT TARGET</h2>
+   <div class="goal"><div class="goal-head"><strong id="goal-name">BRONZE</strong><span id="goal-count">0 / 1,500</span></div><div class="track"><span id="goal-fill"></span></div><p>Beat your last run. Four or more connected tiles earn extra moves.</p></div>
+   <h2>HOW TO PLAY</h2>
+   <div class="steps">
+    <div class="step"><i>01</i><div><strong>SHIFT</strong><p>Slide a complete row or column by one tile.</p></div></div>
+    <div class="step"><i>02</i><div><strong>MATCH</strong><p>Connect 3+ identical colors to clear them.</p></div></div>
+    <div class="step"><i>03</i><div><strong>CHAIN</strong><p>Cascades multiply your score. Match 4+ to earn moves.</p></div></div>
+   </div>
+   <div class="ranks"><div class="ranks-head"><span>HIGH SCORE RANKS</span><span>BEST RUN</span></div>
+    <div class="rank" data-rank="1500"><span>BRONZE</span><b>1,500</b></div>
+    <div class="rank" data-rank="4500"><span>SILVER</span><b>4,500</b></div>
+    <div class="rank" data-rank="9000"><span>GOLD</span><b>9,000</b></div>
+    <div class="rank" data-rank="16000"><span>LEGEND</span><b>16,000</b></div>
+   </div>
+   <button class="btn" type="button" id="restart">↻ NEW RUN</button>
+   <p class="record" id="run-info">No timers. No ads. No prestige. Just one more round.</p>
+  </aside>
+ </div>
+</main>
+<div class="dialog-backdrop" id="end" hidden>
+ <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="end-title">
+  <div class="over">ROUND COMPLETE</div><h2 id="end-title">NICE RUN.</h2>
+  <div class="final-score" id="end-score">0</div>
+  <p id="end-desc">One more try? You can beat that.</p>
+  <button class="btn" type="button" id="play-again">PLAY AGAIN →</button>
+ </div>
+</div>
+<script>
+(function(){
+"use strict";
+var KEY="bureau-cubeshift-run-v1", STATS_KEY="bureau-cubeshift-records-v1";
+var N=5, COLORS=5, INITIAL_MOVES=25, MAX_CHAIN=14;
+var RANKS=[{name:"BRONZE",score:1500},{name:"SILVER",score:4500},{name:"GOLD",score:9000},{name:"LEGEND",score:16000}];
+var board=[],score=0,moves=INITIAL_MOVES,bestChain=0,cleared=0,lastChain=0,runOver=false,busy=false;
+var records={best:0,rounds:0,highestChain:0},pointer=null,notice="MAKE YOUR FIRST MOVE",noticeHot=false;
+function $(id){return document.getElementById(id)}
+function rand(){return Math.floor(Math.random()*COLORS)}
+function format(n){return Math.floor(n).toLocaleString("en-US")}
+function safeLoad(key){try{var x=JSON.parse(localStorage.getItem(key)||"null");return x&&typeof x==="object"?x:null}catch(e){return null}}
+function save(){
+ try{
+  localStorage.setItem(KEY,JSON.stringify({board:board,score:score,moves:moves,bestChain:bestChain,cleared:cleared,runOver:runOver}));
+  localStorage.setItem(STATS_KEY,JSON.stringify(records));
+ }catch(e){}
+}
+function scan(b){
+ var found=new Set();
+ for(var r=0;r<N;r++){
+  for(var c=0;c<N;){
+   var e=c+1;while(e<N&&b[r*N+e]===b[r*N+c])e++;
+   if(e-c>=3)for(var i=c;i<e;i++)found.add(r*N+i);
+   c=e;
+  }
+ }
+ for(var c=0;c<N;c++){
+  for(var r=0;r<N;){
+   var e=r+1;while(e<N&&b[e*N+c]===b[r*N+c])e++;
+   if(e-r>=3)for(var i=r;i<e;i++)found.add(i*N+c);
+   r=e;
+  }
+ }
+ return [...found];
+}
+function shifted(b,axis,index,dir){
+ var result=b.slice();
+ for(var k=0;k<N;k++){
+  if(axis==="row")result[index*N+((k+dir+N)%N)]=b[index*N+k];
+  else result[((k+dir+N)%N)*N+index]=b[k*N+index];
+ }
+ return result;
+}
+function canMatch(b){
+ for(var i=0;i<N;i++)for(var j=0;j<2;j++)for(var d of [-1,1]){
+  if(scan(shifted(b,j?"col":"row",i,d)).length)return true;
+ }
+ return false;
+}
+function freshBoard(){
+ for(var attempt=0;attempt<250;attempt++){
+  var b=[];
+  for(var r=0;r<N;r++)for(var c=0;c<N;c++){
+   var options=[0,1,2,3,4].filter(function(color){
+    return !(c>=2&&b[r*N+c-1]===color&&b[r*N+c-2]===color)&&
+      !(r>=2&&b[(r-1)*N+c]===color&&b[(r-2)*N+c]===color);
+   });
+   b.push(options[Math.floor(Math.random()*options.length)]);
+  }
+  if(canMatch(b))return b;
+ }
+ return [0,1,2,3,4,1,2,3,4,0,2,3,0,0,1,3,0,1,2,4,4,1,2,3,0];
+}
+function init(load){
+ var stored=load?safeLoad(KEY):null, stats=safeLoad(STATS_KEY);
+ if(stats){
+  records.best=Number.isFinite(stats.best)?Math.max(0,Math.floor(stats.best)):0;
+  records.rounds=Number.isFinite(stats.rounds)?Math.max(0,Math.floor(stats.rounds)):0;
+  records.highestChain=Number.isFinite(stats.highestChain)?Math.max(0,Math.floor(stats.highestChain)):0;
+ }
+ if(stored&&Array.isArray(stored.board)&&stored.board.length===25&&stored.board.every(function(x){return Number.isInteger(x)&&x>=0&&x<COLORS})&&
+   Number.isFinite(stored.score)&&Number.isFinite(stored.moves)&&stored.moves>=0&&stored.moves<=500){
+  board=stored.board.slice();score=Math.max(0,Math.floor(stored.score));moves=Math.floor(stored.moves);
+  bestChain=Math.max(0,Math.floor(stored.bestChain)||0);cleared=Math.max(0,Math.floor(stored.cleared)||0);
+  runOver=stored.runOver===true||moves===0;
+  notice=runOver?"ROUND COMPLETE":"WELCOME BACK · KEEP SHIFTING";
+ }else reset();
+ render();
+ if(runOver)endRun(false);
+}
+function reset(){
+ board=freshBoard();score=0;moves=INITIAL_MOVES;bestChain=0;cleared=0;lastChain=0;
+ notice="SHIFT A ROW TO START";noticeHot=false;runOver=false;busy=false;
+ $("end").hidden=true;
+ save();
+}
+function setNotice(message,hot){
+ notice=message;noticeHot=!!hot;
+ var el=$("feedback");el.textContent=notice;el.classList.toggle("hot",noticeHot);
+}
+function rankFor(n){
+ var name="ROOKIE";
+ for(var r of RANKS)if(n>=r.score)name=r.name;
+ return name;
+}
+function target(){
+ for(var r of RANKS)if(score<r.score)return r;
+ return {name:"PERSONAL BEST",score:Math.max(16000,records.best+2000)};
+}
+function drawBoard(){
+ var root=$("board");root.innerHTML="";
+ var fragment=document.createDocumentFragment();
+ for(var r=-1;r<=N;r++)for(var c=-1;c<=N;c++){
+  var corner=(r===-1||r===N)&&(c===-1||c===N);
+  if(corner){var empty=document.createElement("span");empty.className="corner";fragment.appendChild(empty);continue}
+  if(r===-1||r===N||c===-1||c===N){
+   var a=document.createElement("button");a.type="button";a.className="shift";
+   var axis=(r===-1||r===N)?"col":"row",idx=axis==="col"?c:r,dir=axis==="col"?(r===-1?1:-1):(c===-1?-1:1);
+   a.textContent=axis==="col"?(dir===1?"↓":"↑"):(dir===1?"→":"←");
+   a.setAttribute("aria-label","Shift "+(axis==="col"?"column ":"row ")+(idx+1)+" "+(axis==="col"?(dir===1?"down":"up"):(dir===1?"right":"left")));
+   a.dataset.axis=axis;a.dataset.index=idx;a.dataset.dir=dir;
+   a.disabled=busy||runOver;
+   fragment.appendChild(a);continue;
+  }
+  var tile=document.createElement("div");tile.className="cell";tile.dataset.cell=r*N+c;tile.dataset.color=board[r*N+c];
+  tile.setAttribute("role","img");tile.setAttribute("aria-label","row "+(r+1)+", column "+(c+1)+", color "+["red","yellow","green","blue","purple"][board[r*N+c]]);
+  fragment.appendChild(tile);
+ }
+ root.appendChild(fragment);
+ root.classList.toggle("board-busy",busy);
+}
+function paint(){
+ $("score").textContent=format(score);
+ $("best").textContent=format(records.best);
+ $("moves").textContent=moves;
+ $("chain").textContent=bestChain+"×";
+ $("rank-pill").textContent=rankFor(score);
+ var goal=target();
+ $("goal-name").textContent=goal.name;
+ $("goal-count").textContent=format(score)+" / "+format(goal.score);
+ $("goal-fill").style.width=Math.min(100,score/goal.score*100)+"%";
+ $("run-info").textContent=records.rounds+" completed runs · Best chain "+records.highestChain+"× · Progress saves on this device.";
+ var entries=document.querySelectorAll(".rank");
+ for(var entry of entries)entry.classList.toggle("active",records.best>=Number(entry.dataset.rank));
+ setNotice(notice,noticeHot);
+}
+function render(){drawBoard();paint()}
+function settle(chain,total){
+ var matched=scan(board);
+ if(!matched.length||chain>MAX_CHAIN){
+  busy=false;
+  if(score>records.best)records.best=score;
+  if(bestChain>records.highestChain)records.highestChain=bestChain;
+  if(chain>1){
+   setNotice("CHAIN ×"+(chain-1)+" · +"+format(total)+" POINTS!",true);
+  }else if(total>0){
+   setNotice("CLEAR! +"+format(total)+" POINTS",true);
+  }else{
+   setNotice("NO MATCH · TRY ANOTHER LINE",false);
+  }
+  if(moves<=0){endRun(true);return}
+  if(!canMatch(board)){
+   board=freshBoard();
+   setNotice("NO MOVES LEFT ON THIS GRID · FREE SHUFFLE!",true);
+  }
+  save();render();return;
+ }
+ var count=matched.length,delta=count*100*chain;
+ score+=delta;cleared+=count;lastChain=chain;bestChain=Math.max(bestChain,chain);
+ if(count>=4)moves+=count>=5?2:1;
+ setNotice("CHAIN ×"+chain+" · "+count+" TILES · +"+format(delta),true);
+ var tiles=$("board").querySelectorAll(".cell");
+ for(var index of matched)if(tiles[index])tiles[index].classList.add("burst");
+ paint();
+ window.setTimeout(function(){
+  var deleted=new Set(matched);
+  for(var c=0;c<N;c++){
+   var retained=[];
+   for(var r=N-1;r>=0;r--)if(!deleted.has(r*N+c))retained.push(board[r*N+c]);
+   for(var row=N-1;row>=0;row--)board[row*N+c]=(N-1-row<retained.length)?retained[N-1-row]:rand();
+  }
+  drawBoard();
+  window.setTimeout(function(){settle(chain+1,total+delta)},125);
+ },170);
+}
+function move(axis,index,dir){
+ if(busy||runOver||!["row","col"].includes(axis)||index<0||index>=N||!(dir===1||dir===-1))return;
+ board=shifted(board,axis,index,dir);
+ moves--;busy=true;
+ setNotice("SHIFTING…",false);
+ render();
+ window.setTimeout(function(){settle(1,0)},130);
+}
+function endRun(increment){
+ busy=false;runOver=true;
+ if(score>records.best)records.best=score;
+ records.highestChain=Math.max(records.highestChain,bestChain);
+ if(increment)records.rounds++;
+ save();render();
+ $("end-score").textContent=format(score);
+ $("end-title").textContent=score>=16000?"LEGENDARY.":score>=4500?"NICE WORK.":"ONE MORE RUN?";
+ $("end-desc").textContent="Rank: "+rankFor(score)+" · Best: "+format(records.best)+" · Chain record: "+bestChain+"×. Every run is a new grid.";
+ $("end").hidden=false;
+}
+$("board").addEventListener("click",function(e){
+ var btn=e.target.closest("button.shift");if(!btn)return;
+ move(btn.dataset.axis,Number(btn.dataset.index),Number(btn.dataset.dir));
+});
+$("board").addEventListener("pointerdown",function(e){
+ if(busy||runOver||!e.target.closest(".cell"))return;
+ pointer={x:e.clientX,y:e.clientY,index:Number(e.target.closest(".cell").dataset.cell),id:e.pointerId};
+});
+$("board").addEventListener("pointerup",function(e){
+ if(!pointer||pointer.id!==e.pointerId)return;
+ var p=pointer;pointer=null;
+ var dx=e.clientX-p.x,dy=e.clientY-p.y;
+ if(Math.max(Math.abs(dx),Math.abs(dy))<20)return;
+ if(Math.abs(dx)>Math.abs(dy))move("row",Math.floor(p.index/N),dx>0?1:-1);
+ else move("col",p.index%N,dy>0?1:-1);
+});
+$("board").addEventListener("pointercancel",function(){pointer=null});
+$("board").addEventListener("dragstart",function(e){e.preventDefault()});
+$("restart").addEventListener("click",function(){
+ if(!runOver&&!window.confirm("Start a new run? Your current score will reset. Your best stays saved."))return;
+ reset();render();
+});
+$("play-again").addEventListener("click",function(){reset();render()});
+init(true);
+})();
+</script>
+</body></html>
