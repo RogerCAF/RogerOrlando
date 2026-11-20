@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#080d16"><title>Agtung die Kurve — Samen op eigen computers</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#080d16;color:#f4eee7}
+*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;background:radial-gradient(ellipse at 76% 2%,#252e43 0%,transparent 44%),#080d16}
+button,input{font:inherit}
+button{cursor:pointer;touch-action:manipulation}
+button:disabled{cursor:not-allowed;opacity:.45}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #f4cb90;outline-offset:3px}
+a{color:inherit;text-decoration:none}
+[hidden]{display:none!important}
+main{width:min(1180px,calc(100% - 28px));margin:0 auto;padding:18px 0 40px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;border-bottom:1px solid #ffffff1b;padding:8px 0 19px}
+.brandline{font:850 10px ui-monospace,monospace;letter-spacing:.13em;color:#ceac83}
+.back{display:inline-flex;gap:8px;align-items:center;font:800 10px ui-monospace,monospace;color:#adb9c9}
+.back:hover{color:#fff}
+h1{font-weight:950;font-size:clamp(32px,5vw,56px);line-height:1.1;letter-spacing:-.065em;margin:22px 0 11px}
+h1 span{color:#e6b680}
+.lede{margin:0 0 24px;max-width:690px;color:#a6b5c7;font-size:13px;line-height:1.65}
+.section-tag{display:block;color:#e8bd83;letter-spacing:.15em;font:850 10px ui-monospace,monospace;margin-bottom:9px}
+.setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.setup-card{border:1px solid #394658;border-radius:15px;padding:clamp(17px,3vw,30px);background:linear-gradient(145deg,#222b3b,#131b28)}
+.setup-card.featured{border-color:#dcb07870;background:radial-gradient(ellipse at 100% 0%,#72543338,transparent 65%),linear-gradient(145deg,#272b32,#151c28)}
+.setup-card h2{font-size:clamp(21px,2.3vw,29px);line-height:1.15;letter-spacing:-.04em;margin:0 0 11px}
+.setup-card p{font-size:12px;color:#b2becd;line-height:1.7;min-height:52px;margin:0 0 18px}
+.primary{min-height:46px;border:1px solid #f0c78c;border-radius:8px;background:#e9ba7e;color:#191e24;padding:12px 18px;font-size:11px;font-weight:900;letter-spacing:.04em}
+.primary:hover:not(:disabled){background:#ffd8a3}
+.secondary{min-height:44px;border:1px solid #6f8095;border-radius:8px;background:#243549;color:#f4e9d9;padding:10px 16px;font-size:11px;font-weight:850}
+.secondary:hover{background:#34475b}
+.join-row{display:flex;gap:8px;flex-wrap:wrap}
+.join-row input{min-width:0;flex:1;width:140px;min-height:47px;padding:9px 14px;border:1px solid #637489;border-radius:8px;color:#fff0dd;background:#0e1826;font:900 23px ui-monospace,monospace;letter-spacing:.17em;text-transform:uppercase}
+.join-row button{min-width:126px}
+.helper{margin:15px 0 0;color:#7f93a9;font-size:11px;line-height:1.5}
+.status{margin:19px 0;padding:12px 14px;border:1px solid #536274;border-radius:9px;background:#182333;font:700 11px/1.6 ui-monospace,monospace;color:#c7d5e4}
+.status[data-type="good"]{border-color:#448e7a;color:#abdfc3}
+.status[data-type="bad"]{border-color:#a95162;color:#ffc6ca}
+.panel{border:1px solid #354456;border-radius:13px;background:#131b29;padding:16px;margin-bottom:12px}
+.panel-head{display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
+.panel-head strong{font:850 11px ui-monospace,monospace;color:#dfb87e;letter-spacing:.08em}
+.code{font:950 clamp(25px,4vw,43px)/1 ui-monospace,monospace;letter-spacing:.18em;color:#ffdcab}
+.info-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.info-row input{flex:1;min-width:180px;padding:12px;border:1px solid #41516a;border-radius:7px;background:#0d1522;color:#a9b7c8;font-size:11px}
+.play-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:15px}
+.player-role{display:flex;align-items:center;gap:10px;font:800 12px ui-monospace,monospace;letter-spacing:.07em;color:#e7c496}
+.my-color{height:12px;width:12px;border-radius:50%;box-shadow:0 0 0 4px #ffffff12}
+.members{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:13px 0}
+.member{display:flex;align-items:center;gap:7px;padding:10px;min-width:0;border:1px solid #344254;border-radius:8px;background:#0b1522;opacity:.55;font:750 9px ui-monospace,monospace;color:#a1afc2}
+.member.online{opacity:1;color:#ecf2f9;border-color:#65798a}
+.member i{height:9px;width:9px;border-radius:50%;background:var(--member-color);box-shadow:0 0 10px var(--member-color);flex:0 0 auto}
+.member span{overflow-wrap:anywhere}
+.controls-panel{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:12px 14px;margin-bottom:14px;border:1px solid #c29b665c;border-radius:10px;background:#202838;color:#b4c3d3;font:750 10px/1.55 ui-monospace,monospace}
+.controls-panel strong{color:#f2c58b;letter-spacing:.12em}
+.controls-panel span{display:flex;align-items:center;gap:5px}
+kbd{display:inline-flex;min-width:31px;height:28px;padding:0 7px;align-items:center;justify-content:center;border:1px solid #8798aa;border-bottom:3px solid #8798aa;border-radius:6px;background:#2b3c50;color:#fff1dc;font:900 12px ui-monospace,monospace}
+.scores{display:flex;gap:9px;flex-wrap:wrap;margin:0 0 12px}
+.score{display:flex;align-items:center;justify-content:space-between;gap:15px;min-width:115px;padding:9px 12px;border:1px solid color-mix(in srgb,var(--p),transparent 55%);border-radius:8px;background:#151f2d}
+.score span{color:var(--p);font:850 11px ui-monospace,monospace}
+.score strong{font:950 22px ui-monospace,monospace}
+.canvas-shell{position:relative;overflow:hidden;border:1px solid #536881;border-radius:13px;background:#0b1521}
+canvas{display:block;width:100%;height:auto;aspect-ratio:960/620;touch-action:none}
+.arena-meta{position:absolute;top:13px;left:13px;display:flex;gap:13px;font:850 10px ui-monospace,monospace;letter-spacing:.07em;color:#cad5e2;text-shadow:0 2px 4px #000}
+.arena-meta strong{color:#f3c68c}
+.action-shade{position:absolute;inset:0;display:grid;place-items:center;padding:20px;background:#080f1bd7;backdrop-filter:blur(3px)}
+.action-card{width:min(390px,100%);max-height:100%;overflow:auto;padding:25px;border:1px solid #d8b47e6b;border-radius:12px;background:#172337;text-align:center}
+.action-card h2{font-size:clamp(24px,4vw,34px);letter-spacing:-.05em;line-height:1.1;margin:0 0 9px}
+.action-card p{color:#c4cdd6;font-size:12px;line-height:1.65;margin:0 0 10px}
+.action-card .primary{width:100%}
+.touch-controls{display:flex;gap:9px;margin-top:12px}
+.touch-controls button{flex:1;min-height:54px;border:1px solid #7391b4;border-radius:10px;background:#233449;color:#ebdfcc;font:900 16px ui-monospace,monospace;touch-action:none}
+.touch-controls button.active,.touch-controls button:active{background:#4b5c73;border-color:#edc68a}
+.note{font-size:11px;line-height:1.7;color:#8da1b6;margin:15px 0 0}
+@media(max-width:710px){.setup-grid{grid-template-columns:1fr}.setup-card p{min-height:0}.members{grid-template-columns:repeat(3,minmax(0,1fr))}.member{padding:8px 6px}.controls-panel{gap:8px}.status{font-size:10px}}
+@media(max-width:480px){main{width:calc(100% - 20px);padding-top:9px}.topbar{padding:8px 0 12px}.brandline,.back{font-size:9px;letter-spacing:.03em}h1{margin:16px 0 8px}.lede{font-size:12px}.panel{padding:10px}.panel-head strong{font-size:10px}.members{grid-template-columns:repeat(2,minmax(0,1fr))}.join-row button{min-width:100px}.score{min-width:90px;padding:7px 8px}.score span{font-size:9px}.score strong{font-size:17px}.arena-meta{font-size:8px;top:7px;left:7px}.action-card{padding:13px}.action-shade{padding:8px}.touch-controls button{min-height:47px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style></head><body>
+<main>
+ <header class="topbar"><span class="brandline">THE BUREAU / AGTUNG DIE KURVE</span><a id="back" class="back" href="/bureau/curve-clash.html">← TERUG NAAR 1 TOETSENBORD</a></header>
+ <h1>Iedereen zijn <span>eigen toetsenbord.</span></h1>
+ <p class="lede">Speel samen vanaf 2 tot 5 eigen computers op hetzelfde Wi-Fi- of LAN-netwerk. Eén iemand maakt de kamer; de rest opent de link of voert de code in. Geen accounts, downloads of IP-adressen nodig.</p>
+ <section id="setup">
+  <span class="section-tag">KIES HOE JE WILT VERBINDEN</span>
+  <div class="setup-grid" id="setupActions">
+   <article class="setup-card featured">
+    <span class="section-tag">01 / HOST</span><h2>Maak een kamer.</h2>
+    <p>Speel zelf mee vanaf deze computer. Deel de link met de andere spelers en start zodra iedereen is verbonden.</p>
+    <button id="createRoom" type="button" class="primary">MAAK KAMER →</button>
+   </article>
+   <article class="setup-card">
+    <span class="section-tag">02 / JOIN</span><h2>Doe mee.</h2>
+    <p>Heb je een code gekregen? Vul hem hier in. Je krijgt automatisch een vrije spelerskleur toegewezen.</p>
+    <div class="join-row"><input id="roomInput" maxlength="6" placeholder="ABC234" aria-label="Zescijferige of zesletterige kamercode" autocomplete="off" autocapitalize="characters" spellcheck="false"><button id="joinRoom" type="button" class="primary">JOIN →</button></div>
+   </article>
+  </div>
+ </section>
+ <p class="status" id="statusMessage" role="status">Maak een kamer en deel de link. Iedereen gebruikt zijn eigen toetsenbord.</p>
+ <section id="gameShell" hidden>
+  <div class="panel" id="lobby">
+   <div class="panel-head"><strong>JULLIE KAMER · <span id="memberCount">1</span> / 5 SPELERS</strong><span class="code" id="roomCode">------</span></div>
+   <div id="roomDetails" hidden>
+    <div class="info-row"><input type="text" readonly id="roomLink" aria-label="Uitnodigingslink"><button type="button" id="copyLink" class="secondary">KOPIEER LINK</button><button type="button" id="copyCode" class="secondary">KOPIEER CODE</button></div>
+    <p class="helper">Open deze link op een andere computer. De host blijft op deze pagina en start het spel.</p>
+   </div>
+   <div class="members" id="members"></div>
+   <div class="play-row" id="playControls">
+    <span class="player-role"><i class="my-color" id="yourColor"></i><span id="playerRole">SPELER</span></span>
+    <div id="hostControls" hidden><button type="button" class="primary" id="hostStart" disabled>START MATCH →</button></div>
+    <div id="joinControls" hidden><span class="helper">WACHT TOT DE HOST START</span></div>
+   </div>
+  </div>
+  <div class="controls-panel"><strong>⌨ EIGEN PC / KEYBOARD</strong><span><kbd>A</kbd> / <kbd>←</kbd> LINKS</span><span><kbd>D</kbd> / <kbd>→</kbd> RECHTS</span><span><kbd>SPACE</kbd> HOST: START / VOLGENDE RONDE</span><span><kbd>P</kbd> HOST: PAUZE</span></div>
+  <div class="scores" id="scoreList"></div>
+  <section class="canvas-shell" aria-label="Gedeelde Agtung die Kurve-arena">
+   <canvas id="arena" width="960" height="620" aria-label="Arena, gebruik A en D of pijltjes links en rechts om je lijn te sturen"></canvas>
+   <div class="arena-meta"><span>RONDE <strong id="roundText">1</strong></span><span id="arenaStatus">WAITING FOR PLAYERS</span></div>
+   <div class="action-shade" id="actionPanel" hidden><div class="action-card"><h2 id="resultTitle">RONDE VOORBIJ</h2><p id="resultSubtitle"></p><p id="resultHint"></p><button type="button" id="hostNext" class="primary">VOLGENDE RONDE →</button></div></div>
+  </section>
+  <div class="touch-controls"><button type="button" data-turn="left">↶ LINKS / A</button><button type="button" data-turn="right">RECHTS / D ↷</button></div>
+  <p class="note">De host bepaalt de wedstrijd; iedere andere computer bestuurt alleen zijn eigen speler. De kamercode is tijdelijk. Bij een geblokkeerde peer-to-peer-verbinding: controleer of beide apparaten op hetzelfde netwerk zitten.</p>
+ </section>
+</main>
+<script defer src="/bureau/curve-lan.js"></script>
+</body></html>
