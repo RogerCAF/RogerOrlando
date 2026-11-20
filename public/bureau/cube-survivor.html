@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b1118">
 <meta name="color-scheme" content="dark">
 <title>Cube Survivor — Color Arsenal | The Bureau</title>
-<link rel="stylesheet" href="/bureau/cube-survivor.css?v=arsenal-1">
+<link rel="stylesheet" href="/bureau/cube-survivor.css?v=arsenal-2">
 </head>
 <body>
 <main>
@@ -36,34 +36,34 @@
     <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
      <div class="kicker" id="dialog-kicker">THE BUREAU / COLOR ARSENAL</div>
      <h2 id="dialog-title">SIX COLORS. SIX WEAPONS.</h2>
-     <p id="dialog-description">You are the Rubik's Cube. Dodge incoming enemies while your weapons fire automatically. Switch between colors, collect XP and survive until the final boss.</p>
+     <p id="dialog-description">You are the Rubik's Cube. Every gun you unlock fires at the same time. Dodge enemies, collect XP to unlock all six weapons and defeat the final boss.</p>
      <div id="dialog-score" class="big-number" hidden></div>
      <div id="upgrade-choices" class="choices" hidden></div>
      <button class="cta" id="dialog-action" type="button">START RUN →</button>
-     <p class="mini" id="dialog-footnote">Desktop: WASD / arrows + keys 1–6. Mobile: drag anywhere on the arena + tap a color.</p>
+     <p class="mini" id="dialog-footnote">Desktop: WASD or arrows to move. Mobile: drag in the arena. Guns fire automatically, all at once.</p>
     </div>
    </div>
   </section>
   <div class="xp-meter" aria-label="Experience progress"><div id="xp-progress"></div></div>
   <div class="control-bar">
-   <div class="weapon-tabs" id="weapons" aria-label="Select weapon color">
-    <button type="button" class="weapon" data-weapon="0" style="--w:#eeeeea" aria-pressed="true"><span class="tone"></span><small>PISTOLS</small><em>1</em></button>
-    <button type="button" class="weapon locked" data-weapon="1" style="--w:#e05251" aria-pressed="false" disabled><span class="tone"></span><small>SHOTGUN</small><em>2</em></button>
-    <button type="button" class="weapon locked" data-weapon="2" style="--w:#f0c448" aria-pressed="false" disabled><span class="tone"></span><small>GATLING</small><em>3</em></button>
-    <button type="button" class="weapon locked" data-weapon="3" style="--w:#ec904b" aria-pressed="false" disabled><span class="tone"></span><small>BAZOOKA</small><em>4</em></button>
-    <button type="button" class="weapon locked" data-weapon="4" style="--w:#538fe1" aria-pressed="false" disabled><span class="tone"></span><small>RAY GUN</small><em>5</em></button>
-    <button type="button" class="weapon locked" data-weapon="5" style="--w:#4fbf85" aria-pressed="false" disabled><span class="tone"></span><small>SEEKERS</small><em>6</em></button>
+   <div class="weapon-tabs" id="weapons" aria-label="Equipped auto-firing weapons">
+    <div class="weapon locked" data-weapon="0" role="status" style="--w:#eeeeea" aria-label="PISTOLS locked"><svg class="gun-icon" viewBox="0 0 64 40" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M8 10h24v7H8z M7 23h23v7H7z M15 17v5 M15 30l-5 7 M32 13h14v5H32 M30 26h16v5H30" /></svg><small>PISTOLS</small><em>—</em></div>
+    <div class="weapon locked" data-weapon="1" role="status" style="--w:#e05251" aria-label="SHOTGUN locked"><svg class="gun-icon" viewBox="0 0 64 40" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M8 15h39v6H8z M8 25h39v6H8z M19 12h17v22H19z M35 8v26 M44 11v24" /></svg><small>SHOTGUN</small><em>—</em></div>
+    <div class="weapon locked" data-weapon="2" role="status" style="--w:#f0c448" aria-label="GATLING locked"><svg class="gun-icon" viewBox="0 0 64 40" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M8 12h31v3H8z M8 20h34v3H8z M8 28h31v3H8z M17 7h11v31H17z M43 8v27" /></svg><small>GATLING</small><em>—</em></div>
+    <div class="weapon locked" data-weapon="3" role="status" style="--w:#ec904b" aria-label="BAZOOKA locked"><svg class="gun-icon" viewBox="0 0 64 40" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M5 13h43v16H5z M36 8h12v26H36z M8 30h12v7H8z M48 16h9v10h-9z" /></svg><small>BAZOOKA</small><em>—</em></div>
+    <div class="weapon locked" data-weapon="4" role="status" style="--w:#538fe1" aria-label="RAY GUN locked"><svg class="gun-icon" viewBox="0 0 64 40" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M5 17h38v9H5z M13 13h22v17H13z M38 11l20 10-20 10z M15 21h20" /></svg><small>RAY GUN</small><em>—</em></div>
+    <div class="weapon locked" data-weapon="5" role="status" style="--w:#4fbf85" aria-label="SEEKERS locked"><svg class="gun-icon" viewBox="0 0 64 40" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M7 8h39v25H7z M36 12h16v7H36z M36 24h16v7H36z M12 12h14v17H12z" /></svg><small>SEEKERS</small><em>—</em></div>
    </div>
-   <div class="bar-right"><strong id="weapon-name">DUAL PISTOLS</strong><small id="weapon-hint">Precise auto-targeting cube bullets.</small></div>
+   <div class="bar-right"><strong id="weapon-name">0 / 6 WEAPONS ACTIVE</strong><small id="weapon-hint">Every equipped gun fires simultaneously.</small></div>
   </div>
-  <div class="fusion" id="fusion" role="status">FUSION READY · switch colors to discover combos</div>
+  <div class="fusion" id="fusion" role="status">ALL UNLOCKED WEAPONS FIRE TOGETHER</div>
  </div>
  <div class="instructions">
-  <span>MOVE: WASD / ARROWS · WEAPONS: 1–6 · PAUSE: P</span>
-  <span class="mobile-hint">MOBILE: DRAG TO MOVE · TAP A COLOR</span>
+  <span>MOVE: WASD / ARROWS · AUTO-FIRE: ALL WEAPONS · PAUSE: P</span>
+  <span class="mobile-hint">MOBILE: DRAG TO MOVE · GUNS FIRE AUTOMATICALLY</span>
   <span>30 FPS TARGET · 2D CANVAS · NO GAME ENGINE</span>
  </div>
 </main>
-<script src="/bureau/cube-survivor.js?v=arsenal-1"></script>
+<script src="/bureau/cube-survivor.js?v=arsenal-2"></script>
 </body>
 </html>
