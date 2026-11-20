@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0a1019"><title>Sky Hop — The Bureau Phone</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0a1019"><title>Flap Rush — The Bureau Phone</title>
 <style>
 :root{color-scheme:dark;font-family:Inter,system-ui,-apple-system,sans-serif;background:#080f19;color:#f4f6fb}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;overscroll-behavior:none}button,input{font:inherit}
@@ -47,9 +47,9 @@ button:focus-visible{outline:3px solid #f9d598;outline-offset:3px}
 @media(prefers-reduced-motion:reduce){.board,.dialog{scroll-behavior:auto}}
 </style></head>
 <body><main>
-<header><div class="brand"><small>THE BUREAU / PHONE ARCADE</small><h1>SKY HOP<span>.</span></h1></div><div class="record"><small>YOUR BEST</small><b id="best">0</b></div></header>
+<header><div class="brand"><small>THE BUREAU / PHONE ARCADE</small><h1>FLAP RUSH<span>.</span></h1></div><div class="record"><small>YOUR BEST</small><b id="best">0</b></div></header>
 <div class="layout">
-<section class="board" aria-label="Sky Hop game"><canvas id="game" width="420" height="680" role="button" tabindex="0" aria-label="Tap or press space to flap and avoid the gates"></canvas><div class="hud"><b id="score">0</b></div>
+<section class="board" aria-label="Flap Rush game"><canvas id="game" width="420" height="680" role="button" tabindex="0" aria-label="Tap or press space to flap and avoid the gates"></canvas><div class="hud"><b id="score">0</b></div>
 <div class="overlay" id="overlay"><div class="dialog"><div class="eyebrow" id="eyebrow">ONE MORE TRY</div><h2 id="title">Keep it flying.</h2><p id="desc">Tap, click or press SPACE to hop. Thread the gaps between the towers. How far can you get?</p><div class="result" id="result"></div><div class="field"><label for="nickname">PLAYER NAME / TOP 10</label><input id="nickname" maxlength="12" value="PLAYER" autocomplete="off" spellcheck="false" aria-label="Name for local high score"></div><button class="primary" type="button" id="start">START FLIGHT →</button><span class="tip">SPACE / ↑ / TAP TO HOP · P TO PAUSE</span></div></div></section>
 <aside class="sidebar"><div class="sidebar-head"><small>LOCAL RECORDS / THIS DEVICE</small><h2>TOP 10 FLIGHTS</h2></div><ol class="scores" id="scores"></ol><footer>Scores are saved automatically in this browser. The ten highest flights remain after refreshing the page.</footer></aside>
 </div><p class="instructions">ORIGINAL ONE-TAP ARCADE · No account required · High scores are stored on this device</p>
