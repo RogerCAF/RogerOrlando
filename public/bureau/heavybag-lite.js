@@ -53,7 +53,7 @@ function read(){
  d.lastTick=safe(s.lastTick,0,Date.now());
  return d;
 }
-let state=read(),booted=false,timer=0,ticks=0,notice="",audioCtx=null,soundOn=false,combo=0,lastPunchAt=0,lastSaveAt=0,dirty=false;
+let state=read(),booted=false,timer=0,ticks=0,notice="",audioCtx=null,soundOn=false,combo=0,lastPunchAt=0,lastSaveAt=0,dirty=false,lastPointerTapAt=0,bagAnimation=null,popAnimation=null;
 function count(){return state.counts.reduce((n,v)=>n+v,0)}
 function rate(){
  let total=0;
@@ -146,6 +146,30 @@ function shopGear(){
  });
  return '<div class="hbl-panel hbl-shop-panel"><div class="hbl-panel-head"><h3>PUNCH POWER</h3><small>PERMANENT</small></div><div class="hbl-shop">'+rows+'</div></div>';
 }
+function recommended(){
+ const options=[];
+ BOXERS.forEach((b,i)=>{
+  if(b.chapter<=state.chapter)options.push({action:"hire",index:i,name:b.name,cost:price(i),gain:b.income,unit:"/ SEC"});
+ });
+ GEAR.forEach((g,i)=>{
+  if(!state.gear[i]&&g.chapter<=state.chapter)options.push({action:"gear",index:i,name:g.name,cost:g.cost,gain:g.bonus*2,unit:"/ HIT"});
+ });
+ if(!options.length)return null;
+ const affordable=options.filter(o=>o.cost<=state.credits+1e-7);
+ if(affordable.length){
+  affordable.sort((a,b)=>(a.cost/a.gain)-(b.cost/b.gain)||a.cost-b.cost);
+  return affordable[0];
+ }
+ options.sort((a,b)=>a.cost-b.cost);
+ return options[0];
+}
+function quickBar(){
+ return '<div class="hbl-quick" id="hbl-quick">'+
+  '<div class="hbl-quick-info"><small>YOUR NEXT UPGRADE</small><strong id="hbl-quick-name">Rookie</strong>'+
+  '<span id="hbl-quick-progress">0 / 12 C</span></div>'+
+  '<button type="button" class="hbl-quick-button" id="hbl-quick-buy" data-action="hire" data-index="0" disabled>12 C</button>'+
+  '<span class="hbl-quick-track"><span id="hbl-quick-fill"></span></span></div>';
+}
 function journey(){
  return '<div class="hbl-panel hbl-journey"><div class="hbl-panel-head"><h3>ROAD TO CHAMPION</h3><small>5 GYMS</small></div>'+
  '<div class="hbl-timeline">'+
@@ -154,7 +178,7 @@ function journey(){
 }
 function render(){
  const root=$("content");if(!root)return;
- root.innerHTML='<div class="hbl">'+header()+'<main class="hbl-layout"><div class="hbl-left">'+bag()+objective()+'</div><div class="hbl-right">'+shopBoxers()+shopGear()+'</div></main>'+journey()+
+ root.innerHTML='<div class="hbl">'+header()+'<main class="hbl-layout"><div class="hbl-left">'+bag()+objective()+'</div><div class="hbl-right">'+shopBoxers()+shopGear()+'</div></main>'+journey()+quickBar()+
  '<footer class="hbl-footer"><span>UP TO 8 HOURS OFFLINE EARNINGS · SAVED ON THIS DEVICE</span>'+
  '<div><button type="button" id="hbl-sound" class="hbl-reset" data-action="sound">SOUND '+(soundOn?'ON':'OFF')+'</button> &nbsp;·&nbsp; <button type="button" class="hbl-reset" data-action="reset">RESTART FROM ZERO</button></div></footer></div>';
  sync();
@@ -183,6 +207,20 @@ function sync(){
  if(state.chapter===4&&!state.champion){
   updateText("hbl-goal-help","Sign an Arena Deal ("+(state.counts[5]?"✓":"○")+") · Earn "+fmt(state.earned)+" / 12M total credits · Reach 80K/sec.");
  }
+ const next=recommended(),quick=$("hbl-quick"),quickBuy=$("hbl-quick-buy");
+ if(next&&quick&&quickBuy){
+  quick.hidden=false;
+  updateText("hbl-quick-name",next.name);
+  updateText("hbl-quick-progress",fmt(Math.min(state.credits,next.cost))+" / "+fmt(next.cost)+" C");
+  const ready=state.credits+1e-7>=next.cost;
+  quickBuy.disabled=!ready;
+  quickBuy.setAttribute("data-action",next.action);
+  quickBuy.setAttribute("data-index",String(next.index));
+  quickBuy.textContent=ready?"BUY · "+fmt(next.cost)+" C":fmt(next.cost)+" C";
+  quick.classList.toggle("ready",ready);
+  const fill=$("hbl-quick-fill");
+  if(fill)fill.style.width=(clamp(state.credits/next.cost,0,1)*100).toFixed(1)+"%";
+ }else if(quick){quick.hidden=true}
  const n=$("hbl-notice");
  if(n){n.hidden=!notice;if(notice)updateText("hbl-notice-text",notice)}
  for(const b of document.querySelectorAll("[data-action='hire']")){
@@ -205,8 +243,9 @@ function impact(amount,automatic){
  const bag=$("hbl-bag"),pop=$("hbl-pop");
  if(bag){
   if(typeof bag.animate==="function"){
-   bag.animate([{transform:"rotate(0deg) scale(1)"},{transform:"rotate(7deg) scale(.975)",offset:.25},{transform:"rotate(-3deg) scale(1.012)",offset:.65},{transform:"rotate(0deg) scale(1)"}],
-    {duration:205,easing:"cubic-bezier(.18,.7,.2,1)"});
+   bagAnimation?.cancel?.();
+   bagAnimation=bag.animate([{transform:"rotate(0deg) scale(1)"},{transform:"rotate(7deg) scale(.975)",offset:.25},{transform:"rotate(-3deg) scale(1.012)",offset:.65},{transform:"rotate(0deg) scale(1)"}],
+    {duration:180,easing:"cubic-bezier(.18,.7,.2,1)"});
   }else{
    bag.classList.remove("impact");bag.classList.add("impact");
   }
@@ -214,8 +253,9 @@ function impact(amount,automatic){
  if(pop){
   pop.textContent="+"+fmt(amount);
   if(typeof pop.animate==="function"){
-   pop.animate([{opacity:1,transform:"translateY(0) scale(.92)"},{opacity:0,transform:"translateY(-55px) scale(1.1)"}],
-    {duration:420,easing:"ease-out"});
+   popAnimation?.cancel?.();
+   popAnimation=pop.animate([{opacity:1,transform:"translateY(0) scale(.92)"},{opacity:0,transform:"translateY(-55px) scale(1.1)"}],
+    {duration:340,easing:"ease-out"});
   }else{pop.classList.remove("show");pop.classList.add("show")}
  }
 }
@@ -289,11 +329,18 @@ function boot(){
  save();render();startTimer();
 }
 window.openHeavyBag=boot;
+document.addEventListener("pointerdown",event=>{
+ if(!booted||event.button!==0)return;
+ const btn=event.target?.closest?.("[data-action='punch']");
+ if(!btn||btn.disabled)return;
+ lastPointerTapAt=Date.now();
+ punch();
+},{passive:true});
 document.addEventListener("click",event=>{
  const btn=event.target&&event.target.closest?event.target.closest("[data-action]"):null;
  if(!btn||!booted)return;
  const action=btn.getAttribute("data-action");
- if(action==="punch")punch();
+ if(action==="punch"){if(Date.now()-lastPointerTapAt>=650||!event.detail)punch()}
  else if(action==="hire")hire(Number(btn.getAttribute("data-index")));
  else if(action==="gear")buyGear(Number(btn.getAttribute("data-index")));
  else if(action==="dismiss"){notice="";sync()}
