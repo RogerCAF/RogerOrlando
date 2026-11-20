@@ -8,11 +8,11 @@
 const KEY="the-bureau-heavybag-lite-v1";
 const LIMIT_MS=8*60*60*1000,MAX_CREDITS=1e15;
 const GYMS=[
- {name:"THE BASEMENT",desc:"One bag. No shortcuts.",goal:6,bonus:120},
- {name:"THE LOCAL CLUB",desc:"Your first real boxing gym.",goal:60,bonus:1200},
- {name:"THE FIGHT FACTORY",desc:"The gym starts to grow.",goal:650,bonus:16000},
- {name:"THE ELITE GYM",desc:"Train with the best.",goal:5500,bonus:300000},
- {name:"THE CHAMPIONSHIP",desc:"Build the world's best boxing club.",goal:35000,bonus:0}
+ {name:"THE BASEMENT",desc:"One bag. No shortcuts.",goal:6,bonus:30},
+ {name:"THE LOCAL CLUB",desc:"Your first real boxing gym.",goal:100,bonus:300},
+ {name:"THE FIGHT FACTORY",desc:"The gym starts to grow.",goal:1800,bonus:3000},
+ {name:"THE ELITE GYM",desc:"Train with the best.",goal:20000,bonus:30000},
+ {name:"THE CHAMPIONSHIP",desc:"Build the world's best boxing club.",goal:80000,bonus:0}
 ];
 const BOXERS=[
  {name:"Rookie",icon:"🥊",income:2,cost:12,chapter:0,detail:"Your first helper."},
@@ -114,7 +114,7 @@ function objective(){
  const complete=state.champion,final=state.chapter===4;
  const goalText=complete?"THE UNDISPUTED CLUB":final?"Become World Champion":"Unlock "+GYMS[state.chapter+1].name;
  const hint=complete?"You have completed the game. Your gym stays yours.":final?
-  "Reach 35K credits/sec, earn 12M total credits and sign an Arena Deal.":
+  "Reach 80K credits/sec, earn 12M total credits and sign an Arena Deal.":
   "Grow your automatic income. The next gym unlocks automatically.";
  return '<div class="hbl-panel"><div class="hbl-panel-head"><h3>YOUR NEXT GOAL</h3><small>'+(complete?"COMPLETED":String(state.chapter+1).padStart(2,"0")+" / 05")+'</small></div>'+
  '<div class="hbl-goal-label"><span>'+goalText+'</span><b id="hbl-goal-count"></b></div>'+
@@ -126,7 +126,7 @@ function objective(){
 function shopBoxers(){
  let rows="";
  BOXERS.forEach((b,i)=>{
-   if(i>state.chapter+1)return;
+   if(b.chapter>state.chapter+1)return;
    const locked=b.chapter>state.chapter,p=price(i);
    rows+='<div class="hbl-item'+(locked?' hbl-locked':'')+'"><span class="hbl-symbol">'+b.icon+'</span>'+
    '<div><strong>'+b.name+(state.counts[i]?' ×'+state.counts[i]:'')+'</strong>'+
@@ -138,7 +138,7 @@ function shopBoxers(){
 function shopGear(){
  let rows="";
  GEAR.forEach((g,i)=>{
-   if(i>state.chapter+1)return;
+   if(g.chapter>state.chapter+1)return;
    const done=state.gear[i],locked=GEAR[i].chapter>state.chapter;
    rows+='<div class="hbl-item'+(locked?' hbl-locked':'')+'"><span class="hbl-symbol">'+g.icon+'</span>'+
    '<div><strong>'+g.name+'</strong><small>'+g.detail+'</small></div>'+
@@ -181,7 +181,7 @@ function sync(){
  updateText("hbl-goal-count",g.label);
  const bar=$("hbl-goal-progress");if(bar)bar.style.width=(g.fraction*100).toFixed(1)+"%";
  if(state.chapter===4&&!state.champion){
-  updateText("hbl-goal-help","Sign an Arena Deal ("+(state.counts[5]?"✓":"○")+") · Earn "+fmt(state.earned)+" / 12M total credits · Reach 35K/sec.");
+  updateText("hbl-goal-help","Sign an Arena Deal ("+(state.counts[5]?"✓":"○")+") · Earn "+fmt(state.earned)+" / 12M total credits · Reach 80K/sec.");
  }
  const n=$("hbl-notice");
  if(n){n.hidden=!notice;if(notice)updateText("hbl-notice-text",notice)}
