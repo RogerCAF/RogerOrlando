@@ -185,14 +185,6 @@ export default function Home() {
 
       <section className="bureau-home-section" id="lab" aria-label="The Bureau — interactieve wereld">
         <h2 className="bureau-home-sr-only">The Bureau — interactieve wereld</h2>
-        <nav className="bureau-quickplay" aria-label="Direct naar de spellen in The Bureau">
-          <span className="bureau-quickplay-title"><span className="bureau-quickplay-dot" aria-hidden="true"/> THE BUREAU <span>/</span> SPEEL DIRECT</span>
-          <div className="bureau-quickplay-links">
-            <a href="/arcade/reaction">DR. MONGO’S REACTION GAME <ArrowUpRight size={15} aria-hidden="true"/></a>
-            <a href="/arcade/ten">THE BUTTON 10:00 <ArrowUpRight size={15} aria-hidden="true"/></a>
-            <a href="/arcade" className="bureau-quickplay-all">BEKIJK ALLE 8 SPELLEN <ArrowUpRight size={15} aria-hidden="true"/></a>
-          </div>
-        </nav>
         <div className="bureau-home-experience">
           <BureauExperience />
         </div>
