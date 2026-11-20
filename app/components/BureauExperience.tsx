@@ -1008,7 +1008,7 @@ export default function BureauExperience() {
       <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="Heavy Bag spel">
         <header className="bureau-game-chrome">
           <div className="bureau-game-identity"><span className="bureau-game-signal"/>
-            <span><strong>THE HEAVY BAG</strong><small>THE BUREAU / 20 STAGES / STORY MODE</small></span>
+            <span><strong>THE HEAVY BAG</strong><small>THE BUREAU / IDLE BOXING / ROAD TO CHAMPION</small></span>
           </div>
           <div className="bureau-game-actions">
             <button ref={bagCloseRef} type="button" onClick={() => setBagOpen(false)}>
@@ -1017,7 +1017,7 @@ export default function BureauExperience() {
           </div>
         </header>
         <iframe className="bureau-game-viewport" src="/bureau/heavybag-play.html"
-          title="Heavy Bag — speel de volledige campagne" allow="fullscreen"/>
+          title="Heavy Bag — Idle Boxing" allow="fullscreen"/>
       </div>, document.body)}
     {rubikOpen && typeof document !== "undefined" && createPortal(
       <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="Cube Survivor spel">
