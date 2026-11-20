@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="346" viewBox="0 0 400 346">
+<defs>
+  <linearGradient id="night" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#24212a"/><stop offset=".52" stop-color="#13131a"/><stop offset="1" stop-color="#070b10"/></linearGradient>
+  <radialGradient id="sun" cx=".55" cy=".48" r=".5"><stop stop-color="#da7153"/><stop offset=".57" stop-color="#aa342d"/><stop offset="1" stop-color="#5c2527" stop-opacity="0"/></radialGradient>
+  <linearGradient id="limbs" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#e8b68a"/><stop offset=".48" stop-color="#ae634f"/><stop offset="1" stop-color="#562a31"/></linearGradient>
+  <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#0b0f16" stop-opacity="0"/><stop offset=".65" stop-color="#0b0f16" stop-opacity=".7"/><stop offset="1" stop-color="#090b10"/></linearGradient>
+  <pattern id="grain" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".7" fill="#e1c6a8" opacity=".16"/><circle cx="5" cy="4" r=".5" fill="#e1c6a8" opacity=".12"/></pattern>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="11"/></filter>
+</defs>
+<rect width="400" height="346" fill="url(#night)"/>
+<path d="M-35 210 297 -68 M32 378 442 29" stroke="#ac392e" stroke-opacity=".16" stroke-width="83"/>
+<circle cx="225" cy="153" r="137" fill="url(#sun)" opacity=".9"/>
+<circle cx="225" cy="153" r="118" fill="none" stroke="#e9c29a" stroke-width="1" opacity=".32"/>
+<circle cx="225" cy="153" r="101" fill="none" stroke="#e9c29a" stroke-width="1" stroke-dasharray="3 8" opacity=".4"/>
+<path d="M29 69 365 69 M29 76 146 76 M275 76 370 76" stroke="#f2d4ac" opacity=".36"/>
+<path d="M36 232 Q186 75 371 115" fill="none" stroke="#e8a064" opacity=".13" stroke-width="3"/>
+<g opacity=".28" stroke="#f0c492" stroke-width="2">
+ <path d="m20 185 80 -31 M15 201 111 172 M289 104 381 66 M292 117 389 96"/>
+</g>
+<!-- Guarding fighter with raised right knee; layered hand-painted vector silhouette -->
+<g transform="translate(7,-4)">
+ <path d="M216 216 Q251 230 279 245 L334 237" fill="none" stroke="#1a1218" stroke-width="37" stroke-linecap="round" stroke-linejoin="round"/>
+ <path d="M217 216 Q245 221 268 239 L323 234" fill="none" stroke="url(#limbs)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+ <path d="M213 218 Q201 249 177 275 L156 299" fill="none" stroke="#151016" stroke-width="39" stroke-linecap="round" stroke-linejoin="round"/>
+ <path d="M213 218 Q201 248 177 275 L156 297" fill="none" stroke="url(#limbs)" stroke-width="29" stroke-linecap="round" stroke-linejoin="round"/>
+ <path d="M194 149 Q223 139 244 155 Q260 175 259 205 L237 241 195 234 181 190Z" fill="#100f17" stroke="#e3ae85" stroke-width="3"/>
+ <path d="M198 157 Q217 155 229 169 L231 215 210 229 189 195Z" fill="url(#limbs)" opacity=".81"/>
+ <path d="M196 221 244 224 230 245 207 247Z" fill="#bd352e" stroke="#d5a175" stroke-width="2"/>
+ <path d="M214 224 214 241 M224 225 224 242" stroke="#e9be94" opacity=".5"/>
+ <path d="M203 151 Q180 133 159 140 L144 118" fill="none" stroke="#120f15" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/>
+ <path d="M203 151 Q180 133 159 140 L144 118" fill="none" stroke="url(#limbs)" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+ <path d="M240 159 Q252 128 271 124 L296 113" fill="none" stroke="#120f15" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+ <path d="M240 159 Q252 128 271 124 L296 113" fill="none" stroke="url(#limbs)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+ <path d="M128 108 Q130 92 146 90 Q160 93 162 109 L157 127 136 129Z" fill="#b93d35" stroke="#ecb17f" stroke-width="2"/>
+ <path d="M282 103 Q286 88 302 90 Q318 95 318 110 L306 126 287 123Z" fill="#be413a" stroke="#ecb17f" stroke-width="2"/>
+ <path d="M207 108 Q213 92 231 94 Q250 101 249 123 Q249 141 231 147 Q218 145 208 132Z" fill="url(#limbs)" stroke="#22161a" stroke-width="4"/>
+ <path d="M206 109 Q208 84 230 83 Q248 85 251 107 L240 106 226 98 207 114" fill="#151017"/>
+ <path d="M226 148 229 158" stroke="#d5a17a" stroke-width="11" stroke-linecap="round"/>
+ <path d="M229 121 244 119" stroke="#2b1820" stroke-width="2"/>
+</g>
+<path d="M282 199 366 155 M283 212 377 183 M286 226 372 214" stroke="#faad79" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+<rect y="244" width="400" height="102" fill="url(#fade)"/>
+<rect width="400" height="346" fill="url(#grain)"/>
+<g font-family="Arial,Helvetica,sans-serif">
+ <text x="27" y="28" fill="#f3d7b5" font-size="11" font-weight="700" letter-spacing="3">THE BUREAU / 004</text>
+ <text x="371" y="28" fill="#edaa77" font-size="11" text-anchor="end" letter-spacing="1.4">EST. AFTER DARK</text>
+ <text x="29" y="284" fill="#f7e5cc" font-size="62" font-weight="900" letter-spacing="-2.7">FIGHT</text>
+ <text x="29" y="325" fill="#f7e5cc" font-size="62" font-weight="900" letter-spacing="-2.7">CAMP<tspan fill="#cb5447">.</tspan></text>
+ <text x="368" y="290" text-anchor="end" fill="#e9b17e" font-size="11" font-weight="800" letter-spacing="1.7">30 SEC</text>
+ <text x="369" y="305" text-anchor="end" fill="#e9b17e" font-size="9" letter-spacing="1.1">REFLEX TRIAL</text>
+ <path d="M29 332 H369" stroke="#e5b389" opacity=".65"/>
+ <text x="30" y="342" fill="#c7a88c" font-size="7" letter-spacing="2.6">THE POSTER THAT FIGHTS BACK</text>
+</g>
+<rect x="5" y="5" width="390" height="336" fill="none" stroke="#d4a77c" stroke-width="1.2" opacity=".78"/>
+<path d="M5 50 V5 H50 M350 5 H395 V50 M5 296 V341 H50 M350 341 H395 V296" fill="none" stroke="#e6b17d" stroke-width="3" opacity=".65"/>
+</svg>
