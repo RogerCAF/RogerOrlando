@@ -1459,7 +1459,7 @@ export default function BureauExperience() {
             </button>
           </div>
         </header>
-        <iframe className="bureau-game-viewport" src="/bureau/heavybag-play.html"
+        <iframe className="bureau-game-viewport" src="/bureau/heavybag-play.html?v=mobile-compact-v9"
           title="Heavy Bag — Idle Boxing" allow="fullscreen"/>
       </div>, document.body)}
     {rubikOpen && typeof document !== "undefined" && createPortal(
