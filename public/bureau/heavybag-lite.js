@@ -55,6 +55,8 @@ function read(){
 }
 let savedSound;try{savedSound=localStorage.getItem("the-bureau-heavybag-sound-v1")}catch(e){}
 let state=read(),booted=false,timer=0,ticks=0,notice="",audioCtx=null,soundOn=savedSound!=="off",combo=0,lastPunchAt=0,lastSaveAt=0,dirty=false,lastPointerTapAt=0,bagAnimation=null,popAnimation=null,noiseBuffer=null;
+let buyMode="1",shopTab="auto",rushUntil=0,rushCooldownAt=0;
+const RUSH_MS=6500,RUSH_COOLDOWN_MS=22000;
 function count(){return state.counts.reduce((n,v)=>n+v,0)}
 function rate(){
  let total=0;
@@ -62,11 +64,34 @@ function rate(){
  return Math.min(1e12,total);
 }
 function punchValue(){return 1+GEAR.reduce((sum,g,i)=>sum+(state.gear[i]?g.bonus:0),0)}
+function effectiveRate(){return rate()*(Date.now()<rushUntil&&!document.hidden?2:1)}
+function bundleCost(i,n){
+ let sum=0;
+ for(let j=0;j<n;j++){
+  sum+=Math.min(MAX_CREDITS,Math.ceil(BOXERS[i].cost*Math.pow(1.16,state.counts[i]+j)));
+  if(sum>MAX_CREDITS)return MAX_CREDITS+1;
+ }
+ return sum;
+}
+function offer(i,mode=buyMode){
+ const remaining=Math.max(0,100000-state.counts[i]);
+ if(!remaining)return{quantity:0,cost:MAX_CREDITS+1};
+ if(mode==="1"||mode==="10"){
+  const quantity=Math.min(Number(mode),remaining);
+  return{quantity,cost:bundleCost(i,quantity)};
+ }
+ let lo=0,hi=Math.min(100,remaining);
+ while(lo<hi){const mid=Math.ceil((lo+hi)/2);if(bundleCost(i,mid)<=state.credits+1e-7)lo=mid;else hi=mid-1}
+ return{quantity:lo,cost:lo?bundleCost(i,lo):price(i)};
+}
 function price(i){return Math.min(MAX_CREDITS,Math.ceil(BOXERS[i].cost*Math.pow(1.16,state.counts[i])))}
 function earn(n){if(n>0&&Number.isFinite(n)){state.credits=Math.min(MAX_CREDITS,state.credits+n);state.earned=Math.min(MAX_CREDITS,state.earned+n)}}
 function settle(now){
  const elapsed=clamp(now-state.lastTick,0,LIMIT_MS);
- const gained=elapsed?rate()*elapsed/1000:0;
+ const base=rate();
+ let gained=elapsed?base*elapsed/1000:0;
+ // Power Rush doubles active idle income, not time spent away from the game.
+ if(!document.hidden&&rushUntil>0&&elapsed>0)gained+=base*Math.max(0,Math.min(now,rushUntil)-(now-elapsed))/1000;
  earn(gained);
  state.lastTick=now;
  return gained;
@@ -94,7 +119,7 @@ function header(){
  '<div class="hbl-stats">'+
  '<div class="hbl-stat"><small>CREDITS</small><strong id="hbl-credits">0</strong></div>'+
  '<div class="hbl-stat"><small>AUTO / SEC</small><strong id="hbl-rate" class="green">0</strong></div>'+
- '<div class="hbl-stat"><small>HELPERS</small><strong id="hbl-boxers">0</strong></div>'+
+ '<div class="hbl-stat hbl-stat-helpers"><small>TEAM</small><strong id="hbl-boxers">0</strong></div>'+
  '<div class="hbl-stat hbl-stat-punches"><small>TOTAL HITS</small><strong id="hbl-punches">0</strong></div>'+
  '</div><div class="hbl-notice" id="hbl-notice" hidden><span id="hbl-notice-text"></span><button type="button" data-action="dismiss" aria-label="Dismiss message">✕</button></div>';
 }
@@ -108,7 +133,7 @@ function bag(){
  '<span class="hbl-bag-body"><span class="hbl-bag-stitch" aria-hidden="true"></span><span class="hbl-bag-logo">HEAVY<br>BAG</span><span class="hbl-bag-band"></span></span></button>'+
  '<span class="hbl-shadow"></span><span class="hbl-pop" id="hbl-pop" aria-hidden="true"></span></div>'+
  '<div class="hbl-bag-caption"><strong>HIT TO EARN</strong><span id="hbl-value">+1 credit per punch</span><b id="hbl-combo" class="hbl-combo" hidden></b></div>'+
- '<div class="hbl-fury"><div class="hbl-fury-top"><span id="hbl-fury-title">BUILD YOUR COMBO</span><b id="hbl-fury-hits">POWER SHOT IN 8</b></div><div class="hbl-fury-track"><span id="hbl-fury-fill"></span></div><small>SPACE / CLICK / TAP TO PUNCH · CHAIN 8 HITS FOR A POWER SHOT</small></div>'+
+ '<div class="hbl-fury"><div class="hbl-fury-top"><span id="hbl-fury-title">BUILD YOUR COMBO</span><b id="hbl-fury-hits">POWER SHOT IN 8</b></div><div class="hbl-fury-track"><span id="hbl-fury-fill"></span></div><small>8-HIT COMBO = POWER SHOT · SHORT 2× AUTO RUSH</small></div>'+
  '<div class="hbl-auto'+(auto?' on':'')+'" id="hbl-auto"><i></i><span>'+(auto?'AUTO TRAINING ACTIVE · YOUR TEAM EARNS WHILE YOU ARE AWAY':'NO AUTO TRAINING YET · 12 CREDITS TO HIRE YOUR FIRST ROOKIE')+'</span></div></div>';
 }
 function objective(){
@@ -128,14 +153,14 @@ function objective(){
 function shopBoxers(){
  let rows="";
  BOXERS.forEach((b,i)=>{
-   if(b.chapter>state.chapter+1)return;
-   const locked=b.chapter>state.chapter,p=price(i);
-   rows+='<div class="hbl-item'+(locked?' hbl-locked':'')+'"><span class="hbl-symbol">'+b.icon+'</span>'+
-   '<div><strong>'+b.name+(state.counts[i]?' ×'+state.counts[i]:'')+'</strong>'+
-   '<small>'+(locked?'AVAILABLE AT GYM '+(b.chapter+1):'+'+fmt(b.income)+'/SEC EACH')+'</small></div>'+
-   '<button class="hbl-buy" type="button" data-action="hire" data-index="'+i+'"'+(locked||state.credits+1e-7<p?' disabled':'')+'>'+(locked?'LOCKED':fmt(p)+' C')+'</button></div>';
+  if(b.chapter>state.chapter+1)return;
+  const locked=b.chapter>state.chapter,deal=offer(i),priceLabel=buyMode==="MAX"&&deal.quantity?"×"+deal.quantity+" · "+fmt(deal.cost)+" C":fmt(deal.cost)+" C";
+  rows+='<div class="hbl-item'+(locked?' hbl-locked':'')+'"><span class="hbl-symbol">'+b.icon+'</span>'+
+  '<div><strong>'+b.name+(state.counts[i]?' ×'+state.counts[i]:'')+'</strong>'+
+  '<small>'+(locked?'AVAILABLE AT GYM '+(b.chapter+1):'+'+fmt(b.income)+'/SEC EACH')+'</small></div>'+
+  '<button class="hbl-buy" type="button" data-action="hire" data-index="'+i+'"'+(locked||!deal.quantity||state.credits+1e-7<deal.cost?' disabled':'')+'>'+(locked?'LOCKED':!deal.quantity?'MAXED':priceLabel)+'</button></div>';
  });
- return '<div class="hbl-panel hbl-shop-panel"><div class="hbl-panel-head"><h3>AUTO TRAINING</h3><small>'+count()+' ACTIVE</small></div><div class="hbl-shop">'+rows+'</div></div>';
+ return '<div class="hbl-panel hbl-shop-panel" data-shop="auto"><div class="hbl-panel-head"><h3>AUTO TRAINING</h3><div class="hbl-bulk" aria-label="Hire quantity">'+["1","10","MAX"].map(mode=>'<button type="button" data-action="bulk" data-mode="'+mode+'" aria-pressed="'+(buyMode===mode)+'">'+(mode==="MAX"?"MAX":"×"+mode)+'</button>').join("")+'</div></div><div class="hbl-shop">'+rows+'</div></div>';
 }
 function shopGear(){
  let rows="";
@@ -146,7 +171,7 @@ function shopGear(){
    '<div><strong>'+g.name+'</strong><small>'+g.detail+'</small></div>'+
    '<button class="hbl-buy'+(done?' hbl-bought':'')+'" data-action="gear" data-index="'+i+'" type="button"'+(done||locked||state.credits+1e-7<g.cost?' disabled':'')+'>'+(done?'OWNED':locked?'LOCKED':fmt(g.cost)+' C')+'</button></div>';
  });
- return '<div class="hbl-panel hbl-shop-panel"><div class="hbl-panel-head"><h3>PUNCH POWER</h3><small>PERMANENT</small></div><div class="hbl-shop">'+rows+'</div></div>';
+ return '<div class="hbl-panel hbl-shop-panel" data-shop="gear"><div class="hbl-panel-head"><h3>PUNCH POWER</h3><small>PERMANENT</small></div><div class="hbl-shop">'+rows+'</div></div>';
 }
 function recommended(){
  const options=[];
@@ -167,11 +192,12 @@ function recommended(){
 }
 function quickBar(){
  return '<div class="hbl-quick" id="hbl-quick">'+
-  '<div class="hbl-quick-info"><small>YOUR NEXT UPGRADE</small><strong id="hbl-quick-name">Rookie</strong>'+
+  '<div class="hbl-quick-info"><small>NEXT UPGRADE</small><strong id="hbl-quick-name">Rookie</strong>'+
   '<span id="hbl-quick-progress">0 / 12 C</span></div>'+
-  '<button type="button" class="hbl-quick-button" id="hbl-quick-buy" data-action="hire" data-index="0" disabled>12 C</button>'+
+  '<button type="button" class="hbl-quick-button" id="hbl-quick-buy" data-action="hire" data-index="0" data-quantity="1" disabled>12 C</button>'+
   '<span class="hbl-quick-track"><span id="hbl-quick-fill"></span></span></div>';
 }
+function shopTabs(){return '<div class="hbl-shop-tabs" role="tablist" aria-label="Training upgrades"><button type="button" role="tab" data-action="tab" data-tab="auto" aria-selected="'+(shopTab==="auto")+'">TEAM / +SEC</button><button type="button" role="tab" data-action="tab" data-tab="gear" aria-selected="'+(shopTab==="gear")+'">POWER / +HIT</button></div>'}
 function journey(){
  return '<div class="hbl-panel hbl-journey"><div class="hbl-panel-head"><h3>ROAD TO CHAMPION</h3><small>5 GYMS</small></div>'+
  '<div class="hbl-timeline">'+
@@ -180,7 +206,7 @@ function journey(){
 }
 function render(){
  const root=$("content");if(!root)return;
- root.innerHTML='<div class="hbl">'+header()+'<main class="hbl-layout"><div class="hbl-left">'+bag()+objective()+'</div><div class="hbl-right">'+shopBoxers()+shopGear()+'</div></main>'+journey()+quickBar()+
+ root.innerHTML='<div class="hbl" data-tab="'+shopTab+'">'+header()+'<main class="hbl-layout"><div class="hbl-left">'+bag()+objective()+'</div><div class="hbl-right">'+shopTabs()+shopBoxers()+shopGear()+'</div></main>'+journey()+quickBar()+
  '<footer class="hbl-footer"><span>UP TO 8 HOURS OFFLINE EARNINGS · SAVED ON THIS DEVICE</span>'+
  '<div><button type="button" id="hbl-sound" class="hbl-reset" data-action="sound">SOUND '+(soundOn?'ON':'OFF')+'</button> &nbsp;·&nbsp; <button type="button" class="hbl-reset" data-action="reset">RESTART FROM ZERO</button></div></footer></div>';
  sync();
@@ -198,7 +224,7 @@ function goalStats(){
 function sync(){
  updateText("hbl-rank",state.champion?"🏆 WORLD CHAMPION":"GYM "+String(state.chapter+1).padStart(2,"0")+" / 05");
  updateText("hbl-credits",fmt(state.credits));
- updateText("hbl-rate","+"+fmt(rate()));
+ updateText("hbl-rate","+"+fmt(effectiveRate()));
  updateText("hbl-boxers",fmt(count()));
  updateText("hbl-punches",fmt(state.punches));
  updateText("hbl-value","+"+fmt(punchValue())+" base / hit");
@@ -207,8 +233,15 @@ function sync(){
  const activeChain=combo>0&&Date.now()-lastPunchAt<1300;
  const progress=activeChain?combo%8:0;
  if(heat)heat.style.width=((progress/8)*100).toFixed(1)+"%";
- if(title)title.textContent=activeChain?"COMBO / "+Math.min(combo,999)+" HITS":"BUILD YOUR COMBO";
- if(hits)hits.textContent=activeChain&&combo%8===0?"POWER SHOT!":"POWER SHOT IN "+(8-progress);
+ const rushLeft=Math.max(0,rushUntil-Date.now());
+ if(title)title.textContent=rushLeft?"⚡ RUSH MODE · 2× AUTO":activeChain?"COMBO / "+Math.min(combo,999)+" HITS":"BUILD YOUR COMBO";
+ if(hits)hits.textContent=rushLeft?(rushLeft/1000).toFixed(1)+"S":activeChain&&combo%8===0?"POWER SHOT!":"POWER SHOT IN "+(8-progress);
+ const auto=$("hbl-auto");
+ if(auto&&count()>0){
+  const label=auto.querySelector("span");
+  if(label)label.textContent=rushLeft?"⚡ POWER RUSH · 2× AUTO INCOME":"● AUTO TRAINING · EARN WHILE AWAY";
+  auto.classList.toggle("rush",!!rushLeft);
+ }
  const g=goalStats();
  updateText("hbl-goal-count",g.label);
  const bar=$("hbl-goal-progress");if(bar)bar.style.width=(g.fraction*100).toFixed(1)+"%";
@@ -232,10 +265,11 @@ function sync(){
  const n=$("hbl-notice");
  if(n){n.hidden=!notice;if(notice)updateText("hbl-notice-text",notice)}
  for(const b of document.querySelectorAll("[data-action='hire']")){
-  const i=Number(b.getAttribute("data-index"));
-  const locked=BOXERS[i].chapter>state.chapter,p=price(i),afford=state.credits+1e-7>=p;
+  if(b.id==="hbl-quick-buy")continue;
+  const i=Number(b.getAttribute("data-index")),locked=BOXERS[i].chapter>state.chapter,deal=offer(i);
+  const afford=deal.quantity>0&&state.credits+1e-7>=deal.cost;
   b.disabled=locked||!afford;
-  b.textContent=locked?"LOCKED":fmt(p)+" C";
+  b.textContent=locked?"LOCKED":!deal.quantity?"MAXED":buyMode==="MAX"&&afford?"×"+deal.quantity+" · "+fmt(deal.cost)+" C":fmt(deal.cost)+" C";
   b.closest(".hbl-item")?.classList.toggle("hbl-affordable",!locked&&afford);
  }
  for(const b of document.querySelectorAll("[data-action='gear']")){
@@ -306,22 +340,23 @@ function punch(){
  const now=Date.now();
  combo=now-lastPunchAt<1300?Math.min(combo+1,999):1;lastPunchAt=now;
  const finisher=combo%8===0;
+ if(finisher&&now>=rushCooldownAt){rushUntil=now+RUSH_MS;rushCooldownAt=now+RUSH_COOLDOWN_MS}
  const multiplier=1+Math.min(4,Math.floor((combo-1)/5));
- const amount=punchValue()*multiplier*(finisher?3:1);
+ const amount=punchValue()*multiplier*(finisher?3:1)*(now<rushUntil?1.35:1);
  earn(amount);state.punches++;dirty=true;
  sound(finisher);try{navigator.vibrate?.(finisher?[10,15,20]:8)}catch(e){}
  impact(amount,finisher);
  const grown=milestones();if(grown)render();else sync();
  if(grown||finisher||state.punches===1||state.punches%4===0||Date.now()-lastSaveAt>1200)save();
 }
-function hire(i){
+function hire(i,forcedSingle=false){
  if(!Number.isInteger(i)||i<0||i>=BOXERS.length||BOXERS[i].chapter>state.chapter)return;
  settle(Date.now());
- const p=price(i);
- if(p>state.credits+1e-7)return;
- state.credits-=p;state.counts[i]++;
- if(i===0&&count()===1)notice="🥊 FIRST HELPER HIRED · AUTOMATIC TRAINING IS ON!";
- else notice=BOXERS[i].name+" HIRED · +"+fmt(BOXERS[i].income)+"/SEC";
+ const deal=offer(i,forcedSingle?"1":buyMode);
+ if(!deal.quantity||deal.cost>state.credits+1e-7)return;
+ state.credits-=deal.cost;state.counts[i]+=deal.quantity;
+ if(i===0&&count()===1)notice="🥊 FIRST HELPER · AUTO TRAINING UNLOCKED";
+ else notice="+"+deal.quantity+" "+BOXERS[i].name+" · +"+fmt(BOXERS[i].income*deal.quantity)+"/SEC";
  milestones();save();render();
 }
 function buyGear(i){
@@ -367,13 +402,15 @@ document.addEventListener("click",event=>{
  if(!btn||!booted)return;
  const action=btn.getAttribute("data-action");
  if(action==="punch"){if(Date.now()-lastPointerTapAt>=650||!event.detail)punch()}
- else if(action==="hire")hire(Number(btn.getAttribute("data-index")));
+ else if(action==="hire")hire(Number(btn.getAttribute("data-index")),btn.hasAttribute("data-quantity"));
+ else if(action==="bulk"){const mode=btn.getAttribute("data-mode");if(["1","10","MAX"].includes(mode)){buyMode=mode;render()}}
+ else if(action==="tab"){const tab=btn.getAttribute("data-tab");if(tab==="auto"||tab==="gear"){shopTab=tab;const root=document.querySelector(".hbl");if(root)root.setAttribute("data-tab",tab);document.querySelectorAll("[data-action='tab']").forEach(el=>el.setAttribute("aria-selected",String(el.getAttribute("data-tab")===tab)))}}
  else if(action==="gear")buyGear(Number(btn.getAttribute("data-index")));
  else if(action==="dismiss"){notice="";sync()}
  else if(action==="sound"){soundOn=!soundOn;try{localStorage.setItem("the-bureau-heavybag-sound-v1",soundOn?"on":"off")}catch(e){}render()}
  else if(action==="reset"){
   if(window.confirm("Restart Heavy Bag from zero? This resets only this new Idle Boxing save.")){
-   state=fresh();combo=0;lastPunchAt=0;notice="NEW START · 12 CREDITS TO YOUR FIRST ROOKIE";
+   state=fresh();combo=0;lastPunchAt=0;rushUntil=0;rushCooldownAt=0;notice="NEW START · 12 CREDITS TO YOUR FIRST ROOKIE";
    save();render();
   }
  }
@@ -387,7 +424,7 @@ document.addEventListener("keydown",event=>{
 });
 document.addEventListener("visibilitychange",()=>{
  if(!booted)return;
- if(document.hidden){settle(Date.now());save();stopTimer()}
+ if(document.hidden){settle(Date.now());rushUntil=0;save();stopTimer()}
  else {tick();save();startTimer()}
 });
 window.addEventListener("pagehide",()=>{if(!booted)return;settle(Date.now());save();stopTimer()});
