@@ -1,181 +1,303 @@
 <!doctype html>
-<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b0d13"><title>Fight Camp — The Poster Challenge</title>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0d11">
+<title>TEST YOUR MIGHT — Fight Camp / The Bureau</title>
 <style>
-:root{color-scheme:dark;--gold:#eac58d;--text:#f5ece0;--mute:#9eacb7;--red:#b75e50;--line:#f1cd8b28;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#0b0d13;color:var(--text)}
-body{background:radial-gradient(ellipse 58% 60% at 49% 3%,#583c363d,transparent),linear-gradient(155deg,#141924,#080b12)}
-button{font:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-button:focus-visible{outline:2px solid #ffdb9f;outline-offset:3px}
-main{max-width:1250px;margin:auto;padding:clamp(15px,2.5vw,32px)}
-.top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin:0 0 22px}
-.kicker{font:900 10px ui-monospace,monospace;color:#d7b282;letter-spacing:.16em}
-h1{font:950 clamp(34px,5vw,62px)/1.03 system-ui,-apple-system,sans-serif;letter-spacing:-.07em;margin:8px 0 10px}
-h1 span{color:#e4a86e}
-.intro{font:400 12px/1.7 system-ui,-apple-system,sans-serif;color:#abb5c1;max-width:630px;margin:0}
-.record{min-width:128px;text-align:right;padding:13px 17px;border:1px solid #c99d6255;border-radius:9px;background:#211f21;white-space:nowrap}
-.record span{display:block;font:850 9px ui-monospace,monospace;letter-spacing:.12em;color:#b9a184}
-.record b{display:block;font:900 28px ui-monospace,monospace;color:#ffd494;margin-top:6px}
-.layout{display:grid;grid-template-columns:minmax(0,1.36fr) minmax(265px,.64fr);gap:14px;align-items:stretch}
-.board{position:relative;min-height:440px;isolation:isolate;overflow:hidden;border:1px solid #b88e6668;border-radius:15px;background:radial-gradient(ellipse 65% 60% at 50% 50%,#53312c66 0%,transparent 76%),linear-gradient(120deg,#261c22,#111722 65%,#161921);box-shadow:0 25px 60px #0007}
-.board:before{content:"";position:absolute;left:0;right:0;bottom:16%;height:115px;opacity:.35;background:repeating-linear-gradient(180deg,transparent 0 34px,#aa7d6082 35px 39px,transparent 40px 48px);transform:perspective(700px) rotateX(-8deg);pointer-events:none}
-.board:after{content:"";position:absolute;left:50%;top:42%;width:60%;height:70%;transform:translate(-50%,-50%);background:radial-gradient(ellipse,#e9ac7024,transparent 68%);pointer-events:none}
-.board-header{position:relative;z-index:1;display:flex;justify-content:space-between;gap:16px;align-items:center;padding:18px 22px;color:#e3c294;font:850 10px ui-monospace,monospace;letter-spacing:.1em}
-.board-header .round{color:#95a0ac}
-.mitt-scene{position:relative;z-index:1;min-height:320px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 16px 20px}
-.mitt{position:relative;width:clamp(185px,30vw,290px);aspect-ratio:1;border-radius:50%;border:10px solid #1a1c25;background:radial-gradient(circle at 36% 30%,#6b5a52 0%,#573a37 20%,#2c2630 62%,#10151e 100%);box-shadow:0 0 0 3px #c09765a6,0 0 0 15px #16192166,20px 30px 30px #000b,inset -18px -22px 27px #0008,inset 15px 12px 25px #ffc67b12;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;transform:rotate(-6deg);transition:box-shadow .16s,background .16s}
-.mitt:before,.mitt:after{content:"";position:absolute;border:1px solid #e0be8e3b;border-radius:50%;inset:19px;pointer-events:none}
-.mitt:after{inset:45px;border-color:#e0be8e56}
-.mitt strong{font:950 clamp(37px,6vw,64px)/1 system-ui,-apple-system,sans-serif;letter-spacing:-.06em;z-index:1;color:#fff1db;text-shadow:0 4px 9px #000d;transform:rotate(6deg)}
-.mitt .cue-key{font:900 11px ui-monospace,monospace;letter-spacing:.2em;color:#ffd28b;z-index:1;transform:rotate(6deg)}
-.mitt.hit{animation:mitt-snap .20s cubic-bezier(.15,.85,.21,1)}
-.mitt.miss{animation:mitt-error .24s ease-in-out}
-@keyframes mitt-snap{0%{transform:rotate(-6deg) scale(1)}20%{transform:rotate(-13deg) translateX(16px) scale(.92);filter:brightness(1.9)}55%{transform:rotate(0) translateX(-5px) scale(1.02)}100%{transform:rotate(-6deg) scale(1)}}
-@keyframes mitt-error{0%,100%{transform:rotate(-6deg)}25%{transform:rotate(-1deg) translateX(-8px)}75%{transform:rotate(-9deg) translateX(8px)}}
-.mitt[data-cue="JAB"]{box-shadow:0 0 0 3px #9ec6ff9b,0 0 35px #79a9ff40,20px 30px 30px #000b,inset -18px -22px 27px #0008}
-.mitt[data-cue="KNEE"]{box-shadow:0 0 0 3px #ffc08baf,0 0 35px #ff9b5955,20px 30px 30px #000b,inset -18px -22px 27px #0008}
-.mitt[data-cue="KICK"]{box-shadow:0 0 0 3px #fa98a89b,0 0 35px #e35f6b40,20px 30px 30px #000b,inset -18px -22px 27px #0008}
-.mitt.hit[data-cue]{filter:brightness(1.6)}
-.feedback{height:44px;display:grid;place-items:center;color:#ffdfab;font:950 clamp(18px,3vw,31px) system-ui,-apple-system,sans-serif;letter-spacing:.035em;text-shadow:0 3px 7px #000c}
-.feedback.good{color:#b4f1c1}.feedback.bad{color:#ff9c9c}
-.play-buttons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:13px}
-.strike{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0;min-height:105px;padding:17px 10px;border:1px solid #c1a07970;border-radius:12px;background:linear-gradient(140deg,#302a2a,#161b24);color:#f6ead9;font:900 18px system-ui,-apple-system,sans-serif}
-.strike kbd{display:grid;place-items:center;width:29px;height:29px;border:1px solid #edc48d;border-bottom-width:3px;border-radius:5px;background:#2b3948;color:#ffdda9;font:900 14px ui-monospace,monospace}
-.strike:hover{background:#41302d;border-color:#ffcc8b}
-.strike:active{transform:scale(.97)}
-.strike[data-move="JAB"]{border-color:#8aa8cb6b}.strike[data-move="KICK"]{border-color:#ba7c8b7d}
-.sidebar{display:flex;flex-direction:column;gap:12px}
-.stat-panel,.info-panel{padding:20px;border:1px solid var(--line);border-radius:13px;background:#171b22}
-.stat-panel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-.stat-panel>div{min-width:0}
-.stat-panel span{display:block;font:800 10px ui-monospace,monospace;letter-spacing:.09em;color:#9da9b5}
-.stat-panel strong{display:block;margin-top:8px;color:#f7d9a6;font:900 clamp(22px,2.5vw,34px) ui-monospace,monospace;font-variant-numeric:tabular-nums}
-.info-panel{flex:1}
-.info-panel .kicker{font-size:9px}
-.info-panel h2{margin:10px 0 13px;font-size:23px;line-height:1.16;letter-spacing:-.04em}
-.info-panel p{font-size:12px;line-height:1.8;color:#adb5bd;margin:0 0 11px}
-.info-panel .key-row{display:flex;gap:8px;align-items:center;padding:8px 0;border-top:1px solid #ffffff13;font:750 11px ui-monospace,monospace;color:#c2cbd4}
-.info-panel kbd{min-width:34px;padding:6px;border:1px solid #bca179;border-bottom-width:3px;border-radius:5px;text-align:center;color:#ffe5b4;background:#28323d;font:900 12px ui-monospace,monospace}
-.progress{height:6px;background:#2b343d;border-radius:6px;overflow:hidden;margin:15px 0 3px}
-.progress>span{display:block;width:100%;height:100%;background:linear-gradient(90deg,#bd7952,#ffcc87);transition:width .07s linear}
-.shade{position:absolute;inset:0;z-index:5;display:grid;place-items:center;padding:20px;background:#090d16dd;backdrop-filter:blur(7px)}
-.shade[hidden]{display:none!important}
-.shade-inner{width:min(420px,100%);padding:clamp(20px,4vw,35px);text-align:center;border:1px solid #d9b48189;border-radius:15px;background:linear-gradient(145deg,#322627,#141b26);box-shadow:0 24px 70px #000b}
-.shade .eyebrow{font:900 10px ui-monospace,monospace;letter-spacing:.2em;color:#e9bd80}
-.shade h2{font:950 clamp(29px,5vw,46px)/1.04 system-ui,-apple-system,sans-serif;letter-spacing:-.06em;margin:15px 0}
-.shade p{font:400 12px/1.7 system-ui,-apple-system,sans-serif;color:#b3bdc7;margin:0 0 22px}
-.primary{display:block;width:100%;min-height:52px;border:1px solid #ffd39b;border-radius:8px;background:#e8b379;color:#151b22;font:950 12px ui-monospace,monospace;letter-spacing:.12em}
-.primary:hover{background:#ffd49a}
-.shade small{display:block;margin-top:13px;font:700 10px ui-monospace,monospace;color:#9aa8b4}
-.sound{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid #cfa76e6c;border-radius:7px;background:#25282c;color:#efd1a7;padding:9px 13px;font:850 10px ui-monospace,monospace}
-@media(max-width:840px){.layout{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:1fr 1fr}.board{min-height:380px}.mitt-scene{min-height:300px}.stat-panel{grid-template-columns:1fr 1fr}}
-@media(max-width:570px){main{padding:11px}.top{gap:8px;margin-bottom:12px}.record{min-width:85px;padding:9px}.record b{font-size:20px}.record span{font-size:8px}.intro{font-size:11px}.board{min-height:315px}.board-header{padding:11px;font-size:9px}.mitt-scene{min-height:260px;padding:5px}.mitt{width:210px;border-width:7px}.play-buttons{gap:7px;margin-top:10px}.strike{min-height:77px;padding:11px 6px;font-size:14px;gap:5px}.strike kbd{width:25px;height:25px}.sidebar{display:flex}.stat-panel,.info-panel{padding:14px}.shade{padding:9px}.shade-inner{padding:18px}.shade h2{font-size:33px}}
-@media(prefers-reduced-motion:reduce){.mitt.hit,.mitt.miss{animation:none}.progress>span{transition:none}}
-</style></head>
-<body><main>
- <div class="top"><div><div class="kicker">THE BUREAU / THE POSTER THAT FIGHTS BACK</div><h1>FIGHT CAMP<span>.</span></h1><p class="intro">Een poster aan de muur. Een verborgen Muay Thai-training van 30 seconden. Reageer op de opening: jab, knee of kick. Snelheid én precisie bepalen je score. Niet sneller klikken, maar scherper reageren.</p></div><div class="record"><span>PERSONAL BEST</span><b id="best">0</b></div></div>
- <div class="layout"><section class="board">
-  <div class="board-header"><span>THE POSTER / ROUND 01</span><span class="round" id="boardStatus">READY TO FIGHT</span></div>
-  <div class="mitt-scene">
-   <div class="mitt" id="mitt" data-cue=""><strong id="cue">READY?</strong><span class="cue-key" id="cueKey">FOCUS MITTS / 30 SECONDS</span></div>
-   <div class="feedback" id="feedback" aria-live="polite">THREE STRIKES. ONE CHANCE.</div>
+:root{color-scheme:dark;--bg:#0b0d11;--surface:#15181d;--surface2:#1c2025;--line:#4b4039;--muted:#a8a7a2;--gold:#d2ac80;--off:#e9e6df;--red:#9e5246;--green:#acc59c}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--off);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+body{background:radial-gradient(ellipse 65% 54% at 49% -9%,#44312c5c,transparent 75%),#0b0d11}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button:focus-visible{outline:2px solid #e6c198;outline-offset:3px}
+button:disabled{opacity:.52;cursor:not-allowed}
+[hidden]{display:none!important}
+main{max-width:1160px;margin:0 auto;padding:clamp(16px,2.7vw,34px)}
+.topline{display:flex;align-items:start;justify-content:space-between;gap:20px;margin-bottom:22px}
+.eyebrow{font:800 10px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+h1{margin:7px 0 6px;font-size:clamp(35px,5vw,58px);line-height:.97;letter-spacing:-.075em;font-weight:900}
+h1 span{color:var(--gold)}
+.description{color:var(--muted);margin:9px 0 0;max-width:530px;font-size:13px;line-height:1.65}
+.record{flex-shrink:0;border:1px solid #9c816451;background:#17181d;padding:12px 16px;text-align:right;min-width:102px;border-radius:9px}
+.record span{display:block;color:#b8a58e;font:800 9px/1.4 ui-monospace,monospace;letter-spacing:.09em}
+.record b{display:block;font:900 24px/1.1 ui-monospace,monospace;margin-top:5px;color:#f0d7ae}
+.grid{display:grid;grid-template-columns:minmax(0,1.42fr) minmax(300px,.68fr);gap:15px}
+.arena{border:1px solid #75604b79;background:#12151a;border-radius:14px;overflow:hidden;position:relative;isolation:isolate;min-height:480px;display:flex;flex-direction:column;box-shadow:0 22px 65px #0005}
+.arena-head{padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #a2896c2c;color:#d7bf9d;font:800 10px/1.3 ui-monospace,monospace;letter-spacing:.09em;position:relative;z-index:2}
+.arena-head strong{font-size:12px;color:var(--off);letter-spacing:.04em}
+.arena-scene{position:relative;flex:1;min-height:318px;overflow:hidden;background:radial-gradient(ellipse 47% 55% at 50% 41%,#4b3a304f,transparent 79%),linear-gradient(130deg,#1d2024,#0f1218 72%)}
+.arena-scene:before{content:"";position:absolute;inset:0;opacity:.12;background:repeating-linear-gradient(0deg,transparent 0 3px,#d6c6a1 4px,transparent 5px 48px);pointer-events:none}
+.arena-scene:after{content:"";position:absolute;left:0;right:0;bottom:0;height:29%;background:linear-gradient(transparent,#0a0c10bd);pointer-events:none}
+.backdrop-ring{position:absolute;left:50%;top:46%;width:min(55%,320px);aspect-ratio:1;border:1px solid #a1896430;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 23px #c9b09208,0 0 0 57px #c9b09206}
+.fist{position:absolute;width:100px;height:114px;left:50%;top:6%;transform:translate(-50%,-24px);z-index:4;filter:drop-shadow(7px 10px 10px #000b);transform-origin:center}
+.fist svg{display:block;width:100%;height:100%}
+.arena-scene.impact .fist{animation:hit-motion .58s cubic-bezier(.17,.89,.37,1) both}
+@keyframes hit-motion{0%{transform:translate(-50%,-42px)}37%{transform:translate(-50%,133px) scale(1.06)}45%{transform:translate(-50%,128px) scale(1.01)}100%{transform:translate(-50%,-24px)}}
+.platform{position:absolute;left:50%;top:71%;width:min(86%,445px);height:22px;background:linear-gradient(#383a40,#1a1b20);border:1px solid #77736b66;border-radius:3px;transform:translate(-50%,0);box-shadow:0 18px 19px #0008;z-index:1}
+.platform:before,.platform:after{content:"";position:absolute;width:40px;height:46px;top:12px;background:linear-gradient(90deg,#34373d,#15181d);border:1px solid #65594960}
+.platform:before{left:4%}.platform:after{right:4%}
+.target{position:absolute;z-index:3;left:50%;top:55%;width:min(77%,390px);height:59px;transform:translate(-50%,0);display:flex;filter:drop-shadow(0 13px 10px #0009)}
+.piece{position:relative;height:100%;width:50%;background:linear-gradient(#bf956c 0%,#95653f 23%,#835535 67%,#c28b57 100%);border-top:2px solid #dbb58d;border-bottom:3px solid #563923;overflow:hidden}
+.piece.left{border-left:4px solid #70462f;border-radius:4px 0 0 3px}
+.piece.right{border-right:4px solid #70462f;border-radius:0 4px 3px 0}
+.piece:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(174deg,transparent 0 9px,#422e206b 10px,#fff2 13px,transparent 17px 24px);opacity:.7}
+.piece:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#0003,transparent 40%,#fff2);pointer-events:none}
+.target[data-material="planks"]{height:72px}
+.target[data-material="planks"] .piece{background:repeating-linear-gradient(180deg,#bc9263 0 19px,#4b3325 20px 23px,#aa774f 25px 42px,#36291f 43px 47px,#aa774f 48px 66px,#31221b 67px 72px);border-color:#c8aa79}
+.target[data-material="bamboo"]{height:46px}
+.target[data-material="bamboo"] .piece{border-radius:25px 0 0 25px;background:repeating-linear-gradient(90deg,#6a5f31 0 7px,#a69d56 10px 40px,#716934 42px 52px,#4c472c 54px 60px);border:3px solid #b7a76e}
+.target[data-material="bamboo"] .piece.right{border-radius:0 25px 25px 0}
+.target[data-material="brick"]{height:70px}
+.target[data-material="brick"] .piece{background:repeating-linear-gradient(0deg,#923f32 0 27px,#c15c43 29px 31px,#615049 32px 36px);border-top-color:#d68e6e;border-bottom-color:#643930}
+.target[data-material="steel"]{height:46px}
+.target[data-material="steel"] .piece{background:linear-gradient(#b6bec2,#4a535a 18%,#8e9da4 39%,#38444b 61%,#8b9799 86%,#343c43);border-top-color:#d4d9d7;border-bottom-color:#252f38}
+.target[data-material="steel"] .piece:before{opacity:.08}
+.arena-scene.success .piece.left{animation:break-left 1.1s cubic-bezier(.2,.85,.35,1) forwards}
+.arena-scene.success .piece.right{animation:break-right 1.1s cubic-bezier(.2,.85,.35,1) forwards}
+@keyframes break-left{0%,28%{transform:none}100%{transform:translate(-55px,110px) rotate(-37deg);opacity:0}}
+@keyframes break-right{0%,28%{transform:none}100%{transform:translate(57px,115px) rotate(32deg);opacity:0}}
+.arena-scene.failure .target{animation:fail-jolt .45s ease-out}
+@keyframes fail-jolt{0%,100%{transform:translate(-50%,0)}25%{transform:translate(calc(-50% + 5px),-3px)}53%{transform:translate(calc(-50% - 4px),0)}}
+.arena-scene.impact{animation:arena-jolt .42s ease-out}
+@keyframes arena-jolt{0%,100%{filter:none}39%{filter:brightness(1.38)}}
+.hit-burst{position:absolute;left:50%;top:61%;width:6px;height:6px;z-index:6;pointer-events:none}
+.hit-burst i{position:absolute;width:4px;height:16px;border-radius:2px;background:#d9b27c;opacity:0;transform:rotate(var(--angle)) translateY(0)}
+.arena-scene.success .hit-burst i{animation:burst .6s ease-out both}
+@keyframes burst{0%{opacity:1;transform:rotate(var(--angle)) translateY(0) scale(1)}100%{opacity:0;transform:rotate(var(--angle)) translateY(var(--distance)) scale(.4)}}
+.arena-info{position:absolute;z-index:2;bottom:19px;left:20px;right:20px;display:flex;align-items:center;justify-content:space-between;gap:10px;color:#d7bc99;font:850 11px ui-monospace,monospace;letter-spacing:.1em}
+.arena-info #callout{color:#fff2df;text-align:right}
+.panel{border:1px solid #6152467d;background:#15181d;border-radius:14px;display:flex;flex-direction:column;padding:22px;gap:19px}
+.small-label{color:#a7a8a6;font:850 10px/1.5 ui-monospace,monospace;letter-spacing:.12em}
+.timer-row{display:flex;align-items:end;justify-content:space-between;gap:10px}
+.bigtime{font:900 51px/.92 ui-monospace,monospace;letter-spacing:-.06em;font-variant-numeric:tabular-nums;color:#f3ebdc}
+.level{font:800 12px ui-monospace,monospace;color:var(--gold)}
+.panel-rule{height:1px;background:#85715c45}
+.meter-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.meter-top strong{color:#e9d8bc;font:900 22px ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.power-track{width:100%;height:22px;position:relative;background:#292d33;border:1px solid #655c50;border-radius:4px;overflow:visible}
+.power-fill{height:100%;width:0%;background:linear-gradient(90deg,#77584b,#b3805b 70%,#e0bc85);transition:width .045s linear;border-radius:2px}
+.power-mark{position:absolute;top:-5px;bottom:-5px;left:var(--target);width:2px;background:#f4e4bd;box-shadow:0 0 7px #f0d5a7;z-index:2}
+.power-mark:after{content:"GOAL";position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);color:#f1ddbc;font:850 9px ui-monospace,monospace}
+.meter-bottom{display:flex;align-items:center;justify-content:space-between;color:#b0aca3;font:700 10px ui-monospace,monospace}
+.action-buttons{display:grid;grid-template-columns:1.1fr .9fr;gap:10px}
+.action{border-radius:8px;min-height:115px;padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;text-align:center;font-weight:900;transition:transform .075s,background .12s;user-select:none}
+.action:active{transform:scale(.97)}
+.action.charge{color:#12151a;background:#d7b388;border:1px solid #e8cba5;font-size:23px;letter-spacing:-.035em}
+.action.charge:hover{background:#efd0a4}
+.action.strike{color:#f6ead9;background:linear-gradient(#403129,#271d1c);border:1px solid #af7c59;font-size:20px;letter-spacing:-.035em}
+.action.strike:hover{background:#5b3b2a}
+.action kbd{font:800 10px ui-monospace,monospace;letter-spacing:.02em;border:1px solid currentColor;border-radius:4px;padding:3px 7px;opacity:.67}
+.instructions{font-size:12px;line-height:1.7;color:#b5b6b3;margin:0}
+.panel-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:5px}
+.sound{border:1px solid #695b4c;background:#26282a;color:#dfc8a9;border-radius:5px;padding:8px 10px;font:850 10px ui-monospace,monospace}
+.overlay{position:absolute;z-index:10;inset:0;background:rgba(8,10,14,.88);backdrop-filter:blur(8px);display:grid;place-items:center;padding:18px}
+.overlay-card{width:min(405px,100%);text-align:center;background:#191b20;border:1px solid #a087674f;border-radius:12px;padding:clamp(23px,4.5vw,37px);box-shadow:0 30px 70px #0009}
+.overlay-card .eyebrow{color:#d5ac7a}
+.overlay h2{font-size:clamp(34px,5vw,51px);line-height:.98;letter-spacing:-.067em;margin:15px 0 15px;font-weight:950}
+.overlay p{margin:0 0 24px;color:#b8b7b3;font-size:13px;line-height:1.72}
+.play{min-height:52px;width:100%;border-radius:7px;background:#d6b084;color:#161719;border:1px solid #e5c7a6;font:900 12px ui-monospace,monospace;letter-spacing:.08em}
+.play:hover{background:#efd0a6}
+.overlay small{display:block;margin-top:14px;color:#a29c92;font:750 10px ui-monospace,monospace;letter-spacing:.04em}
+@media(max-width:840px){.grid{grid-template-columns:1fr}.arena{min-height:370px}.arena-scene{min-height:300px}.panel{gap:13px}.action{min-height:95px}.action-buttons{grid-template-columns:1fr 1fr}.topline{margin-bottom:15px}}
+@media(max-width:530px){main{padding:12px}.topline{gap:10px}.record{padding:10px;min-width:80px}.record b{font-size:18px}.record span{font-size:8px}.eyebrow{font-size:9px}h1{font-size:clamp(31px,8.2vw,46px)}.description{font-size:11px;margin-top:7px}.arena{min-height:320px}.arena-head{padding:12px 14px}.arena-scene{min-height:270px}.fist{width:78px;height:92px;top:5%}.target{width:78%;height:45px;top:56%}.target[data-material="planks"]{height:53px}.target[data-material="brick"]{height:52px}.target[data-material="bamboo"],.target[data-material="steel"]{height:39px}.platform{top:70%}.bigtime{font-size:38px}.panel{padding:15px}.panel-footer{padding-top:0}.instructions{font-size:11px}.action{min-height:89px;font-size:18px!important}.overlay-card{padding:20px}.overlay h2{font-size:35px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<main>
+  <div class="topline">
+    <div><div class="eyebrow">THE BUREAU / FIGHT CAMP / SECRET TRIAL</div><h1>TEST YOUR <span>MIGHT.</span></h1><p class="description">Bouw kracht op met snelle klikken. Sla op het juiste moment toe. Vijf materialen, één ultieme krachtproef.</p></div>
+    <div class="record"><span>BEST LEVEL</span><b id="best">0 / 5</b></div>
   </div>
-  <div class="shade" id="shade"><div class="shade-inner"><div class="eyebrow" id="eyebrow">THE POSTER CHALLENGE / 001</div><h2 id="shadeTitle">Earn your corner.</h2><p id="shadeDesc">Je hebt 30 seconden. Druk op A, S of D zodra de juiste stoot verschijnt. Snel en foutloos is de sleutel tot een hoge score.</p><button class="primary" type="button" id="start">START THE ROUND →</button><small>30 SECOND REFLEX CHALLENGE · NO ACCOUNT</small></div></div>
- </section>
- <aside class="sidebar">
-  <div class="stat-panel"><div><span>TIME LEFT</span><strong id="time">30.0</strong></div><div><span>POINTS</span><strong id="score">0</strong></div><div><span>COMBO</span><strong id="combo">0</strong></div><div><span>HIT RATE</span><strong id="accuracy">100%</strong></div></div>
-  <div class="info-panel"><span class="kicker">THE COACH'S INSTRUCTIONS</span><h2>Follow the rhythm.<br>Don't guess.</h2><p>Bij elke opening verschijnt een stoot. Raak precies de goede toets voordat de opening sluit. Verkeerde stoten breken je combo.</p>
-   <div class="key-row"><kbd>A</kbd> JAB — snelle voorhand</div><div class="key-row"><kbd>S</kbd> KNEE — kniestoot</div><div class="key-row"><kbd>D</kbd> KICK — trap</div>
-   <div class="progress"><span id="progress"></span></div>
-   <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:18px"><span class="kicker">TRAINING AUDIO</span><button id="sound" class="sound" type="button">SOUND ON</button></div>
+  <div class="grid">
+    <section class="arena" aria-label="Test Your Might arena">
+      <div class="arena-head"><span id="roundTitle">ROUND 01 / WOOD</span><strong id="roundState">AWAITING CHALLENGER</strong></div>
+      <div class="arena-scene" id="scene">
+        <div class="backdrop-ring" aria-hidden="true"></div>
+        <div class="fist" id="fist" aria-hidden="true">
+          <svg viewBox="0 0 100 122" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="glove" x1=".15" y1="0" x2=".89" y2="1"><stop stop-color="#b7644b"/><stop offset=".53" stop-color="#853d35"/><stop offset="1" stop-color="#39252a"/></linearGradient></defs>
+            <path d="M36 0 H64 L69 42 Q83 39 90 50 Q102 63 95 87 L84 99 L81 121 H23 L20 101 Q9 93 8 71 Q8 55 19 49 L30 43 Z" fill="#292328" stroke="#b69d7f" stroke-width="2"/>
+            <path d="M20 64 Q16 50 30 48 L40 50 Q46 40 56 42 L65 48 Q80 41 86 54 Q97 77 80 91 L76 111 H30 L26 95 Q13 87 20 64Z" fill="url(#glove)" stroke="#d6986c" stroke-width="2"/>
+            <path d="M27 65 Q37 61 46 65 M47 62 Q59 59 65 65 M67 61 Q77 60 84 68" fill="none" stroke="#4a2c2a" stroke-width="3" stroke-linecap="round"/>
+            <path d="M28 100 H76 M30 109 H75" stroke="#cfa77c" stroke-width="2" opacity=".55"/>
+          </svg>
+        </div>
+        <div class="platform" aria-hidden="true"></div>
+        <div class="target" id="target" data-material="wood" aria-hidden="true"><div class="piece left"></div><div class="piece right"></div></div>
+        <div class="hit-burst" aria-hidden="true" id="burst"></div>
+        <div class="arena-info"><span id="materialName">WOODEN BOARD</span><span id="callout">MAKE IT COUNT.</span></div>
+      </div>
+      <div class="overlay" id="cover" role="status">
+        <div class="overlay-card">
+          <div class="eyebrow" id="coverKicker">THE POSTER THAT FIGHTS BACK</div>
+          <h2 id="coverTitle">PROVE YOUR STRENGTH.</h2>
+          <p id="coverDesc">Klik zo snel mogelijk om kracht op te bouwen. De meter loopt terug. Druk daarna op STRIKE om het materiaal te breken — voordat de 10 seconden voorbij zijn.</p>
+          <button type="button" class="play" id="coverButton">START THE TEST ↗</button>
+          <small id="coverHint">MUIS / TOUCH: KLIK + STRIKE · TOETSENBORD: SPATIE + ENTER</small>
+        </div>
+      </div>
+    </section>
+    <section class="panel" aria-label="Spelbediening">
+      <div class="timer-row"><div><div class="small-label">TIME LEFT</div><div class="bigtime" id="time">10.0</div></div><div style="text-align:right"><div class="small-label">STRENGTH TRIAL</div><div class="level" id="levelLabel">01 / 05</div></div></div>
+      <div class="panel-rule"></div>
+      <div class="meter-top"><span class="small-label">POWER METER</span><strong id="powerLabel" aria-live="off">0%</strong></div>
+      <div class="power-track" id="powerTrack" style="--target:50%"><div class="power-fill" id="powerFill"></div><span class="power-mark" aria-hidden="true"></span></div>
+      <div class="meter-bottom"><span>0% FORCE</span><span id="neededLabel">REQUIRED 50%</span></div>
+      <div class="action-buttons">
+        <button type="button" class="action charge" id="charge"><span>BUILD POWER</span><kbd>CLICK / SPACE</kbd></button>
+        <button type="button" class="action strike" id="strike"><span>STRIKE!</span><kbd>CLICK / ENTER</kbd></button>
+      </div>
+      <p class="instructions" id="instructions">Klik herhaaldelijk op <b>BUILD POWER</b>. De meter zakt zodra je stopt. Bereik de markering en gebruik <b>STRIKE!</b> voor de beslissende klap.</p>
+      <div class="panel-footer"><span class="small-label" id="score">SCORE / 0000</span><button type="button" class="sound" id="sound" aria-pressed="true">SOUND ON</button></div>
+    </section>
   </div>
- </aside></div>
- <div class="play-buttons"><button type="button" class="strike" data-move="JAB"><kbd>A</kbd>JAB</button><button type="button" class="strike" data-move="KNEE"><kbd>S</kbd>KNEE</button><button type="button" class="strike" data-move="KICK"><kbd>D</kbd>KICK</button></div>
 </main>
 <script>
-(()=>{
+(function(){
 "use strict";
-const $=id=>document.getElementById(id),MOVES=["JAB","KNEE","KICK"],KEYS={KeyA:"JAB",KeyS:"KNEE",KeyD:"KICK"},STORAGE="bureau-fightcamp-reflex-best-v1";
-let phase="idle",score=0,best=0,combo=0,perfect=0,hits=0,misses=0,cue="",previous="",cueAt=0,roundStart=0,nextCue=0,lastDraw=0,raf=0,soundOn=true,audio=null;
-const DURATION=30000;
-try{best=Math.max(0,Math.min(1e9,Number(localStorage.getItem(STORAGE))||0))}catch{}
-$("best").textContent=best.toLocaleString("en-US");
-function beep(good){
- if(!soundOn)return;
- try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;if(!audio)audio=new C();
- if(audio.state==="suspended")audio.resume().catch(()=>{});
- const t=audio.currentTime,osc=audio.createOscillator(),gain=audio.createGain();osc.type=good?"triangle":"sawtooth";
- osc.frequency.setValueAtTime(good?135:165,t);osc.frequency.exponentialRampToValueAtTime(good?60:94,t+.1);
- gain.gain.setValueAtTime(good?.07:.02,t);gain.gain.exponentialRampToValueAtTime(.0001,t+.12);
- osc.connect(gain);gain.connect(audio.destination);osc.start(t);osc.stop(t+.13)}catch{}
+const $=id=>document.getElementById(id);
+const stages=[
+ {label:"WOODEN BOARD",short:"WOOD",material:"wood",need:50,decay:12,add:10},
+ {label:"THREE PLANKS",short:"STACK",material:"planks",need:60,decay:14,add:9.8},
+ {label:"BAMBOO STAFF",short:"BAMBOO",material:"bamboo",need:70,decay:15,add:9.6},
+ {label:"STONE BRICK",short:"STONE",material:"brick",need:78,decay:17,add:9.3},
+ {label:"STEEL BAR",short:"STEEL",material:"steel",need:87,decay:19,add:9.2}
+];
+const KEY="bureau-test-your-might-unlocked-v1";
+let phase="intro",index=0,power=0,time=10,deadline=0,lastFrame=0,raf=0,score=0,best=0,audioOn=true,ctx=null,stopped=false;
+try{best=Math.max(0,Math.min(5,Number(localStorage.getItem(KEY))||0))}catch(e){}
+$("best").textContent=best+" / 5";
+function setText(id,value){$(id).textContent=String(value)}
+function tone(kind){
+ if(!audioOn)return;
+ try{
+ const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+ if(!ctx)ctx=new AC();if(ctx.state==="suspended")ctx.resume().catch(()=>{});
+ const t=ctx.currentTime;
+ const parts=kind==="win"?[[135,.13,.17],[66,.22,.13],[480,.08,.05]]:kind==="fail"?[[88,.22,.1],[55,.14,.07]]:[[170,.045,.025]];
+ parts.forEach((p,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type=i===2?"triangle":"sine";o.frequency.setValueAtTime(p[0],t+i*.03);o.frequency.exponentialRampToValueAtTime(Math.max(35,p[0]*.38),t+p[1]+i*.03);g.gain.setValueAtTime(p[2],t+i*.03);g.gain.exponentialRampToValueAtTime(.0001,t+p[1]+i*.03);o.connect(g);g.connect(ctx.destination);o.start(t+i*.03);o.stop(t+p[1]+i*.03+.015)})
+ }catch(e){}
 }
-function feedback(text,type=""){
- const el=$("feedback");el.textContent=text;el.className="feedback "+type;
+function vibrate(pattern){try{navigator.vibrate&&navigator.vibrate(pattern)}catch(e){}}
+function draw(){
+ const stage=stages[index];
+ $("powerFill").style.width=power.toFixed(1)+"%";
+ setText("powerLabel",Math.round(power)+"%");
+ setText("time",Math.max(0,time).toFixed(1));
+ $("powerTrack").style.setProperty("--target",stage.need+"%");
+ setText("neededLabel","REQUIRED "+stage.need+"%");
+ setText("levelLabel",String(index+1).padStart(2,"0")+" / 05");
+ setText("score","SCORE / "+String(score).padStart(4,"0"));
+ const enough=power>=stage.need;
+ $("strike").style.borderColor=enough?"#e1c391":"#af7c59";
+ $("strike").style.boxShadow=enough?"0 0 0 1px #e1c39133,0 0 22px #a9865930":"none";
 }
-function showCue(){
- if(phase!=="playing")return;
- let i=Math.floor(Math.random()*3),next=MOVES[i];
- if(next===previous)next=MOVES[(i+1+Math.floor(Math.random()*2))%3];
- previous=cue=next;cueAt=performance.now();nextCue=0;
- $("cue").textContent=next;$("cueKey").textContent="PRESS "+({JAB:"A",KNEE:"S",KICK:"D"}[next]);
- $("mitt").dataset.cue=next;$("mitt").classList.remove("hit","miss");feedback("HIT THE OPENING");
+function setButtons(active){$("charge").disabled=!active;$("strike").disabled=!active}
+function prepareStage(){
+ const stage=stages[index];
+ $("scene").className="arena-scene";
+ $("target").dataset.material=stage.material;
+ setText("materialName",stage.label);
+ setText("roundTitle","ROUND "+String(index+1).padStart(2,"0")+" / "+stage.short);
+ setText("roundState","READY FOR IMPACT");
+ setText("callout","MAKE IT COUNT.");
+ power=0;time=10;draw();setButtons(false);
 }
-function cueLimit(){return Math.max(850,1750-Math.floor(hits/6)*90)}
-function miss(message){
- if(phase!=="playing"||!cue)return;
- misses++;combo=0;cue="";nextCue=performance.now()+180;
- const mitt=$("mitt");mitt.classList.remove("hit","miss");void mitt.offsetWidth;mitt.classList.add("miss");
- feedback(message,"bad");beep(false);drawStats();
+function showCover(kicker,title,description,button,hint){
+ $("coverKicker").textContent=kicker;
+ $("coverTitle").textContent=title;
+ $("coverDesc").textContent=description;
+ $("coverButton").textContent=button;
+ $("coverHint").textContent=hint;
+ $("cover").hidden=false;
+ $("coverButton").focus({preventScroll:true});
 }
-function strike(move){
- if(phase!=="playing"||!cue)return;
- if(move!==cue){miss("WRONG STRIKE — COMBO LOST");return}
- const ms=performance.now()-cueAt;if(ms>cueLimit()){miss("TOO LATE");return}
- hits++;combo=Math.min(999,combo+1);
- const grade=ms<270?"PERFECT":ms<540?"CLEAN":"SOLID";
- if(grade==="PERFECT")perfect++;
- const gained=Math.max(65,Math.round(330-ms*.14)+Math.min(combo,25)*15);
- score+=gained;cue="";nextCue=performance.now()+170;
- const mitt=$("mitt");mitt.classList.remove("hit","miss");void mitt.offsetWidth;mitt.classList.add("hit");
- feedback(grade+"! +"+gained,"good");beep(true);try{navigator.vibrate?.(9)}catch{}
- drawStats();
+function enterStage(){
+ stopped=false;
+ prepareStage();
+ $("cover").hidden=true;
+ phase="charge";setButtons(true);setText("roundState","BUILDING POWER");
+ lastFrame=performance.now();deadline=lastFrame+10000;
+ cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);
 }
-function drawStats(){
- $("score").textContent=score.toLocaleString("en-US");$("combo").textContent=String(combo);
- $("accuracy").textContent=hits+misses?Math.round(hits/(hits+misses)*100)+"%":"100%";
+function tap(){
+ if(phase!=="charge")return;
+ const now=performance.now();if(now>=deadline){fail("TIME EXPIRED","Je moet zelf STRIKE indrukken voordat de tijd om is.");return}
+ power=Math.min(100,power+stages[index].add);
+ setText("callout",power>=stages[index].need?"STRIKE NOW!":"KEEP PUSHING.");
+ tone("tap");draw();
 }
-function showResult(){
- phase="result";cancelAnimationFrame(raf);raf=0;cue="";$("mitt").dataset.cue="";$("cue").textContent="TIME!";$("cueKey").textContent="ROUND COMPLETE";
- const oldBest=best;if(score>best){best=score;try{localStorage.setItem(STORAGE,String(best))}catch{}}
- $("best").textContent=best.toLocaleString("en-US");$("boardStatus").textContent="ROUND COMPLETE";
- $("eyebrow").textContent=score>oldBest?"★ NEW PERSONAL BEST":"ROUND 01 / RESULTS";
- $("shadeTitle").textContent=score>=6000?"CORNER CHAMPION.":score>=2800?"SOLID WORK.":"BACK TO TRAINING.";
- $("shadeDesc").textContent=score.toLocaleString("en-US")+" punten · "+hits+" treffers · "+perfect+" perfect. "+(score>oldBest?"Nieuw persoonlijk record!":"Je record blijft opgeslagen op dit apparaat.");
- $("start").textContent="TRAIN AGAIN →";$("shade").hidden=false;feedback("ROUND COMPLETE");
+function resultCover(success,reason){
+ setButtons(false);
+ if(success){
+  const stage=stages[index];
+  score+=Math.round((1000+time*170)*(1+(power-stage.need)/100));
+  if(index+1>best){best=index+1;try{localStorage.setItem(KEY,String(best))}catch(e){}}
+  $("best").textContent=best+" / 5";
+  draw();
+  if(index===stages.length-1){
+   phase="champion";showCover("TRIAL COMPLETE / FIVE OF FIVE","MIGHT PROVEN.","Je hebt alle vijf materialen gebroken. Je voortgang staat opgeslagen op dit apparaat. Eindscore: "+score+" punten.","PLAY AGAIN ↗","THE POSTER HAS MET ITS MATCH.");
+  }else{
+   phase="won";showCover("CLEAN BREAK / "+stage.label,"TEST PASSED.","Sterke slag! "+score+" punten verzameld. De volgende ronde vraagt meer kracht en een snellere reactie.","NEXT MATERIAL ↗","ROUND "+String(index+2).padStart(2,"0")+" / 05");
+  }
+ }else{
+  phase="lost";showCover("NOT ENOUGH FORCE","STILL STANDING.",reason+" Je kunt deze ronde opnieuw proberen.","TRY AGAIN ↗","BUILD POWER. STRIKE BEFORE TIME RUNS OUT.");
+ }
+}
+function impact(success,reason){
+ if(phase!=="charge")return;
+ phase="impact";cancelAnimationFrame(raf);
+ $("scene").className="arena-scene impact "+(success?"success":"failure");
+ setText("roundState",success?"CLEAN BREAK":"NOT ENOUGH FORCE");
+ setText("callout",success?"CLEAN BREAK!":"TRY AGAIN.");
+ tone(success?"win":"fail");vibrate(success?[25,30,45]:[50]);
+ window.setTimeout(()=>{if(phase==="impact")resultCover(success,reason)},success?1080:610);
+}
+function fail(kicker,reason){time=Math.max(0,(deadline-performance.now())/1000);draw();impact(false,reason)}
+function strike(){
+ if(phase!=="charge")return;
+ const now=performance.now();
+ if(now>=deadline){fail("TIME EXPIRED","De tijd is verstreken.");return}
+ time=Math.max(0,(deadline-now)/1000);
+ draw();
+ const stage=stages[index];
+ impact(power>=stage.need,"Je had "+Math.round(power)+"% kracht, maar minstens "+stage.need+"% was nodig.");
 }
 function loop(now){
- raf=0;if(phase!=="playing")return;
- const elapsed=now-roundStart;if(elapsed>=DURATION){$("time").textContent="0.0";$("progress").style.width="0%";showResult();return}
- if(now-lastDraw>45){lastDraw=now;$("time").textContent=((DURATION-elapsed)/1000).toFixed(1);$("progress").style.width=((DURATION-elapsed)/DURATION*100).toFixed(1)+"%";}
- if(cue&&now-cueAt>cueLimit())miss("OPENING MISSED");
- if(!cue&&nextCue&&now>=nextCue)showCue();
+ if(phase!=="charge")return;
+ const dt=Math.min(0.12,Math.max(0,(now-lastFrame)/1000));
+ lastFrame=now;
+ power=Math.max(0,power-stages[index].decay*dt);
+ time=Math.max(0,(deadline-now)/1000);
+ draw();
+ if(time<=0){impact(false,"De 10 seconden zijn voorbij voordat je de slag uitvoerde.");return}
  raf=requestAnimationFrame(loop);
 }
-function start(){
- cancelAnimationFrame(raf);score=0;combo=0;perfect=0;hits=0;misses=0;cue="";previous="";
- phase="playing";roundStart=performance.now();nextCue=roundStart+300;lastDraw=0;
- $("shade").hidden=true;$("time").textContent="30.0";$("progress").style.width="100%";
- $("mitt").dataset.cue="";$("cue").textContent="READY!";$("cueKey").textContent="FOCUS ON THE MITT";
- $("boardStatus").textContent="TRAINING LIVE";feedback("WAIT FOR THE OPENING");drawStats();
- raf=requestAnimationFrame(loop);
-}
-$("start").addEventListener("click",start);
-document.querySelectorAll("[data-move]").forEach(button=>button.addEventListener("click",()=>strike(button.dataset.move)));
-document.addEventListener("keydown",event=>{
- if(event.repeat)return;
- if(event.code==="Space"&&phase!=="playing"){event.preventDefault();start();return}
- if(KEYS[event.code]&&phase==="playing"){event.preventDefault();strike(KEYS[event.code])}
+$("charge").addEventListener("click",tap);
+$("strike").addEventListener("click",strike);
+$("coverButton").addEventListener("click",()=>{
+ if(phase==="champion"){index=0;score=0;enterStage()}
+ else if(phase==="won"){index++;enterStage()}
+ else if(phase==="lost"||phase==="intro"){enterStage()}
 });
-$("sound").addEventListener("click",()=>{soundOn=!soundOn;$("sound").textContent="SOUND "+(soundOn?"ON":"OFF")});
-window.addEventListener("pagehide",()=>{cancelAnimationFrame(raf);if(audio?.state==="running")audio.close().catch(()=>{})});
+document.addEventListener("keydown",event=>{
+ if(event.repeat || event.altKey || event.metaKey || event.ctrlKey)return;
+ const element=event.target;const tag=element&&element.tagName;
+ if((event.code==="Space"||event.code==="Enter")&&phase==="charge"){
+  event.preventDefault();
+  if(event.code==="Space")tap();else strike();
+ }else if((event.code==="Space"||event.code==="Enter")&&phase!=="charge"&&tag!=="BUTTON"){
+  event.preventDefault();$("coverButton").click();
+ }
+});
+$("sound").addEventListener("click",()=>{audioOn=!audioOn;$("sound").textContent="SOUND "+(audioOn?"ON":"OFF");$("sound").setAttribute("aria-pressed",String(audioOn))});
+const burst=$("burst");for(let i=0;i<20;i++){let p=document.createElement("i");p.style.setProperty("--angle",i*18+"deg");p.style.setProperty("--distance","-"+(55+i%6*13)+"px");p.style.animationDelay=(i%5*25)+"ms";burst.appendChild(p)}
+window.addEventListener("pagehide",()=>{cancelAnimationFrame(raf);if(ctx&&ctx.state==="running")ctx.close().catch(()=>{})});
+prepareStage();
 })();
-</script></body></html>
+</script>
+</body>
+</html>
