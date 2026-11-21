@@ -1148,7 +1148,7 @@ export default function BureauExperience() {
       // Muay Thai print under its warm physical picture light. Never cover it
       // with illustrated artwork: the poster MUST belong to the same desk.
       // Only a discreet printed title and a tiny reactive eye live above it.
-      style.textContent += \`
+      style.textContent += `
         .bureau-embed #scene > .bureau-kinetic-poster {
           position: absolute !important;
           left: 17.66% !important;
@@ -1219,7 +1219,7 @@ export default function BureauExperience() {
             transition: none !important;
           }
         }
-      \`;
+      `;
       if (scene && !document.getElementById("bureau-approved-photo")) {
         const approved = document.createElement("img");
         approved.id = "bureau-approved-photo";
