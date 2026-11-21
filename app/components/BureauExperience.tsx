@@ -134,8 +134,8 @@ export default function BureauExperience() {
     };
   }, [phoneMode]);
 
-  // The original illustrated poster now launches its own playable 30-second
-  // focus-mitts trial. No change to the poster artwork or click boundaries.
+  // The original photographic poster opens the Test Your Might challenge.
+  // Preserve the approved Bureau artwork and original click boundaries.
   const openFightCamp = useCallback(() => {
     setArcadeOpen(false);
     setPosterOpen(true);
@@ -876,8 +876,8 @@ export default function BureauExperience() {
 
       const posterSpot = scene?.querySelector<HTMLElement>('.spot[data-open="muay"]');
       if (posterSpot) {
-        posterSpot.setAttribute("aria-label", "Interactieve Fight Camp-poster: start de Muay Thai-reactie-uitdaging van 30 seconden");
-        posterSpot.title = "FIGHT CAMP / LIVING POSTER / 30 SEC";
+        posterSpot.setAttribute("aria-label", "TEST YOUR MIGHT: start de verborgen krachtproef");
+        posterSpot.title = "TEST YOUR MIGHT / LIVING POSTER";
       }
 
       // Display a deliberate 16:20 on the desk phone too, not only in
@@ -1144,87 +1144,82 @@ export default function BureauExperience() {
         }
       `;
 
-      // Replace the inert print in the approved desk photograph with a living
-      // Fight Camp poster. Use the same scene-relative footprint and leave
-      // the invisible Muay Thai hotspot above it for mouse/touch/keyboard.
-      style.textContent += `
+      // The original photo artwork already contains a beautiful monochrome
+      // Muay Thai print under its warm physical picture light. Never cover it
+      // with illustrated artwork: the poster MUST belong to the same desk.
+      // Only a discreet printed title and a tiny reactive eye live above it.
+      style.textContent += \`
         .bureau-embed #scene > .bureau-kinetic-poster {
           position: absolute !important;
-          left: 17.65% !important;
+          left: 17.66% !important;
           top: 7.65% !important;
-          width: 18.25% !important;
+          width: 18.24% !important;
           height: 27.45% !important;
           z-index: 9 !important;
           display: block !important;
           overflow: hidden !important;
           pointer-events: none !important;
           user-select: none !important;
-          background: #121118 url("/bureau/poster-kinetic-fight.svg?v=kinetic-1") center / 100% 100% no-repeat !important;
-          border: 1px solid rgba(235,179,119,.55) !important;
-          border-radius: 1px !important;
-          clip-path: polygon(.5% .3%, 99.6% .2%, 100% 99.4%, 0% 99.8%) !important;
-          transform: translateZ(0) !important;
-          transform-origin: 52% 48% !important;
-          filter: saturate(.92) contrast(1.06) !important;
-          box-shadow: inset 0 0 0 2px #0b1015, 0 4px 17px #0009 !important;
-          transition: filter .24s ease, transform .3s cubic-bezier(.2,.85,.2,1) !important;
+          border: none !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
+          background: linear-gradient(180deg, transparent 58%, rgba(6,8,11,.02) 72%, rgba(6,8,11,.8) 100%) !important;
+          transform: none !important;
+          filter: none !important;
         }
-        .bureau-embed .bureau-kinetic-poster::before {
-          content: "" !important;
+        .bureau-embed .bureau-kinetic-poster .bureau-poster-wordmark {
           position: absolute !important;
-          inset: -65% !important;
-          z-index: 1 !important;
-          background: linear-gradient(100deg, transparent 39%, rgba(255,197,131,.035) 45%, rgba(255,213,154,.27) 50%, rgba(255,193,124,.035) 55%, transparent 62%) !important;
-          mix-blend-mode: screen !important;
-          transform: translateX(-85%) rotate(11deg) !important;
-          animation: bureau-poster-shimmer 7.8s ease-in-out infinite !important;
-        }
-        .bureau-embed .bureau-kinetic-poster::after {
-          content: "ENTER THE RING ↗" !important;
-          position: absolute !important;
-          z-index: 2 !important;
-          bottom: 10% !important;
-          left: 7% !important;
-          width: 86% !important;
-          padding: 7px 1px !important;
-          box-sizing: border-box !important;
-          border: 1px solid #edc18d !important;
-          border-radius: 1px !important;
-          background: rgba(12,14,20,.95) !important;
-          color: #f9d7a3 !important;
-          font: 800 clamp(7px, .74vw, 11px)/1.2 ui-monospace, monospace !important;
-          letter-spacing: .08em !important;
+          left: 4% !important;
+          right: 4% !important;
+          bottom: 5% !important;
+          display: block !important;
+          font: 900 clamp(8px,1.05vw,16px)/1.04 system-ui,-apple-system,sans-serif !important;
+          color: #eee9e3 !important;
+          letter-spacing: -.035em !important;
           text-align: center !important;
-          opacity: 0 !important;
-          transform: translateY(6px) !important;
-          transition: opacity .22s ease, transform .22s ease !important;
+          text-shadow: 0 1px 4px #000, 0 0 9px #000 !important;
+          white-space: nowrap !important;
         }
-        .bureau-embed #scene:has(.spot[data-open="muay"]:is(:hover,:focus-visible)) > .bureau-kinetic-poster {
-          transform: translateY(-1.3%) scale(1.035) rotate(-.35deg) !important;
-          filter: saturate(1.17) brightness(1.16) contrast(1.08) !important;
+        .bureau-embed .bureau-kinetic-poster .bureau-poster-eye {
+          position: absolute !important;
+          left: 54.8% !important;
+          top: 30.2% !important;
+          width: 3.6% !important;
+          height: 1.8% !important;
+          border-radius: 50% !important;
+          background: radial-gradient(ellipse,rgba(237,218,187,.6) 0%,rgba(180,172,169,.36) 36%,transparent 72%) !important;
+          mix-blend-mode: screen !important;
+          opacity: .74 !important;
+          transform: translate3d(var(--bureau-eye-x, 0px),var(--bureau-eye-y,0px),0) !important;
+          transition: transform .17s ease-out,opacity .25s !important;
+          animation: bureau-eye-blink 9.2s ease-in-out infinite !important;
         }
-        .bureau-embed #scene:has(.spot[data-open="muay"]:is(:hover,:focus-visible)) > .bureau-kinetic-poster::after {
+        .bureau-embed #scene:has(.spot[data-open="muay"]:hover) > .bureau-kinetic-poster .bureau-poster-eye,
+        .bureau-embed #scene:has(.spot[data-open="muay"]:focus-visible) > .bureau-kinetic-poster .bureau-poster-eye {
           opacity: 1 !important;
-          transform: translateY(0) !important;
+          filter: brightness(1.14) !important;
         }
         .bureau-embed .spot[data-open="muay"]::after {
-          display: none !important;
+          content: "TEST YOUR MIGHT ↗" !important;
+          display: block !important;
+          background: rgba(12,12,14,.92) !important;
+          border: 1px solid rgba(209,177,138,.65) !important;
+          color: #f0e6da !important;
+          letter-spacing: .06em !important;
+          font-weight: 750 !important;
+          box-shadow: none !important;
         }
-        @keyframes bureau-poster-shimmer {
-          0%, 16% { transform: translateX(-85%) rotate(11deg); opacity: 0; }
-          22% { opacity: .8; }
-          38%, 100% { transform: translateX(86%) rotate(11deg); opacity: 0; }
+        @keyframes bureau-eye-blink {
+          0%,38%,40%,75%,77%,100% { scale: 1 1; }
+          39%,76% { scale: 1 .08; }
         }
-        @media (prefers-reduced-motion: reduce) {
-          .bureau-embed .bureau-kinetic-poster,
-          .bureau-embed .bureau-kinetic-poster::before,
-          .bureau-embed .bureau-kinetic-poster::after {
+        @media (prefers-reduced-motion:reduce) {
+          .bureau-embed .bureau-poster-eye {
             animation: none !important;
             transition: none !important;
           }
         }
-      `;
-
+      \`;
       if (scene && !document.getElementById("bureau-approved-photo")) {
         const approved = document.createElement("img");
         approved.id = "bureau-approved-photo";
@@ -1242,7 +1237,28 @@ export default function BureauExperience() {
         livingPoster.id = "bureau-kinetic-poster";
         livingPoster.className = "bureau-kinetic-poster";
         livingPoster.setAttribute("aria-hidden", "true");
+        const wordmark = document.createElement("span");
+        wordmark.className = "bureau-poster-wordmark";
+        wordmark.textContent = "TEST YOUR MIGHT";
+        const eye = document.createElement("span");
+        eye.className = "bureau-poster-eye";
+        livingPoster.append(wordmark, eye);
         scene.appendChild(livingPoster);
+        const eyeTarget = (event: PointerEvent) => {
+          if (event.pointerType === "touch") return;
+          const bounds = livingPoster.getBoundingClientRect();
+          const cx = bounds.left + bounds.width * .56;
+          const cy = bounds.top + bounds.height * .31;
+          const dx = Math.max(-3, Math.min(3, (event.clientX - cx) / Math.max(bounds.width,1) * 3.5));
+          const dy = Math.max(-2, Math.min(2, (event.clientY - cy) / Math.max(bounds.height,1) * 2.1));
+          livingPoster.style.setProperty("--bureau-eye-x", dx.toFixed(2)+"px");
+          livingPoster.style.setProperty("--bureau-eye-y", dy.toFixed(2)+"px");
+        };
+        document.addEventListener("pointermove", eyeTarget, { passive: true });
+        window.addEventListener("blur", () => {
+          livingPoster.style.setProperty("--bureau-eye-x", "0px");
+          livingPoster.style.setProperty("--bureau-eye-y", "0px");
+        });
       }
 
       document.getElementById(style.id)?.remove();
@@ -1410,30 +1426,30 @@ export default function BureauExperience() {
               <em>OPEN SECRET FILE <ArrowRight size={15} aria-hidden="true"/></em>
             </button>
             <button className="bureau-arcade-card" type="button" onClick={openFightCamp}>
-              <span className="bureau-arcade-card-index">04 / FIGHT CAMP</span>
+              <span className="bureau-arcade-card-index">04 / STRENGTH TRIAL</span>
               <Swords className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
-              <strong>FIGHT CAMP</strong>
-              <span>De poster komt tot leven: speel een 30 seconden reflex- en combo-uitdaging.</span>
-              <em>EXPLORE CAMP <ArrowRight size={15} aria-hidden="true"/></em>
+              <strong>TEST YOUR MIGHT</strong>
+              <span>Bouw kracht op, voer de perfecte slag uit en breek vijf steeds sterkere materialen.</span>
+              <em>TAKE THE TEST <ArrowRight size={15} aria-hidden="true"/></em>
             </button>
           </div>
           <footer className="bureau-arcade-foot">TIP / De bokszak, Rubik's Cube en de poster werken ook direct vanaf het bureau.</footer>
         </div>
       </div>, document.body)}
     {posterOpen && typeof document !== "undefined" && createPortal(
-      <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="Fight Camp — interactieve posteruitdaging">
+      <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="Test Your Might — interactieve krachtproef">
         <header className="bureau-game-chrome">
           <div className="bureau-game-identity"><span className="bureau-game-signal"/>
-            <span><strong>FIGHT CAMP / THE POSTER CHALLENGE</strong><small>THE BUREAU / 30 SECOND MUAY THAI CHALLENGE</small></span>
+            <span><strong>TEST YOUR MIGHT</strong><small>THE BUREAU / FIGHT CAMP / STRENGTH TRIAL</small></span>
           </div>
           <div className="bureau-game-actions">
-            <a href="/bureau/fight-camp.html" target="_blank" rel="noopener noreferrer" aria-label="Open Fight Camp in apart tabblad" title="Open apart"><Maximize2 size={17}/></a>
+            <a href="/bureau/fight-camp.html" target="_blank" rel="noopener noreferrer" aria-label="Open Test Your Might in apart tabblad" title="Open apart"><Maximize2 size={17}/></a>
             <button ref={posterCloseRef} type="button" onClick={() => setPosterOpen(false)}>
               <ArrowLeft size={16}/><span>TERUG NAAR HET BUREAU</span><X size={18}/>
             </button>
           </div>
         </header>
-        <iframe className="bureau-game-viewport" src="/bureau/fight-camp.html" title="Fight Camp — 30 second focus mitts" allow="fullscreen"/>
+        <iframe className="bureau-game-viewport" src="/bureau/fight-camp.html" title="Test Your Might — krachtproef" allow="fullscreen"/>
       </div>, document.body)}
     {bagOpen && typeof document !== "undefined" && createPortal(
       <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="Heavy Bag spel">
