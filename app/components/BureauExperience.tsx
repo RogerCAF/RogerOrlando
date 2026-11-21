@@ -877,7 +877,7 @@ export default function BureauExperience() {
       const posterSpot = scene?.querySelector<HTMLElement>('.spot[data-open="muay"]');
       if (posterSpot) {
         posterSpot.setAttribute("aria-label", "TEST YOUR MIGHT: start de verborgen krachtproef");
-        posterSpot.title = "TEST YOUR MIGHT / LIVING POSTER";
+        posterSpot.title = "Open de verborgen krachtproef";
       }
 
       // Display a deliberate 16:20 on the desk phone too, not only in
@@ -1147,7 +1147,7 @@ export default function BureauExperience() {
       // The original photo artwork already contains a beautiful monochrome
       // Muay Thai print under its warm physical picture light. Never cover it
       // with illustrated artwork: the poster MUST belong to the same desk.
-      // Only a discreet printed title and a tiny reactive eye live above it.
+      // Only the subtle gaze reaction remains. No lettering is printed over the poster.
       style.textContent += `
         .bureau-embed #scene > .bureau-kinetic-poster {
           position: absolute !important;
@@ -1163,22 +1163,9 @@ export default function BureauExperience() {
           border: none !important;
           border-radius: 0 !important;
           box-shadow: none !important;
-          background: linear-gradient(180deg, transparent 58%, rgba(6,8,11,.02) 72%, rgba(6,8,11,.8) 100%) !important;
+          background: transparent !important;
           transform: none !important;
           filter: none !important;
-        }
-        .bureau-embed .bureau-kinetic-poster .bureau-poster-wordmark {
-          position: absolute !important;
-          left: 4% !important;
-          right: 4% !important;
-          bottom: 5% !important;
-          display: block !important;
-          font: 900 clamp(8px,1.05vw,16px)/1.04 system-ui,-apple-system,sans-serif !important;
-          color: #eee9e3 !important;
-          letter-spacing: -.035em !important;
-          text-align: center !important;
-          text-shadow: 0 1px 4px #000, 0 0 9px #000 !important;
-          white-space: nowrap !important;
         }
         .bureau-embed .bureau-kinetic-poster .bureau-poster-eye {
           position: absolute !important;
@@ -1199,14 +1186,25 @@ export default function BureauExperience() {
           opacity: 1 !important;
           filter: brightness(1.14) !important;
         }
+        /* Just a tiny pointer outside the artwork on hover or keyboard focus.
+           The physical framed portrait and its warm picture light stay untouched. */
         .bureau-embed .spot[data-open="muay"]::after {
-          content: "TEST YOUR MIGHT ↗" !important;
-          display: block !important;
-          background: rgba(12,12,14,.92) !important;
-          border: 1px solid rgba(209,177,138,.65) !important;
-          color: #f0e6da !important;
-          letter-spacing: .06em !important;
-          font-weight: 750 !important;
+          content: "↗" !important;
+          display: grid !important;
+          place-items: center !important;
+          left: auto !important;
+          right: -4% !important;
+          top: 0 !important;
+          bottom: auto !important;
+          width: clamp(17px, 2vw, 25px) !important;
+          height: clamp(17px, 2vw, 25px) !important;
+          padding: 0 !important;
+          border-radius: 50% !important;
+          background: rgba(18,19,20,.83) !important;
+          border: 1px solid rgba(207,178,143,.52) !important;
+          color: #eed7b9 !important;
+          font: 650 clamp(10px,1.1vw,14px)/1 system-ui,sans-serif !important;
+          letter-spacing: 0 !important;
           box-shadow: none !important;
         }
         @keyframes bureau-eye-blink {
@@ -1237,12 +1235,9 @@ export default function BureauExperience() {
         livingPoster.id = "bureau-kinetic-poster";
         livingPoster.className = "bureau-kinetic-poster";
         livingPoster.setAttribute("aria-hidden", "true");
-        const wordmark = document.createElement("span");
-        wordmark.className = "bureau-poster-wordmark";
-        wordmark.textContent = "TEST YOUR MIGHT";
         const eye = document.createElement("span");
         eye.className = "bureau-poster-eye";
-        livingPoster.append(wordmark, eye);
+        livingPoster.appendChild(eye);
         scene.appendChild(livingPoster);
         const eyeTarget = (event: PointerEvent) => {
           if (event.pointerType === "touch") return;
