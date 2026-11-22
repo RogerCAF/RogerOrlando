@@ -1406,11 +1406,11 @@ export default function BureauExperience() {
           </div>
           <div className="bureau-arcade-grid">
             <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setBagOpen(true);}}>
-              <span className="bureau-arcade-card-index">01 / IDLE BOXING</span>
+              <span className="bureau-arcade-card-index">01 / HAYSTACK HUNT</span>
               <Dumbbell className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
-              <strong>HEAVY BAG</strong>
-              <span>Bouw van je eerste punch een complete boksschool.</span>
-              <em>START TRAINING <ArrowRight size={15} aria-hidden="true"/></em>
+              <strong>HAYWIRE</strong>
+              <span>Scheur de bokszak open, bouw machines en vind de naald.</span>
+              <em>START SEARCHING <ArrowRight size={15} aria-hidden="true"/></em>
             </button>
             <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setRubikOpen(true);}}>
               <span className="bureau-arcade-card-index">02 / 90-SECOND RUN</span>
@@ -1453,20 +1453,20 @@ export default function BureauExperience() {
         <iframe className="bureau-game-viewport" src="/bureau/fight-camp.html" title="Test Your Might — krachtproef" allow="fullscreen"/>
       </div>, document.body)}
     {bagOpen && typeof document !== "undefined" && createPortal(
-      <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="Heavy Bag spel">
+      <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="HAYWIRE spel">
         <header className="bureau-game-chrome">
           <div className="bureau-game-identity"><span className="bureau-game-signal"/>
-            <span><strong>THE HEAVY BAG</strong><small>THE BUREAU / IDLE BOXING / ROAD TO CHAMPION</small></span>
+            <span><strong>HAYWIRE</strong><small>who the f put a needle in my hay</small></span>
           </div>
           <div className="bureau-game-actions">
-            <a href="/bureau/heavybag-play.html" target="_blank" rel="noopener noreferrer" aria-label="Open Heavy Bag in een nieuw tabblad" title="Open game apart"><Maximize2 size={17}/></a>
+            <a href="/bureau/heavybag-play.html" target="_blank" rel="noopener noreferrer" aria-label="Open HAYWIRE in een nieuw tabblad" title="Open game apart"><Maximize2 size={17}/></a>
             <button ref={bagCloseRef} type="button" onClick={() => setBagOpen(false)}>
               <ArrowLeft size={16}/><span>TERUG NAAR HET PLAATJE</span><X size={18}/>
             </button>
           </div>
         </header>
-        <iframe className="bureau-game-viewport" src="/bureau/heavybag-play.html?v=mobile-compact-v9"
-          title="Heavy Bag — Idle Boxing" allow="fullscreen"/>
+        <iframe className="bureau-game-viewport" src="/bureau/heavybag-play.html?v=haywire-20261122-v1"
+          title="HAYWIRE — Find the needle" allow="fullscreen"/>
       </div>, document.body)}
     {rubikOpen && typeof document !== "undefined" && createPortal(
       <div className="bureau-game-overlay" role="dialog" aria-modal="true" aria-label="Cube Survivor spel">
