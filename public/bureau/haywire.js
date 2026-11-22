@@ -45,7 +45,7 @@
   const bound = (n,min,max) => Math.min(max,Math.max(min, Number.isFinite(Number(n)) ? Number(n) : min));
   const init = () => ({
     started:false, found:false, signal:false, needleAt: Math.floor(TOTAL * (.18 + Math.random()*.76)),
-    searched:0, cash:0, earned:0, straw:0, sold:0, scoops:0, finds:0,
+    searched:0, cash:0, earned:0, straw:0, sold:0, scoops:0, finds:0, remainder:0,
     tool:0, machines:[0,0,0,0,0,0], upgrades:{autoSell:0,value:0,motor:0,capacity:0,detector:0},
     lastTick:Date.now()
   });
@@ -60,6 +60,7 @@
     d.tool=Math.floor(bound(old.tool,0,TOOLS.length-1));
     d.machines=d.machines.map((_,i)=>Math.floor(bound(old.machines?.[i],0,9999)));
     for(const u of UPGRADES) d.upgrades[u.id]=Math.floor(bound(old.upgrades?.[u.id],0,u.prices.length));
+    d.remainder=bound(old.remainder,0,0.999999);
     d.lastTick=bound(old.lastTick,0,Date.now());
     if (d.searched>=d.needleAt && !d.found) d.signal=true;
     return d;
@@ -102,7 +103,9 @@
     const dt=Math.min(MAX_OFFLINE,Math.max(0,now-s.lastTick));
     s.lastTick=now;
     if(!s.started||s.found||s.signal||dt<=0)return 0;
-    return search(output()*dt/1000,true);
+    const work=output()*dt/1000+s.remainder;
+    s.remainder=work-Math.floor(work);
+    return search(work,true);
   }
   const mPrice=i=>Math.ceil(MACHINES[i].cost*Math.pow(1.19,s.machines[i]));
   function bundle(i,n){
@@ -155,7 +158,7 @@
       "<div class='hw-dig' id='hw-dig'>"+
       "<div class='hw-glow'></div><div class='hw-bag-rim' aria-hidden='true'></div>"+
       "<button class='hw-hay' id='hw-hay' type='button' data-act='dig' aria-label='Search through the hay' "+(s.signal||s.found?"disabled":"")+"><span class='hw-straw-texture' aria-hidden='true'></span><span class='hw-scoop-label' id='hw-scoop-label'>"+(s.signal?'SIGNAL FOUND':s.found?'NEEDLE FOUND':'CLICK TO SEARCH')+"</span><span class='hw-fx' aria-hidden='true'></span></button>"+
-      "<div class='hw-needle"+(s.signal||s.found?' show':'')+"' aria-hidden='true'>✦</div>"+
+      "<div class='hw-needle"+(s.signal||s.found?' show':'')+"' aria-hidden='true'><span></span></div>"+
       "</div>"+
       (s.found?"<div class='hw-won'><b>✦ YOU FOUND THE NEEDLE ✦</b><span>Hidden in "+fmt(s.needleAt)+" pieces of straw. Case closed.</span></div>":
       s.signal?"<button type='button' class='hw-primary hw-discover' data-act='claim'>✦ PULL OUT THE NEEDLE</button>":
@@ -243,7 +246,7 @@
     if(act==='sell'){if(sell()){say('BALES SOLD');save();render();}return;}
     if(act==='claim'){
       if(!s.signal||s.found)return;
-      s.found=true;s.signal=false;s.straw+=0;
+      s.found=true;s.signal=false;
       say('THE NEEDLE HAS BEEN FOUND.');save();render();return;
     }
     if(act==='tab'){tab=node.dataset.tab==='upgrades'?'upgrades':'machines';render();return;}
