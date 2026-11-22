@@ -164,3 +164,10 @@ button:focus-visible{outline:2px solid #f5c178;outline-offset:3px}
 }
 @media(max-width:360px){.hw-chapter{display:none}.hw-offer-info small{font-size:8px}.hw-numbers strong{font-size:16px}.hw-sell{min-width:110px}.hw-zone span{font-size:6px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* An actual steel needle (with an eye), rather than a generic treasure sparkle. */
+.hw-needle{width:104px;height:104px;display:none;align-items:center;justify-content:center;filter:drop-shadow(0 0 12px #d0fcff)}
+.hw-needle.show{display:flex}
+.hw-needle span{position:relative;display:block;height:95px;width:6px;border-radius:5px 5px 0 0;transform:rotate(57deg);background:linear-gradient(90deg,#648b99,#f3fbff 37%,#87aab4 68%,#f6ffff);box-shadow:0 0 7px #d2efffac}
+.hw-needle span:before{content:'';position:absolute;top:-12px;left:-2px;width:10px;height:16px;border:2px solid #e7faff;border-radius:52%;background:#617d8088}
+.hw-needle span:after{content:'';position:absolute;bottom:-15px;left:0;border-left:3px solid transparent;border-right:3px solid transparent;border-top:15px solid #c7ebf4}
