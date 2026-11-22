@@ -23,6 +23,9 @@
   <path d="M279 711 Q362 706 473 712 L482 733 L284 736 Z M789 714 L971 714 L973 738 L789 739 Z"/>
   <!-- Both slim monitor light bars -->
   <path d="M665 282 L1109 282 L1113 312 L668 314 Z"/>
+  <!-- Phone: include the complete angled handset, its bezel, and the charging cradle.
+       The old cutout omitted this area, leaving the phone partly transparent. -->
+  <path d="M1183 740 L1205 606 Q1207 597 1218 597 L1275 602 Q1291 603 1291 617 L1297 738 Q1297 752 1285 756 L1198 755 Q1182 752 1183 740 Z"/>
   <!-- Upright PC housing: top, sloping side, front and base -->
   <path d="M1284 344 L1428 277 Q1435 271 1444 273 L1598 273 L1618 287 L1619 725 Q1616 744 1599 749 L1414 751 L1283 702 Z"/>
 </clipPath>
