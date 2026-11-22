@@ -1102,27 +1102,31 @@ export default function BureauExperience() {
             height: 14.4% !important;
           }
         }
-        /* 16:20 is printed on the actual small phone screen, above the
-           artwork without changing the photograph or intercepting taps. */
+        /* The real handset is at the RIGHT of the monitor (not the left).
+           Paint the fixed time directly over the source photo's 10:00 readout.
+           Coordinates follow the 1670 x 942 approved photo. */
         .bureau-embed #bureau-physical-phone-clock {
           position: absolute !important;
-          left: 16.7% !important;
-          top: 72.1% !important;
-          width: 5.25% !important;
-          height: auto !important;
+          left: 72.85% !important;
+          top: 66.45% !important;
+          width: 3.7% !important;
+          height: 3.7% !important;
           z-index: 18 !important;
           box-sizing: border-box !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
           margin: 0 !important;
-          padding: 2px 1px !important;
+          padding: 0 !important;
+          border: none !important;
           border-radius: 2px !important;
-          color: #f9e2b3 !important;
-          background: #15130f !important;
-          text-align: center !important;
+          color: #f8f8f6 !important;
+          background: #070a0c !important;
           white-space: nowrap !important;
-          font: 900 clamp(6px,.9vw,13px)/1 ui-monospace,Consolas,monospace !important;
-          letter-spacing: .02em !important;
-          text-shadow: 0 0 5px #ffce876e,0 1px 2px #000 !important;
-          transform: rotate(15deg) skewX(-7deg) !important;
+          font: 600 clamp(8px, .88vw, 15px)/1 ui-monospace,Consolas,monospace !important;
+          letter-spacing: -.035em !important;
+          text-shadow: 0 1px 2px #000 !important;
+          transform: rotate(6deg) !important;
           transform-origin: center !important;
           pointer-events: none !important;
           user-select: none !important;
@@ -1224,7 +1228,7 @@ export default function BureauExperience() {
         const approved = document.createElement("img");
         approved.id = "bureau-approved-photo";
         approved.className = "bureau-approved-photo";
-        approved.src = "/bureau/bureau-approved-photorealistic-cutout.svg?v=transparent-cutout-1";
+        approved.src = "/bureau/bureau-approved-photorealistic-cutout.svg?v=phone-restored-2";
         approved.alt = "The Bureau: werkplek met twee bergschermen, pc, telefoon, bokszak en notitieboek";
         approved.draggable = false;
         approved.decoding = "async";
