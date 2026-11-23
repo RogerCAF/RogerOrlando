@@ -89,3 +89,63 @@
 /* Deliberately fixed phone-display clock — part of the Bureau experience, not live local time. */
 .bureau-phone-topline .bureau-phone-clock{display:inline-flex;align-items:center;justify-content:center;margin-left:auto;white-space:nowrap;color:#e9f0f4;font:900 13px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.015em;font-variant-numeric:tabular-nums;text-shadow:0 1px 2px #000a}
 @media(max-width:600px){.bureau-phone-topline .bureau-phone-clock{font-size:12px}}
+
+/* 2026 — premium pocket-arcade selection with miniature in-card game scenes. */
+.bureau-phone-home{background:radial-gradient(ellipse at 50% -15%,#3b4d6254,transparent 56%),linear-gradient(165deg,#121e2b,#0a101b 85%)}
+.bureau-phone-intro h2{letter-spacing:-.055em}
+.bureau-phone-apps{gap:10px}
+.bureau-phone-app{
+ isolation:isolate;overflow:hidden;min-height:227px;padding:10px 10px 11px;
+ background:linear-gradient(160deg,#26374b,#131e2c 72%);
+ border:1px solid #ffffff2a;border-radius:14px;
+ box-shadow:inset 0 1px #ffffff19,0 8px 17px #0004;
+ transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+}
+.bureau-phone-app:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(140deg,#ffffff0b,transparent 47%);opacity:.8}
+.bureau-phone-app:hover{transform:translateY(-3px);border-color:#efc89198;box-shadow:inset 0 1px #ffffff30,0 14px 24px #0008}
+.bureau-phone-app:active{transform:translateY(0) scale(.985)}
+.bureau-game-preview{position:relative;display:block;flex:0 0 auto;width:100%;height:88px;overflow:hidden;border-radius:9px;border:1px solid #ffffff24;margin:0 0 9px;box-shadow:inset 0 1px #ffffff26,0 3px 10px #0004}
+.bureau-phone-app .bureau-phone-app-symbol{display:none}
+.bureau-phone-app .bureau-phone-app-type{font-size:7px;min-height:13px;line-height:1.25;letter-spacing:.035em;color:#c5cbd3}
+.bureau-phone-app strong{font-size:15px;line-height:1.12;min-height:34px;margin:6px 0 4px;letter-spacing:-.045em}
+.bureau-phone-app>span:not(.bureau-phone-app-symbol):not(.bureau-phone-app-type):not(.bureau-game-preview){font-size:9px;line-height:1.35;color:#b9c6d2}
+.bureau-phone-app em{width:100%;margin-top:auto;padding-top:9px;border-top:1px solid #ffffff1e;font-size:9px;display:flex;justify-content:space-between;align-items:center;letter-spacing:.075em}
+.bureau-phone-app em svg{transition:transform .2s}
+.bureau-phone-app:hover em svg{transform:translateX(3px)}
+.bureau-phone-app .bureau-game-preview span{position:absolute;display:block}
+.bureau-preview-sky{background:linear-gradient(180deg,#6394b2,#9ccacb 65%,#568b80)}
+.bureau-preview-sky:after{content:"";position:absolute;bottom:0;left:0;right:0;height:12px;background:repeating-linear-gradient(90deg,#3b7560 0 13px,#417b65 13px 22px)}
+.bureau-preview-sky .preview-sun{height:31px;width:31px;border-radius:50%;right:22%;top:11px;background:#fff0bf;box-shadow:0 0 22px #ffefb5a8}
+.bureau-preview-sky .preview-cloud{height:13px;width:41px;border-radius:25px;background:#f5f5e7bb;left:11px;top:14px;box-shadow:12px -5px 0 -3px #f5f5e7a0}
+.bureau-preview-sky .preview-bird{left:38%;top:39px;color:#f4d370;font-size:24px;line-height:1;transform:rotate(-16deg);text-shadow:-3px 2px #a35f37,2px -2px #fff3b0}
+.bureau-preview-sky .preview-pipe{width:22px;background:linear-gradient(90deg,#2d7554,#59b878 40%,#226445);border:2px solid #194c3c;box-shadow:inset 3px 0 #a5df8e5c}
+.bureau-preview-sky .preview-pipe-one{right:15%;top:-19px;height:48px}
+.bureau-preview-sky .preview-pipe-two{right:15%;bottom:-18px;height:43px}
+.bureau-preview-curve{background:radial-gradient(circle at 50% 45%,#272e54,#111529 76%)}
+.bureau-preview-curve .preview-grid{inset:0;background-image:linear-gradient(#a7bbff10 1px,transparent 1px),linear-gradient(90deg,#a7bbff10 1px,transparent 1px);background-size:14px 14px}
+.bureau-preview-curve .preview-trail{border-radius:2px;box-shadow:0 0 8px currentColor}
+.bureau-preview-curve .trail-a{left:12%;top:25%;width:50%;height:4px;color:#71efc4;background:currentColor;transform:rotate(0deg)}
+.bureau-preview-curve .trail-a:after{content:"";position:absolute;right:0;top:0;height:38px;width:4px;background:currentColor}
+.bureau-preview-curve .trail-b{left:19%;bottom:23%;width:62%;height:4px;color:#ef8bdf;background:currentColor}
+.bureau-preview-curve .trail-b:after{content:"";position:absolute;left:0;bottom:0;height:27px;width:4px;background:currentColor}
+.bureau-preview-curve .trail-c{right:25%;top:20%;width:4px;height:42px;color:#f4d16c;background:currentColor}
+.bureau-preview-reaction{background:radial-gradient(circle at center,#314737,#101b1c 85%);display:flex;align-items:center;justify-content:center}
+.bureau-preview-reaction .preview-react-top{top:10px;left:0;right:0;color:#a8c7b1;font:800 8px ui-monospace,monospace;letter-spacing:.15em;text-align:center}
+.bureau-preview-reaction .preview-react-light{position:relative;width:39px;height:39px;border-radius:50%;background:radial-gradient(circle at 36% 30%,#d7ffd0,#72e49a 48%,#309e60 83%);box-shadow:0 0 0 7px #81e5a921,0 0 25px #5cf3a985,inset 0 -3px 6px #204c32}
+.bureau-preview-reaction .preview-react-bottom{bottom:8px;left:0;right:0;color:#b3cfb9;font:700 7px ui-monospace,monospace;letter-spacing:.12em;text-align:center}
+.bureau-preview-ten{background:radial-gradient(ellipse at center,#402832,#17151f 75%);display:flex;align-items:center;justify-content:center}
+.bureau-preview-ten .preview-ten-time{top:9px;left:0;right:0;text-align:center;font:900 24px/.95 ui-monospace,monospace;letter-spacing:-.065em;color:#fff4ef;text-shadow:0 0 14px #ff6d6d4b}
+.bureau-preview-ten .preview-ten-button{top:41px;width:35px;height:35px;border-radius:50%;background:radial-gradient(circle at 32% 25%,#ff9b94,#e33547 60%,#891e31);border:3px solid #9d2d3b;box-shadow:0 2px 0 3px #3b2730,0 7px 13px #0009,inset 0 2px 4px #ffcac87d}
+.bureau-preview-ten .preview-ten-bottom{bottom:6px;left:0;right:0;text-align:center;color:#d4a8ad;font:800 7px ui-monospace,monospace;letter-spacing:.1em}
+@media(max-width:600px){
+ .bureau-phone-app{min-height:219px;padding:9px}
+ .bureau-game-preview{height:80px}
+ .bureau-phone-app strong{font-size:14px;margin:5px 0 4px;min-height:32px}
+ .bureau-phone-app .bureau-phone-app-type{font-size:7px}
+}
+@media(max-width:340px){
+ .bureau-phone-app{min-height:207px;padding:7px}
+ .bureau-game-preview{height:70px}
+ .bureau-phone-app strong{font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){.bureau-phone-app em svg{transition:none}}
