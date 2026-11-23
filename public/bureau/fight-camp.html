@@ -225,9 +225,9 @@ h1 span{background:linear-gradient(160deg,#fff3d3,#d8a75d 45%,#aa6834);-webkit-b
         <div class="overlay-card">
           <div class="eyebrow" id="coverKicker">THE POSTER THAT FIGHTS BACK</div>
           <h2 id="coverTitle">PROVE YOUR STRENGTH.</h2>
-          <p id="coverDesc">Klik zo snel mogelijk om kracht op te bouwen. De meter loopt terug. Druk daarna op STRIKE om het materiaal te breken — voordat de 10 seconden voorbij zijn.</p>
+          <p id="coverDesc">Druk razendsnel op A en D (of klik BUILD POWER) om de krachtmeter te vullen. Zodra je de doelmarkering passeert, druk ENTER of STRIKE om het materiaal te breken — binnen 10 seconden.</p>
           <button type="button" class="play" id="coverButton">START THE TEST ↗</button>
-          <small id="coverHint">MUIS / TOUCH: KLIK + STRIKE · TOETSENBORD: SPATIE + ENTER</small>
+          <small id="coverHint">MUIS / TOUCH: KLIK + STRIKE · TOETSENBORD: A + D / SPATIE + ENTER</small>
         </div>
       </div>
     </section>
@@ -238,10 +238,10 @@ h1 span{background:linear-gradient(160deg,#fff3d3,#d8a75d 45%,#aa6834);-webkit-b
       <div class="power-track" id="powerTrack" style="--target:50%"><div class="power-fill" id="powerFill"></div><span class="power-mark" aria-hidden="true"></span></div>
       <div class="meter-bottom"><span>0% FORCE</span><span id="neededLabel">REQUIRED 50%</span></div>
       <div class="action-buttons">
-        <button type="button" class="action charge" id="charge"><span>BUILD POWER</span><kbd>CLICK / SPACE</kbd></button>
+        <button type="button" class="action charge" id="charge"><span>BUILD POWER</span><kbd>A + D / SPACE / CLICK</kbd></button>
         <button type="button" class="action strike" id="strike"><span>STRIKE!</span><kbd>CLICK / ENTER</kbd></button>
       </div>
-      <p class="instructions" id="instructions">Klik herhaaldelijk op <b>BUILD POWER</b>. De meter zakt zodra je stopt. Bereik de markering en gebruik <b>STRIKE!</b> voor de beslissende klap.</p>
+      <p class="instructions" id="instructions">Druk om-en-om op <b>A en D</b> of tik snel op <b>BUILD POWER</b> (spatie werkt ook). Kracht zakt als je stopt. Sla boven de markering met <b>ENTER / STRIKE</b>.</p>
       <div class="panel-footer"><span class="small-label" id="score">SCORE / 0000</span><button type="button" class="sound" id="sound" aria-pressed="true">SOUND ON</button></div>
     </section>
   </div>
@@ -251,11 +251,11 @@ h1 span{background:linear-gradient(160deg,#fff3d3,#d8a75d 45%,#aa6834);-webkit-b
 "use strict";
 const $=id=>document.getElementById(id);
 const stages=[
- {label:"WOODEN BOARD",short:"WOOD",material:"wood",need:50,decay:12,add:10},
- {label:"THREE PLANKS",short:"STACK",material:"planks",need:60,decay:14,add:9.8},
- {label:"BAMBOO STAFF",short:"BAMBOO",material:"bamboo",need:70,decay:15,add:9.6},
- {label:"STONE BRICK",short:"STONE",material:"brick",need:78,decay:17,add:9.3},
- {label:"STEEL BAR",short:"STEEL",material:"steel",need:87,decay:19,add:9.2}
+ {label:"WOODEN BLOCK",short:"WOOD",material:"wood",need:45,decay:12,add:10.5,bonus:100000},
+ {label:"STONE SLAB",short:"STONE",material:"stone",need:57,decay:13.5,add:10,bonus:200000},
+ {label:"STEEL BAR",short:"STEEL",material:"steel",need:70,decay:15,add:9.7,bonus:500000},
+ {label:"RUBY CRYSTAL",short:"RUBY",material:"ruby",need:81,decay:17.5,add:9.6,bonus:1000000},
+ {label:"DIAMOND",short:"DIAMOND",material:"diamond",need:91,decay:19,add:9.4,bonus:2000000}
 ];
 const KEY="bureau-test-your-might-unlocked-v1";
 let phase="intro",index=0,power=0,time=10,deadline=0,lastFrame=0,raf=0,score=0,best=0,audioOn=true,ctx=null,stopped=false;
@@ -278,13 +278,16 @@ function draw(){
  $("powerFill").style.width=power.toFixed(1)+"%";
  setText("powerLabel",Math.round(power)+"%");
  setText("time",Math.max(0,time).toFixed(1));
+ $("time").classList.toggle("is-urgent",phase==="charge"&&time<=3);
  $("powerTrack").style.setProperty("--target",stage.need+"%");
  setText("neededLabel","REQUIRED "+stage.need+"%");
  setText("levelLabel",String(index+1).padStart(2,"0")+" / 05");
- setText("score","SCORE / "+String(score).padStart(4,"0"));
+ setText("score","SCORE / "+score.toLocaleString("en-US"));
  const enough=power>=stage.need;
- $("strike").style.borderColor=enough?"#e1c391":"#af7c59";
- $("strike").style.boxShadow=enough?"0 0 0 1px #e1c39133,0 0 22px #a9865930":"none";
+ $("powerTrack").classList.toggle("is-ready",enough);
+ $("strike").classList.toggle("is-ready",enough);
+ $("panel").classList.toggle("is-ready",enough);
+ $("scene").classList.toggle("is-charging",phase==="charge"&&power>=stage.need*.6);
 }
 function setButtons(active){$("charge").disabled=!active;$("strike").disabled=!active}
 function prepareStage(){
@@ -325,7 +328,7 @@ function resultCover(success,reason){
  setButtons(false);
  if(success){
   const stage=stages[index];
-  score+=Math.round((1000+time*170)*(1+(power-stage.need)/100));
+  score+=stage.bonus+Math.round(time*1000);
   if(index+1>best){best=index+1;try{localStorage.setItem(KEY,String(best))}catch(e){}}
   $("best").textContent=best+" / 5";
   draw();
@@ -377,15 +380,15 @@ $("coverButton").addEventListener("click",()=>{
 document.addEventListener("keydown",event=>{
  if(event.repeat || event.altKey || event.metaKey || event.ctrlKey)return;
  const element=event.target;const tag=element&&element.tagName;
- if((event.code==="Space"||event.code==="Enter")&&phase==="charge"){
+ if((event.code==="Space"||event.code==="KeyA"||event.code==="KeyD"||event.code==="Enter")&&phase==="charge"){
   event.preventDefault();
-  if(event.code==="Space")tap();else strike();
+  if(event.code==="Enter")strike();else tap();
  }else if((event.code==="Space"||event.code==="Enter")&&phase!=="charge"&&tag!=="BUTTON"){
   event.preventDefault();$("coverButton").click();
  }
 });
 $("sound").addEventListener("click",()=>{audioOn=!audioOn;$("sound").textContent="SOUND "+(audioOn?"ON":"OFF");$("sound").setAttribute("aria-pressed",String(audioOn))});
-const burst=$("burst");for(let i=0;i<20;i++){let p=document.createElement("i");p.style.setProperty("--angle",i*18+"deg");p.style.setProperty("--distance","-"+(55+i%6*13)+"px");p.style.animationDelay=(i%5*25)+"ms";burst.appendChild(p)}
+const burst=$("burst");for(let i=0;i<34;i++){let p=document.createElement("i");p.style.setProperty("--angle",i*(360/34)+"deg");p.style.setProperty("--distance","-"+(75+i%8*18)+"px");p.style.animationDelay=(i%5*25)+"ms";burst.appendChild(p)}
 window.addEventListener("pagehide",()=>{cancelAnimationFrame(raf);if(ctx&&ctx.state==="running")ctx.close().catch(()=>{})});
 prepareStage();
 })();
