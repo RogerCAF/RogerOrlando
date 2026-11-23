@@ -16,21 +16,21 @@ export default function BruteForceLab(){
  const [secret,setSecret]=useState("cat");
  const [mode,setMode]=useState<Charset>("letters");
  const [status,setStatus]=useState<AuditState>("idle");
- const [count,setCount]=useState(0n);
+ const [count,setCount]=useState(BigInt(0));
  const [space,setSpace]=useState(BigInt(26**3));
  const [guess,setGuess]=useState("—");
  const [seconds,setSeconds]=useState(0);
  const [hash,setHash]=useState("");
  const [events,setEvents]=useState<string[]>(["[READY] Local SHA-256 auditing sandbox","[SAFE] Only test strings entered on this page"]);
- const cursor=useRef(0n),runId=useRef(0),running=useRef(false),target=useRef(""),startTime=useRef(0),previous=useRef(0);
+ const cursor=useRef(BigInt(0)),runId=useRef(0),running=useRef(false),target=useRef(""),startTime=useRef(0),previous=useRef(0);
  const config=useRef({mode: "letters" as Charset, length:3, alphabet:alphabets.letters, total:BigInt(26**3)});
  useEffect(()=>()=>{running.current=false;runId.current++;},[]);
  const feasible=mode==="dictionary"?secret.length>0:mode==="digits"?/^\d{1,24}$/.test(secret):mode==="letters"?/^[a-z]{1,24}$/.test(secret):/^[a-z0-9]{1,24}$/.test(secret);
  const maximum=24;
- const numberOfCandidates=mode==="dictionary"?BigInt(dictionaryCandidates.length):feasible?BigInt(alphabets[mode].length)**BigInt(secret.length):0n;
+ const numberOfCandidates=mode==="dictionary"?BigInt(dictionaryCandidates.length):feasible?BigInt(alphabets[mode].length)**BigInt(secret.length):BigInt(0);
  function reset(){
-  runId.current++;running.current=false;cursor.current=0n;previous.current=0;
-  setStatus("idle");setCount(0n);setSeconds(0);setGuess("—");setHash("");
+  runId.current++;running.current=false;cursor.current=BigInt(0);previous.current=0;
+  setStatus("idle");setCount(BigInt(0));setSeconds(0);setGuess("—");setHash("");
   setEvents(["[READY] Local SHA-256 auditing sandbox","[SAFE] No remote logins, networks or servers"]);
  }
  const setInput=(value:string)=>{setSecret(value.slice(0,32));reset();};
@@ -44,7 +44,7 @@ export default function BruteForceLab(){
   const id=++runId.current;
   running.current=true;
   if(!resume){
-   cursor.current=0n;previous.current=0;setCount(0n);setGuess("—");setSeconds(0);
+   cursor.current=BigInt(0);previous.current=0;setCount(BigInt(0));setGuess("—");setSeconds(0);
    const newHash=await digest(secret);
    if(id!==runId.current)return;
    target.current=newHash;setHash(newHash);
@@ -58,7 +58,7 @@ export default function BruteForceLab(){
   const batch=async()=>{
    if(id!==runId.current||!running.current)return;
    const total=config.current.total;
-   const end=cursor.current+30n<total?cursor.current+30n:total;
+   const end=cursor.current+BigInt(30)<total?cursor.current+BigInt(30):total;
    for(;cursor.current<end;cursor.current++){
     const trial=candidate(cursor.current);
     const value=await digest(trial);
@@ -72,7 +72,7 @@ export default function BruteForceLab(){
      return;
     }
    }
-   setCount(cursor.current);setGuess(candidate(cursor.current>0n?cursor.current-1n:0n));
+   setCount(cursor.current);setGuess(candidate(cursor.current>BigInt(0)?cursor.current-BigInt(1):BigInt(0)));
    setSeconds(previous.current+(performance.now()-startTime.current)/1000);
    if(cursor.current>=total){
     running.current=false;setStatus("exhausted");
@@ -83,7 +83,7 @@ export default function BruteForceLab(){
   void batch();
  }
  function pause(){previous.current+=(performance.now()-startTime.current)/1000;running.current=false;runId.current++;setStatus("paused");setEvents(old=>[...old.slice(-6),"[PAUSE] Candidate number "+cursor.current]);}
- const percentage=space>0n?Number(count*10000n/space)/100:0;
+ const percentage=space>BigInt(0)?Number(count*BigInt(10000)/space)/100:0;
  const button:React.CSSProperties={cursor:"pointer",border:"1px solid #355044",borderRadius:7,padding:"9px 14px",font:"inherit",fontSize:12,display:"inline-flex",alignItems:"center",gap:8,color:"#b6f9ca",background:"#11251d"};
  const field:React.CSSProperties={background:"#09120f",border:"1px solid #43604c",padding:"10px",borderRadius:6,color:"#f0fff3",font:"inherit",fontSize:13,maxWidth:"100%"};
  return <div style={{fontFamily:"ui-monospace,SFMono-Regular,Consolas,monospace",color:"#c8e6d0"}}>
