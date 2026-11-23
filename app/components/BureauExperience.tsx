@@ -1377,7 +1377,7 @@ export default function BureauExperience() {
             <div className="bureau-phone-intro">
               <span>POCKET ARCADE / 04 GAMES</span>
               <h2 id="bureau-phone-heading">Pick up &amp; play<span>.</span></h2>
-              <p>Vier mini-games in de telefoon op het bureau. Tik een spel om direct te beginnen.</p>
+              <p>Four games. One tiny screen. Questionable decisions guaranteed.</p>
             </div>
             <div className="bureau-phone-apps">
               <button type="button" onClick={() => setPhoneMode("sky")} className="bureau-phone-app bureau-phone-sky">
