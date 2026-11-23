@@ -246,3 +246,364 @@
   .bureau-ten-standalone .rg-ten-readout>strong {font-size:28px}
   .bureau-ten-standalone .rg-ten-instruction {font-size:9px;margin-bottom:3px}
 }
+
+
+/* DR. MONGO LABS / desktop-first precision reaction arcade.
+   Only the Mongo route is affected. Fully contained primary test surface,
+   separate scrolling world ranking, with no perpetual GPU animations. */
+.bureau-mongo-standalone {
+  width:100%;
+  height:100dvh;
+  min-height:0;
+  padding:clamp(8px,1.8vmin,21px);
+  overflow:hidden;
+  background:radial-gradient(ellipse 62% 64% at 45% 10%,#23333a,#10181f 64%,#090e16);
+}
+.bureau-mongo-standalone .mongo-app {
+  display:grid;
+  grid-template-rows:auto auto minmax(0,1fr);
+  width:100%;
+  max-width:1180px;
+  height:100%;
+  margin:auto;
+  min-width:0;
+  min-height:0;
+  gap:clamp(7px,1.5vmin,16px);
+}
+.mongo-eyebrow {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  font:800 10px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;
+  letter-spacing:.14em;
+  color:#aab4bc;
+}
+.mongo-eyebrow b {color:#967d60;margin:0 6px}
+.mongo-online {color:#8de6b2;font-size:9px;white-space:nowrap}
+.mongo-heading {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  min-width:0;
+  padding-bottom:clamp(5px,1vmin,12px);
+  border-bottom:1px solid #e0bc8150;
+}
+.mongo-kicker,.mongo-head-tag small,.mongo-board-kicker {
+  display:block;
+  color:#d3b88e;
+  font:800 clamp(8px,1.1vmin,10px)/1.25 ui-monospace,Consolas,monospace;
+  letter-spacing:.15em;
+}
+.mongo-heading h1 {
+  margin:4px 0 5px;
+  font-size:clamp(26px,4.1vmin,48px);
+  font-weight:900;
+  line-height:1.04;
+  letter-spacing:-.055em;
+  color:#f7f4e9;
+}
+.mongo-heading h1>span:first-child {color:#adbbc3}
+.mongo-heading .mongo-dot {color:#e6b978}
+.mongo-heading p {margin:0;color:#9aa9b4;font-size:clamp(10px,1.5vmin,12px);line-height:1.35}
+.mongo-head-tag {flex:0 0 auto;display:grid;gap:8px;text-align:right;border-left:1px solid #7f796a66;padding-left:18px}
+.mongo-head-tag b {color:#eee2ca;font:900 13px ui-monospace,Consolas,monospace;letter-spacing:.1em}
+.mongo-head-tag small {color:#859ba2;font-size:9px}
+.mongo-layout {
+  display:grid;
+  grid-template-columns:minmax(0,1.4fr) minmax(250px,.72fr);
+  min-width:0;
+  min-height:0;
+  gap:clamp(8px,1.6vw,18px);
+  overflow:hidden;
+}
+.mongo-lab,.mongo-leaderboard {
+  min-width:0;
+  min-height:0;
+  background:linear-gradient(165deg,#1c2931,#111b25 70%,#10171e);
+  border:1px solid #48606b99;
+  border-radius:12px;
+  box-shadow:0 14px 38px #0004;
+}
+.mongo-lab {
+  display:flex;
+  flex-direction:column;
+  gap:clamp(7px,1.2vmin,13px);
+  padding:clamp(11px,1.9vmin,19px);
+  overflow:hidden;
+}
+.mongo-lab-top {flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:22px}
+.mongo-lab-title {font:900 10px ui-monospace,Consolas,monospace;letter-spacing:.08em;color:#dfc79f}
+.mongo-lab-title span {color:#83949b}
+.mongo-live-state {display:flex;align-items:center;gap:7px;color:#b5c5cc;font:800 9px ui-monospace,Consolas,monospace;white-space:nowrap;letter-spacing:.045em}
+.mongo-live-state i {display:block;width:7px;height:7px;border-radius:50%;background:#d2b783}
+.mongo-live-state.waiting i {background:#ec9875}
+.mongo-live-state.go i {background:#5ff5a2;box-shadow:0 0 0 3px #78df9a2d}
+.mongo-live-state.early i {background:#ff797c}
+.mongo-target.bureau-reaction-target {
+  --mongo-glow:#b6a17d;
+  position:relative;
+  display:flex;
+  flex:1 1 auto;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  isolation:isolate;
+  min-height:150px;
+  width:100%;
+  padding:17px;
+  overflow:hidden;
+  border-radius:9px;
+  border:1px solid #b39b745f;
+  background:radial-gradient(ellipse 60% 90% at center,#3c4041,#202d34 63%,#1a262e);
+  color:#f8f2e8;
+  box-shadow:inset 0 0 0 1px #ffffff10,inset 0 0 44px #0004;
+  transition:background .14s linear,border-color .14s linear,transform .09s ease;
+  touch-action:manipulation;
+}
+.mongo-target.bureau-reaction-target.waiting {
+  --mongo-glow:#f2a276;
+  background:radial-gradient(ellipse 70% 90% at center,#a3473c,#672e2f 60%,#382429);
+  border-color:#da8c75;
+}
+.mongo-target.bureau-reaction-target.go {
+  --mongo-glow:#b6f5c5;
+  background:radial-gradient(ellipse 70% 95% at center,#31c88e,#148f62 63%,#0c563e);
+  border-color:#8bfec4;
+}
+.mongo-target.bureau-reaction-target.early {
+  --mongo-glow:#f9adab;
+  background:radial-gradient(ellipse 65% 90% at center,#b43a46,#782934 64%,#461d2b);
+  border-color:#eb8792;
+}
+.mongo-target.bureau-reaction-target.result {
+  --mongo-glow:#ffd7a5;
+  background:radial-gradient(ellipse 68% 92% at center,#6c594d,#363538 60%,#25262f);
+  border-color:#e7c48d;
+}
+.mongo-target:active {transform:scale(.997)}
+.mongo-target-corners {
+  position:absolute;z-index:0;
+  inset:clamp(10px,2.7vmin,25px);
+  border:1px solid color-mix(in srgb,var(--mongo-glow),transparent 73%);
+  pointer-events:none;
+}
+.mongo-target-corners:before,.mongo-target-corners:after {
+  content:"";position:absolute;width:22px;height:22px;
+  border-top:2px solid var(--mongo-glow);
+  border-left:2px solid var(--mongo-glow);
+}
+.mongo-target-corners:before {top:-1px;left:-1px}
+.mongo-target-corners:after {right:-1px;bottom:-1px;transform:rotate(180deg)}
+.mongo-target-orbit {
+  position:absolute;
+  width:min(38vmin,245px);
+  aspect-ratio:1;
+  max-height:85%;
+  border-radius:50%;
+  border:1px solid #ffffff33;
+  box-shadow:0 0 0 20px #ffffff08,0 0 0 43px #ffffff06;
+  pointer-events:none;
+}
+.mongo-target-copy {display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,1.5vmin,15px);position:relative;z-index:1;pointer-events:none;text-align:center}
+.mongo-target-kicker {
+  color:#ffdfb7;
+  font:800 clamp(8px,1.15vmin,10px)/1.2 ui-monospace,Consolas,monospace;
+  letter-spacing:.18em;
+  text-shadow:0 1px 7px #0008;
+}
+.mongo-target .mongo-target-copy strong {
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:clamp(34px,7.4vmin,83px);
+  line-height:1;
+  font-weight:950;
+  letter-spacing:-.065em;
+  color:#fff9ed;
+  text-shadow:0 3px 20px #0005;
+  white-space:nowrap;
+}
+.mongo-target-hint {
+  font:850 clamp(9px,1.4vmin,12px)/1.3 ui-monospace,Consolas,monospace;
+  color:#f8e9cf;
+  letter-spacing:.09em;
+  opacity:.93;
+}
+.mongo-target-bottom {
+  position:absolute;
+  left:clamp(13px,2.9vmin,27px);
+  right:clamp(13px,2.9vmin,27px);
+  bottom:clamp(10px,2.2vmin,22px);
+  display:flex;
+  justify-content:space-between;
+  gap:9px;
+  font:750 8px ui-monospace,Consolas,monospace;
+  color:#f4ebd2a3;
+  letter-spacing:.05em;
+  pointer-events:none;
+}
+.mongo-control-strip {
+  flex:0 0 auto;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;
+  gap:6px 14px;
+  color:#a8bdc4;
+  font:800 clamp(8px,1.05vmin,10px)/1.2 ui-monospace,Consolas,monospace;
+}
+.mongo-control-strip span {display:flex;align-items:center;gap:5px}
+.mongo-control-strip kbd {
+  padding:3px 6px;
+  min-width:27px;
+  text-align:center;
+  border:1px solid #627885;
+  border-bottom:2px solid #8299a6;
+  border-radius:4px;
+  background:#2a3944;
+  color:#ffe2b7;
+  font:800 9px ui-monospace,Consolas,monospace;
+}
+.mongo-stats {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;
+  flex:0 0 auto;
+}
+.mongo-stat {
+  background:#101b24c7;
+  border:1px solid #4f64735e;
+  border-radius:7px;
+  padding:clamp(8px,1.3vmin,13px);
+  min-width:0;
+}
+.mongo-stat small {
+  display:block;
+  color:#92a6b1;
+  font:800 clamp(7px,1vmin,9px)/1.2 ui-monospace,Consolas,monospace;
+  letter-spacing:.08em;
+  min-height:15px;
+}
+.mongo-stat strong {
+  display:block;
+  margin-top:6px;
+  color:#f1d2a3;
+  font:900 clamp(20px,3.2vmin,33px)/1 system-ui,sans-serif;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.045em;
+}
+.mongo-stat strong em {font:800 clamp(9px,1.25vmin,12px) ui-monospace,Consolas,monospace;font-style:normal;letter-spacing:0;color:#b1bbc0}
+.mongo-lab-footer {
+  flex:0 0 auto;
+  display:flex;justify-content:space-between;
+  gap:10px;align-items:center;
+  color:#94a9b3;
+  font:800 8px/1.2 ui-monospace,Consolas,monospace;
+  letter-spacing:.07em;
+  white-space:nowrap;
+}
+.mongo-lab-footer span:first-child {color:#e1c39b}
+.mongo-leaderboard {
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  padding:clamp(12px,1.8vmin,20px);
+  gap:clamp(8px,1.2vmin,13px);
+}
+.mongo-board-title {flex:0 0 auto}
+.mongo-board-title h2 {font-size:clamp(23px,3.3vmin,36px);line-height:1.05;font-weight:950;letter-spacing:-.06em;margin:6px 0;color:#f9f3e9}
+.mongo-board-title h2 em {color:#f3c38a;font-style:normal}
+.mongo-board-title p {margin:0;color:#91a5b2;font-size:10px;line-height:1.4}
+.mongo-player-name {flex:0 0 auto;display:grid;gap:6px}
+.mongo-player-name span {font:850 9px ui-monospace,Consolas,monospace;letter-spacing:.1em;color:#e4c298}
+.mongo-player-name input {
+  width:100%;min-width:0;
+  padding:10px 11px;
+  border:1px solid #5f7580;
+  border-radius:5px;
+  outline:none;
+  background:#0d1821;
+  color:#fff0dc;
+  font:850 12px ui-monospace,Consolas,monospace;
+  text-transform:uppercase;
+}
+.mongo-player-name input:focus-visible {border-color:#eaca9c;outline:2px solid #eaca9c66}
+.mongo-board-status {
+  flex:0 0 auto;
+  font:700 9px/1.4 ui-monospace,Consolas,monospace;
+  color:#93adba;
+  min-height:15px;
+}
+.mongo-rank-header {
+  flex:0 0 auto;
+  display:flex;justify-content:space-between;
+  color:#d3b78b;
+  padding:0 0 7px;
+  border-bottom:1px solid #c8b39254;
+  font:850 9px ui-monospace,Consolas,monospace;
+  letter-spacing:.1em;
+}
+.mongo-ranking {
+  display:flex;
+  flex:1 1 auto;
+  flex-direction:column;
+  min-height:0;
+  margin:0;
+  padding:0;
+  list-style:none;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+}
+.mongo-ranking li:not(.mongo-rank-empty) {
+  display:grid;
+  grid-template-columns:32px minmax(0,1fr) auto;
+  align-items:center;
+  gap:7px;
+  border-bottom:1px solid #ffffff14;
+  min-height:34px;
+  padding:6px 2px;
+}
+.mongo-rank-number {color:#8c9eaa;font:800 10px ui-monospace,Consolas,monospace}
+.mongo-ranking li:first-child .mongo-rank-number {color:#f4cb88}
+.mongo-rank-name {color:#edf1ef;font:850 11px ui-monospace,Consolas,monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mongo-ranking strong {color:#f0d09c;font:900 13px ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.mongo-ranking strong small {color:#93a6af;font-size:9px}
+.mongo-rank-empty {padding:16px 0;color:#9baeb7;font-size:11px;line-height:1.5}
+.mongo-board-footer {flex:0 0 auto;display:flex;justify-content:space-between;gap:7px;color:#8098a2;font:700 8px ui-monospace,Consolas,monospace;letter-spacing:.05em}
+.mongo-board-footer span {color:#a78a67}
+@media(max-width:780px) {
+ .bureau-mongo-standalone {height:auto;min-height:100dvh;overflow-y:auto;overflow-x:hidden;padding:10px}
+ .bureau-mongo-standalone .mongo-app {height:auto;min-height:0;display:flex;flex-direction:column;gap:9px}
+ .mongo-heading {gap:8px}
+ .mongo-heading h1 {font-size:clamp(27px,6.5vw,36px)}
+ .mongo-head-tag {display:none}
+ .mongo-layout {display:flex;flex-direction:column;overflow:visible;gap:9px}
+ .mongo-lab {height:auto;gap:9px;padding:11px}
+ .mongo-target.bureau-reaction-target {height:clamp(225px,42dvh,355px);flex:none;min-height:225px;padding:12px}
+ .mongo-target .mongo-target-copy strong {font-size:clamp(36px,10vw,62px)}
+ .mongo-target-orbit {width:min(53vw,210px)}
+ .mongo-stats {gap:5px}
+ .mongo-stat {padding:9px}
+ .mongo-stat strong {font-size:clamp(19px,5vw,27px)}
+ .mongo-leaderboard {height:auto;min-height:350px;max-height:530px;padding:14px}
+ .mongo-ranking {min-height:160px}
+}
+@media(max-height:590px) and (min-width:781px) {
+ .bureau-mongo-standalone {padding:7px}
+ .mongo-heading {padding-bottom:5px}
+ .mongo-heading h1 {font-size:clamp(24px,4.6vmin,33px)}
+ .mongo-heading p {display:none}
+ .mongo-lab {padding:9px;gap:6px}
+ .mongo-target.bureau-reaction-target {min-height:120px;padding:8px}
+ .mongo-target .mongo-target-copy strong {font-size:clamp(29px,8vmin,49px)}
+ .mongo-target-copy {gap:5px}
+ .mongo-target-bottom {display:none}
+ .mongo-stat {padding:6px}
+ .mongo-stat strong {margin-top:4px;font-size:20px}
+ .mongo-leaderboard {padding:9px;gap:6px}
+ .mongo-board-title h2 {font-size:24px}
+ .mongo-board-title p {display:none}
+ .mongo-player-name input {padding:6px}
+}
+@media(prefers-reduced-motion:reduce) {
+ .mongo-target.bureau-reaction-target {transition:none}
+}
