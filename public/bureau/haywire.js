@@ -156,7 +156,7 @@
       "<div class='hw-layout'><div class='hw-main'>"+
       "<section class='hw-pit'><div class='hw-pit-head'><span>THE BAG'S INSIDES</span><span id='hw-pit-stage'>"+current.name+"</span></div><h2>"+current.name+"</h2><div class='hw-pit-sub'>"+current.sub+"</div>"+
       "<div class='hw-dig' id='hw-dig'>"+
-      "<div class='hw-glow'></div><div class='hw-bag-rim' aria-hidden='true'></div>"+
+      "<div class='hw-glow'></div><div class='hw-bag-rim' aria-hidden='true'><span class='hw-rim-stitches'></span></div><div class='hw-ripped-shell' aria-hidden='true'><span class='hw-tear-cavity'></span><span class='hw-tear-fiber hw-fiber-a'></span><span class='hw-tear-fiber hw-fiber-b'></span><span class='hw-tear-fiber hw-fiber-c'></span><span class='hw-bag-flap hw-bag-flap-left'></span><span class='hw-bag-flap hw-bag-flap-right'></span><span class='hw-hanging-thread hw-thread-a'></span><span class='hw-hanging-thread hw-thread-b'></span></div>"+
       "<button class='hw-hay' id='hw-hay' type='button' data-act='dig' aria-label='Search through the hay' "+(s.signal||s.found?"disabled":"")+"><span class='hw-straw-texture' aria-hidden='true'></span><span class='hw-scoop-label' id='hw-scoop-label'>"+(s.signal?'SIGNAL FOUND':s.found?'NEEDLE FOUND':'CLICK TO SEARCH')+"</span><span class='hw-fx' aria-hidden='true'></span></button>"+
       "<div class='hw-needle"+(s.signal||s.found?' show':'')+"' aria-hidden='true'><span></span></div>"+
       "</div>"+
