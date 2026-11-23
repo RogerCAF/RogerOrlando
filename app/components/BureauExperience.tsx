@@ -865,7 +865,8 @@ export default function BureauExperience() {
         secondary.className = "bureau-secondary-display";
         secondary.setAttribute("aria-label", "Open live crypto top 10 op het kleine linker scherm");
         secondary.title = "LIVE CRYPTO TOP 10 — KLIK OM TE OPENEN";
-        secondary.innerHTML = '<span class="bureau-crypto-secondary-title">CRYPTO / TOP 10</span><span class="bureau-crypto-secondary-line">BTC &nbsp; ETH &nbsp; SOL</span><span class="bureau-crypto-secondary-action">OPEN LIVE ↗</span>';
+        // The screen must be neutral before interaction: reveal crypto ONLY after click.
+        secondary.innerHTML = "";
         secondary.addEventListener("click", (event) => {
           event.preventDefault();
           event.stopPropagation();
@@ -1008,25 +1009,17 @@ export default function BureauExperience() {
           width: 16% !important;
           height: 38.5% !important;
           z-index: 60 !important;
-          background: linear-gradient(150deg, #102126f2, #071116f2) !important;
-          color: #dcf2e2 !important;
-          border: 1px solid #38544a !important;
-          display: flex !important;
-          flex-direction: column !important;
-          align-items: center !important;
-          justify-content: center !important;
-          gap: 12% !important;
+          background: linear-gradient(145deg, #17242bf5, #060c13f5) !important;
+          color: transparent !important;
+          border: 1px solid #3b474b !important;
+          display: block !important;
           cursor: pointer !important;
           overflow: hidden !important;
-          font: 600 clamp(8px, 1.1vw, 16px) ui-monospace, monospace !important;
-          letter-spacing: .05em !important;
-          text-align: center !important;
         }
-        .bureau-embed .bureau-secondary-display span { color: #c5ebd4 !important; text-shadow: 0 1px 3px #030806 !important; }
-        .bureau-embed .bureau-secondary-display .bureau-crypto-secondary-title { color: #d3b88b !important; font-weight: 800 !important; }
-        .bureau-embed .bureau-secondary-display .bureau-crypto-secondary-line { font-size: .72em !important; }
-        .bureau-embed .bureau-secondary-display .bureau-crypto-secondary-action { background: #1e493b; padding: .55em .8em; border-radius: 4px; font-size: .75em !important; }
-        .bureau-embed .bureau-secondary-display:hover .bureau-crypto-secondary-action { background: #32664f; }
+        .bureau-embed .bureau-secondary-display:hover {
+          border-color: #78948c !important;
+          background: linear-gradient(145deg, #1a2b33f5, #08121af5) !important;
+        }
         .bureau-embed .spot[data-open="bag"] {
           left: 4.3% !important;
           top: 11.2% !important;
