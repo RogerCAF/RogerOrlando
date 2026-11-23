@@ -100,7 +100,7 @@ export default function TenSecondChallenge() {
 
   return <section className="rg-ten-section" aria-label="Speel 10.00 seconden timinggame">
     <div className="rg-ten-head">
-      <div><span className="rg-ten-kicker">BONUS EXPERIMENT / 10.00</span><h2>Ten seconds. <em>One shot.</em></h2>
+      <div><span className="rg-ten-kicker">KAYA’S BUTTON / 10.00</span><h2>Kaya’s Button. <em>Don’t push it.</em></h2>
       <p>Klik op START om de timer te starten en op STOP wanneer je denkt dat precies 10.00 seconden voorbij zijn. Je beste score en laatste pogingen blijven op dit apparaat bewaard.</p></div>
       <span className="rg-ten-edition">ARCADE / 002</span>
     </div>
