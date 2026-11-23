@@ -38,7 +38,7 @@ export default function BureauDesktop({onClose}:{onClose:()=>void}){
    setWallpaper(data);setWallpaperError("");
   }catch{setWallpaperError("Je browser kon de originele afbeelding niet bewaren. Probeer een andere browser.");}
  };
- const icons=[...(Object.keys(files) as FolderName[]).map(name=>({name,type:"folder" as const})),...tools.map(name=>({name,type:"tool" as const}))];
+ const leftFolders=(Object.keys(files) as FolderName[]).filter(name=>name!=="Recycle Bin");
  return <div role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)onClose();}} style={{position:"fixed",inset:0,zIndex:100000,background:"rgba(3,5,9,.88)",display:"grid",placeItems:"center",padding:15}}>
  <section role="dialog" aria-modal="true" aria-label="Personal desktop" style={{width:"min(1200px,97vw)",height:"min(745px,91vh)",minHeight:420,position:"relative",overflow:"hidden",border:"1px solid #625446",borderRadius:13,boxShadow:"0 35px 110px #000",background:wallpaper?`linear-gradient(#06080b33,#06080b33),url("${wallpaper}") center/cover no-repeat`:`url("${originalAvailable?"/bureau/Universum.jpg":"/bureau/universum-wallpaper.svg"}") center/cover no-repeat`,color:"#e7e4e0",fontFamily:"system-ui,sans-serif"}}>
  
@@ -49,10 +49,18 @@ export default function BureauDesktop({onClose}:{onClose:()=>void}){
  <button onClick={onClose} aria-label="Close desktop" style={{...buttonStyle,background:"#20262c",padding:9}}><X size={18}/></button>
  </div>
  {wallpaperError&&<p role="alert" style={{position:"absolute",top:58,right:16,zIndex:5,color:"#ffb0a0",background:"#131516",padding:8,fontSize:11}}>{wallpaperError}</p>}
- <div style={{position:"relative",padding:"28px 21px 68px",width:"min(700px,95%)",height:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"repeat(4,minmax(0,1fr))",gridAutoRows:105,gap:"8px 10px",alignContent:"start",overflowY:"auto"}}>
- {icons.map((entry,i)=>{const ToolIcon=toolIcons[i-4]||Search;const FolderIcon=entry.name==="Recycle Bin"?Trash2:Folder;return <button key={entry.name} onClick={()=>{if(entry.type==="folder"){setFolder(entry.name as FolderName);setTool(null);}else{setTool(entry.name as SecurityTool);setFile(null);}}} style={{...buttonStyle,flexDirection:"column",alignItems:"center",justifyContent:"start",gap:7,textAlign:"center",fontSize:11,textShadow:"0 1px 4px #000,0 1px 8px #000",minWidth:0}}>
- {entry.type==="folder"?<FolderIcon size={37} strokeWidth={1.4} color="#e9c17e" style={{filter:"drop-shadow(0 2px 7px #000a)"}}/>:<ToolIcon size={36} strokeWidth={1.5} color="#91dec1" style={{filter:"drop-shadow(0 2px 7px #000a)"}}/>}
- <span style={{overflowWrap:"anywhere"}}>{entry.name}</span></button>})}
+ {/* Folders are aligned down the left edge, leaving the wallpaper clear. */}
+ <div style={{position:"absolute",left:15,top:24,bottom:155,width:110,display:"flex",flexDirection:"column",gap:15,alignItems:"center",overflowY:"auto",zIndex:1}}>
+ {leftFolders.map(name=><button key={name} onClick={()=>{setFolder(name);setTool(null);setFile(null);}} style={{...buttonStyle,flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center",gap:6,width:100,minHeight:78,fontSize:11,textShadow:"0 1px 5px #000,0 1px 9px #000"}}>
+ <Folder size={36} color="#e9c17e" strokeWidth={1.5} style={{filter:"drop-shadow(0 2px 7px #000a)"}}/><span>{name}</span></button>)}
+ </div>
+ {/* Recycle bin sits in the upper-right, clear of the window controls. */}
+ <button onClick={()=>{setFolder("Recycle Bin");setTool(null);setFile(null);}} style={{...buttonStyle,position:"absolute",right:17,top:70,width:102,flexDirection:"column",alignItems:"center",textAlign:"center",gap:7,fontSize:11,textShadow:"0 1px 5px #000,0 1px 9px #000",zIndex:1}}>
+ <Trash2 size={37} strokeWidth={1.5} color="#e9c17e"/><span>Recycle Bin</span></button>
+ {/* A compact bottom row of security tools, just above the OS taskbar. */}
+ <div role="group" aria-label="Security programs" style={{position:"absolute",left:"50%",bottom:51,transform:"translateX(-50%)",width:"min(710px,calc(100% - 28px))",display:"grid",gridTemplateColumns:"repeat(5,minmax(0,1fr))",gap:4,padding:"9px 8px 5px",border:"1px solid #ffffff33",borderRadius:13,background:"rgba(7,13,18,.45)",backdropFilter:"blur(8px)",zIndex:1}}>
+ {tools.map((name,i)=>{const ToolIcon=toolIcons[i];return <button key={name} onClick={()=>{setTool(name);setFile(null);}} style={{...buttonStyle,flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center",gap:6,padding:"7px 2px",minWidth:0,fontSize:11,textShadow:"0 1px 5px #000,0 1px 9px #000"}}>
+ <ToolIcon size={31} strokeWidth={1.5} color="#91dec1" style={{filter:"drop-shadow(0 2px 7px #000a)"}}/><span style={{overflowWrap:"anywhere"}}>{name}</span></button>})}
  </div>
  <div style={{position:"absolute",bottom:0,left:0,right:0,minHeight:45,background:"rgba(5,9,14,.86)",borderTop:"1px solid #45474a",display:"flex",alignItems:"center",gap:12,padding:"0 19px",fontSize:11,color:"#ddd4ca",backdropFilter:"blur(10px)"}}><Monitor size={17}/> ROGER OS <span style={{marginLeft:"auto"}}>PRIVATE WORKSTATION</span></div>
  {folder&&<div style={{position:"absolute",zIndex:2,top:"15%",left:"min(12%,95px)",width:"min(690px,83%)",height:"min(420px,67%)",background:"#121820",border:"1px solid #4b514f",borderRadius:12,boxShadow:"0 24px 70px #000b",overflow:"auto"}}>
