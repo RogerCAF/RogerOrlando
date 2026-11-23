@@ -62,3 +62,34 @@
  .bureau-arcade-foot{padding:12px 15px 14px;font-size:9px}
 }
 @media(prefers-reduced-motion:reduce){.bureau-arcade-overlay{animation:none}.bureau-arcade-card,.bureau-arcade-card em svg,.bureau-arcade-close{transition:none}}
+
+/* Unified ROGER.OS Projects directory: distinct desktop experiences and Pocket Arcade. */
+.bureau-projects-shell{width:min(100%,970px)}
+.bureau-projects-shell .bureau-arcade-intro{padding-bottom:16px}
+.bureau-projects-section{padding-bottom:9px}
+.bureau-projects-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 clamp(17px,3.5vw,33px) 13px}
+.bureau-projects-section-head h3{font:850 11px ui-monospace,monospace;letter-spacing:.13em;color:#f0c28b;margin:0}
+.bureau-projects-section-head>span{font:750 9px ui-monospace,monospace;letter-spacing:.08em;color:#8d969d}
+.bureau-projects-section .bureau-arcade-grid{padding-bottom:10px}
+.bureau-projects-section .bureau-arcade-card{min-height:175px}
+.bureau-projects-pocket{border-top:1px solid #ffffff19;padding-top:19px;margin-top:5px}
+.bureau-projects-phone-card{background:linear-gradient(137deg,#202e3b,#151c29)!important}
+.bureau-projects-phone-card .bureau-arcade-card-icon{color:#9fbed0}
+.bureau-projects-classified{background:linear-gradient(140deg,#302725,#1d1b1c)!important;border-color:#ba895344!important}
+.bureau-projects-classified .bureau-arcade-card-icon{color:#d1a26b}
+.bureau-projects-shell .bureau-arcade-foot{margin-top:5px}
+@media(min-width:730px){
+ .bureau-projects-shell .bureau-arcade-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+ .bureau-projects-shell .bureau-arcade-card{min-height:230px;padding:14px}
+ .bureau-projects-shell .bureau-arcade-card strong{font-size:17px;margin:35px 0 9px}
+ .bureau-projects-shell .bureau-arcade-card>span:not(.bureau-arcade-card-index){max-width:none}
+ .bureau-projects-shell .bureau-arcade-card-icon{right:14px;top:15px;width:28px;height:28px}
+}
+@media(max-width:729px) and (min-width:621px){.bureau-projects-shell .bureau-arcade-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){
+ .bureau-projects-section-head{padding:0 13px 10px}
+ .bureau-projects-section-head h3{font-size:10px}
+ .bureau-projects-section-head>span{font-size:8px}
+ .bureau-projects-section .bureau-arcade-card{min-height:115px}
+ .bureau-projects-pocket{padding-top:14px}
+}
