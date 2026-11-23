@@ -47,6 +47,8 @@ export default function Play() {
   const [embedded, setEmbedded] = useState(false);
   const [ready, setReady] = useState(false);
   const [accessGranted, setAccessGranted] = useState(false);
+  const [notebookSigned, setNotebookSigned] = useState(false);
+  const [perfectTenDone, setPerfectTenDone] = useState(false);
   const [stage, setStage] = useState(0);
   const [dial, setDial] = useState(380);
   const [cipher, setCipher] = useState("");
@@ -61,8 +63,16 @@ export default function Play() {
   useEffect(() => {
     const check = () => {
       try {
-        setAccessGranted(localStorage.getItem("bureau-signed") === "yes" || localStorage.getItem("bureau-perfect-ten") === "yes");
-      } catch { setAccessGranted(false); }
+        const signed = localStorage.getItem("bureau-signed") === "yes";
+        const perfect = localStorage.getItem("bureau-perfect-ten") === "yes";
+        setNotebookSigned(signed);
+        setPerfectTenDone(perfect);
+        setAccessGranted(signed && perfect);
+      } catch {
+        setNotebookSigned(false);
+        setPerfectTenDone(false);
+        setAccessGranted(false);
+      }
     };
     check();
     window.addEventListener("storage", check);
@@ -236,13 +246,23 @@ export default function Play() {
       <span className="bureau-secret-kicker">THE BUREAU / CLASSIFIED FILE 030</span>
       <LockKeyhole size={45} strokeWidth={1.2} aria-hidden="true"/>
       <h1>THE UNFINISHED<br/><em>PROJECT.</em></h1>
-      <strong>ACCESS DENIED. NICE TRY.</strong>
-      <p>Two ways in. Leave your name in the notebook, or nail exactly 10.00 seconds on the red button. No shortcuts.</p>
+      <strong>ACCESS DENIED. BOTH REQUIRED.</strong>
+      <p>The archive opens only after you complete <b>both</b> challenges. No shortcuts.</p>
+      <div className="bureau-secret-checks" aria-label="Unlock requirements">
+        <div className={`bureau-secret-check ${notebookSigned ? "done" : ""}`}>
+          <span aria-hidden="true">{notebookSigned ? "✓" : "○"}</span>
+          <div><b>SIGN THE NOTEBOOK</b><small>{notebookSigned ? "SIGNED / REQUIREMENT COMPLETE" : "Leave your name in the guestbook."}</small></div>
+        </div>
+        <div className={`bureau-secret-check ${perfectTenDone ? "done" : ""}`}>
+          <span aria-hidden="true">{perfectTenDone ? "✓" : "○"}</span>
+          <div><b>HIT EXACTLY 10.00</b><small>{perfectTenDone ? "PERFECT STOP / REQUIREMENT COMPLETE" : "Stop Kaya’s Button at exactly 10.00 seconds."}</small></div>
+        </div>
+      </div>
       <div className="bureau-secret-options">
         <Link href="/bureau/guestbook">SIGN THE NOTEBOOK <ArrowRight size={16}/></Link>
-        <Link href="/arcade/ten">BEAT THE RED BUTTON <ArrowRight size={16}/></Link>
+        <Link href="/arcade/ten">PLAY KAYA’S BUTTON <ArrowRight size={16}/></Link>
       </div>
-      <small>ONCE UNLOCKED, THIS BROWSER REMEMBERS.</small>
+      <small>2/2 REQUIRED · THIS BROWSER REMEMBERS YOUR PROGRESS.</small>
     </section>
     <style>{`
       .bureau-secret-gate{min-height:100dvh;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 32%,#403126,#101315 70%);color:#f4e7d1;font-family:ui-sans-serif,system-ui,sans-serif}
@@ -253,6 +273,13 @@ export default function Play() {
       .bureau-secret-lock h1 em{color:#e3ad69;font-style:normal}
       .bureau-secret-lock strong{color:#f3ca92;font:900 13px ui-monospace,monospace;letter-spacing:.1em}
       .bureau-secret-lock p{font-size:14px;line-height:1.7;color:#c6b6a5;margin:18px auto 24px}
+      .bureau-secret-checks{display:grid;gap:10px;margin:0 0 22px}
+      .bureau-secret-check{display:flex;align-items:center;gap:13px;text-align:left;padding:14px 16px;border:1px solid #8e6f4d66;border-radius:11px;background:linear-gradient(120deg,#27211c,#19191a)}
+      .bureau-secret-check.done{border-color:#d0a36a;background:linear-gradient(120deg,#382b1d,#211e1b)}
+      .bureau-secret-check>span{display:grid;place-items:center;width:31px;height:31px;flex:none;border:1px solid #96734a;border-radius:50%;color:#d3ab74;font:900 18px ui-monospace,monospace}
+      .bureau-secret-check.done>span{background:#806035;color:#fff0c9;border-color:#f1c990}
+      .bureau-secret-check b{display:block;color:#f5d8a9;font:800 11px ui-monospace,monospace;letter-spacing:.065em}
+      .bureau-secret-check small{display:block;margin:6px 0 0!important;color:#bca994!important;font:11px/1.5 ui-monospace,monospace!important;letter-spacing:0!important}
       .bureau-secret-options{display:grid;gap:9px}
       .bureau-secret-options a{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 17px;border:1px solid #b18b5a7b;color:#f5d8a9;background:#2a251e;text-decoration:none;font:800 11px ui-monospace,monospace;letter-spacing:.06em}
       .bureau-secret-options a:hover{background:#493620}
