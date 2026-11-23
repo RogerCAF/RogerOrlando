@@ -1,98 +1,129 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import { Play, Pause, RotateCcw, ShieldCheck, X } from "lucide-react";
+import {useEffect,useRef,useState} from "react";
+import {Play,Pause,RotateCcw,ShieldCheck} from "lucide-react";
 
-const enc = new TextEncoder();
-const hex = (bytes: ArrayBuffer) => [...new Uint8Array(bytes)].map(v=>v.toString(16).padStart(2,"0")).join("");
-async function sha256(text: string) { return hex(await crypto.subtle.digest("SHA-256",enc.encode(text))); }
-type State = "idle" | "running" | "paused" | "found" | "exhausted";
-
-export default function BruteForceLab() {
- const [pin,setPin] = useState("0420");
- const [status,setStatus] = useState<State>("idle");
- const [attempts,setAttempts] = useState(0);
- const [elapsed,setElapsed] = useState(0);
- const [candidate,setCandidate] = useState("----");
- const [targetHash,setTargetHash] = useState("");
- const [logs,setLogs] = useState<string[]>(["LOCAL HASH AUDIT · SHA-256","Target: four-digit demo PIN only","No network or login requests"]);
- const cursor=useRef(0);
- const token=useRef(0);
- const started=useRef(0);
- const baseElapsed=useRef(0);
- const target=useRef("");
- const active=useRef(false);
-
- useEffect(()=>()=>{token.current++;active.current=false;},[]);
- async function start(resume=false) {
-  token.current++;
-  const run=token.current;
-  active.current=true;
-  if(!resume) {
-   cursor.current=0;
-   baseElapsed.current=0;
-   setElapsed(0);setAttempts(0);setCandidate("----");
-   const digest=await sha256(pin);
-   if(token.current!==run)return;
-   target.current=digest;
-   setTargetHash(digest);
-   setLogs(["[INIT] Local SHA-256 hash generated","[TARGET] sha256: "+digest.slice(0,28)+"…","[MODE] Numeric mask ?d?d?d?d","[SPACE] 10,000 unique candidates","[RUN] Comparing SHA-256 digests locally"]);
-  } else {
-   setLogs(old=>[...old.slice(-5),"[RESUME] Continuing keyspace search"]);
-  }
-  started.current=performance.now();
-  setStatus("running");
+type AuditState="idle"|"running"|"paused"|"found"|"exhausted";
+type Charset="digits"|"letters"|"alphanumeric"|"dictionary";
+const alphabets:Record<Exclude<Charset,"dictionary">,string>={
+ digits:"0123456789",letters:"abcdefghijklmnopqrstuvwxyz",alphanumeric:"abcdefghijklmnopqrstuvwxyz0123456789"
+};
+const dictionary=["admin","password","welcome","letmein","secret","hello","monkey","dragon","qwerty","computer","hacker","test","roger","nasa","world","sunshine","love","coffee","1234","12345","123456"];
+const encoder=new TextEncoder();
+async function digest(value:string){const bytes=new Uint8Array(await crypto.subtle.digest("SHA-256",encoder.encode(value)));return Array.from(bytes,n=>n.toString(16).padStart(2,"0")).join("");}
+function combination(i:number,alphabet:string,length:number){let result="";for(let pos=0;pos<length;pos++){result=alphabet[i%alphabet.length]+result;i=Math.floor(i/alphabet.length);}return result;}
+export default function BruteForceLab(){
+ const [secret,setSecret]=useState("cat");
+ const [mode,setMode]=useState<Charset>("letters");
+ const [status,setStatus]=useState<AuditState>("idle");
+ const [count,setCount]=useState(0);
+ const [space,setSpace]=useState(26**3);
+ const [guess,setGuess]=useState("—");
+ const [seconds,setSeconds]=useState(0);
+ const [hash,setHash]=useState("");
+ const [events,setEvents]=useState<string[]>(["[READY] Local SHA-256 auditing sandbox","[SAFE] Only test strings entered on this page"]);
+ const cursor=useRef(0),runId=useRef(0),running=useRef(false),target=useRef(""),startTime=useRef(0),previous=useRef(0);
+ const config=useRef({mode: "letters" as Charset, length:3, alphabet:alphabets.letters, total:26**3});
+ useEffect(()=>()=>{running.current=false;runId.current++;},[]);
+ const feasible=mode==="dictionary"?true:mode==="digits"?/^\d{1,5}$/.test(secret):mode==="letters"?/^[a-z]{1,4}$/.test(secret):/^[a-z0-9]{1,4}$/.test(secret);
+ const maximum=mode==="digits"?5:4;
+ const numberOfCandidates=mode==="dictionary"?dictionary.length:feasible?alphabets[mode].length**secret.length:0;
+ function reset(){
+  runId.current++;running.current=false;cursor.current=0;previous.current=0;
+  setStatus("idle");setCount(0);setSeconds(0);setGuess("—");setHash("");
+  setEvents(["[READY] Local SHA-256 auditing sandbox","[SAFE] No remote logins, networks or servers"]);
+ }
+ const setInput=(value:string)=>{setSecret(value.slice(0,14).toLowerCase());reset();};
+ const setStrategy=(value:Charset)=>{setMode(value);reset();};
+ const candidate=(n:number)=>{
+  const cfg=config.current;
+  return cfg.mode==="dictionary"?dictionary[n]??"":combination(n,cfg.alphabet,cfg.length);
+ };
+ async function run(resume=false){
+  if(!resume&&!feasible)return;
+  const id=++runId.current;
+  running.current=true;
+  if(!resume){
+   cursor.current=0;previous.current=0;setCount(0);setGuess("—");setSeconds(0);
+   const newHash=await digest(secret);
+   if(id!==runId.current)return;
+   target.current=newHash;setHash(newHash);
+   const alphabet=mode==="dictionary"?"":alphabets[mode];
+   const total=mode==="dictionary"?dictionary.length:alphabet.length**secret.length;
+   config.current={mode,length:secret.length,alphabet,total};
+   setSpace(total);
+   setEvents(["[INIT] SHA-256 target hash generated locally","[MODE] "+mode.toUpperCase(),"[KEYSPACE] "+total.toLocaleString("en-US")+" candidates","[RUN] Hashing each candidate individually"]);
+  }else setEvents(old=>[...old.slice(-5),"[RESUME] Continuing from attempt "+cursor.current]);
+  startTime.current=performance.now();setStatus("running");
   const batch=async()=>{
-   if(!active.current||run!==token.current)return;
-   const limit=Math.min(cursor.current+12,10000);
-   for(;cursor.current<limit;cursor.current++) {
-    const guess=String(cursor.current).padStart(4,"0");
-    const digest=await sha256(guess);
-    if(!active.current||run!==token.current)return;
-    setCandidate(guess);
-    if(digest===target.current) {
+   if(id!==runId.current||!running.current)return;
+   const total=config.current.total;
+   const end=Math.min(cursor.current+30,total);
+   for(;cursor.current<end;cursor.current++){
+    const trial=candidate(cursor.current);
+    const value=await digest(trial);
+    if(id!==runId.current||!running.current)return;
+    if(value===target.current){
      cursor.current++;
-     setAttempts(cursor.current);
-     setElapsed(baseElapsed.current+(performance.now()-started.current)/1000);
-     active.current=false;
-     setStatus("found");
-     setLogs(old=>[...old.slice(-6),"[MATCH] sha256("+guess+") equals target","[SUCCESS] Demo PIN recovered: "+guess]);
+     setCount(cursor.current);setGuess(trial);
+     setSeconds(previous.current+(performance.now()-startTime.current)/1000);
+     running.current=false;setStatus("found");
+     setEvents(old=>[...old.slice(-6),"[MATCH] SHA-256 digest verified","[SUCCESS] Test password recovered: "+trial]);
      return;
     }
    }
-   setAttempts(cursor.current);
-   setElapsed(baseElapsed.current+(performance.now()-started.current)/1000);
-   if(cursor.current>=10000){active.current=false;setStatus("exhausted");setLogs(old=>[...old.slice(-6),"[DONE] Exhausted 10,000 candidates"]);return;}
-   window.setTimeout(batch,15);
+   setCount(cursor.current);setGuess(candidate(Math.max(0,cursor.current-1)));
+   setSeconds(previous.current+(performance.now()-startTime.current)/1000);
+   if(cursor.current>=total){
+    running.current=false;setStatus("exhausted");
+    setEvents(old=>[...old.slice(-6),"[EXHAUSTED] No match in selected search space"]);return;
+   }
+   window.setTimeout(()=>void batch(),12);
   };
   void batch();
  }
- function pause(){baseElapsed.current+=(performance.now()-started.current)/1000;active.current=false;token.current++;setStatus("paused");setLogs(old=>[...old.slice(-6),"[PAUSED] Search paused at candidate "+String(cursor.current).padStart(4,"0")]);}
- function reset(){active.current=false;token.current++;cursor.current=0;baseElapsed.current=0;setStatus("idle");setAttempts(0);setElapsed(0);setTargetHash("");setCandidate("----");setLogs(["LOCAL HASH AUDIT · SHA-256","Target: four-digit demo PIN only","No network or login requests"]);}
- const progress=attempts/100;
- const btn:React.CSSProperties={cursor:"pointer",border:"1px solid #355044",borderRadius:7,padding:"9px 14px",font:"inherit",fontSize:12,display:"inline-flex",alignItems:"center",gap:8,color:"#b6f9ca",background:"#11251d"};
+ function pause(){previous.current+=(performance.now()-startTime.current)/1000;running.current=false;runId.current++;setStatus("paused");setEvents(old=>[...old.slice(-6),"[PAUSE] Candidate number "+cursor.current]);}
+ const button:React.CSSProperties={cursor:"pointer",border:"1px solid #355044",borderRadius:7,padding:"9px 14px",font:"inherit",fontSize:12,display:"inline-flex",alignItems:"center",gap:8,color:"#b6f9ca",background:"#11251d"};
+ const field:React.CSSProperties={background:"#09120f",border:"1px solid #43604c",padding:"10px",borderRadius:6,color:"#f0fff3",font:"inherit",fontSize:13,maxWidth:"100%"};
  return <div style={{fontFamily:"ui-monospace,SFMono-Regular,Consolas,monospace",color:"#c8e6d0"}}>
- <div style={{fontSize:11,letterSpacing:2,color:"#70cf9c",marginBottom:16}}>PASSWORD AUDIT / LOCAL SANDBOX</div>
- <p style={{fontFamily:"system-ui,sans-serif",fontSize:13,color:"#b5c5be",lineHeight:1.6}}>Een echte brute-force-demonstratie: elke pincode wordt lokaal met SHA-256 gehasht en vergeleken met een testhash. Geen echte accounts, servers of netwerkaanvragen.</p>
- <label style={{display:"block",fontSize:12,margin:"15px 0 7px"}}>Kies een test-PIN (4 cijfers)</label>
- <input aria-label="Demo PIN" inputMode="numeric" maxLength={4} value={pin} disabled={status==="running"||status==="paused"} onChange={e=>{const v=e.target.value.replace(/\D/g,"").slice(0,4);setPin(v);reset();}} style={{background:"#09120f",border:"1px solid #43604c",padding:12,borderRadius:6,color:"#f0fff3",font:"inherit",width:100,letterSpacing:4}}/>
- <div style={{display:"flex",flexWrap:"wrap",gap:8,margin:"14px 0"}}>
- {status!=="running"&&status!=="paused"&&<button style={btn} disabled={pin.length!==4} onClick={()=>void start(false)}><Play size={14}/> Start audit</button>}
- {status==="running"&&<button style={btn} onClick={pause}><Pause size={14}/> Pauzeer</button>}
- {status==="paused"&&<button style={btn} onClick={()=>void start(true)}><Play size={14}/> Hervat</button>}
- <button style={{...btn,background:"#1b2020",color:"#e4e8e4"}} onClick={reset}><RotateCcw size={14}/> Reset</button>
- </div>
- <div style={{background:"#080f0c",border:"1px solid #263a31",borderRadius:9,padding:15}}>
- <div style={{display:"flex",justifyContent:"space-between",gap:12,marginBottom:10,fontSize:11}}><span>STATUS: {status.toUpperCase()}</span><span>{progress.toFixed(2)}%</span></div>
- <div style={{height:6,background:"#263329",borderRadius:9,overflow:"hidden"}}><div style={{height:"100%",width:progress+"%",background:"#4bd58a",transition:"width .15s"}}/></div>
- <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:15,marginTop:16,fontSize:12}}>
- <div><div style={{color:"#809c8c"}}>ATTEMPTS</div><strong>{attempts.toLocaleString("en-US")} / 10,000</strong></div>
- <div><div style={{color:"#809c8c"}}>CURRENT GUESS</div><strong>{candidate}</strong></div>
- <div><div style={{color:"#809c8c"}}>ELAPSED</div><strong>{elapsed.toFixed(2)}s</strong></div>
- <div><div style={{color:"#809c8c"}}>HASH RATE</div><strong>{elapsed>0?Math.round(attempts/elapsed).toLocaleString("en-US"):"0"} H/s</strong></div>
- </div>
- {targetHash&&<div style={{fontSize:10,color:"#6f9682",marginTop:15,overflowWrap:"anywhere"}}>TARGET SHA-256: {targetHash}</div>}
- <pre aria-live="polite" style={{margin:"15px 0 0",padding:12,whiteSpace:"pre-wrap",overflowWrap:"anywhere",background:"#050907",color:"#8fdaa9",lineHeight:1.7,fontSize:11,maxHeight:160,overflowY:"auto"}}>{logs.join("\n")}</pre>
- {status==="found"&&<p style={{color:"#7ff4a6",fontSize:13}}><ShieldCheck size={16} style={{verticalAlign:"middle"}}/> Lokale testhash gekraakt. Geen echt wachtwoord aangeraakt.</p>}
- </div>
+  <div style={{fontSize:11,letterSpacing:2,color:"#70cf9c",marginBottom:12}}>PASSWORD AUDIT / OFFLINE SHA-256 LAB</div>
+  <p style={{fontFamily:"system-ui,sans-serif",fontSize:13,color:"#b5c5be",lineHeight:1.65}}>Probeer nu ook <b>woorden en lettercombinaties</b>. Het programma genereert echt SHA-256-hashes voor elke kandidaat en vergelijkt die met jouw testwachtwoord. Alles draait uitsluitend lokaal in je browser.</p>
+  <div style={{display:"flex",gap:12,flexWrap:"wrap",margin:"15px 0",alignItems:"end"}}>
+   <label style={{display:"grid",gap:7,fontSize:12}}>Zoekmethode
+    <select value={mode} disabled={status==="running"||status==="paused"} onChange={e=>setStrategy(e.target.value as Charset)} style={field}>
+     <option value="letters">Letters a–z</option>
+     <option value="alphanumeric">Letters + cijfers</option>
+     <option value="digits">Cijfers 0–9</option>
+     <option value="dictionary">Bekende woordenlijst</option>
+    </select>
+   </label>
+   <label style={{display:"grid",gap:7,fontSize:12}}>Testwachtwoord
+    <input value={secret} maxLength={14} disabled={status==="running"||status==="paused"} onChange={e=>setInput(e.target.value)} aria-label="Test password" style={{...field,width:200}} autoComplete="off" spellCheck={false}/>
+   </label>
+  </div>
+  <p style={{fontSize:11,color:feasible?"#a7b9ad":"#ffac9c"}}>
+   {mode==="dictionary"?"Woordenlijst: "+dictionary.join(", "):"Maximaal "+maximum+" tekens, alleen "+(mode==="digits"?"cijfers":mode==="letters"?"kleine letters a–z":"kleine letters en cijfers")+". "}
+   {mode!=="dictionary"&&feasible?" Zoekruimte: "+numberOfCandidates.toLocaleString("nl-NL")+" pogingen.":""}
+   {mode==="dictionary"&&" Woorden buiten deze lijst kunnen niet gevonden worden."}
+  </p>
+  <div style={{display:"flex",gap:8,flexWrap:"wrap",margin:"14px 0"}}>
+   {status!=="running"&&status!=="paused"&&<button style={button} disabled={!feasible||secret.length===0} onClick={()=>void run()}><Play size={14}/> Start audit</button>}
+   {status==="running"&&<button style={button} onClick={pause}><Pause size={14}/> Pauzeren</button>}
+   {status==="paused"&&<button style={button} onClick={()=>void run(true)}><Play size={14}/> Hervatten</button>}
+   <button style={{...button,background:"#1b2020",color:"#e4e8e4"}} onClick={reset}><RotateCcw size={14}/> Reset</button>
+  </div>
+  <div style={{background:"#080f0c",border:"1px solid #263a31",borderRadius:9,padding:15}}>
+   <div style={{display:"flex",justifyContent:"space-between",gap:12,marginBottom:10,fontSize:11}}><span>STATUS: {status.toUpperCase()}</span><span>{(count/Math.max(1,space)*100).toFixed(2)}%</span></div>
+   <div style={{height:6,background:"#263329",borderRadius:9,overflow:"hidden"}}><div style={{height:"100%",width:(count/Math.max(1,space)*100)+"%",background:"#4bd58a",transition:"width .12s"}}/></div>
+   <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:15,marginTop:16,fontSize:12}}>
+    <div><div style={{color:"#809c8c"}}>ATTEMPTS</div><strong>{count.toLocaleString("en-US")} / {space.toLocaleString("en-US")}</strong></div>
+    <div><div style={{color:"#809c8c"}}>CURRENT GUESS</div><strong style={{overflowWrap:"anywhere"}}>{guess}</strong></div>
+    <div><div style={{color:"#809c8c"}}>ELAPSED</div><strong>{seconds.toFixed(2)}s</strong></div>
+    <div><div style={{color:"#809c8c"}}>HASH RATE</div><strong>{seconds>0?Math.round(count/seconds).toLocaleString("en-US"):"0"} H/s</strong></div>
+   </div>
+   {hash&&<div style={{fontSize:10,color:"#6f9682",marginTop:15,overflowWrap:"anywhere"}}>TARGET SHA-256: {hash}</div>}
+   <pre aria-live="polite" style={{margin:"15px 0 0",padding:12,whiteSpace:"pre-wrap",overflowWrap:"anywhere",background:"#050907",color:"#8fdaa9",lineHeight:1.7,fontSize:11,maxHeight:160,overflowY:"auto"}}>{events.join("\n")}</pre>
+   {status==="found"&&<p style={{color:"#7ff4a6",fontSize:13}}><ShieldCheck size={16} style={{verticalAlign:"middle"}}/> Testwachtwoord gevonden en met SHA-256 geverifieerd.</p>}
+   {status==="exhausted"&&<p style={{color:"#ffc38e",fontSize:12}}>Geen match in deze zoekruimte. Probeer een andere methode.</p>}
+  </div>
  </div>;
 }
