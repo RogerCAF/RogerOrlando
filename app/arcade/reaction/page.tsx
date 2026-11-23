@@ -10,7 +10,7 @@ export default function MongoReactionGame() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [best, setBest] = useState<number | null>(null);
   const [last, setLast] = useState<number | null>(null);
-  const [nickname, setNickname] = useState("PLAYER");
+  const [nickname, setNickname] = useState("NPC");
   const [ranking, setRanking] = useState<Array<{name:string;ms:number}>>([]);
   const [boardStatus, setBoardStatus] = useState("Loading global Top 10…");
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -24,7 +24,7 @@ export default function MongoReactionGame() {
       const value = Number(localStorage.getItem(STORE));
       if (Number.isFinite(value) && value > 0) setBest(value);
     } catch { /* The game still works without browser storage. */ }
-    try { setNickname(localStorage.getItem("bureau-mongo-name") || "PLAYER"); } catch {}
+    try { setNickname(((saved => saved && saved !== "PLAYER" ? saved : "NPC")(localStorage.getItem("bureau-mongo-name")))); } catch {}
     void refreshBoard();
     return () => { if (timeout.current !== null) clearTimeout(timeout.current); };
   }, []);
@@ -39,7 +39,7 @@ export default function MongoReactionGame() {
     } catch { setBoardStatus("Global leaderboard temporarily unavailable."); }
   }
   async function submitReaction(id: string, measured: number) {
-    const name = nickname.trim().toUpperCase().replace(/[^A-Z0-9 _-]/g, "").slice(0,12) || "PLAYER";
+    const name = nickname.trim().toUpperCase().replace(/[^A-Z0-9 _-]/g, "").slice(0,12) || "NPC";
     try { localStorage.setItem("bureau-mongo-name", name); } catch {}
     try {
       setBoardStatus("Verifying reaction time with the server…");
