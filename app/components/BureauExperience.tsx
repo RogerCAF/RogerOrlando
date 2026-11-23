@@ -182,7 +182,7 @@ export default function BureauExperience() {
         panel.className = "bureau-crypto-in-screen";
         const heading = document.createElement("div");
         heading.className = "bureau-crypto-in-screen-heading";
-        heading.textContent = "CRYPTO / TOP 10";
+        heading.textContent = "TOP 10 / USD";
         const list = document.createElement("div");
         list.className = "bureau-crypto-in-screen-list";
         list.textContent = "LIVE DATA LADEN…";
@@ -190,7 +190,12 @@ export default function BureauExperience() {
         footer.className = "bureau-crypto-in-screen-footer";
         footer.textContent = "LIVE · USD";
         panel.append(heading, list, footer);
-        button.appendChild(panel);
+        // Render into the original painted portrait glass, not into the
+        // oversized button hitbox that includes its metal bezel.
+        const scene = document.getElementById("scene");
+        if (!scene) return;
+        scene.querySelector(".bureau-crypto-in-screen")?.remove();
+        scene.appendChild(panel);
         let inFlight = false;
         const load = async () => {
           if (inFlight || !button.isConnected) return;
@@ -1080,54 +1085,97 @@ export default function BureauExperience() {
           padding: 0 !important;
         }
         .bureau-embed .bureau-secondary-display:hover { background: transparent !important; }
-        /* After click, replace ONLY the pixels inside the left monitor screen. */
-        .bureau-embed .bureau-secondary-display .bureau-crypto-in-screen {
+        /* The approved image is 1670 × 942. The portrait screen is not
+           rectangular: its glass runs x=259..494, top y=315..337 and
+           bottom y=660..647. Clip only the screen content to that trapezoid.
+           No frame, monitor, tabletop, or base photo is modified. */
+        .bureau-embed #scene > .bureau-crypto-in-screen {
           position: absolute !important;
-          inset: 6% 9% 6% 9% !important;
-          z-index: 1 !important;
+          left: 15.52% !important;
+          top: 33.44% !important;
+          width: 14.08% !important;
+          height: 36.35% !important;
+          z-index: 61 !important;
           display: flex !important;
           flex-direction: column !important;
-          gap: 2% !important;
-          padding: 6% 4% !important;
           box-sizing: border-box !important;
-          background: #081219f5 !important;
-          color: #e8f5e9 !important;
-          border-radius: 2px !important;
+          padding: 7.5% 5% 3% 5% !important;
+          margin: 0 !important;
+          background: linear-gradient(155deg,#111e26 0%,#08121a 55%,#071015 100%) !important;
+          color: #eef3f0 !important;
+          clip-path: polygon(0 0,100% 6.1%,100% 96.1%,0 100%) !important;
+          border: none !important;
+          border-radius: 0 !important;
+          box-shadow: inset 0 0 16px #000a !important;
+          overflow: hidden !important;
+          pointer-events: none !important;
+          font-family: ui-monospace,SFMono-Regular,Consolas,monospace !important;
+          font-size: clamp(5px,.72vw,10px) !important;
+          line-height: 1.12 !important;
+          letter-spacing: 0 !important;
           text-align: left !important;
-          font-family: ui-monospace, SFMono-Regular, Consolas, monospace !important;
-          font-size: clamp(5px, .57vw, 10px) !important;
-          line-height: 1.25 !important;
         }
         .bureau-embed .bureau-crypto-in-screen-heading {
-          color: #cbb084 !important;
+          display: flex !important;
+          justify-content: space-between !important;
+          align-items: center !important;
+          flex: 0 0 auto !important;
+          color: #b7e2cb !important;
+          font-size: 1.02em !important;
           font-weight: 800 !important;
-          letter-spacing: .04em !important;
-          padding-bottom: 3% !important;
-          border-bottom: 1px solid #355247 !important;
+          white-space: nowrap !important;
+          border-bottom: 1px solid #375448 !important;
+          padding: 0 0 6px 0 !important;
+          margin: 0 0 3px 0 !important;
+          letter-spacing: .025em !important;
+        }
+        .bureau-embed .bureau-crypto-in-screen-heading::after {
+          content: "● LIVE" !important;
+          color: #79d69b !important;
+          font-size: .85em !important;
+          letter-spacing: 0 !important;
         }
         .bureau-embed .bureau-crypto-in-screen-list {
-          flex: 1 !important;
+          display: grid !important;
+          grid-template-rows: repeat(10,minmax(0,1fr)) !important;
+          align-items: stretch !important;
+          flex: 1 1 auto !important;
           min-height: 0 !important;
-          display: flex !important;
-          flex-direction: column !important;
-          justify-content: space-around !important;
           overflow: hidden !important;
+          padding: 0 !important;
+          margin: 0 !important;
         }
         .bureau-embed .bureau-crypto-in-screen-row {
           display: grid !important;
-          grid-template-columns: 29% 41% 30% !important;
-          gap: 1px !important;
-          color: #e4f2e8 !important;
+          grid-template-columns: 24% 45% 31% !important;
+          gap: 0 !important;
+          align-items: center !important;
+          border-bottom: 1px solid #779a8123 !important;
+          background: transparent !important;
+          color: #dbe9e2 !important;
+          min-height: 0 !important;
+          padding: 0 !important;
           white-space: nowrap !important;
+          font-variant-numeric: tabular-nums !important;
         }
-        .bureau-embed .bureau-crypto-in-screen-row span:nth-child(2) { text-align: right !important; }
+        .bureau-embed .bureau-crypto-in-screen-row span {
+          display: block !important;
+          min-width: 0 !important;
+          overflow: hidden !important;
+          text-overflow: clip !important;
+        }
+        .bureau-embed .bureau-crypto-in-screen-row span:first-child { color: #c4d2ca !important; font-weight: 800 !important; }
+        .bureau-embed .bureau-crypto-in-screen-row span:nth-child(2),
         .bureau-embed .bureau-crypto-in-screen-row span:nth-child(3) { text-align: right !important; }
-        .bureau-embed .bureau-crypto-in-screen-row .is-up { color: #74d9a0 !important; }
-        .bureau-embed .bureau-crypto-in-screen-row .is-down { color: #f28c88 !important; }
+        .bureau-embed .bureau-crypto-in-screen-row .is-up { color: #7ddeab !important; }
+        .bureau-embed .bureau-crypto-in-screen-row .is-down { color: #f3a29b !important; }
         .bureau-embed .bureau-crypto-in-screen-footer {
+          flex: 0 0 auto !important;
           font-size: .8em !important;
-          color: #7a9d8d !important;
+          color: #849c92 !important;
           text-align: center !important;
+          border-top: 1px solid #375448 !important;
+          padding: 4px 0 0 !important;
         }
         .bureau-embed .spot[data-open="bag"] {
           left: 4.3% !important;
