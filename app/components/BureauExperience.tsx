@@ -1095,6 +1095,39 @@ export default function BureauExperience() {
           border: 0 !important;
           padding: 0 !important;
           touch-action: manipulation !important;
+          border-radius: 5px !important;
+          transition: box-shadow .18s ease, background-color .18s ease !important;
+        }
+        .bureau-embed #bureau-phone-entry::after {
+          content: "PHONE ARCADE ↗" !important;
+          position: absolute !important;
+          left: 50% !important;
+          bottom: calc(100% + 5px) !important;
+          transform: translate(-50%,5px) !important;
+          width: max-content !important;
+          max-width: 160px !important;
+          padding: 7px 10px !important;
+          border: 1px solid #f5c686 !important;
+          border-radius: 3px !important;
+          background: #141013e8 !important;
+          color: #ffdcaa !important;
+          box-shadow: 0 8px 22px #0008 !important;
+          text-align: center !important;
+          font: 900 clamp(8px,.8vw,11px)/1.2 ui-monospace,monospace !important;
+          letter-spacing: .1em !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+          transition: opacity .16s,transform .16s !important;
+        }
+        .bureau-embed #bureau-phone-entry:hover,
+        .bureau-embed #bureau-phone-entry:focus-visible {
+          background: rgba(241,188,115,.065) !important;
+          box-shadow: inset 0 0 0 1px rgba(245,198,134,.68),0 0 20px #e0ad6040 !important;
+        }
+        .bureau-embed #bureau-phone-entry:hover::after,
+        .bureau-embed #bureau-phone-entry:focus-visible::after {
+          opacity: 1 !important;
+          transform: translate(-50%,0) !important;
         }
         .bureau-embed #bureau-phone-entry:focus-visible,
         .bureau-embed .spot[data-open="arcade"]:focus-visible,
@@ -1348,6 +1381,8 @@ export default function BureauExperience() {
             </div>
             <div className="bureau-phone-apps">
               <button type="button" onClick={() => setPhoneMode("sky")} className="bureau-phone-app bureau-phone-sky">
+                
+                <span className="bureau-game-preview bureau-preview-sky" aria-hidden="true"><span className="preview-sun"/><span className="preview-cloud"/><span className="preview-bird">◆</span><span className="preview-pipe preview-pipe-one"/><span className="preview-pipe preview-pipe-two"/></span>
                 <span className="bureau-phone-app-symbol"><Bird size={35} strokeWidth={1.65} aria-hidden="true"/></span>
                 <span className="bureau-phone-app-type"><Trophy size={13} aria-hidden="true"/> SINGLE PLAYER / TOP 10</span>
                 <strong>SNUFFY BIRD</strong>
@@ -1355,6 +1390,8 @@ export default function BureauExperience() {
                 <em>PLAY NOW <ArrowRight size={15} aria-hidden="true"/></em>
               </button>
               <button type="button" onClick={() => setPhoneMode("curve")} className="bureau-phone-app bureau-phone-curve">
+                
+                <span className="bureau-game-preview bureau-preview-curve" aria-hidden="true"><span className="preview-grid"/><span className="preview-trail trail-a"/><span className="preview-trail trail-b"/><span className="preview-trail trail-c"/></span>
                 <span className="bureau-phone-app-symbol"><Route size={35} strokeWidth={1.65} aria-hidden="true"/></span>
                 <span className="bureau-phone-app-type"><UsersRound size={13} aria-hidden="true"/> LOCAL MULTIPLAYER / 2–5</span>
                 <strong>AGTUNG DIE KURVE</strong>
@@ -1362,6 +1399,8 @@ export default function BureauExperience() {
                 <em>PLAY TOGETHER <ArrowRight size={15} aria-hidden="true"/></em>
               </button>
               <button type="button" onClick={() => setPhoneMode("reaction")} className="bureau-phone-app bureau-phone-reaction">
+                
+                <span className="bureau-game-preview bureau-preview-reaction" aria-hidden="true"><span className="preview-react-top">REACTION TEST</span><span className="preview-react-light"/><span className="preview-react-bottom">WAIT FOR GREEN</span></span>
                 <span className="bureau-phone-app-symbol"><Zap size={35} strokeWidth={1.65} aria-hidden="true"/></span>
                 <span className="bureau-phone-app-type"><Trophy size={13} aria-hidden="true"/> REFLEX / PERSONAL BEST</span>
                 <strong>DR. MONGO’S REACTION GAME</strong>
@@ -1369,6 +1408,8 @@ export default function BureauExperience() {
                 <em>PLAY NOW <ArrowRight size={15} aria-hidden="true"/></em>
               </button>
               <button type="button" onClick={() => setPhoneMode("ten")} className="bureau-phone-app bureau-phone-ten">
+                
+                <span className="bureau-game-preview bureau-preview-ten" aria-hidden="true"><span className="preview-ten-time">10.00</span><span className="preview-ten-button"/><span className="preview-ten-bottom">STOP THE CLOCK</span></span>
                 <span className="bureau-phone-app-symbol"><Timer size={35} strokeWidth={1.65} aria-hidden="true"/></span>
                 <span className="bureau-phone-app-type"><Trophy size={13} aria-hidden="true"/> TIMING / PERSONAL BEST</span>
                 <strong>THE BUTTON 10:00</strong>
