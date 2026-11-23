@@ -87,12 +87,16 @@ button:focus-visible,select:focus-visible{outline:2px solid #f6d098;outline-offs
 .dialog-lan{display:block;margin:12px 0 0;padding:10px;border:1px solid #4e98a74d;border-radius:9px;background:#193444;color:#d7f6ff;text-decoration:none;font:850 10px/1.4 ui-monospace,monospace}
 .dialog-lan:hover{background:#275468}
 @media(max-width:540px){.mode-link{flex:1;min-height:39px;padding:9px;font-size:9px}}
+.curve-career{margin:11px 0;padding:12px 15px;border:1px solid #8f78564f;border-radius:10px;background:#111b2b;color:#e7c493;font:800 10px ui-monospace,monospace}
+.curve-career #careerScores{display:flex;flex-wrap:wrap;gap:7px 15px;margin:10px 0}
+.curve-career #careerScores span{font:700 10px ui-monospace,monospace}
+.curve-career small{color:#91a0b1;font-weight:500}
 </style></head>
 <body><main>
 <header><div class="brand"><small>THE BUREAU / PHONE ARCADE / LOCAL MULTIPLAYER</small><h1>AGTUNG DIE KURVE<span>.</span></h1></div><span class="tag">UP TO 5 PLAYERS<br>FIRST TO 5 POINTS</span></header>
 <nav class="mode-select" aria-label="Kies multiplayer modus"><span class="mode-link selected">✓ 1 TOETSENBORD · 2–5 SPELERS</span><a class="mode-link lan" href="/bureau/curve-lan.html">⌨ IEDEREEN EIGEN PC · LAN / KAMERCODE →</a></nav>
 <section class="pc-keyboard-guide" aria-label="PC toetsen per speler"><div class="pc-guide-head"><strong>⌨ PC KEYBOARD / WHO CONTROLS WHAT?</strong><span>Houd links of rechts ingedrukt om te sturen</span></div><div class="pc-guide-grid" id="keyboardGuide"></div><div class="pc-keyboard-footer"><kbd>SPACE</kbd> start / volgende ronde &nbsp;·&nbsp; <kbd>P</kbd> pauze &nbsp;·&nbsp; loslaten = rechtdoor</div></section>
-<div class="topbar"><div class="scoreboards" id="scores"></div></div>
+<div class="topbar"><div class="scoreboards" id="scores"></div></div><section class="curve-career" aria-label="Persistent local results"><strong>ALL-TIME LOCAL STATS</strong><div id="careerScores"></div><small>Saved on this device · separate from the current match</small></section>
 <section class="game-wrap" aria-label="Agtung die Kurve shared arena"><canvas id="arena" width="960" height="620" aria-label="Agtung die Kurve arena. Hold your player's left or right keys to steer and avoid walls and trails."></canvas><div class="arena-meta"><span>ROUND <strong id="round">1</strong></span><span id="status">WAITING FOR PLAYERS</span></div>
 <div class="overlay" id="overlay"><div class="dialog"><span class="kicker" id="kicker">ONE SCREEN / FIVE RIVALS</span><h2 id="title">Don't hit the curve.</h2><p id="description">All players move automatically and leave a trail. Hold LEFT or RIGHT to steer. Touch a wall or a trail and you're out. Last survivor scores a point.</p><div class="select-row" id="selectRow"><label for="count">PLAYERS</label><select id="count" aria-label="Number of local players"><option selected value="2">2 PLAYERS</option><option value="3">3 PLAYERS</option><option value="4">4 PLAYERS</option><option value="5">5 PLAYERS</option></select></div><div class="dialog-keyboard" aria-label="Toetsen van de spelers"><div class="dialog-keyboard-head">⌨ ONE COMPUTER / ONE KEYBOARD / NO ACCOUNTS</div><div class="pc-guide-grid" id="dialogKeyboard"></div><div class="dialog-keyboard-footer"><kbd>SPACE</kbd> starten / volgende ronde &nbsp;·&nbsp; <kbd>P</kbd> pauze</div></div><button id="action" class="primary" type="button">START LOCAL MATCH →</button><a class="dialog-lan" href="/bureau/curve-lan.html">LIEVER IEDEREEN ACHTER EEN EIGEN PC? MAAK EEN KAMER →</a><p class="legend">Speel samen op één PC. Kies 2–5 spelers en start direct zonder accounts. Houd je toetsen ingedrukt om te sturen.</p></div></div>
 </section>
@@ -111,6 +115,11 @@ const CONFIG=[
  {id:4,name:"GREEN",color:"#87e88a",left:"q",right:"e",keys:"Q / E"},
  {id:5,name:"PURPLE",color:"#c1a0ff",left:"v",right:"n",keys:"V / N"}
 ];
+const CAREER_KEY="bureau-curve-local-career-v1";
+let career={};try{const stored=JSON.parse(localStorage.getItem(CAREER_KEY)||"{}");if(stored&&typeof stored==="object")career=stored}catch{}
+function careerFor(id){const x=career[id]||{};return {rounds:Math.max(0,Number(x.rounds)||0),wins:Math.max(0,Number(x.wins)||0),matches:Math.max(0,Number(x.matches)||0)}}
+function saveCareer(){try{localStorage.setItem(CAREER_KEY,JSON.stringify(career))}catch{}renderCareer()}
+function renderCareer(){const root=$("careerScores");if(!root)return;root.replaceChildren();for(const cfg of CONFIG){const x=careerFor(cfg.id);const el=document.createElement("span");el.style.color=cfg.color;el.textContent=cfg.name+": "+x.wins+" wins · "+x.rounds+" rounds · "+x.matches+" matches";root.append(el)}}
 const held=new Set(),pointers=new Map();
 let players=[],count=2,round=1,mode="menu",stamp=1,clock=0,countdown=3.3,last=0,raf=0,winner=null;
 function clearInput(){held.clear();pointers.clear();document.querySelectorAll(".turn.held").forEach(b=>b.classList.remove("held"))}
@@ -180,10 +189,11 @@ function show(kicker,title,desc,button,showCount){
 }
 function finishRound(){
  const alive=players.filter(p=>p.alive),survivor=alive.length===1?alive[0]:null;
- if(survivor){survivor.points++;winner=survivor}
+ if(survivor){survivor.points++;winner=survivor;const x=careerFor(survivor.id);x.rounds++;career[survivor.id]=x;saveCareer()}
  scoreboard();
  if(players.some(p=>p.points>=5)){
   mode="matchend";const champ=players.find(p=>p.points>=5);
+  for(const p of players){const x=careerFor(p.id);x.matches++;if(p.id===champ.id)x.wins++;career[p.id]=x}saveCareer();
   $("status").textContent="MATCH COMPLETE";
   show("MATCH CHAMPION","P"+champ.id+" "+champ.name+" wins!",champ.name+" reaches 5 points. Start a new local match with up to five players.","PLAY AGAIN →",true);
  }else{
@@ -279,6 +289,6 @@ document.addEventListener("keydown",e=>{
 document.addEventListener("keyup",e=>{const key=e.key.toLowerCase();held.delete(key);document.querySelectorAll(".turn").forEach(btn=>{if(btn.dataset.key===key)btn.classList.remove("held")})});
 window.addEventListener("blur",()=>{if(mode==="playing"||mode==="countdown")pause();clearInput()});
 document.addEventListener("visibilitychange",()=>{if(document.hidden){if(mode==="playing"||mode==="countdown")pause();clearInput()}});
-chooseCount();draw();
+chooseCount();renderCareer();draw();
 })();
 </script></body></html>
