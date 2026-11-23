@@ -45,6 +45,7 @@ export default function BureauGuestbook() {
       if (!r.ok) throw new Error(result.error || "Signing failed");
       setEntries(result.entries || []);
       localStorage.setItem("bureau-signed", "yes");
+      window.dispatchEvent(new Event("bureau:unlock-changed"));
       setSigned(true);
       setName("");
       setMessage("Ink dried. Legend secured.");
