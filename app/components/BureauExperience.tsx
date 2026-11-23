@@ -673,7 +673,7 @@ export default function BureauExperience() {
           const app = document.createElement("button");
           app.type = "button";
           app.id = "bureau-unfinished-os-app";
-          app.setAttribute("aria-label", "The Unfinished Project — locked until you sign the guestbook or hit 10.00");
+          app.setAttribute("aria-label", "The Unfinished Project — locked until you sign the guestbook AND hit 10.00");
           app.title = "THE UNFINISHED PROJECT / CLASSIFIED";
           app.innerHTML = "🔒<br>Unfinished.exe";
           app.addEventListener("click", event => {
@@ -1490,7 +1490,7 @@ export default function BureauExperience() {
                 <span className="bureau-arcade-card-index">03 / CLASSIFIED FILE 030</span>
                 <LockKeyhole className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
                 <strong>THE UNFINISHED PROJECT</strong>
-                <span>Access restricted. Sign the notebook or hit exactly 10.00 to get in.</span>
+                <span>Access restricted. Sign the notebook AND hit exactly 10.00 on Kaya’s Button.</span>
                 <em>VIEW LOCKED FILE <ArrowRight size={15} aria-hidden="true"/></em>
               </button>
               <button className="bureau-arcade-card" type="button" onClick={openFightCamp}>
