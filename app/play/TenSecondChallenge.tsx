@@ -13,7 +13,7 @@ export default function TenSecondChallenge() {
   const [phase, setPhase] = useState<"ready" | "running" | "result">("ready");
   const [elapsed, setElapsed] = useState(0);
   const [showTime, setShowTime] = useState(true);
-  const [nickname, setNickname] = useState("PLAYER");
+  const [nickname, setNickname] = useState("NPC");
   const [allTime, setAllTime] = useState<BoardEntry[]>([]);
   const [leaderboardStatus, setLeaderboardStatus] = useState("Loading all-time Top 10…");
   const started = useRef<number | null>(null);
@@ -34,7 +34,7 @@ export default function TenSecondChallenge() {
         setAttempts(safe);
       }
     } catch { /* Browser storage may be unavailable. */ }
-    try {setNickname(localStorage.getItem("bureau-kaya-name")||"PLAYER")}catch{}
+    try {setNickname(((saved => saved && saved !== "PLAYER" ? saved : "NPC")(localStorage.getItem("bureau-kaya-name"))))}catch{}
     void refreshLeaderboard();
     return () => { if (displayTimer.current !== null) window.clearInterval(displayTimer.current); };
   }, []);
@@ -49,7 +49,7 @@ export default function TenSecondChallenge() {
     } catch {setLeaderboardStatus("All-time leaderboard temporarily unavailable. Local attempts are still saved.")}
   }
   async function submitScore(time:number) {
-    const name=nickname.trim().toUpperCase().replace(/[^A-Z0-9 _-]/g,"").slice(0,12)||"PLAYER";
+    const name=nickname.trim().toUpperCase().replace(/[^A-Z0-9 _-]/g,"").slice(0,12)||"NPC";
     try{localStorage.setItem("bureau-kaya-name",name)}catch{}
     try{
       setLeaderboardStatus("Submitting qualifying attempt…");
