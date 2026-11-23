@@ -19,11 +19,17 @@ export default function BureauDesktop({onClose}:{onClose:()=>void}){
  const [file,setFile]=useState<Entry|null>(null);
  const [tool,setTool]=useState<SecurityTool|null>(null);
  const [wallpaper,setWallpaper]=useState("");
- const [originalAvailable,setOriginalAvailable]=useState(false);
  const [wallpaperError,setWallpaperError]=useState("");
  const [dragging,setDragging]=useState(false);
  const chooser=useRef<HTMLInputElement>(null);
- useEffect(()=>{try{const saved=localStorage.getItem("roger-desktop-wallpaper-fullres-v2");if(saved)setWallpaper(saved);}catch{} const original=new Image();original.onload=()=>setOriginalAvailable(true);original.src="/bureau/Universum.jpg";},[]);
+ // Ignore old low-quality cached variants. The site now ships the exact
+ // original 2048x1536 JPEG; user uploads remain lossless in the new key.
+ useEffect(()=>{try{
+  localStorage.removeItem("roger-desktop-wallpaper-v1");
+  localStorage.removeItem("roger-desktop-wallpaper-fullres-v2");
+  const saved=localStorage.getItem("roger-desktop-wallpaper-fullres-v3");
+  if(saved)setWallpaper(saved);
+ }catch{}},[]);
  useEffect(()=>{const close=(e:KeyboardEvent)=>{if(e.key==="Escape"){if(tool)setTool(null);else if(file)setFile(null);else if(folder)setFolder(null);else onClose();}};document.addEventListener("keydown",close);const previous=document.body.style.overflow;document.body.style.overflow="hidden";return()=>{document.removeEventListener("keydown",close);document.body.style.overflow=previous;};},[folder,file,tool,onClose]);
  const setBackground=async(selected?:File)=>{
   if(!selected)return;
@@ -35,22 +41,21 @@ export default function BureauDesktop({onClose}:{onClose:()=>void}){
     reader.onerror=()=>reject(new Error("Unable to read wallpaper"));
     reader.readAsDataURL(selected);
    });
-   localStorage.setItem("roger-desktop-wallpaper-fullres-v2",data);
+   localStorage.setItem("roger-desktop-wallpaper-fullres-v3",data);
    setWallpaper(data);setWallpaperError("");
   }catch{setWallpaperError("Je browser kon de originele afbeelding niet bewaren. Probeer een andere browser.");}
  };
  const leftFolders=(Object.keys(files) as FolderName[]).filter(name=>name!=="Recycle Bin");
  return <div role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)onClose();}} style={{position:"fixed",inset:0,zIndex:100000,background:"rgba(3,5,9,.88)",display:"grid",placeItems:"center",padding:15}}>
- <section onDragOver={e=>{if(e.dataTransfer.types.includes("Files")){e.preventDefault();setDragging(true);}}} onDragLeave={e=>{if(e.currentTarget===e.target)setDragging(false);}} onDrop={e=>{e.preventDefault();setDragging(false);void setBackground(e.dataTransfer.files?.[0]);}} role="dialog" aria-modal="true" aria-label="Personal desktop" style={{width:"min(1200px,97vw)",height:"min(745px,91vh)",minHeight:420,position:"relative",overflow:"hidden",border:"1px solid #625446",borderRadius:13,boxShadow:"0 35px 110px #000",background:wallpaper?`linear-gradient(#06080b33,#06080b33),url("${wallpaper}") center/cover no-repeat`:`url("${originalAvailable?"/bureau/Universum.jpg":"/bureau/universum-wallpaper.svg"}") center/cover no-repeat`,color:"#e7e4e0",fontFamily:"system-ui,sans-serif"}}>
+ <section onDragOver={e=>{if(e.dataTransfer.types.includes("Files")){e.preventDefault();setDragging(true);}}} onDragLeave={e=>{if(e.currentTarget===e.target)setDragging(false);}} onDrop={e=>{e.preventDefault();setDragging(false);void setBackground(e.dataTransfer.files?.[0]);}} role="dialog" aria-modal="true" aria-label="Personal desktop" style={{width:"min(1200px,97vw)",height:"min(745px,91vh)",minHeight:420,position:"relative",overflow:"hidden",border:"1px solid #625446",borderRadius:13,boxShadow:"0 35px 110px #000",background:`url("${wallpaper||"/bureau/Universum.jpg?v=original-full-2048x1536"}") center / cover no-repeat #080d13`,color:"#e7e4e0",fontFamily:"system-ui,sans-serif"}}>
  
  <div style={{position:"absolute",top:15,right:15,zIndex:4,display:"flex",gap:7,alignItems:"center"}}>
  <input ref={chooser} aria-label="Upload wallpaper" type="file" accept="image/*" style={{display:"none"}} onChange={e=>{void setBackground(e.target.files?.[0]);e.target.value="";}}/>
  <button onClick={()=>chooser.current?.click()} title="Gebruik je eigen achtergrond" style={{...buttonStyle,background:"#121b20da",fontSize:11,border:"1px solid #53645c"}}><ImagePlus size={16}/> Wallpaper wijzigen</button>
- {wallpaper&&<button onClick={()=>{try{localStorage.removeItem("roger-desktop-wallpaper-fullres-v2");localStorage.removeItem("roger-desktop-wallpaper-v1");}catch{}setWallpaper("");}} title="Herstel je originele Universum-achtergrond" style={{...buttonStyle,background:"#121b20da",fontSize:11,border:"1px solid #53645c"}}>Originele achtergrond</button>}
+ {wallpaper&&<button onClick={()=>{try{localStorage.removeItem("roger-desktop-wallpaper-fullres-v3");localStorage.removeItem("roger-desktop-wallpaper-fullres-v2");localStorage.removeItem("roger-desktop-wallpaper-v1");}catch{}setWallpaper("");}} title="Herstel je originele Universum-achtergrond" style={{...buttonStyle,background:"#121b20da",fontSize:11,border:"1px solid #53645c"}}>Originele achtergrond</button>}
  <button onClick={onClose} aria-label="Close desktop" style={{...buttonStyle,background:"#20262c",padding:9}}><X size={18}/></button>
  </div>
  {dragging&&<div style={{position:"absolute",inset:8,zIndex:20,display:"grid",placeItems:"center",background:"#06120bd9",border:"2px dashed #8fe0b3",borderRadius:12,pointerEvents:"none",fontSize:20,fontWeight:700}}>Laat je originele JPG hier los</div>}
- {!wallpaper&&!originalAvailable&&<button type="button" onClick={()=>chooser.current?.click()} style={{position:"absolute",zIndex:3,top:65,left:135,background:"#0e171ed9",color:"#e7edec",fontSize:11,border:"1px solid #687971",borderRadius:7,padding:"8px 12px",cursor:"pointer"}}>Originele achtergrond in HD instellen · Klik of sleep JPG hier</button>}
  {wallpaperError&&<p role="alert" style={{position:"absolute",top:58,right:16,zIndex:5,color:"#ffb0a0",background:"#131516",padding:8,fontSize:11}}>{wallpaperError}</p>}
  {/* Folders are aligned down the left edge, leaving the wallpaper clear. */}
  <div style={{position:"absolute",left:15,top:24,bottom:155,width:110,display:"flex",flexDirection:"column",gap:15,alignItems:"center",overflowY:"auto",zIndex:1}}>
