@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b0d11">
-<title>TEST YOUR MIGHT — Fight Camp / The Bureau</title>
+<title>TEST YOUR MIGHT — Arcade Strength Trial / The Bureau</title>
 <style>
 :root{color-scheme:dark;--bg:#0b0d11;--surface:#15181d;--surface2:#1c2025;--line:#4b4039;--muted:#a8a7a2;--gold:#d2ac80;--off:#e9e6df;--red:#9e5246;--green:#acc59c}
 *{box-sizing:border-box}
@@ -103,19 +103,110 @@ h1 span{color:var(--gold)}
 @media(max-width:840px){.grid{grid-template-columns:1fr}.arena{min-height:370px}.arena-scene{min-height:300px}.panel{gap:13px}.action{min-height:95px}.action-buttons{grid-template-columns:1fr 1fr}.topline{margin-bottom:15px}}
 @media(max-width:530px){main{padding:12px}.topline{gap:10px}.record{padding:10px;min-width:80px}.record b{font-size:18px}.record span{font-size:8px}.eyebrow{font-size:9px}h1{font-size:clamp(31px,8.2vw,46px)}.description{font-size:11px;margin-top:7px}.arena{min-height:320px}.arena-head{padding:12px 14px}.arena-scene{min-height:270px}.fist{width:78px;height:92px;top:5%}.target{width:78%;height:45px;top:56%}.target[data-material="planks"]{height:53px}.target[data-material="brick"]{height:52px}.target[data-material="bamboo"],.target[data-material="steel"]{height:39px}.platform{top:70%}.bigtime{font-size:38px}.panel{padding:15px}.panel-footer{padding-top:0}.instructions{font-size:11px}.action{min-height:89px;font-size:18px!important}.overlay-card{padding:20px}.overlay h2{font-size:35px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* THE BUREAU / TEST YOUR MIGHT — CINEMATIC ARCADE REDESIGN
+   Original artwork, original controls and existing interaction semantics. */
+:root{--gold:#eac488;--off:#fff6e9;--red:#aa332c;--green:#80d9ad}
+body{background:radial-gradient(ellipse 85% 70% at 50% -30%,#7854324d,transparent 78%),repeating-linear-gradient(115deg,#080809 0 2px,#0b0b0d 3px 8px);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1280px}
+.eyebrow{color:#e5bd7a;letter-spacing:.19em}
+h1{font-family:Georgia,Times New Roman,serif;font-size:clamp(38px,6vw,76px);font-weight:900;letter-spacing:-.058em;text-shadow:0 3px 0 #2c1a12,0 8px 34px #000b}
+h1 span{background:linear-gradient(160deg,#fff3d3,#d8a75d 45%,#aa6834);-webkit-background-clip:text;background-clip:text;color:transparent}
+.record{background:linear-gradient(140deg,#3c2a23,#19171a 66%);border:1px solid #a37b53;border-radius:2px;box-shadow:inset 0 1px #e6b77c30,0 13px 36px #0006}
+.grid{grid-template-columns:minmax(0,1.45fr) minmax(310px,.68fr);gap:18px}
+.arena{border:2px solid #846449;border-radius:4px;min-height:540px;box-shadow:inset 0 0 0 2px #201611,0 15px 80px #000b,0 0 45px #613d201c}
+.arena-head{padding:14px 20px;background:linear-gradient(#33231d,#17161a);border-bottom:2px solid #b2855457}
+.arena-scene{min-height:385px;background:radial-gradient(ellipse 37% 46% at 50% 34%,#9c684426,transparent 88%),linear-gradient(180deg,#231e1b 0%,#17171c 59%,#0c1015 100%)}
+.arena-scene:before{content:"";position:absolute;inset:0;opacity:.62;background:radial-gradient(ellipse 33% 68% at 50% 19%,#d9aa6347,transparent 78%),repeating-linear-gradient(90deg,transparent 0 16%,#090c138c 17% 19%,transparent 20% 32%);pointer-events:none}
+.arena-scene:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0008 0%,transparent 16%,transparent 59%,#090a0e96 100%),radial-gradient(ellipse 83% 8% at 50% 81%,#d8a67522,transparent 90%);pointer-events:none}
+.backdrop-ring{top:42%;width:min(46%,295px);border:2px solid #ae7b426c;box-shadow:0 0 0 8px #322419,0 0 0 10px #bc864133,0 0 0 44px #271d1929,0 0 0 45px #e1b56c1c}
+.backdrop-ring:before,.backdrop-ring:after{content:"";position:absolute;inset:13%;border:1px solid #d4a96733;border-radius:50%}
+.backdrop-ring:after{inset:29%;border:2px solid #daa45d33}
+.arena::before{content:"";position:absolute;z-index:1;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,transparent,#bd925f88 15%,#f2d2a1 50%,#bd925f88 85%,transparent)}
+.arena-scene .fist{z-index:5;width:118px;height:140px;top:0;filter:drop-shadow(3px 8px 0 #100b0b) drop-shadow(0 18px 18px #000b)}
+.arena-scene.impact .fist{animation:hit-motion .65s cubic-bezier(.13,.76,.32,1) both}
+@keyframes hit-motion{0%{transform:translate(-50%,-110px) rotate(-8deg)}30%{transform:translate(-50%,-52px) scale(1.1)}39%{transform:translate(-50%,136px) scale(1.2)}47%{transform:translate(-50%,124px) scale(.98)}75%{transform:translate(-50%,-30px)}100%{transform:translate(-50%,-54px)}}
+.platform{top:73%;height:23px;background:linear-gradient(#85746a,#424047 25%,#11151c 75%,#0a0b10);border:2px solid #bc9b65;border-radius:2px;box-shadow:inset 0 3px 2px #ddbd8666,0 20px 30px #000a}
+.platform:before,.platform:after{background:linear-gradient(90deg,#13151d,#525056,#17191f);border-color:#827461}
+.target{top:53%;height:74px;filter:drop-shadow(0 15px 14px #000c)}
+.piece{background:repeating-linear-gradient(3deg,#ae784e 0 5px,#96623f 6px 10px,#bc8c5d 11px 13px,#714529 14px 16px);border-top:3px solid #e8bd89;border-bottom:5px solid #4b2919}
+.piece:before{background:repeating-linear-gradient(92deg,transparent 0 23px,#472b1d35 24px 26px,transparent 27px 40px),linear-gradient(180deg,#fff4,transparent 33%,#16090035 78%,#fff2);opacity:1}
+.piece:after{background:linear-gradient(90deg,#0003,transparent 8%,transparent 90%,#0004)}
+.target[data-material="stone"]{height:79px}
+.target[data-material="stone"] .piece{background:linear-gradient(145deg,#9e9b92,#666a69 34%,#9c9b92 61%,#545d5d);border-top:3px solid #c7c8b8;border-bottom:5px solid #343637}
+.target[data-material="stone"] .piece:before{background:repeating-linear-gradient(130deg,transparent 0 18px,#20262744 20px,#dddddd2c 21px,transparent 24px 50px);opacity:.6}
+.target[data-material="steel"]{height:50px}
+.target[data-material="steel"] .piece{background:linear-gradient(175deg,#e2e5e3 0%,#848c92 13%,#3b454e 30%,#acb9ba 45%,#3d484f 63%,#707d82 87%,#141a20 100%);border:2px solid #9eadb4;box-shadow:inset 0 6px 0 #e3eeee55}
+.target[data-material="ruby"]{height:90px}
+.target[data-material="ruby"] .piece{background:linear-gradient(45deg,#3a111c,#ac1c35 18%,#fa5c66 40%,#720a26 60%,#e83556 82%,#2c0d1c);border:3px solid #ff7383;box-shadow:inset 0 0 18px #f45a7d88,0 0 22px #d6243c44}
+.target[data-material="ruby"] .piece:before{background:repeating-linear-gradient(55deg,transparent 0 17px,#ffc1d655 18px 20px,transparent 21px 50px);opacity:.9}
+.target[data-material="diamond"]{height:90px}
+.target[data-material="diamond"] .piece{background:linear-gradient(125deg,#597b99,#c5ecf8 20%,#75a7c6 33%,#edfbff 47%,#446981 54%,#b9d7eb 75%,#315271);border:3px solid #d8f6ff;box-shadow:inset 0 0 32px #fff9,0 0 24px #86d2ff77}
+.target[data-material="diamond"] .piece:before{background:repeating-linear-gradient(125deg,transparent 0 11px,#fff8 12px 14px,transparent 15px 44px),repeating-linear-gradient(47deg,transparent 0 16px,#174c6f61 18px 19px,transparent 20px 42px);opacity:.72}
+.arena-scene.success .piece.left{animation:break-left 1.08s cubic-bezier(.1,.8,.34,1) forwards}
+.arena-scene.success .piece.right{animation:break-right 1.08s cubic-bezier(.1,.8,.34,1) forwards}
+@keyframes break-left{0%,33%{transform:translate(0) rotate(0)}48%{transform:translate(-18px,-5px) rotate(-12deg)}100%{transform:translate(-170px,148px) rotate(-94deg);opacity:0}}
+@keyframes break-right{0%,33%{transform:translate(0) rotate(0)}48%{transform:translate(18px,-5px) rotate(12deg)}100%{transform:translate(170px,154px) rotate(98deg);opacity:0}}
+.arena-scene.impact{animation:arena-jolt .42s steps(2,end) both}
+@keyframes arena-jolt{0%,100%{transform:none;filter:none}35%{transform:translate(-5px,2px);filter:brightness(1.6)}44%{transform:translate(7px,-3px)}53%{transform:translate(-4px,-2px)}68%{transform:translate(3px,2px)}}
+.hit-burst{top:62%}
+.hit-burst i{width:clamp(3px,.48vw,7px);height:clamp(18px,2.1vw,37px);background:linear-gradient(#ffebaf,#d79a4f 65%,transparent);box-shadow:0 0 12px #ffd27c99}
+.arena-scene.success .hit-burst i{animation:burst .85s cubic-bezier(.17,.71,.31,1) both}
+@keyframes burst{0%{opacity:1;transform:rotate(var(--angle)) translateY(0) scale(1.15)}45%{opacity:1}100%{opacity:0;transform:rotate(var(--angle)) translateY(var(--distance)) scale(.18)}}
+.panel{background:linear-gradient(170deg,#232126,#14151b 70%);border:2px solid #7f634d;border-radius:4px;box-shadow:inset 0 1px #ffe8ba21,0 18px 65px #0006;padding:22px}
+.bigtime{font-size:clamp(52px,5vw,80px);line-height:.85;color:#fff1d2;text-shadow:0 2px 14px #edb57e33}
+.bigtime.is-urgent{color:#f78370;animation:time-flicker .35s alternate infinite}
+@keyframes time-flicker{to{opacity:.63}}
+.power-track{height:36px;border:2px solid #ae8e65;border-radius:2px;background:repeating-linear-gradient(90deg,#26252b 0 12px,#363238 13px 14px,#1d2026 15px 18px);box-shadow:inset 0 5px 12px #000b,0 3px 0 #080909;overflow:visible}
+.power-fill{position:relative;background:linear-gradient(90deg,#6d302c,#ae4433 26%,#df7f3e 57%,#ffc669 83%,#fff2bb);border-radius:0;box-shadow:inset 0 3px #fff5,0 0 14px #f3a75787;transition:width .055s linear}
+.power-fill:after{content:"";position:absolute;right:0;top:0;bottom:0;width:4px;background:#fffad1;box-shadow:0 0 12px #fff6b5}
+.power-mark{top:-9px;bottom:-9px;width:4px;background:#f7f1dc;box-shadow:0 0 0 2px #361d1d,0 0 15px #fff3bd}
+.power-mark:after{bottom:calc(100% + 7px);font-size:10px;letter-spacing:.1em}
+.power-track.is-ready .power-mark{background:#82f0ae;box-shadow:0 0 0 2px #173525,0 0 18px #7afbb3}
+.power-track.is-ready{border-color:#9bddac;box-shadow:0 0 24px #65d29d30,inset 0 4px 12px #000a}
+.meter-top strong{font-size:26px;color:#ffe0a9}
+.action{border-radius:3px;min-height:120px;box-shadow:inset 0 2px #fff2,0 7px 0 #0c0b0e,0 14px 22px #0005;transition:transform .07s,box-shadow .07s,background .1s}
+.action:active{transform:translateY(6px) scale(.995);box-shadow:inset 0 2px #fff2,0 1px 0 #080808}
+.action.charge{background:linear-gradient(160deg,#ffe0a2,#cb8b4e 62%,#96613a);color:#20140c;border:2px solid #f9d5a0;text-shadow:0 1px #ffe7ac77}
+.action.charge:hover{background:linear-gradient(160deg,#ffe8ba,#e2a461)}
+.action.strike{background:linear-gradient(160deg,#9d3c2e,#5e201e 60%,#35191a);border:2px solid #cd8262;color:#fff1df}
+.action.strike:hover{background:linear-gradient(160deg,#b84d39,#5e201e)}
+.action.strike.is-ready{background:linear-gradient(160deg,#b65530,#812e20);border-color:#ffd39b;box-shadow:0 0 24px #ffc37e54,inset 0 1px #fff4,0 7px 0 #200c0a}
+.action kbd{background:#0002;border-radius:2px;opacity:.9}
+.overlay{background:radial-gradient(ellipse at 50% 42%,#34241ef2,#08090df7 72%);backdrop-filter:blur(4px)}
+.overlay-card{background:linear-gradient(155deg,#2c201c,#14151b 75%);border:2px solid #af7c4a;border-radius:3px;box-shadow:inset 0 0 0 1px #f8d0a21e,0 0 0 5px #0007,0 28px 80px #000d}
+.overlay h2{font-family:Georgia,Times New Roman,serif;letter-spacing:-.055em;text-shadow:0 3px 0 #160e0c}
+.play{background:linear-gradient(#ffe4b0,#c69055);border:2px solid #f9d7a9;border-radius:3px;font-size:14px;box-shadow:0 5px 0 #4b281a}
+.play:active{transform:translateY(4px);box-shadow:0 1px 0 #4b281a}
+#callout{font-weight:950;letter-spacing:.05em}
+.arena-scene.success #callout{color:#9ff1b2!important;text-shadow:0 0 16px #8eecaf}
+.arena-scene.failure #callout{color:#ffb0a0!important}
+.material-plate{position:absolute;z-index:3;left:50%;top:12%;transform:translateX(-50%);display:grid;place-items:center;gap:4px;pointer-events:none}
+.material-plate strong{font:900 clamp(16px,2.4vw,30px) Georgia,serif;letter-spacing:.08em;color:#ffe3b2;text-shadow:0 3px 10px #000,0 0 25px #e5a75d55}
+.material-plate span{font:800 9px ui-monospace,monospace;color:#c8ae8a;letter-spacing:.22em}
+.impact-title{position:absolute;z-index:8;left:50%;top:28%;transform:translate(-50%,-10%) scale(.8);opacity:0;pointer-events:none;white-space:nowrap;font:900 clamp(28px,5vw,64px)/.9 Georgia,serif;letter-spacing:-.07em;color:#ffdca5;text-shadow:0 4px 0 #25110c,0 0 30px #efc27eaa}
+.arena-scene.success .impact-title{animation:impact-title-in .8s .16s both}
+.arena-scene.failure .impact-title{color:#ff988b;animation:impact-title-in .65s .12s both}
+@keyframes impact-title-in{0%{opacity:0;transform:translate(-50%,-30%) scale(1.8)}25%,70%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,22%) scale(.94)}}
+.arena-scene.is-charging .backdrop-ring{box-shadow:0 0 0 8px #322419,0 0 0 10px #bc864133,0 0 0 44px #271d1929,0 0 25px #eab57488}
+.panel.is-ready .meter-top strong{color:#a3f3b6}
+@media(max-width:840px){.grid{grid-template-columns:1fr}.arena{min-height:400px}.arena-scene{min-height:310px}.panel{gap:14px}}
+@media(max-width:530px){.arena{min-height:355px}.arena-scene{min-height:275px}.arena-scene .fist{width:85px;height:105px}.target{top:54%;width:82%;height:55px}.target[data-material="stone"],.target[data-material="ruby"],.target[data-material="diamond"]{height:61px}.target[data-material="steel"]{height:45px}.platform{top:72%}.material-plate{top:9%}.panel{padding:16px}.action{min-height:95px}.power-track{height:32px}.bigtime{font-size:54px}.overlay-card{padding:22px}}
+@media(prefers-reduced-motion:reduce){.arena-scene.impact,.arena-scene.success .piece,.arena-scene.success .hit-burst i,.impact-title{animation-duration:.01ms!important}}
+
 </style>
 </head>
 <body>
 <main>
   <div class="topline">
-    <div><div class="eyebrow">THE BUREAU / FIGHT CAMP / SECRET TRIAL</div><h1>TEST YOUR <span>MIGHT.</span></h1><p class="description">Bouw kracht op met snelle klikken. Sla op het juiste moment toe. Vijf materialen, één ultieme krachtproef.</p></div>
+    <div><div class="eyebrow">THE BUREAU / FIGHT CAMP / SECRET TRIAL</div><h1>TEST YOUR <span>MIGHT.</span></h1><p class="description">De klassieke arcade-krachtproef: ram de meter omhoog, raak de doelmarkering en breek vijf steeds hardere materialen.</p></div>
     <div class="record"><span>BEST LEVEL</span><b id="best">0 / 5</b></div>
   </div>
   <div class="grid">
     <section class="arena" aria-label="Test Your Might arena">
       <div class="arena-head"><span id="roundTitle">ROUND 01 / WOOD</span><strong id="roundState">AWAITING CHALLENGER</strong></div>
       <div class="arena-scene" id="scene">
-        <div class="backdrop-ring" aria-hidden="true"></div>
+        <div class="backdrop-ring" aria-hidden="true"></div><div class="material-plate" aria-hidden="true"><strong id="materialHeading">WOOD</strong><span>THE STRENGTH TRIAL</span></div><div class="impact-title" id="impactTitle" aria-hidden="true">SHATTERED!</div>
         <div class="fist" id="fist" aria-hidden="true">
           <svg viewBox="0 0 100 122" xmlns="http://www.w3.org/2000/svg">
             <defs><linearGradient id="glove" x1=".15" y1="0" x2=".89" y2="1"><stop stop-color="#b7644b"/><stop offset=".53" stop-color="#853d35"/><stop offset="1" stop-color="#39252a"/></linearGradient></defs>
@@ -140,7 +231,7 @@ h1 span{color:var(--gold)}
         </div>
       </div>
     </section>
-    <section class="panel" aria-label="Spelbediening">
+    <section class="panel" id="panel" aria-label="Spelbediening">
       <div class="timer-row"><div><div class="small-label">TIME LEFT</div><div class="bigtime" id="time">10.0</div></div><div style="text-align:right"><div class="small-label">STRENGTH TRIAL</div><div class="level" id="levelLabel">01 / 05</div></div></div>
       <div class="panel-rule"></div>
       <div class="meter-top"><span class="small-label">POWER METER</span><strong id="powerLabel" aria-live="off">0%</strong></div>
