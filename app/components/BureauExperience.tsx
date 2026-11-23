@@ -180,16 +180,35 @@ export default function BureauExperience() {
         button.title = "LIVE CRYPTO TOP 10";
         const panel = document.createElement("div");
         panel.className = "bureau-crypto-in-screen";
-        const heading = document.createElement("div");
-        heading.className = "bureau-crypto-in-screen-heading";
-        heading.textContent = "TOP 10 / USD";
+        const header = document.createElement("div");
+        header.className = "bureau-crypto-in-screen-heading";
+        const title = document.createElement("strong");
+        title.textContent = "MARKETS";
+        const live = document.createElement("span");
+        live.textContent = "● LIVE";
+        header.append(title, live);
+        const hero = document.createElement("div");
+        hero.className = "bureau-crypto-hero";
+        const heroLabel = document.createElement("div");
+        heroLabel.className = "bureau-crypto-hero-label";
+        heroLabel.textContent = "01   BITCOIN / BTC";
+        const heroValue = document.createElement("div");
+        heroValue.className = "bureau-crypto-hero-value";
+        heroValue.textContent = "—";
+        const heroChange = document.createElement("div");
+        heroChange.className = "bureau-crypto-hero-change";
+        heroChange.textContent = "24H CHANGE   —";
+        hero.append(heroLabel, heroValue, heroChange);
+        const listHeading = document.createElement("div");
+        listHeading.className = "bureau-crypto-list-heading";
+        listHeading.textContent = "TOP ASSETS";
         const list = document.createElement("div");
         list.className = "bureau-crypto-in-screen-list";
-        list.textContent = "LIVE DATA LADEN…";
+        list.textContent = "Loading market data…";
         const footer = document.createElement("div");
         footer.className = "bureau-crypto-in-screen-footer";
-        footer.textContent = "LIVE · USD";
-        panel.append(heading, list, footer);
+        footer.textContent = "USD · LIVE FEED";
+        panel.append(header,hero,listHeading,list,footer);
         // Render into the original painted portrait glass, not into the
         // oversized button hitbox that includes its metal bezel.
         const scene = document.getElementById("scene");
@@ -206,19 +225,40 @@ export default function BureauExperience() {
             const data: unknown = await response.json();
             if (!Array.isArray(data)) throw new Error("Unexpected market data");
             list.replaceChildren();
-            for (const coin of data.slice(0, 10) as Array<{symbol: string; price: number; change: number}>) {
+            const coins = (data as Array<{symbol:string;price:number;change:number}>).slice(0,10);
+            const fmt = (price:number) => {
+              if (!Number.isFinite(price)) return "—";
+              if (price >= 100000) return "$" + (price/1000).toFixed(1) + "k";
+              if (price >= 1000) return "$" + price.toLocaleString("en-US",{maximumFractionDigits:0});
+              if (price >= 1) return "$" + price.toLocaleString("en-US",{maximumFractionDigits:2});
+              return "$" + price.toFixed(3);
+            };
+            if (coins.length) {
+              const btc = coins[0];
+              heroLabel.textContent = "01   " + String(btc.symbol).toUpperCase() + " / USD";
+              heroValue.textContent = fmt(Number(btc.price));
+              heroChange.textContent = (btc.change >= 0 ? "↗ +" : "↘ ") + Number(btc.change).toFixed(2) + "%  / 24H";
+              heroChange.className = "bureau-crypto-hero-change " + (btc.change >= 0 ? "is-up" : "is-down");
+            }
+            for (const [index,coin] of coins.slice(1).entries()) {
               const row = document.createElement("div");
               row.className = "bureau-crypto-in-screen-row";
-              const name = document.createElement("span");
-              name.textContent = String(coin.symbol || "").slice(0, 5).toUpperCase();
-              const value = document.createElement("span");
-              value.textContent = Number(coin.price).toLocaleString("en-US", {
-                maximumFractionDigits: Number(coin.price) < 1 ? 4 : 2,
-              });
+              const rank = document.createElement("span");
+              rank.className = "bureau-crypto-row-rank";
+              rank.textContent = String(index+2).padStart(2,"0");
+              const name = document.createElement("strong");
+              name.className = "bureau-crypto-row-name";
+              name.textContent = String(coin.symbol||"").slice(0,5).toUpperCase();
+              const quote = document.createElement("div");
+              quote.className = "bureau-crypto-row-quote";
+              const price = document.createElement("span");
+              price.className = "bureau-crypto-row-price";
+              price.textContent = fmt(Number(coin.price));
               const change = document.createElement("span");
               change.textContent = (coin.change >= 0 ? "+" : "") + Number(coin.change).toFixed(1) + "%";
               change.className = coin.change >= 0 ? "is-up" : "is-down";
-              row.append(name, value, change);
+              quote.append(price,change);
+              row.append(rank,name,quote);
               list.appendChild(row);
             }
             footer.textContent = "LIVE · " + new Date().toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
@@ -1085,10 +1125,8 @@ export default function BureauExperience() {
           padding: 0 !important;
         }
         .bureau-embed .bureau-secondary-display:hover { background: transparent !important; }
-        /* The approved image is 1670 × 942. The portrait screen is not
-           rectangular: its glass runs x=259..494, top y=315..337 and
-           bottom y=660..647. Clip only the screen content to that trapezoid.
-           No frame, monitor, tabletop, or base photo is modified. */
+        /* Render only AFTER a click; no changes to the original photo.
+           Perspective-clipped to the actual glass of the left monitor. */
         .bureau-embed #scene > .bureau-crypto-in-screen {
           position: absolute !important;
           left: 15.52% !important;
@@ -1096,86 +1134,133 @@ export default function BureauExperience() {
           width: 14.08% !important;
           height: 36.35% !important;
           z-index: 61 !important;
+          box-sizing: border-box !important;
           display: flex !important;
           flex-direction: column !important;
-          box-sizing: border-box !important;
-          padding: 7.5% 5% 3% 5% !important;
+          gap: 0 !important;
+          padding: 1.75% .95% 1.15% 1.05% !important;
           margin: 0 !important;
-          background: linear-gradient(155deg,#111e26 0%,#08121a 55%,#071015 100%) !important;
-          color: #eef3f0 !important;
+          background: linear-gradient(165deg,#14212a,#08121a 52%,#080e16) !important;
+          color: #f0f4f1 !important;
           clip-path: polygon(0 0,100% 6.1%,100% 96.1%,0 100%) !important;
-          border: none !important;
+          border: 0 !important;
           border-radius: 0 !important;
-          box-shadow: inset 0 0 16px #000a !important;
           overflow: hidden !important;
           pointer-events: none !important;
-          font-family: ui-monospace,SFMono-Regular,Consolas,monospace !important;
-          font-size: clamp(5px,.72vw,10px) !important;
-          line-height: 1.12 !important;
+          box-shadow: none !important;
+          font-family: ui-monospace, SFMono-Regular, Consolas, monospace !important;
+          font-size: clamp(6px, .67vw, 11px) !important;
           letter-spacing: 0 !important;
+          line-height: 1.13 !important;
+          font-variant-numeric: tabular-nums !important;
           text-align: left !important;
         }
         .bureau-embed .bureau-crypto-in-screen-heading {
+          flex: 0 0 auto !important;
           display: flex !important;
           justify-content: space-between !important;
           align-items: center !important;
-          flex: 0 0 auto !important;
-          color: #b7e2cb !important;
-          font-size: 1.02em !important;
-          font-weight: 800 !important;
+          color: #f1f2ed !important;
+          font-size: 1.23em !important;
+          letter-spacing: .06em !important;
+          border-bottom: 1px solid #42605273 !important;
+          padding: 0 0 6% 0 !important;
+          margin: 0 !important;
           white-space: nowrap !important;
-          border-bottom: 1px solid #375448 !important;
-          padding: 0 0 6px 0 !important;
-          margin: 0 0 3px 0 !important;
-          letter-spacing: .025em !important;
         }
-        .bureau-embed .bureau-crypto-in-screen-heading::after {
-          content: "● LIVE" !important;
-          color: #79d69b !important;
-          font-size: .85em !important;
-          letter-spacing: 0 !important;
+        .bureau-embed .bureau-crypto-in-screen-heading strong { font-weight: 900 !important; }
+        .bureau-embed .bureau-crypto-in-screen-heading span {
+          color: #69d3a4 !important;
+          font-size: .68em !important;
+          font-weight: 800 !important;
+          letter-spacing: .03em !important;
+        }
+        .bureau-embed .bureau-crypto-hero {
+          flex: 0 0 auto !important;
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 3px !important;
+          padding: 9% 0 7% 0 !important;
+          margin: 0 !important;
+          border-bottom: 1px solid #4260527a !important;
+        }
+        .bureau-embed .bureau-crypto-hero-label {
+          font-size: .84em !important;
+          color: #a9bfb5 !important;
+          font-weight: 700 !important;
+          letter-spacing: .055em !important;
+        }
+        .bureau-embed .bureau-crypto-hero-value {
+          color: #f1f1e8 !important;
+          font-size: 2.3em !important;
+          font-weight: 900 !important;
+          line-height: 1.04 !important;
+          letter-spacing: -.04em !important;
+          white-space: nowrap !important;
+        }
+        .bureau-embed .bureau-crypto-hero-change {
+          font-weight: 800 !important;
+          letter-spacing: .01em !important;
+          font-size: 1em !important;
+        }
+        .bureau-embed .bureau-crypto-list-heading {
+          flex: 0 0 auto !important;
+          margin: 0 !important;
+          padding: 6% 0 2% 0 !important;
+          color: #839b90 !important;
+          font-size: .75em !important;
+          font-weight: 800 !important;
+          letter-spacing: .12em !important;
         }
         .bureau-embed .bureau-crypto-in-screen-list {
-          display: grid !important;
-          grid-template-rows: repeat(10,minmax(0,1fr)) !important;
-          align-items: stretch !important;
           flex: 1 1 auto !important;
+          display: grid !important;
+          grid-template-rows: repeat(9,minmax(0,1fr)) !important;
           min-height: 0 !important;
-          overflow: hidden !important;
-          padding: 0 !important;
           margin: 0 !important;
+          padding: 0 !important;
+          overflow: hidden !important;
         }
         .bureau-embed .bureau-crypto-in-screen-row {
           display: grid !important;
-          grid-template-columns: 24% 45% 31% !important;
-          gap: 0 !important;
+          grid-template-columns: 16% 27% 57% !important;
           align-items: center !important;
-          border-bottom: 1px solid #779a8123 !important;
-          background: transparent !important;
-          color: #dbe9e2 !important;
-          min-height: 0 !important;
-          padding: 0 !important;
-          white-space: nowrap !important;
-          font-variant-numeric: tabular-nums !important;
-        }
-        .bureau-embed .bureau-crypto-in-screen-row span {
-          display: block !important;
           min-width: 0 !important;
+          min-height: 0 !important;
+          gap: 0 !important;
+          white-space: nowrap !important;
+          border-bottom: 1px solid #7aab8a23 !important;
+          color: #ebf1eb !important;
+        }
+        .bureau-embed .bureau-crypto-row-rank { color: #607b75 !important; font-size: .76em !important; }
+        .bureau-embed .bureau-crypto-row-name {
+          font-weight: 800 !important;
+          font-size: .98em !important;
           overflow: hidden !important;
           text-overflow: clip !important;
         }
-        .bureau-embed .bureau-crypto-in-screen-row span:first-child { color: #c4d2ca !important; font-weight: 800 !important; }
-        .bureau-embed .bureau-crypto-in-screen-row span:nth-child(2),
-        .bureau-embed .bureau-crypto-in-screen-row span:nth-child(3) { text-align: right !important; }
-        .bureau-embed .bureau-crypto-in-screen-row .is-up { color: #7ddeab !important; }
-        .bureau-embed .bureau-crypto-in-screen-row .is-down { color: #f3a29b !important; }
+        .bureau-embed .bureau-crypto-row-quote {
+          display: flex !important;
+          justify-content: flex-end !important;
+          align-items: center !important;
+          gap: 7% !important;
+          min-width: 0 !important;
+        }
+        .bureau-embed .bureau-crypto-row-price { font-weight: 750 !important; color: #c4d6ce !important; }
+        .bureau-embed .bureau-crypto-in-screen-row .is-up,
+        .bureau-embed .bureau-crypto-hero .is-up,
+        .bureau-embed .bureau-crypto-hero-change.is-up { color: #72dba8 !important; }
+        .bureau-embed .bureau-crypto-in-screen-row .is-down,
+        .bureau-embed .bureau-crypto-hero .is-down,
+        .bureau-embed .bureau-crypto-hero-change.is-down { color: #f18f92 !important; }
         .bureau-embed .bureau-crypto-in-screen-footer {
           flex: 0 0 auto !important;
-          font-size: .8em !important;
-          color: #849c92 !important;
+          margin: 0 !important;
+          padding: 5% 0 0 0 !important;
+          color: #748b81 !important;
+          font-size: .74em !important;
+          letter-spacing: .045em !important;
           text-align: center !important;
-          border-top: 1px solid #375448 !important;
-          padding: 4px 0 0 !important;
         }
         .bureau-embed .spot[data-open="bag"] {
           left: 4.3% !important;
