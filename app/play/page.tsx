@@ -46,6 +46,7 @@ export default function Play() {
   const [game, setGame] = useState<Game>(INITIAL);
   const [embedded, setEmbedded] = useState(false);
   const [ready, setReady] = useState(false);
+  const [accessGranted, setAccessGranted] = useState(false);
   const [stage, setStage] = useState(0);
   const [dial, setDial] = useState(380);
   const [cipher, setCipher] = useState("");
@@ -56,6 +57,23 @@ export default function Play() {
   const [finalChoice, setFinalChoice] = useState<Exclude<Ending, null>>("chaos");
   const [finalPhase, setFinalPhase] = useState<"select" | "sequence">("select");
   const [chaosLocked, setChaosLocked] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      try {
+        setAccessGranted(localStorage.getItem("bureau-signed") === "yes" || localStorage.getItem("bureau-perfect-ten") === "yes");
+      } catch { setAccessGranted(false); }
+    };
+    check();
+    window.addEventListener("storage", check);
+    window.addEventListener("focus", check);
+    window.addEventListener("bureau:unlock-changed", check);
+    return () => {
+      window.removeEventListener("storage", check);
+      window.removeEventListener("focus", check);
+      window.removeEventListener("bureau:unlock-changed", check);
+    };
+  }, []);
 
   useEffect(() => {
     setEmbedded(window.parent !== window && new URLSearchParams(window.location.search).get("bureau") === "1");
@@ -211,6 +229,36 @@ export default function Play() {
     document.getElementById("mission-control")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
   const current = MISSIONS[stage];
+
+  if (!ready) return <main className="bureau-secret-gate" aria-label="Checking archive access"><p>VERIFYING ACCESS...</p></main>;
+  if (!accessGranted) return <main className="bureau-secret-gate" aria-label="The Unfinished Project locked">
+    <section className="bureau-secret-lock">
+      <span className="bureau-secret-kicker">THE BUREAU / CLASSIFIED FILE 030</span>
+      <LockKeyhole size={45} strokeWidth={1.2} aria-hidden="true"/>
+      <h1>THE UNFINISHED<br/><em>PROJECT.</em></h1>
+      <strong>ACCESS DENIED. NICE TRY.</strong>
+      <p>Two ways in. Leave your name in the notebook, or nail exactly 10.00 seconds on the red button. No shortcuts.</p>
+      <div className="bureau-secret-options">
+        <Link href="/bureau/guestbook">SIGN THE NOTEBOOK <ArrowRight size={16}/></Link>
+        <Link href="/arcade/ten">BEAT THE RED BUTTON <ArrowRight size={16}/></Link>
+      </div>
+      <small>ONCE UNLOCKED, THIS BROWSER REMEMBERS.</small>
+    </section>
+    <style>{`
+      .bureau-secret-gate{min-height:100dvh;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 32%,#403126,#101315 70%);color:#f4e7d1;font-family:ui-sans-serif,system-ui,sans-serif}
+      .bureau-secret-lock{max-width:560px;width:100%;text-align:center;padding:clamp(25px,5vw,50px);border:1px solid #d5aa6b58;border-radius:16px;background:#171b1de8;box-shadow:0 25px 75px #0008}
+      .bureau-secret-kicker{display:block;margin-bottom:27px;color:#caa36f;font:800 10px ui-monospace,monospace;letter-spacing:.16em}
+      .bureau-secret-lock>svg{color:#eac28b;margin-bottom:12px}
+      .bureau-secret-lock h1{font-size:clamp(30px,6vw,52px);letter-spacing:-.07em;line-height:.99;margin:12px 0 24px}
+      .bureau-secret-lock h1 em{color:#e3ad69;font-style:normal}
+      .bureau-secret-lock strong{color:#f3ca92;font:900 13px ui-monospace,monospace;letter-spacing:.1em}
+      .bureau-secret-lock p{font-size:14px;line-height:1.7;color:#c6b6a5;margin:18px auto 24px}
+      .bureau-secret-options{display:grid;gap:9px}
+      .bureau-secret-options a{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 17px;border:1px solid #b18b5a7b;color:#f5d8a9;background:#2a251e;text-decoration:none;font:800 11px ui-monospace,monospace;letter-spacing:.06em}
+      .bureau-secret-options a:hover{background:#493620}
+      .bureau-secret-lock small{display:block;margin-top:24px;font:10px ui-monospace,monospace;letter-spacing:.07em;color:#9d968c}
+    `}</style>
+  </main>;
 
   return (
     <div className={`ro-game ${embedded ? "ro-game-bureau" : ""}`}>
