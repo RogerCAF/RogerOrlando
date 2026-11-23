@@ -16,6 +16,7 @@ import "./bureau-phone.css";
 import BureauTerminal from "./BureauTerminal";
 import BureauDiagnostics from "./BureauDiagnostics";
 import BureauDesktop from "./BureauDesktop";
+import BureauCrypto from "./BureauCrypto";
 
 /**
  * Same-origin Bureau embed. Keep the original interactive artwork and hotspots,
@@ -36,6 +37,7 @@ export default function BureauExperience() {
   const phoneCloseRef = useRef<HTMLButtonElement>(null);
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [desktopOpen, setDesktopOpen] = useState(false);
+  const [cryptoOpen, setCryptoOpen] = useState(false);
   const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
   const [diagnosticsRgb, setDiagnosticsRgb] = useState(false);
   const [posterOpen, setPosterOpen] = useState(false);
@@ -174,6 +176,7 @@ export default function BureauExperience() {
       if (!document.documentElement.dataset.bureauBagLinkInstalled) {
         document.addEventListener("click", (event: MouseEvent) => {
           const target = event.target as Element | null;
+          const isCrypto = !!target?.closest?.("#bureau-crypto-trigger");
           const isDiagnostics = !!target?.closest?.('[data-open="pc"], [data-inside="pc"]');
           const isBag = !!target?.closest?.('[data-open="bag"], [data-inside="bag"]');
           const isRubik = !!target?.closest?.('[data-open="rubik"], [data-inside="rubik"]');
@@ -181,11 +184,12 @@ export default function BureauExperience() {
           const isKeyboard = !!target?.closest?.('[data-open="keyboard"], [data-inside="keyboard"]');
           const isPhone = !!target?.closest?.('[data-open="phone"], [data-inside="phone"], [data-open="arcade"], [data-inside="arcade"], #bureau-phone-entry');
           const isPoster = !!target?.closest?.('[data-open="muay"], [data-inside="muay"]');
-          if (!isDiagnostics && !isBag && !isRubik && !isArcade && !isKeyboard && !isPhone && !isPoster) return;
+          if (!isCrypto && !isDiagnostics && !isBag && !isRubik && !isArcade && !isKeyboard && !isPhone && !isPoster) return;
           event.preventDefault();
           event.stopPropagation();
           event.stopImmediatePropagation();
-          if (isDiagnostics) {
+          if (isCrypto) setCryptoOpen(true);
+          else if (isDiagnostics) {
             const rgbButton = document.getElementById("rgb");
             setDiagnosticsRgb(Boolean(rgbButton?.textContent?.includes("uit") || document.getElementById("scene")?.classList.contains("rgb-on")));
             setDiagnosticsOpen(true);
@@ -827,51 +831,33 @@ export default function BureauExperience() {
         }
       }
 
-      // Live data stays on the small portrait monitor; the large display is a personal desktop.
-      if (scene && !document.getElementById("bureau-crypto-live")) {
-        const market = document.createElement("div");
-        market.id = "bureau-crypto-live";
-        market.setAttribute("aria-label", "Live top ten cryptocurrency market");
-        market.style.cssText = [
-          "position:absolute","left:66.75%","top:31.15%","width:7.15%","height:25.15%",
-          "box-sizing:border-box","z-index:9","pointer-events:none","overflow:hidden",
-          "background:linear-gradient(145deg,#111920,#060b10)","color:#e2e8de",
-          "padding:0.35% 0.35%","font-family:ui-monospace,monospace",
-          "display:flex","flex-direction:column","gap:1.8%","border-radius:2px"
+      // The small monitor is an entry point, not an always-on market display.
+      // Fetch live data only when the visitor explicitly clicks it.
+      if (scene && !document.getElementById("bureau-crypto-trigger")) {
+        const entry = document.createElement("button");
+        entry.id = "bureau-crypto-trigger";
+        entry.type = "button";
+        entry.setAttribute("aria-label", "Open live cryptocurrency top ten on the small monitor");
+        entry.title = "LIVE CRYPTO TOP 10 · CLICK TO OPEN";
+        entry.style.cssText = [
+          "position:absolute","left:66.65%","top:31.05%","width:7.45%","height:25.75%",
+          "z-index:12","cursor:pointer","box-sizing:border-box",
+          "background:linear-gradient(145deg,#111920,#060b10)","border:1px solid #4b4d4e",
+          "border-radius:2px","padding:0.38% 0.3%","display:flex",
+          "flex-direction:column","align-items:center","justify-content:center",
+          "gap:6%","color:#d9b98a","font-family:ui-monospace,monospace"
         ].join(";");
-        const header = document.createElement("div");
-        header.textContent = "CRYPTO / TOP 10";
-        header.style.cssText = "color:#d8b387;font-size:clamp(3px,.52vw,9px);font-weight:800;letter-spacing:.02em;white-space:nowrap;border-bottom:1px solid #675542;padding-bottom:5%";
-        const status = document.createElement("div");
-        status.textContent = "Loading live market...";
-        status.style.cssText = "font-size:clamp(3px,.39vw,7px);color:#98a7a6";
-        market.append(header,status);
-        scene.appendChild(market);
-        const renderMarket = async () => {
-          try {
-            const response = await window.fetch("/api/crypto/top");
-            if (!response.ok) throw new Error("feed unavailable");
-            const coins: {symbol:string;price:number;change:number}[] = await response.json();
-            if (!Array.isArray(coins) || !coins.length) throw new Error("empty feed");
-            status.replaceChildren();
-            status.style.cssText = "display:flex;flex-direction:column;gap:1.5%;height:92%;justify-content:space-around";
-            coins.slice(0,10).forEach(coin => {
-              const item = document.createElement("div");
-              item.style.cssText = "display:flex;justify-content:space-between;gap:2px;font-size:clamp(3px,.43vw,8px);white-space:nowrap";
-              const symbol = document.createElement("span");
-              symbol.textContent = coin.symbol;
-              const change = document.createElement("span");
-              change.textContent = (coin.change >= 0 ? "+" : "") + coin.change.toFixed(1) + "%";
-              change.style.color = coin.change >= 0 ? "#70d6a2" : "#ec8b84";
-              item.append(symbol,change);
-              status.appendChild(item);
-            });
-          } catch {
-            status.textContent = "MARKET OFFLINE";
-          }
-        };
-        void renderMarket();
-        window.setInterval(() => { if (market.isConnected) void renderMarket(); }, 90000);
+        const title = document.createElement("span");
+        title.textContent = "CRYPTO";
+        title.style.cssText = "font-weight:800;font-size:clamp(4px,.67vw,11px);letter-spacing:.06em";
+        const sub = document.createElement("span");
+        sub.textContent = "TOP 10 · LIVE";
+        sub.style.cssText = "color:#96b49f;font-size:clamp(3px,.46vw,8px)";
+        const open = document.createElement("span");
+        open.textContent = "CLICK TO OPEN";
+        open.style.cssText = "color:#c3b2a4;font-size:clamp(3px,.38vw,7px);margin-top:25%";
+        entry.append(title,sub,open);
+        scene.appendChild(entry);
       }
 
       // Twin monitors and a squared-up case sit in exactly the old hardware
@@ -1425,9 +1411,10 @@ export default function BureauExperience() {
       title="The Bureau — interactieve illustratie" loading="eager"
       // Keep the scene mounted (preserves its interactive state), but stop
       // rendering the large illustrated iframe under the full-screen game.
-      style={gameOpen || bagOpen || rubikOpen || arcadeOpen || posterOpen || terminalOpen || desktopOpen || diagnosticsOpen || phoneMode ? { display: "none" } : undefined}
+      style={gameOpen || bagOpen || rubikOpen || arcadeOpen || posterOpen || terminalOpen || desktopOpen || cryptoOpen || diagnosticsOpen || phoneMode ? { display: "none" } : undefined}
       onLoad={prepareScene} allowFullScreen />
     {desktopOpen && typeof document !== "undefined" && createPortal(<BureauDesktop onClose={() => setDesktopOpen(false)} />, document.body)}
+    {cryptoOpen && typeof document !== "undefined" && createPortal(<BureauCrypto onClose={() => setCryptoOpen(false)} />, document.body)}
     {diagnosticsOpen && typeof document !== "undefined" && createPortal(
       <BureauDiagnostics
         onClose={() => setDiagnosticsOpen(false)}
