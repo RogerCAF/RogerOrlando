@@ -54,9 +54,44 @@ button:focus-visible{outline:2px solid #f5c178;outline-offset:3px}
 .hw-glow{position:absolute;inset:5% 7% 0;border-radius:50%;background:radial-gradient(ellipse,#edaf4a1c 0,transparent 66%);z-index:-1}
 .hw-bag-rim{position:absolute;width:min(86%,440px);height:76px;bottom:52px;border:10px solid #46423e;border-top:18px solid #4c4c4a;border-radius:43% 43% 37% 37%;background:radial-gradient(ellipse,#352719,#161718);box-shadow:0 15px 20px #000a,inset 0 12px 16px #000b;transform:rotate(-3deg);pointer-events:none}
 .hw-hay{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;width:min(85%,430px);height:205px;margin-bottom:0;background:transparent;color:#201c14;border:0;padding:0;user-select:none;-webkit-tap-highlight-color:transparent;outline-offset:7px}
-.hw-hay:before{content:'';position:absolute;inset:3px 0 0;transform:scaleY(var(--fill,1));transform-origin:bottom;border-radius:46% 48% 16% 18% / 70% 72% 15% 16%;clip-path:polygon(3% 100%,0% 77%,10% 56%,15% 57%,22% 29%,30% 36%,39% 16%,48% 25%,55% 14%,64% 34%,72% 22%,81% 51%,87% 46%,95% 72%,100% 100%);background:repeating-linear-gradient(162deg,transparent 0 3px,#fff4ae16 3px 5px,transparent 6px 9px),repeating-linear-gradient(24deg,#c29a51 0px,#f1cc78 3px,#97723b 5px,#d9ab5a 8px,#ad8645 11px);border:2px solid #f0c67e54;box-shadow:inset -20px -12px 25px #59391690,0 9px 13px #0007,0 0 24px #c9934d43}
-.hw-hay:after{content:'';position:absolute;inset:30% 7% 7%;transform:scaleY(var(--fill,1));transform-origin:bottom;clip-path:ellipse(46% 47% at 50% 50%);background:repeating-linear-gradient(13deg,transparent 0 4px,#fff5d51e 4px 5px,transparent 6px 10px);opacity:.65;pointer-events:none}
-.hw-straw-texture{position:absolute;inset:15% 8% 5%;z-index:1;pointer-events:none;transform:scaleY(var(--fill,1));transform-origin:bottom;background:repeating-linear-gradient(-24deg,transparent 0 7px,#ffdb8b83 7px 8px,transparent 9px 13px),repeating-linear-gradient(56deg,transparent 0 6px,#5d472a45 7px 8px,transparent 9px 16px);clip-path:polygon(3% 100%,0% 77%,10% 56%,15% 57%,22% 29%,30% 36%,39% 16%,48% 25%,55% 14%,64% 34%,72% 22%,81% 51%,87% 46%,95% 72%,100% 100%)}
+/* Organic, layered straw heap: irregular outline, tangled fibers and soft volume. */
+.hw-hay{filter:drop-shadow(0 10px 9px #130d0890)}
+.hw-hay:before{
+ content:'';position:absolute;inset:0 0 0;transform:scaleY(var(--fill,1));transform-origin:bottom;
+ border-radius:48% 49% 20% 20% / 64% 66% 19% 18%;
+ clip-path:polygon(0% 100%,1% 86%,4% 79%,7% 67%,10% 68%,13% 55%,17% 59%,21% 43%,25% 46%,29% 31%,34% 34%,38% 21%,43% 25%,48% 15%,53% 22%,58% 18%,63% 31%,67% 27%,72% 39%,76% 36%,81% 53%,85% 50%,89% 66%,93% 69%,97% 84%,100% 88%,100% 100%);
+ background:
+ radial-gradient(ellipse 48% 37% at 43% 35%,#ffe5a2a8 0%,#ecc27366 52%,transparent 100%),
+ radial-gradient(ellipse 37% 70% at 91% 65%,#63421eaa 0%,transparent 92%),
+ radial-gradient(ellipse 55% 33% at 47% 92%,#5a371b98 0%,transparent 100%),
+ repeating-linear-gradient(159deg,transparent 0 6px,#ffe8a53b 7px 8px,transparent 9px 17px),
+ repeating-linear-gradient(27deg,transparent 0 5px,#79502450 6px 7px,transparent 8px 15px),
+ linear-gradient(116deg,#9d6d32 0%,#d6a455 18%,#f0c77a 39%,#dbae62 61%,#9b692f 89%,#6f4826 100%);
+ box-shadow:inset -22px -16px 28px #4b2d1590,inset 15px 12px 24px #ffe3a038,0 8px 14px #0006;
+ transition:transform .35s ease-out;
+}
+.hw-hay:after{
+ content:'';position:absolute;inset:8% 5% 0;transform:scaleY(var(--fill,1));transform-origin:bottom;pointer-events:none;
+ clip-path:polygon(0% 100%,2% 83%,10% 60%,16% 56%,23% 43%,31% 32%,39% 22%,48% 14%,58% 23%,66% 31%,76% 42%,85% 57%,94% 77%,100% 100%);
+ background:
+ repeating-linear-gradient(172deg,transparent 0 12px,#fff0ba76 13px 14px,transparent 15px 28px),
+ repeating-linear-gradient(34deg,transparent 0 11px,#633f203f 12px 13px,transparent 14px 25px),
+ radial-gradient(ellipse at 47% 34%,#fff2be47,transparent 57%);
+ opacity:.8;transition:transform .35s ease-out;
+}
+.hw-straw-texture{
+ position:absolute;inset:3% 1% 0;z-index:1;pointer-events:none;
+ transform:scaleY(var(--fill,1));transform-origin:bottom;
+ clip-path:polygon(0% 100%,2% 82%,7% 66%,14% 58%,19% 46%,25% 43%,31% 30%,39% 21%,47% 14%,54% 20%,61% 23%,69% 33%,76% 42%,84% 52%,91% 69%,98% 84%,100% 100%);
+ background:
+ repeating-linear-gradient(151deg,transparent 0 17px,#ffe6a6a8 17.5px 18.5px,transparent 19px 39px),
+ repeating-linear-gradient(23deg,transparent 0 20px,#fbe0a575 20.5px 21.5px,transparent 22px 43px),
+ repeating-linear-gradient(113deg,transparent 0 14px,#6b47267d 14.5px 15.5px,transparent 16px 34px),
+ repeating-linear-gradient(64deg,transparent 0 24px,#f4c77c66 24px 25px,transparent 26px 47px);
+ background-size:117px 131px,143px 116px,83px 139px,167px 98px;
+ opacity:.89;filter:drop-shadow(0 1px 1px #49301580);transition:transform .35s ease-out;
+}
+.hw-hay:not(:disabled):hover:before{filter:brightness(1.075) saturate(1.08)}
 .hw-scoop-label{position:relative;z-index:3;display:inline-flex;padding:8px 12px;border:1px solid #1c1c1682;background:#201c15d9;border-radius:999px;box-shadow:0 3px 12px #0005;color:#ffdfa3;letter-spacing:.06em;font:900 10px ui-monospace,Consolas,monospace;white-space:nowrap;pointer-events:none}
 .hw-hay:not(:disabled):hover .hw-scoop-label{background:#3a2c1c}
 .hw-hay.hit:before{animation:hw-rustle .24s ease-out}
