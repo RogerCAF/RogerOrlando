@@ -13,6 +13,19 @@ const trail=document.createElement("canvas"),paint=trail.getContext("2d");
 trail.width=W;trail.height=H;
 const map=new Uint32Array(W*H);
 let role="menu",room="",secret="",slot=0,phase="lobby",round=1,points=[0,0,0,0,0],players=[],countdown=3.25,clock=0,stamp=1;
+
+const LAN_STATS_KEY="bureau-curve-lan-career-v1";
+let lanCareer={};try{const stored=JSON.parse(localStorage.getItem(LAN_STATS_KEY)||"{}");if(stored&&typeof stored==="object")lanCareer=stored}catch{}
+const safeCareer=id=>{const r=lanCareer[id]||{};return {rounds:Math.max(0,Number(r.rounds)||0),wins:Math.max(0,Number(r.wins)||0),matches:Math.max(0,Number(r.matches)||0)}};
+function saveLanCareer(){try{localStorage.setItem(LAN_STATS_KEY,JSON.stringify(lanCareer))}catch{}renderLanCareer()}
+function renderLanCareer(){
+ let panel=document.getElementById("lanCareer");
+ if(!panel){panel=document.createElement("div");panel.id="lanCareer";panel.setAttribute("aria-label","LAN lifetime match statistics");panel.style.cssText="padding:11px 14px;margin:10px 0;border:1px solid #af94535a;border-radius:10px;background:#101b2a;color:#e5c392;font:700 11px ui-monospace,monospace";document.getElementById("scoreList")?.after(panel)}
+ if(!panel)return;
+ const rows=[1,2,3,4,5].map(id=>{const a=safeCareer(id);return "P"+id+": "+a.wins+" wins · "+a.rounds+" rounds · "+a.matches+" matches"});
+ panel.textContent="LAN CAREER / SAVED ON HOST DEVICE — "+rows.join("   |   ");
+}
+
 let last=0,frameId=0,sendAt=0,segments=[],held={left:false,right:false},myConnected=false,joinPeer="";
 const peers=new Map(),attempted=new Set();
 let guestPc=null,guestChannel=null,joinStarted=0,alive=true,roomPoll=0,answerPoll=0,connectWatch=0;
@@ -331,9 +344,10 @@ function showResult(title,subtitle,hint){
 }
 function finishRound(){
  const alivePlayers=players.filter(p=>p.alive),lastOne=alivePlayers.length===1?alivePlayers[0]:null;
- if(lastOne){points[lastOne.id-1]++;lastOne.points++}
+ if(lastOne){points[lastOne.id-1]++;lastOne.points++;const career=safeCareer(lastOne.id);career.rounds++;lanCareer[lastOne.id]=career;saveLanCareer()}
  const winner=players.find(p=>points[p.id-1]>=5);
  phase=winner?"matchend":"roundend";
+ if(winner){for(const p of players){const career=safeCareer(p.id);career.matches++;if(p.id===winner.id)career.wins++;lanCareer[p.id]=career}saveLanCareer()}
  const title=winner?"P"+winner.id+" WINT DE MATCH!":lastOne?"P"+lastOne.id+" WINT DE RONDE!":"RONDE VOORBIJ";
  $("arenaStatus").textContent=winner?"MATCH COMPLETE":"ROUND COMPLETE";
  const subtitle=winner?"Eerste speler met 5 punten.":lastOne?"Laatste speler over verdient een punt.":"Niemand overleefde deze ronde.";
@@ -423,5 +437,5 @@ window.addEventListener("beforeunload",()=>{
 setRole("menu");
 if(allowed.test(safeCode(urlRoom))){$("roomInput").value=safeCode(urlRoom);joinRoom(urlRoom)}
 else message("Maak een kamer en deel de link. Iedere speler gebruikt zijn eigen toetsenbord.");
-renderScores();frameId=requestAnimationFrame(frame);
+renderScores();renderLanCareer();frameId=requestAnimationFrame(frame);
 })();
