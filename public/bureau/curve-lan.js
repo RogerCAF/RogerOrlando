@@ -1,4 +1,4 @@
-/* Agtung die Kurve — same-LAN / one-keyboard-per-computer mode.
+/* Mano die Kurve — same-LAN / one-keyboard-per-computer mode.
  * Signaling: same-origin /api/curve-room (immutable short-lived Vercel Blobs).
  * Gameplay: host-authoritative browser physics, WebRTC peer-to-peer data channels.
  * No user accounts, external realtime SDKs, or installed server required. */
