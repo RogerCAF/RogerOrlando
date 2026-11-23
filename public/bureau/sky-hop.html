@@ -57,20 +57,20 @@ button:focus-visible{outline:3px solid #f9d598;outline-offset:3px}
 <div class="keyboard-strip" aria-label="PC besturing Snuffy Bird"><strong>⌨ PC CONTROLS</strong><span><kbd>SPACE</kbd> / <kbd>↑</kbd> vlieg</span><span><kbd>P</kbd> pauze</span><span>MUIS / TOUCH = tik om te vliegen</span></div>
 <div class="layout">
 <section class="board" aria-label="Snuffy Bird game"><canvas id="game" width="420" height="680" role="button" tabindex="0" aria-label="Tap or press space to flap and avoid the gates"></canvas><div class="hud"><b id="score">0</b></div>
-<div class="overlay" id="overlay"><div class="dialog"><div class="eyebrow" id="eyebrow">ONE MORE TRY</div><h2 id="title">Keep it flying.</h2><p id="desc">Tap, click or press SPACE to hop. Thread the gaps between the towers. How far can you get?</p><div class="result" id="result"></div><div class="field"><label for="nickname">PLAYER NAME / TOP 10</label><input id="nickname" maxlength="12" value="PLAYER" autocomplete="off" spellcheck="false" aria-label="Name for local high score"></div><button class="primary" type="button" id="start">START FLIGHT →</button><span class="tip">SPACE / ↑ / TAP TO HOP · P TO PAUSE</span></div></div></section>
-<aside class="sidebar"><div class="sidebar-head"><small>LOCAL RECORDS / THIS DEVICE</small><h2>TOP 10 FLIGHTS</h2></div><ol class="scores" id="scores"></ol><footer>Scores are saved automatically in this browser. The ten highest flights remain after refreshing the page.</footer></aside>
-</div><p class="instructions">ORIGINAL ONE-TAP ARCADE · No account required · High scores are stored on this device</p>
+<div class="overlay" id="overlay"><div class="dialog"><div class="eyebrow" id="eyebrow">ONE MORE TRY</div><h2 id="title">Keep it flying.</h2><p id="desc">Tap, click or press SPACE to hop. Thread the gaps between the towers. How far can you get?</p><div class="result" id="result"></div><div class="field"><label for="nickname">PLAYER NAME / TOP 10</label><input id="nickname" maxlength="12" value="PLAYER" autocomplete="off" spellcheck="false" aria-label="Name for global high score"></div><button class="primary" type="button" id="start">START FLIGHT →</button><span class="tip">SPACE / ↑ / TAP TO HOP · P TO PAUSE</span></div></div></section>
+<aside class="sidebar"><div class="sidebar-head"><small>GLOBAL LEADERBOARD / ALL PLAYERS</small><h2>TOP 10 FLIGHTS</h2></div><ol class="scores" id="scores"></ol><footer id="board-status" aria-live="polite">Loading worldwide records… Scores are saved online and stay after refreshing.</footer></aside>
+</div><p class="instructions">ORIGINAL ONE-TAP ARCADE · No account required · Persistent global leaderboard</p>
 </main><script>
 (()=>{
 "use strict";
 const W=420,H=680,$=id=>document.getElementById(id),canvas=$("game"),ctx=canvas.getContext("2d"),overlay=$("overlay"),STORAGE="the-bureau-skyhop-top10-v1",PLAYER="the-bureau-skyhop-player-v1";
-let records=[],nickname="PLAYER",mode="menu",score=0,best=0,player={x:112,y:280,vy:0,r:15,angle:0},pipes=[],particles=[],spawn=0,last=0,raf=0,time=0,flash=0,ground=0;
+let records=[],globalRecords=[],globalReady=false,nickname="PLAYER",mode="menu",score=0,best=0,player={x:112,y:280,vy:0,r:15,angle:0},pipes=[],particles=[],spawn=0,last=0,raf=0,time=0,flash=0,ground=0;
 const rng=(a,b)=>a+Math.random()*(b-a),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const safeName=s=>String(s||"PLAYER").trim().replace(/[^a-zA-Z0-9 _-]/g,"").slice(0,12).toUpperCase()||"PLAYER";
 function load(){
  try{const raw=JSON.parse(localStorage.getItem(STORAGE)||"[]");if(Array.isArray(raw))records=raw.filter(r=>r&&Number.isInteger(r.score)&&r.score>0&&r.score<1e7&&typeof r.name==="string").map(r=>({name:safeName(r.name),score:r.score})).sort((a,b)=>b.score-a.score).slice(0,10)}catch{}
  try{nickname=safeName(localStorage.getItem(PLAYER)||"PLAYER")}catch{}
- $("nickname").value=nickname;renderScores();
+ $("nickname").value=nickname;renderScores();void refreshLeaderboard();
 }
 function persist(){
  try{localStorage.setItem(STORAGE,JSON.stringify(records));localStorage.setItem(PLAYER,nickname)}catch{}
@@ -78,8 +78,46 @@ function persist(){
 function renderScores(){
  best=records[0]?.score||0;$("best").textContent=String(best);
  const list=$("scores");list.replaceChildren();
- if(!records.length){const el=document.createElement("li");el.className="empty";el.textContent="No records yet. Your first successful flight starts the list.";list.append(el);return}
- records.forEach((entry,index)=>{const li=document.createElement("li");for(const [klass,value] of [["rank",String(index+1).padStart(2,"0")],["name",entry.name],["points",String(entry.score)]]){const span=document.createElement("span");span.className=klass;span.textContent=value;li.append(span)}list.append(li)});
+ const displayed=globalReady?globalRecords:[];
+ if(!displayed.length){const el=document.createElement("li");el.className="empty";el.textContent=globalReady?"No records yet. Be the first to claim the top spot.":"Loading global Top 10…";list.append(el);return}
+ displayed.forEach((entry,index)=>{const li=document.createElement("li");for(const [klass,value] of [["rank",String(index+1).padStart(2,"0")],["name",entry.name],["points",String(entry.score)]]){const span=document.createElement("span");span.className=klass;span.textContent=value;li.append(span)}list.append(li)});
+}
+const API="/api/sky-hop/leaderboard";
+let leaderboardRequest=0;
+function normalizeGlobal(entries){
+ if(!Array.isArray(entries))return [];
+ return entries.filter(r=>r&&typeof r.name==="string"&&Number.isInteger(r.score)&&r.score>0)
+  .map(r=>({name:safeName(r.name),score:r.score}))
+  .sort((a,b)=>b.score-a.score).slice(0,10);
+}
+async function refreshLeaderboard(){
+ const current=++leaderboardRequest;
+ try{
+  const response=await fetch(API,{cache:"no-store"});
+  if(!response.ok)throw Error("Leaderboard offline");
+  const payload=await response.json();
+  if(current!==leaderboardRequest)return;
+  globalRecords=normalizeGlobal(payload.entries);
+  globalReady=true;
+  $("board-status").textContent="Worldwide Top 10 · Saved online and shared across devices. No account needed.";
+ }catch{
+  if(current!==leaderboardRequest)return;
+  globalReady=false;
+  $("board-status").textContent="Global leaderboard temporarily unavailable. Your personal best still saves in this browser.";
+ }
+ renderScores();
+}
+async function submitGlobalScore(points){
+ if(globalReady&&globalRecords.length>=10&&points<globalRecords[9].score)return;
+ const name=nickname;
+ $("board-status").textContent="Saving qualifying flight to the global leaderboard…";
+ try{
+  const response=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,score:points})});
+  if(!response.ok)throw Error("Save failed");
+  await refreshLeaderboard();
+ }catch{
+  $("board-status").textContent="Could not save this flight online. Your personal best is safe on this device.";
+ }
 }
 function addRecord(points){
  if(points<1)return false;
@@ -109,7 +147,8 @@ function end(){
  if(mode!=="playing")return;
  mode="ended";flash=.5;
  const newBest=addRecord(score);
- setDialog(newBest?"NEW PERSONAL BEST":"FLIGHT COMPLETE",newBest?"New record!":"Try again?",score?"You cleared "+score+" gate"+(score===1?"":"s")+". Your result has been saved to the local Top 10.":"You can do it. Tap earlier to keep your flyer in the air.",score,"TRY AGAIN →");
+ if(score>0)void submitGlobalScore(score);
+ setDialog(newBest?"NEW PERSONAL BEST":"FLIGHT COMPLETE",newBest?"New personal record!":"Try again?",score?"You cleared "+score+" gate"+(score===1?"":"s")+". Your personal best was saved. A qualifying score is sent to the global Top 10.":"You can do it. Tap earlier to keep your flyer in the air.",score,"TRY AGAIN →");
 }
 function pause(){if(mode!=="playing")return;mode="paused";setDialog("RUN PAUSED","Hold that thought.","Resume whenever you're ready. Your flight is frozen.",null,"RESUME →")}
 function tower(x,y,w,h,top){
