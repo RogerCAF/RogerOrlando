@@ -9,7 +9,7 @@ const phoneGameDetails: Record<PhoneGame, { title: string; subtitle: string; url
   sky: { title: "SNUFFY BIRD", subtitle: "THE BUREAU / PHONE / TOP 10", url: "/bureau/sky-hop.html" },
   curve: { title: "AGTUNG DIE KURVE", subtitle: "THE BUREAU / PHONE / LOCAL MULTIPLAYER", url: "/bureau/curve-clash.html" },
   reaction: { title: "DR. MONGO’S REACTION GAME", subtitle: "THE BUREAU / PHONE / REFLEX TEST", url: "/arcade/reaction" },
-  ten: { title: "THE BUTTON 10:00", subtitle: "THE BUREAU / PHONE / TIMING CHALLENGE", url: "/arcade/ten" },
+  ten: { title: "KAYA’S BUTTON", subtitle: "THE BUREAU / PHONE / TIMING CHALLENGE", url: "/arcade/ten" },
 };
 import "./bureau-game.css";
 import "./bureau-phone.css";
@@ -1427,8 +1427,8 @@ export default function BureauExperience() {
                 <span className="bureau-game-preview bureau-preview-ten" aria-hidden="true"><span className="preview-ten-time">10.00</span><span className="preview-ten-button"/><span className="preview-ten-bottom">STOP THE CLOCK</span></span>
                 <span className="bureau-phone-app-symbol"><Timer size={35} strokeWidth={1.65} aria-hidden="true"/></span>
                 <span className="bureau-phone-app-type"><Trophy size={13} aria-hidden="true"/> TIMING / PERSONAL BEST</span>
-                <strong>THE BUTTON 10:00</strong>
-                <span>Stop de rode knop op exact 10.00 seconden.</span>
+                <strong>KAYA’S BUTTON</strong>
+                <span>Kaya heeft weinig geduld. Jij hebt precies 10.00 seconden.</span>
                 <em>PLAY NOW <ArrowRight size={15} aria-hidden="true"/></em>
               </button>
             </div>
@@ -1529,8 +1529,8 @@ export default function BureauExperience() {
               <button className="bureau-arcade-card bureau-projects-phone-card" type="button" onClick={() => {setArcadeOpen(false);setPhoneMode("ten");}}>
                 <span className="bureau-arcade-card-index">08 / PRECISION CHALLENGE</span>
                 <Timer className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
-                <strong>THE BUTTON 10:00</strong>
-                <span>One red button. Ten seconds. Zero excuses.</span>
+                <strong>KAYA’S BUTTON</strong>
+                <span>One red button. Ten seconds. Don't make Kaya angry.</span>
                 <em>STOP AT 10.00 <ArrowRight size={15} aria-hidden="true"/></em>
               </button>
             </div>
