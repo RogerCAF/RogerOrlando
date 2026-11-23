@@ -15,6 +15,7 @@ import "./bureau-game.css";
 import "./bureau-phone.css";
 import BureauTerminal from "./BureauTerminal";
 import BureauDiagnostics from "./BureauDiagnostics";
+import BureauDesktop from "./BureauDesktop";
 
 /**
  * Same-origin Bureau embed. Keep the original interactive artwork and hotspots,
@@ -34,6 +35,7 @@ export default function BureauExperience() {
   const [phoneMode, setPhoneMode] = useState<null | "menu" | PhoneGame>(null);
   const phoneCloseRef = useRef<HTMLButtonElement>(null);
   const [terminalOpen, setTerminalOpen] = useState(false);
+  const [desktopOpen, setDesktopOpen] = useState(false);
   const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
   const [diagnosticsRgb, setDiagnosticsRgb] = useState(false);
   const [posterOpen, setPosterOpen] = useState(false);
@@ -193,7 +195,7 @@ export default function BureauExperience() {
           else if (isKeyboard) setTerminalOpen(true);
           else if (isRubik) setRubikOpen(true);
           else if (isBag) setBagOpen(true);
-          else setArcadeOpen(true);
+          else setDesktopOpen(true);
         }, true);
         document.documentElement.dataset.bureauBagLinkInstalled = "1";
       }
@@ -663,8 +665,8 @@ export default function BureauExperience() {
               icon.tabIndex = -1;
             }
           });
-          // One visible Projects launcher, not repeated projects folders.
-          if (!icons.querySelector("#bureau-projects-os-app")) {
+          // The games live at their original physical entry points; no duplicate desktop launcher.
+          if (false && !icons.querySelector("#bureau-projects-os-app")) {
             const projects = document.createElement("button");
             projects.type = "button";
             projects.id = "bureau-projects-os-app";
@@ -1390,8 +1392,9 @@ export default function BureauExperience() {
       title="The Bureau — interactieve illustratie" loading="eager"
       // Keep the scene mounted (preserves its interactive state), but stop
       // rendering the large illustrated iframe under the full-screen game.
-      style={gameOpen || bagOpen || rubikOpen || arcadeOpen || posterOpen || terminalOpen || diagnosticsOpen || phoneMode ? { display: "none" } : undefined}
+      style={gameOpen || bagOpen || rubikOpen || arcadeOpen || posterOpen || terminalOpen || desktopOpen || diagnosticsOpen || phoneMode ? { display: "none" } : undefined}
       onLoad={prepareScene} allowFullScreen />
+    {desktopOpen && typeof document !== "undefined" && createPortal(<BureauDesktop onClose={() => setDesktopOpen(false)} />, document.body)}
     {diagnosticsOpen && typeof document !== "undefined" && createPortal(
       <BureauDiagnostics
         onClose={() => setDiagnosticsOpen(false)}
