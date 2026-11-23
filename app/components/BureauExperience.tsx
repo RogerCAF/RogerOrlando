@@ -7,7 +7,7 @@ import { ArrowLeft, ArrowRight, Bird, Box, Dumbbell, FolderClosed, Gamepad2, Loc
 type PhoneGame = "sky" | "curve" | "reaction" | "ten";
 const phoneGameDetails: Record<PhoneGame, { title: string; subtitle: string; url: string }> = {
   sky: { title: "SNUFFY BIRD", subtitle: "THE BUREAU / PHONE / TOP 10", url: "/bureau/sky-hop.html" },
-  curve: { title: "AGTUNG DIE KURVE", subtitle: "THE BUREAU / PHONE / LOCAL MULTIPLAYER", url: "/bureau/curve-clash.html" },
+  curve: { title: "MANO DIE KURVE", subtitle: "THE BUREAU / PHONE / LOCAL MULTIPLAYER", url: "/bureau/curve-clash.html" },
   reaction: { title: "DR. MONGO’S REACTION GAME", subtitle: "THE BUREAU / PHONE / REFLEX TEST", url: "/arcade/reaction" },
   ten: { title: "KAYA’S BUTTON", subtitle: "THE BUREAU / PHONE / TIMING CHALLENGE", url: "/arcade/ten" },
 };
@@ -1675,7 +1675,7 @@ export default function BureauExperience() {
                 <span className="bureau-game-preview bureau-preview-curve" aria-hidden="true"><span className="preview-grid"/><span className="preview-trail trail-a"/><span className="preview-trail trail-b"/><span className="preview-trail trail-c"/></span>
                 <span className="bureau-phone-app-symbol"><Route size={35} strokeWidth={1.65} aria-hidden="true"/></span>
                 <span className="bureau-phone-app-type"><UsersRound size={13} aria-hidden="true"/> LOCAL MULTIPLAYER / 2–5</span>
-                <strong>AGTUNG DIE KURVE</strong>
+                <strong>MANO DIE KURVE</strong>
                 <span>Speel met 2–5 spelers op één toetsenbord of op eigen computers via een kamercode.</span>
                 <em>PLAY TOGETHER <ArrowRight size={15} aria-hidden="true"/></em>
               </button>
@@ -1781,7 +1781,7 @@ export default function BureauExperience() {
               <button className="bureau-arcade-card bureau-projects-phone-card" type="button" onClick={() => {setArcadeOpen(false);setPhoneMode("curve");}}>
                 <span className="bureau-arcade-card-index">06 / MULTIPLAYER</span>
                 <Route className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
-                <strong>ACHTUNG DIE KURVE</strong>
+                <strong>MANO DIE KURVE</strong>
                 <span>One turn too late. Five people blaming each other.</span>
                 <em>PLAY TOGETHER <ArrowRight size={15} aria-hidden="true"/></em>
               </button>
