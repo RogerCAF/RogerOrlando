@@ -666,20 +666,6 @@ export default function BureauExperience() {
             }
           });
           // The games live at their original physical entry points; no duplicate desktop launcher.
-          if (false && !icons.querySelector("#bureau-projects-os-app")) {
-            const projects = document.createElement("button");
-            projects.type = "button";
-            projects.id = "bureau-projects-os-app";
-            projects.setAttribute("aria-label", "Open Projects — Main Experiences and Pocket Arcade");
-            projects.title = "PROJECTS / ALL EXPERIENCES";
-            projects.innerHTML = "▤<br>Projects";
-            projects.addEventListener("click", event => {
-              event.preventDefault();
-              event.stopPropagation();
-              setArcadeOpen(true);
-            });
-            icons.appendChild(projects);
-          }
           if (icons.querySelector("#bureau-unfinished-os-app")) return;
           const app = document.createElement("button");
           app.type = "button";
