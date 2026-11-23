@@ -103,7 +103,7 @@ export default function BruteForceLab(){
    </label>
   </div>
   <p style={{fontSize:11,color:feasible?"#a7b9ad":"#ffac9c"}}>
-   {mode==="dictionary"?"Woordenlijst met "+dictionaryCandidates.length+" varianten (woorden, hoofdletters, cijfers en suffixen):"Maximaal "+maximum+" tekens, alleen "+(mode==="digits"?"cijfers":mode==="letters"?"kleine letters a–z":"kleine letters en cijfers")+". "}
+   {mode==="dictionary"?"Woordenlijst met "+dictionaryCandidates.length+" varianten (woorden, hoofdletters, cijfers en suffixen)":"Maximaal "+maximum+" tekens, alleen "+(mode==="digits"?"cijfers":mode==="letters"?"kleine letters a–z":"kleine letters en cijfers")+". "}
    {mode!=="dictionary"&&feasible?" Zoekruimte: "+numberOfCandidates.toLocaleString("nl-NL")+" combinaties. Een lange brute-force-zoektocht kan praktisch onhaalbaar zijn.":""}
    {mode==="dictionary"&&" Woorden buiten deze lijst kunnen niet gevonden worden."}
   </p>
