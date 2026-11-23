@@ -171,37 +171,12 @@ export default function BureauExperience() {
       const window = frame.contentWindow;
       if (!document || !window) return;
 
-      // Capture pointer interactions before the embedded scene's original
-      // arcade hotspots. The large monitor hotspot overlaps the narrow
-      // screen, so its own pointer handler must get first priority.
-      if (!document.documentElement.dataset.bureauCryptoPointerInstalled) {
-        document.addEventListener("pointerdown", (event: PointerEvent) => {
-          const area = document.getElementById("scene")?.getBoundingClientRect();
-          if (!area || area.width <= 0 || area.height <= 0) return;
-          const px = (event.clientX - area.left) / area.width;
-          const py = (event.clientY - area.top) / area.height;
-          if (px < .659 || px > .755 || py < .289 || py > .582) return;
-          event.preventDefault();
-          event.stopPropagation();
-          event.stopImmediatePropagation();
-          setCryptoOpen(true);
-        }, true);
-        document.documentElement.dataset.bureauCryptoPointerInstalled = "1";
-      }
-
       // The approved homepage artwork is an embedded iframe. Full-screen
       // games open in page-level portals so the illustration stays untouched.
       if (!document.documentElement.dataset.bureauBagLinkInstalled) {
         document.addEventListener("click", (event: MouseEvent) => {
           const target = event.target as Element | null;
-          // The main monitor hotspot overlaps the small portrait monitor.
-          // Prioritize the small screen based on its exact scene coordinates.
-          const sceneHit = document.getElementById("scene");
-          const sceneBounds = sceneHit?.getBoundingClientRect();
-          const x = sceneBounds && sceneBounds.width > 0 ? (event.clientX - sceneBounds.left) / sceneBounds.width : -1;
-          const y = sceneBounds && sceneBounds.height > 0 ? (event.clientY - sceneBounds.top) / sceneBounds.height : -1;
-          const insideSmallMonitor = x >= 0.659 && x <= 0.755 && y >= 0.289 && y <= 0.582;
-          const isCrypto = insideSmallMonitor || !!target?.closest?.("#bureau-crypto-trigger");
+          const isCrypto = !!target?.closest?.("#bureau-secondary-display");
           const isDiagnostics = !!target?.closest?.('[data-open="pc"], [data-inside="pc"]');
           const isBag = !!target?.closest?.('[data-open="bag"], [data-inside="bag"]');
           const isRubik = !!target?.closest?.('[data-open="rubik"], [data-inside="rubik"]');
@@ -856,35 +831,6 @@ export default function BureauExperience() {
         }
       }
 
-      // The small monitor is an entry point, not an always-on market display.
-      // Fetch live data only when the visitor explicitly clicks it.
-      if (scene && !document.getElementById("bureau-crypto-trigger")) {
-        const entry = document.createElement("button");
-        entry.id = "bureau-crypto-trigger";
-        entry.type = "button";
-        entry.setAttribute("aria-label", "Open live cryptocurrency top ten on the small monitor");
-        entry.title = "LIVE CRYPTO TOP 10 · CLICK TO OPEN";
-        entry.style.cssText = [
-          "position:absolute","left:66.63%","top:31.03%","width:7.7%","height:25.8%",
-          "z-index:100","cursor:pointer","box-sizing:border-box","pointer-events:auto!important",
-          "background:linear-gradient(145deg,#111920,#060b10)","border:1px solid #4b4d4e",
-          "border-radius:2px","padding:0.38% 0.3%","display:flex",
-          "flex-direction:column","align-items:center","justify-content:center",
-          "gap:6%","color:#d9b98a","font-family:ui-monospace,monospace"
-        ].join(";");
-        const title = document.createElement("span");
-        title.textContent = "CRYPTO";
-        title.style.cssText = "font-weight:800;font-size:clamp(4px,.67vw,11px);letter-spacing:.06em";
-        const sub = document.createElement("span");
-        sub.textContent = "TOP 10 · LIVE";
-        sub.style.cssText = "color:#96b49f;font-size:clamp(3px,.46vw,8px)";
-        const open = document.createElement("span");
-        open.textContent = "CLICK TO OPEN";
-        open.style.cssText = "color:#c3b2a4;font-size:clamp(3px,.38vw,7px);margin-top:25%";
-        entry.append(title,sub,open);
-        scene.appendChild(entry);
-      }
-
       // Twin monitors and a squared-up case sit in exactly the old hardware
       // footprint. The main monitor, books, Rubik, phone, bag and names list
       // retain their original scene coordinates and functionality.
@@ -917,12 +863,13 @@ export default function BureauExperience() {
         secondary.type = "button";
         secondary.id = "bureau-secondary-display";
         secondary.className = "bureau-secondary-display";
-        secondary.setAttribute("aria-label", "Open Bureau Arcade via het tweede scherm");
-        secondary.title = "TWEEDE SCHERM / BUREAU ARCADE";
+        secondary.setAttribute("aria-label", "Open live crypto top 10 op het kleine linker scherm");
+        secondary.title = "LIVE CRYPTO TOP 10 — KLIK OM TE OPENEN";
+        secondary.innerHTML = '<span class="bureau-crypto-secondary-title">CRYPTO / TOP 10</span><span class="bureau-crypto-secondary-line">BTC &nbsp; ETH &nbsp; SOL</span><span class="bureau-crypto-secondary-action">OPEN LIVE ↗</span>';
         secondary.addEventListener("click", (event) => {
           event.preventDefault();
           event.stopPropagation();
-          setArcadeOpen(true);
+          setCryptoOpen(true);
         });
         scene.appendChild(secondary);
       }
@@ -1060,8 +1007,26 @@ export default function BureauExperience() {
           top: 31.2% !important;
           width: 16% !important;
           height: 38.5% !important;
-          z-index: 12 !important;
+          z-index: 60 !important;
+          background: linear-gradient(150deg, #102126f2, #071116f2) !important;
+          color: #dcf2e2 !important;
+          border: 1px solid #38544a !important;
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 12% !important;
+          cursor: pointer !important;
+          overflow: hidden !important;
+          font: 600 clamp(8px, 1.1vw, 16px) ui-monospace, monospace !important;
+          letter-spacing: .05em !important;
+          text-align: center !important;
         }
+        .bureau-embed .bureau-secondary-display span { color: #c5ebd4 !important; text-shadow: 0 1px 3px #030806 !important; }
+        .bureau-embed .bureau-secondary-display .bureau-crypto-secondary-title { color: #d3b88b !important; font-weight: 800 !important; }
+        .bureau-embed .bureau-secondary-display .bureau-crypto-secondary-line { font-size: .72em !important; }
+        .bureau-embed .bureau-secondary-display .bureau-crypto-secondary-action { background: #1e493b; padding: .55em .8em; border-radius: 4px; font-size: .75em !important; }
+        .bureau-embed .bureau-secondary-display:hover .bureau-crypto-secondary-action { background: #32664f; }
         .bureau-embed .spot[data-open="bag"] {
           left: 4.3% !important;
           top: 11.2% !important;
