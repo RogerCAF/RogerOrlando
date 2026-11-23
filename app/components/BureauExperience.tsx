@@ -14,6 +14,7 @@ const phoneGameDetails: Record<PhoneGame, { title: string; subtitle: string; url
 import "./bureau-game.css";
 import "./bureau-phone.css";
 import BureauTerminal from "./BureauTerminal";
+import BureauDiagnostics from "./BureauDiagnostics";
 
 /**
  * Same-origin Bureau embed. Keep the original interactive artwork and hotspots,
@@ -33,6 +34,8 @@ export default function BureauExperience() {
   const [phoneMode, setPhoneMode] = useState<null | "menu" | PhoneGame>(null);
   const phoneCloseRef = useRef<HTMLButtonElement>(null);
   const [terminalOpen, setTerminalOpen] = useState(false);
+  const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
+  const [diagnosticsRgb, setDiagnosticsRgb] = useState(false);
   const [posterOpen, setPosterOpen] = useState(false);
   const posterCloseRef = useRef<HTMLButtonElement>(null);
 
@@ -169,17 +172,23 @@ export default function BureauExperience() {
       if (!document.documentElement.dataset.bureauBagLinkInstalled) {
         document.addEventListener("click", (event: MouseEvent) => {
           const target = event.target as Element | null;
+          const isDiagnostics = !!target?.closest?.('[data-open="pc"], [data-inside="pc"]');
           const isBag = !!target?.closest?.('[data-open="bag"], [data-inside="bag"]');
           const isRubik = !!target?.closest?.('[data-open="rubik"], [data-inside="rubik"]');
           const isArcade = !!target?.closest?.('[data-open="projects"], [data-open="monitor"], [data-open="computer"]');
           const isKeyboard = !!target?.closest?.('[data-open="keyboard"], [data-inside="keyboard"]');
           const isPhone = !!target?.closest?.('[data-open="phone"], [data-inside="phone"], [data-open="arcade"], [data-inside="arcade"], #bureau-phone-entry');
           const isPoster = !!target?.closest?.('[data-open="muay"], [data-inside="muay"]');
-          if (!isBag && !isRubik && !isArcade && !isKeyboard && !isPhone && !isPoster) return;
+          if (!isDiagnostics && !isBag && !isRubik && !isArcade && !isKeyboard && !isPhone && !isPoster) return;
           event.preventDefault();
           event.stopPropagation();
           event.stopImmediatePropagation();
-          if (isPhone) setPhoneMode("menu");
+          if (isDiagnostics) {
+            const rgbButton = document.getElementById("rgb");
+            setDiagnosticsRgb(Boolean(rgbButton?.textContent?.includes("uit") || document.getElementById("scene")?.classList.contains("rgb-on")));
+            setDiagnosticsOpen(true);
+          }
+          else if (isPhone) setPhoneMode("menu");
           else if (isPoster) setPosterOpen(true);
           else if (isKeyboard) setTerminalOpen(true);
           else if (isRubik) setRubikOpen(true);
@@ -1381,8 +1390,18 @@ export default function BureauExperience() {
       title="The Bureau — interactieve illustratie" loading="eager"
       // Keep the scene mounted (preserves its interactive state), but stop
       // rendering the large illustrated iframe under the full-screen game.
-      style={gameOpen || bagOpen || rubikOpen || arcadeOpen || posterOpen || terminalOpen || phoneMode ? { display: "none" } : undefined}
+      style={gameOpen || bagOpen || rubikOpen || arcadeOpen || posterOpen || terminalOpen || diagnosticsOpen || phoneMode ? { display: "none" } : undefined}
       onLoad={prepareScene} allowFullScreen />
+    {diagnosticsOpen && typeof document !== "undefined" && createPortal(
+      <BureauDiagnostics
+        onClose={() => setDiagnosticsOpen(false)}
+        rgbEnabled={diagnosticsRgb}
+        onToggleRgb={() => {
+          const frame = iframeRef.current?.contentDocument;
+          frame?.getElementById("rgb")?.click();
+          setDiagnosticsRgb(Boolean(frame?.getElementById("scene")?.classList.contains("rgb-on")));
+        }}
+      />, document.body)}
     {phoneMode === "menu" && typeof document !== "undefined" && createPortal(
       <div className="bureau-phone-overlay" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) setPhoneMode(null); }}>
         <section className="bureau-phone-device" role="dialog" aria-modal="true" aria-labelledby="bureau-phone-heading">
