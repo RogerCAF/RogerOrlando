@@ -12,6 +12,7 @@ export default function MongoReactionGame() {
   const [best, setBest] = useState<number | null>(null);
   const [last, setLast] = useState<number | null>(null);
   const [lastVerified, setLastVerified] = useState(false);
+  const [verificationState, setVerificationState] = useState<"idle"|"pending"|"verified"|"failed">("idle");
   const [history, setHistory] = useState<number[]>([]);
   const [nickname, setNickname] = useState("NPC");
   const [ranking, setRanking] = useState<Array<{name:string;ms:number}>>([]);
@@ -55,6 +56,7 @@ export default function MongoReactionGame() {
       if (!response.ok) throw Error(data.error || "Verification failed");
       setLast(data.ms);
       setLastVerified(true);
+      setVerificationState("verified");
       setHistory(previous => {
         const next = [data.ms, ...previous].slice(0,5);
         try {localStorage.setItem(HISTORY_STORE, JSON.stringify(next))} catch {}
@@ -70,6 +72,7 @@ export default function MongoReactionGame() {
     } catch {
       setLast(measured);
       setLastVerified(false);
+      setVerificationState("failed");
       setBoardStatus("This round was not verified. It was not entered into the global Top 10.");
     }
   }
@@ -87,6 +90,7 @@ export default function MongoReactionGame() {
       if (timeout.current !== null) clearTimeout(timeout.current);
       setLast(null);
       setLastVerified(false);
+      setVerificationState("idle");
       changePhase("waiting");
       void (async () => {
         try {
@@ -121,6 +125,7 @@ export default function MongoReactionGame() {
       const id=roundRef.current;
       roundRef.current=null;
       setLast(ms);
+      setVerificationState("pending");
       changePhase("result");
       if (id) void submitReaction(id,ms);
     }
@@ -152,7 +157,7 @@ export default function MongoReactionGame() {
   const experimentState = phase==="waiting" ? "CALIBRATING"
     : phase==="go" ? "SIGNAL ACTIVE"
     : phase==="early" ? "FALSE START"
-    : phase==="result" ? (lastVerified ? "VERIFIED RESULT" : "MEASURING RESULT")
+    : phase==="result" ? (verificationState==="verified" ? "VERIFIED RESULT" : verificationState==="failed" ? "NOT VERIFIED" : "VERIFYING RESULT")
     : "READY TO TEST";
   const reactionGrade = last === null ? null : last < 150 ? "LIGHTNING"
     : last < 220 ? "EXCELLENT" : last < 300 ? "QUICK" : last < 400 ? "GOOD" : "KEEP PRACTICING";
@@ -191,7 +196,7 @@ export default function MongoReactionGame() {
             <div className="mongo-stat"><small>LATEST RESPONSE</small><strong>{last === null ? "—" : last}<em>{last === null ? "" : " ms"}</em></strong></div>
             <div className="mongo-stat"><small>LAST 5 VERIFIED / AVG</small><strong>{average === null ? "—" : average}<em>{average === null ? "" : " ms"}</em></strong></div>
           </div>
-          <div className="mongo-lab-footer"><span>{phase==="result"&&reactionGrade ? reactionGrade : "GREEN MEANS GO · EARLY TAP RESETS"}</span><span>{phase==="result" ? (lastVerified?"✓ VERIFIED":"PENDING / UNVERIFIED") : "LOCAL BEST SAVED"}</span></div>
+          <div className="mongo-lab-footer"><span>{phase==="result"&&reactionGrade ? reactionGrade : "GREEN MEANS GO · EARLY TAP RESETS"}</span><span>{phase==="result" ? (lastVerified?"✓ VERIFIED":verificationState==="failed"?"UNVERIFIED":"VERIFYING…") : "LOCAL BEST SAVED"}</span></div>
         </section>
         <aside className="mongo-leaderboard" aria-label="Verified global reaction leaderboard">
           <div className="mongo-board-title"><span className="mongo-board-kicker">WORLDWIDE / COMPETITIVE</span><h2>GLOBAL TOP <em>10</em></h2><p>Every published time is checked by the server.</p></div>
