@@ -33,3 +33,216 @@
 .bureau-standalone .rg-ten-section>.bureau-arcade-key-guide{margin:0 clamp(15px,3vw,38px) 22px}
 .bureau-reaction-target:focus-visible{outline:2px solid #f2c68c;outline-offset:3px}
 @media(max-width:620px){.bureau-arcade-key-guide{gap:8px 12px;padding:10px;font-size:9px}.bureau-arcade-key-guide kbd{min-width:27px;height:24px;font-size:10px;padding:0 5px}.bureau-standalone .rg-ten-section>.bureau-arcade-key-guide{margin:0 15px 14px}}
+
+
+/* THE BUTTON 10.00 — in-frame sizing.
+   Gameplay stays fully visible; long score histories scroll inside their panel.
+   Scoped to the arcade route, never the main ROGER.OS play page. */
+.bureau-ten-standalone {
+  width:100%;
+  height:100dvh;
+  min-height:0;
+  padding:clamp(5px,1.1vmin,12px);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+.bureau-ten-standalone .bureau-standalone-inner {
+  display:flex;
+  flex:1 1 auto;
+  flex-direction:column;
+  width:100%;
+  max-width:1120px;
+  min-width:0;
+  min-height:0;
+  margin:0 auto;
+}
+.bureau-ten-standalone .bureau-standalone-eyebrow {
+  flex:0 0 auto;
+  padding:0 3px clamp(3px,.6vmin,8px);
+  font-size:clamp(8px,1.3vmin,10px);
+  line-height:1.35;
+}
+.bureau-ten-standalone .rg-ten-section {
+  display:grid;
+  grid-template-rows:auto auto minmax(0,1fr);
+  flex:1 1 auto;
+  min-height:0;
+  min-width:0;
+  margin:0;
+  overflow:hidden;
+}
+.bureau-ten-standalone .rg-ten-head {
+  min-height:0;
+  gap:8px;
+  padding:clamp(7px,1.4vmin,15px) clamp(12px,2vmin,24px);
+  align-items:center;
+  border-bottom:1px solid #37404b;
+}
+.bureau-ten-standalone .rg-ten-head h2 {
+  margin:3px 0 0;
+  font-size:clamp(20px,3vmin,36px);
+  line-height:1.09;
+  letter-spacing:-.05em;
+}
+.bureau-ten-standalone .rg-ten-head p {
+  display:none;
+}
+.bureau-ten-standalone .rg-ten-kicker,
+.bureau-ten-standalone .rg-ten-edition {
+  font-size:9px;
+}
+.bureau-ten-standalone .rg-ten-section>.bureau-arcade-key-guide {
+  flex:0 0 auto;
+  min-height:0;
+  margin:0 clamp(10px,1.6vw,20px) clamp(5px,.9vmin,10px);
+  padding:clamp(5px,.8vmin,9px) 10px;
+  gap:5px 12px;
+  font-size:9px;
+  line-height:1.25;
+}
+.bureau-ten-standalone .bureau-arcade-key-guide kbd {
+  min-width:26px;
+  height:21px;
+  font-size:10px;
+}
+.bureau-ten-standalone .rg-ten-layout {
+  display:grid;
+  grid-template-columns:minmax(0,1.12fr) minmax(260px,.88fr);
+  min-width:0;
+  min-height:0;
+  height:100%;
+  overflow:hidden;
+}
+.bureau-ten-standalone .rg-ten-play {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-width:0;
+  min-height:0;
+  overflow:hidden;
+  padding:clamp(6px,1.3vmin,16px) clamp(10px,1.5vw,20px);
+}
+.bureau-ten-standalone .rg-ten-readout {
+  flex:0 0 auto;
+  min-height:0;
+  gap:3px;
+  text-align:center;
+}
+.bureau-ten-standalone .rg-ten-readout>strong {
+  font-size:clamp(29px,5.3vmin,50px);
+  line-height:1.04;
+}
+.bureau-ten-standalone .rg-ten-readout>strong span {
+  font-size:10px;
+}
+.bureau-ten-standalone .rg-ten-button {
+  display:grid;
+  place-items:center;
+  flex:0 0 auto;
+  width:min(220px,27dvh,31vw);
+  height:min(220px,27dvh,31vw);
+  min-width:0;
+  min-height:0;
+  margin:clamp(6px,1.4vmin,14px) auto clamp(7px,1.6vmin,15px);
+  border-width:7px!important;
+}
+.bureau-ten-standalone .rg-ten-instruction {
+  flex:0 0 auto;
+  margin:0 0 clamp(5px,1vmin,11px);
+  line-height:1.4;
+}
+.bureau-ten-standalone .rg-ten-toggle {
+  flex:0 0 auto;
+  justify-content:center;
+  gap:6px;
+  font-size:9px;
+  line-height:1.3;
+}
+.bureau-ten-standalone .rg-ten-toggle small {
+  font-size:9px;
+}
+.bureau-ten-standalone .rg-ten-scores {
+  min-width:0;
+  min-height:0;
+  height:100%;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+  padding:clamp(12px,2vmin,20px) clamp(12px,1.8vw,24px);
+}
+.bureau-ten-standalone .rg-ten-best {
+  margin:clamp(5px,1vmin,10px) 0 5px;
+  font-size:clamp(30px,4.5vmin,49px);
+}
+.bureau-ten-standalone .rg-ten-best-sub {
+  margin:0 0 clamp(8px,1.3vmin,15px);
+}
+.bureau-ten-standalone .rg-ten-history-head {
+  padding-top:clamp(8px,1.3vmin,13px);
+}
+.bureau-ten-standalone .rg-ten-history {
+  margin-top:8px;
+}
+.bureau-ten-standalone .rg-ten-history li {
+  padding:clamp(5px,.95vmin,9px) 0;
+}
+.bureau-ten-standalone .rg-ten-scores>div[style] {
+  margin-top:clamp(9px,1.5vmin,16px)!important;
+  padding-top:clamp(9px,1.5vmin,16px)!important;
+}
+@media(max-width:780px) {
+  .bureau-ten-standalone .rg-ten-layout {
+    display:flex;
+    flex-direction:column;
+  }
+  .bureau-ten-standalone .rg-ten-play {
+    flex:0 0 auto;
+    height:auto;
+    padding:clamp(6px,.95vmin,10px) 8px;
+  }
+  .bureau-ten-standalone .rg-ten-button {
+    width:min(190px,23dvh,48vw);
+    height:min(190px,23dvh,48vw);
+    margin:6px auto 9px;
+  }
+  .bureau-ten-standalone .rg-ten-readout>strong {
+    font-size:clamp(29px,5.5vmin,41px);
+  }
+  .bureau-ten-standalone .rg-ten-instruction {
+    margin-bottom:6px;
+    font-size:10px;
+  }
+  .bureau-ten-standalone .rg-ten-toggle {
+    font-size:9px;
+  }
+  .bureau-ten-standalone .rg-ten-scores {
+    flex:1 1 0;
+    height:auto;
+    min-height:0;
+    padding:10px 13px;
+    border-left:0;
+    border-top:1px solid #394450;
+  }
+  .bureau-ten-standalone .rg-ten-head {
+    padding:9px 12px;
+  }
+  .bureau-ten-standalone .rg-ten-head h2 {
+    font-size:clamp(19px,4.2vw,29px);
+  }
+}
+@media(max-height:480px) {
+  .bureau-ten-standalone .bureau-standalone-eyebrow {display:none}
+  .bureau-ten-standalone .rg-ten-head {padding:5px 10px}
+  .bureau-ten-standalone .rg-ten-head h2 {font-size:19px}
+  .bureau-ten-standalone .rg-ten-edition {display:none}
+  .bureau-ten-standalone .rg-ten-section>.bureau-arcade-key-guide {padding:3px 7px;margin-bottom:3px}
+  .bureau-ten-standalone .rg-ten-button {
+    width:min(120px,23dvh,36vw);
+    height:min(120px,23dvh,36vw);
+    margin:4px auto 5px;
+  }
+  .bureau-ten-standalone .rg-ten-readout>strong {font-size:28px}
+  .bureau-ten-standalone .rg-ten-instruction {font-size:9px;margin-bottom:3px}
+}
