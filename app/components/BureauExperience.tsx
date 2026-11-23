@@ -16,7 +16,6 @@ import "./bureau-phone.css";
 import BureauTerminal from "./BureauTerminal";
 import BureauDiagnostics from "./BureauDiagnostics";
 import BureauDesktop from "./BureauDesktop";
-import BureauCrypto from "./BureauCrypto";
 
 /**
  * Same-origin Bureau embed. Keep the original interactive artwork and hotspots,
@@ -37,7 +36,6 @@ export default function BureauExperience() {
   const phoneCloseRef = useRef<HTMLButtonElement>(null);
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [desktopOpen, setDesktopOpen] = useState(false);
-  const [cryptoOpen, setCryptoOpen] = useState(false);
   const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
   const [diagnosticsRgb, setDiagnosticsRgb] = useState(false);
   const [posterOpen, setPosterOpen] = useState(false);
@@ -171,6 +169,68 @@ export default function BureauExperience() {
       const window = frame.contentWindow;
       if (!document || !window) return;
 
+      // The left monitor is part of the ORIGINAL artwork. Do not repaint it
+      // until the visitor clicks the invisible hotspot. Market rows are rendered
+      // directly INSIDE that exact screen, never in a fullscreen portal.
+      const activateLeftCrypto = (button: HTMLButtonElement) => {
+        if (button.dataset.cryptoActivated === "1") return;
+        button.dataset.cryptoActivated = "1";
+        button.classList.add("is-active");
+        button.setAttribute("aria-label", "Live top ten cryptocurrency prices on left monitor");
+        button.title = "LIVE CRYPTO TOP 10";
+        const panel = document.createElement("div");
+        panel.className = "bureau-crypto-in-screen";
+        const heading = document.createElement("div");
+        heading.className = "bureau-crypto-in-screen-heading";
+        heading.textContent = "CRYPTO / TOP 10";
+        const list = document.createElement("div");
+        list.className = "bureau-crypto-in-screen-list";
+        list.textContent = "LIVE DATA LADEN…";
+        const footer = document.createElement("div");
+        footer.className = "bureau-crypto-in-screen-footer";
+        footer.textContent = "LIVE · USD";
+        panel.append(heading, list, footer);
+        button.appendChild(panel);
+        let inFlight = false;
+        const load = async () => {
+          if (inFlight || !button.isConnected) return;
+          inFlight = true;
+          try {
+            const response = await window.fetch("/api/crypto/top", { cache: "no-store" });
+            if (!response.ok) throw new Error("Market unavailable");
+            const data: unknown = await response.json();
+            if (!Array.isArray(data)) throw new Error("Unexpected market data");
+            list.replaceChildren();
+            for (const coin of data.slice(0, 10) as Array<{symbol: string; price: number; change: number}>) {
+              const row = document.createElement("div");
+              row.className = "bureau-crypto-in-screen-row";
+              const name = document.createElement("span");
+              name.textContent = String(coin.symbol || "").slice(0, 5).toUpperCase();
+              const value = document.createElement("span");
+              value.textContent = Number(coin.price).toLocaleString("en-US", {
+                maximumFractionDigits: Number(coin.price) < 1 ? 4 : 2,
+              });
+              const change = document.createElement("span");
+              change.textContent = (coin.change >= 0 ? "+" : "") + Number(coin.change).toFixed(1) + "%";
+              change.className = coin.change >= 0 ? "is-up" : "is-down";
+              row.append(name, value, change);
+              list.appendChild(row);
+            }
+            footer.textContent = "LIVE · " + new Date().toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
+          } catch {
+            list.textContent = "KOERSEN TIJDELIJK NIET BESCHIKBAAR";
+            footer.textContent = "VERBINDING OFFLINE";
+          } finally {
+            inFlight = false;
+          }
+        };
+        void load();
+        const refresh = window.setInterval(() => {
+          if (!button.isConnected) { window.clearInterval(refresh); return; }
+          void load();
+        }, 90_000);
+      };
+
       // The approved homepage artwork is an embedded iframe. Full-screen
       // games open in page-level portals so the illustration stays untouched.
       if (!document.documentElement.dataset.bureauBagLinkInstalled) {
@@ -188,7 +248,7 @@ export default function BureauExperience() {
           event.preventDefault();
           event.stopPropagation();
           event.stopImmediatePropagation();
-          if (isCrypto) setCryptoOpen(true);
+          if (isCrypto) { const monitor = document.getElementById("bureau-secondary-display"); if (monitor instanceof window.HTMLButtonElement) activateLeftCrypto(monitor); }
           else if (isDiagnostics) {
             const rgbButton = document.getElementById("rgb");
             setDiagnosticsRgb(Boolean(rgbButton?.textContent?.includes("uit") || document.getElementById("scene")?.classList.contains("rgb-on")));
@@ -870,7 +930,7 @@ export default function BureauExperience() {
         secondary.addEventListener("click", (event) => {
           event.preventDefault();
           event.stopPropagation();
-          setCryptoOpen(true);
+          activateLeftCrypto(secondary);
         });
         scene.appendChild(secondary);
       }
@@ -1003,22 +1063,71 @@ export default function BureauExperience() {
           outline: 1px solid rgba(220,197,159,.62) !important;
           outline-offset: 1px !important;
         }
+        /* The ORIGINAL left-screen artwork stays entirely visible and
+           unmodified before click: this is only a transparent hit target. */
         .bureau-embed .bureau-secondary-display {
           left: 14.2% !important;
           top: 31.2% !important;
           width: 16% !important;
           height: 38.5% !important;
           z-index: 60 !important;
-          background: linear-gradient(145deg, #17242bf5, #060c13f5) !important;
+          background: transparent !important;
+          border: 0 !important;
           color: transparent !important;
-          border: 1px solid #3b474b !important;
-          display: block !important;
+          box-shadow: none !important;
           cursor: pointer !important;
           overflow: hidden !important;
+          padding: 0 !important;
         }
-        .bureau-embed .bureau-secondary-display:hover {
-          border-color: #78948c !important;
-          background: linear-gradient(145deg, #1a2b33f5, #08121af5) !important;
+        .bureau-embed .bureau-secondary-display:hover { background: transparent !important; }
+        /* After click, replace ONLY the pixels inside the left monitor screen. */
+        .bureau-embed .bureau-secondary-display .bureau-crypto-in-screen {
+          position: absolute !important;
+          inset: 6% 9% 6% 9% !important;
+          z-index: 1 !important;
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 2% !important;
+          padding: 6% 4% !important;
+          box-sizing: border-box !important;
+          background: #081219f5 !important;
+          color: #e8f5e9 !important;
+          border-radius: 2px !important;
+          text-align: left !important;
+          font-family: ui-monospace, SFMono-Regular, Consolas, monospace !important;
+          font-size: clamp(5px, .57vw, 10px) !important;
+          line-height: 1.25 !important;
+        }
+        .bureau-embed .bureau-crypto-in-screen-heading {
+          color: #cbb084 !important;
+          font-weight: 800 !important;
+          letter-spacing: .04em !important;
+          padding-bottom: 3% !important;
+          border-bottom: 1px solid #355247 !important;
+        }
+        .bureau-embed .bureau-crypto-in-screen-list {
+          flex: 1 !important;
+          min-height: 0 !important;
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: space-around !important;
+          overflow: hidden !important;
+        }
+        .bureau-embed .bureau-crypto-in-screen-row {
+          display: grid !important;
+          grid-template-columns: 29% 41% 30% !important;
+          gap: 1px !important;
+          color: #e4f2e8 !important;
+          white-space: nowrap !important;
+        }
+        .bureau-embed .bureau-crypto-in-screen-row span:nth-child(2) { text-align: right !important; }
+        .bureau-embed .bureau-crypto-in-screen-row span:nth-child(3) { text-align: right !important; }
+        .bureau-embed .bureau-crypto-in-screen-row .is-up { color: #74d9a0 !important; }
+        .bureau-embed .bureau-crypto-in-screen-row .is-down { color: #f28c88 !important; }
+        .bureau-embed .bureau-crypto-in-screen-footer {
+          font-size: .8em !important;
+          color: #7a9d8d !important;
+          text-align: center !important;
         }
         .bureau-embed .spot[data-open="bag"] {
           left: 4.3% !important;
@@ -1394,10 +1503,9 @@ export default function BureauExperience() {
       title="The Bureau — interactieve illustratie" loading="eager"
       // Keep the scene mounted (preserves its interactive state), but stop
       // rendering the large illustrated iframe under the full-screen game.
-      style={gameOpen || bagOpen || rubikOpen || arcadeOpen || posterOpen || terminalOpen || desktopOpen || cryptoOpen || diagnosticsOpen || phoneMode ? { display: "none" } : undefined}
+      style={gameOpen || bagOpen || rubikOpen || arcadeOpen || posterOpen || terminalOpen || desktopOpen || diagnosticsOpen || phoneMode ? { display: "none" } : undefined}
       onLoad={prepareScene} allowFullScreen />
     {desktopOpen && typeof document !== "undefined" && createPortal(<BureauDesktop onClose={() => setDesktopOpen(false)} />, document.body)}
-    {cryptoOpen && typeof document !== "undefined" && createPortal(<BureauCrypto onClose={() => setCryptoOpen(false)} />, document.body)}
     {diagnosticsOpen && typeof document !== "undefined" && createPortal(
       <BureauDiagnostics
         onClose={() => setDiagnosticsOpen(false)}
