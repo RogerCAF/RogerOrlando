@@ -6,12 +6,16 @@ const STORE = "roger-os-ten-seconds-v1";
 const TARGET = 10000;
 const format = (ms: number) => (ms / 1000).toFixed(2);
 type Attempt = { time: number; at: number };
+type BoardEntry = {name:string;ms:number;deviation:number;at:string};
 
 export default function TenSecondChallenge() {
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [phase, setPhase] = useState<"ready" | "running" | "result">("ready");
   const [elapsed, setElapsed] = useState(0);
   const [showTime, setShowTime] = useState(true);
+  const [nickname, setNickname] = useState("PLAYER");
+  const [allTime, setAllTime] = useState<BoardEntry[]>([]);
+  const [leaderboardStatus, setLeaderboardStatus] = useState("Loading all-time Top 10…");
   const started = useRef<number | null>(null);
   const displayTimer = useRef<number | null>(null);
   const phaseRef = useRef<"ready" | "running" | "result">("ready");
@@ -30,8 +34,32 @@ export default function TenSecondChallenge() {
         setAttempts(safe);
       }
     } catch { /* Browser storage may be unavailable. */ }
+    try {setNickname(localStorage.getItem("bureau-kaya-name")||"PLAYER")}catch{}
+    void refreshLeaderboard();
     return () => { if (displayTimer.current !== null) window.clearInterval(displayTimer.current); };
   }, []);
+
+  async function refreshLeaderboard() {
+    try {
+      const response=await fetch("/api/kayas-button/leaderboard",{cache:"no-store"});
+      if(!response.ok)throw Error("Leaderboard offline");
+      const data=await response.json();
+      setAllTime(Array.isArray(data.entries)?data.entries:[]);
+      setLeaderboardStatus("ALL-TIME TOP 10 · SHARED ONLINE");
+    } catch {setLeaderboardStatus("All-time leaderboard temporarily unavailable. Local attempts are still saved.")}
+  }
+  async function submitScore(time:number) {
+    const name=nickname.trim().toUpperCase().replace(/[^A-Z0-9 _-]/g,"").slice(0,12)||"PLAYER";
+    try{localStorage.setItem("bureau-kaya-name",name)}catch{}
+    try{
+      setLeaderboardStatus("Submitting qualifying attempt…");
+      const response=await fetch("/api/kayas-button/leaderboard",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,ms:Math.round(time)})});
+      if(!response.ok)throw Error("Save failed");
+      const data=await response.json();
+      setAllTime(Array.isArray(data.entries)?data.entries:[]);
+      setLeaderboardStatus(data.saved?"SAVED TO ALL-TIME TOP 10":"ALL-TIME TOP 10 · SCORE DID NOT QUALIFY");
+    }catch{setLeaderboardStatus("Could not submit this score. Your local record is preserved.")}
+  }
 
   // Only the *visual readout* needs periodic updates. The score itself is
   // measured with performance.now() when STOP is pressed, so reducing renders
@@ -64,12 +92,13 @@ export default function TenSecondChallenge() {
     attemptsRef.current = next;
     setAttempts(next);
     try { localStorage.setItem(STORE, JSON.stringify(next)); } catch { /* Still playable without localStorage. */ }
+    void submitScore(actual);
     // A genuine stopped result which displays 10.00 unlocks Secret File 030.
     if (Math.round(actual / 10) === 1000) {
       try { localStorage.setItem("bureau-perfect-ten", "yes"); } catch { /* No persistence in restricted browsers. */ }
       window.dispatchEvent(new Event("bureau:unlock-changed"));
     }
-  }, []);
+  }, [nickname]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -101,7 +130,7 @@ export default function TenSecondChallenge() {
   return <section className="rg-ten-section" aria-label="Speel 10.00 seconden timinggame">
     <div className="rg-ten-head">
       <div><span className="rg-ten-kicker">KAYA’S BUTTON / 10.00</span><h2>Kaya’s Button. <em>Don’t push it.</em></h2>
-      <p>Klik op START om de timer te starten en op STOP wanneer je denkt dat precies 10.00 seconden voorbij zijn. Je beste score en laatste pogingen blijven op dit apparaat bewaard.</p></div>
+      <p>Klik op START om de timer te starten en op STOP wanneer je denkt dat precies 10.00 seconden voorbij zijn. Je persoonlijke pogingen blijven op dit apparaat bewaard. De beste tien tijden, het dichtst bij exact 10.00 seconden, staan voor altijd in de gedeelde Top 10.</p></div>
       <span className="rg-ten-edition">ARCADE / 002</span>
     </div>
     <div className="bureau-arcade-key-guide"><strong>⌨ PC CONTROLS</strong><span><kbd>SPACE</kbd> of <kbd>ENTER</kbd> start / stop</span><span><kbd>B</kbd> blind mode</span><span>MUIS / TOUCH: rode knop</span></div>
@@ -126,6 +155,19 @@ export default function TenSecondChallenge() {
         <ol className="rg-ten-history">{attempts.length ? attempts.slice(0, 5).map((entry,i)=>
           <li key={entry.at+"-"+i}><span>#{String(attempts.length-i).padStart(2,"0")}</span><strong>{format(entry.time)} s</strong><small>{entry.time >= TARGET ? "+" : "−"}{format(Math.abs(entry.time-TARGET))} s</small></li>
         ) : <li className="rg-ten-empty">Je laatste vijf tijden verschijnen hier.</li>}</ol>
+        <div style={{marginTop:22,paddingTop:18,borderTop:"1px solid #ffffff22"}}>
+          <div className="rg-ten-score-head"><span>ALL-TIME TOP 10</span><span>WORLDWIDE</span></div>
+          <label style={{display:"block",margin:"13px 0",fontSize:10,fontWeight:800,letterSpacing:".08em",color:"#eac18b"}}>PLAYER NAME
+            <input aria-label="Naam voor het all-time klassement" value={nickname} maxLength={12} onChange={e=>setNickname(e.target.value)} style={{display:"block",marginTop:7,width:"100%",padding:"10px",borderRadius:7,border:"1px solid #af8b5c",background:"#142031",color:"#fff"}}/>
+          </label>
+          <p role="status" style={{fontSize:10,color:"#a9bac9"}}>{leaderboardStatus}</p>
+          <ol className="rg-ten-history" style={{marginTop:10}}>
+            {allTime.length?allTime.map((entry,index)=><li key={entry.at+"-"+index}>
+              <span>#{String(index+1).padStart(2,"0")} {entry.name}</span><strong>{format(entry.ms)} s</strong><small>±{format(entry.deviation)} s</small>
+            </li>):<li className="rg-ten-empty">Nog geen all-time records.</li>}
+          </ol>
+          <small style={{display:"block",marginTop:9,color:"#a9bac9",fontSize:10}}>Closest to 10.00 wins. Equal deviations: earliest record first.</small>
+        </div>
       </aside>
     </div>
   </section>;
