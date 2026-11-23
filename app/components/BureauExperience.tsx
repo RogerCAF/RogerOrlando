@@ -248,7 +248,7 @@ export default function BureauExperience() {
           event.preventDefault();
           event.stopPropagation();
           event.stopImmediatePropagation();
-          if (isCrypto) { const monitor = document.getElementById("bureau-secondary-display"); if (monitor instanceof window.HTMLButtonElement) activateLeftCrypto(monitor); }
+          if (isCrypto) { const monitor = document.getElementById("bureau-secondary-display"); if (monitor?.tagName === "BUTTON") activateLeftCrypto(monitor as HTMLButtonElement); }
           else if (isDiagnostics) {
             const rgbButton = document.getElementById("rgb");
             setDiagnosticsRgb(Boolean(rgbButton?.textContent?.includes("uit") || document.getElementById("scene")?.classList.contains("rgb-on")));
