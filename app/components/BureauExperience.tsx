@@ -767,7 +767,7 @@ export default function BureauExperience() {
         desk.setAttribute("aria-hidden", "true");
         desk.draggable = false;
         desk.decoding = "async";
-        desk.src = "/bureau/desk-surface-clean.svg?v=soft-desk-v3";
+        desk.src = "/bureau/desk-surface-clean.svg?v=angular-desk-corners-v4";
         scene.appendChild(desk);
       }
 
