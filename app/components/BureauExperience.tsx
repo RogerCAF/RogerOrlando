@@ -862,9 +862,12 @@ export default function BureauExperience() {
       if (scene) {
         const phoneSpot = scene.querySelector<HTMLElement>('.spot[data-open="arcade"], .spot[data-open="phone"]');
         if (phoneSpot) {
-          phoneSpot.setAttribute("aria-label", "Open de vier spellen op de telefoon");
-          phoneSpot.title = "PHONE ARCADE / 4 GAMES";
-        } else if (!document.getElementById("bureau-phone-entry")) {
+          // Old illustration hotspot is positioned over the wrong object.
+          // Keep it for compatibility, but use a dedicated hit target on the real phone.
+          phoneSpot.setAttribute("aria-hidden", "true");
+          phoneSpot.setAttribute("tabindex", "-1");
+        }
+        if (!document.getElementById("bureau-phone-entry")) {
           const phone = document.createElement("button");
           phone.type = "button";
           phone.id = "bureau-phone-entry";
@@ -1070,15 +1073,23 @@ export default function BureauExperience() {
           height: 50% !important;
           z-index: 11 !important;
         }
+        /* The approved photo's handset is to the RIGHT of the monitor.
+           An independent transparent button ensures the launcher stays clickable. */
         .bureau-embed .spot[data-open="arcade"],
-        .bureau-embed .spot[data-open="phone"],
+        .bureau-embed .spot[data-open="phone"] {
+          pointer-events: none !important;
+        }
         .bureau-embed #bureau-phone-entry {
           position: absolute !important;
-          left: 14.9% !important;
-          top: 69.7% !important;
-          width: 7.4% !important;
-          height: 8.6% !important;
-          z-index: 16 !important;
+          left: 71.1% !important;
+          top: 64.4% !important;
+          width: 7.6% !important;
+          height: 15% !important;
+          z-index: 19 !important;
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          pointer-events: auto !important;
           cursor: pointer !important;
           background: transparent !important;
           border: 0 !important;
@@ -1093,13 +1104,11 @@ export default function BureauExperience() {
         }
         @media (max-width: 680px) {
           /* Minimum ~44px phone target on small screens without moving its artwork. */
-          .bureau-embed .spot[data-open="arcade"],
-          .bureau-embed .spot[data-open="phone"],
           .bureau-embed #bureau-phone-entry {
-            left: 12.5% !important;
-            top: 67.5% !important;
-            width: 12.5% !important;
-            height: 14.4% !important;
+            left: 69.5% !important;
+            top: 62.5% !important;
+            width: 12% !important;
+            height: 18% !important;
           }
         }
         /* The real handset is at the RIGHT of the monitor (not the left).
