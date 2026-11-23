@@ -57,10 +57,10 @@ export default function BureauDesktop({onClose}:{onClose:()=>void}){
  {/* Recycle bin sits in the upper-right, clear of the window controls. */}
  <button onClick={()=>{setFolder("Recycle Bin");setTool(null);setFile(null);}} style={{...buttonStyle,position:"absolute",right:17,top:70,width:102,flexDirection:"column",alignItems:"center",textAlign:"center",gap:7,fontSize:11,textShadow:"0 1px 5px #000,0 1px 9px #000",zIndex:1}}>
  <Trash2 size={37} strokeWidth={1.5} color="#e9c17e"/><span>Recycle Bin</span></button>
- {/* A compact bottom row of security tools, just above the OS taskbar. */}
- <div role="group" aria-label="Security programs" style={{position:"absolute",left:"50%",bottom:51,transform:"translateX(-50%)",width:"min(710px,calc(100% - 28px))",display:"grid",gridTemplateColumns:"repeat(5,minmax(0,1fr))",gap:4,padding:"9px 8px 5px",border:"1px solid #ffffff33",borderRadius:13,background:"rgba(7,13,18,.45)",backdropFilter:"blur(8px)",zIndex:1}}>
- {tools.map((name,i)=>{const ToolIcon=toolIcons[i];return <button key={name} onClick={()=>{setTool(name);setFile(null);}} style={{...buttonStyle,flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center",gap:6,padding:"7px 2px",minWidth:0,fontSize:11,textShadow:"0 1px 5px #000,0 1px 9px #000"}}>
- <ToolIcon size={31} strokeWidth={1.5} color="#91dec1" style={{filter:"drop-shadow(0 2px 7px #000a)"}}/><span style={{overflowWrap:"anywhere"}}>{name}</span></button>})}
+ {/* Ordinary desktop shortcuts, directly on the wallpaper at the bottom-left. */}
+ <div role="group" aria-label="Security programs" style={{position:"absolute",left:15,bottom:55,width:"min(620px,calc(100% - 30px))",display:"flex",flexWrap:"wrap",alignItems:"flex-end",gap:"8px 6px",zIndex:1}}>
+ {tools.map((name,i)=>{const ToolIcon=toolIcons[i];return <button key={name} onClick={()=>{setTool(name);setFile(null);}} style={{...buttonStyle,flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center",gap:6,padding:"7px 3px",width:108,minWidth:0,fontSize:11,textShadow:"0 1px 5px #000,0 1px 9px #000"}}>
+ <ToolIcon size={34} strokeWidth={1.5} color="#91dec1" style={{filter:"drop-shadow(0 2px 7px #000a)"}}/><span style={{overflowWrap:"anywhere"}}>{name}</span></button>})}
  </div>
  <div style={{position:"absolute",bottom:0,left:0,right:0,minHeight:45,background:"rgba(5,9,14,.86)",borderTop:"1px solid #45474a",display:"flex",alignItems:"center",gap:12,padding:"0 19px",fontSize:11,color:"#ddd4ca",backdropFilter:"blur(10px)"}}><Monitor size={17}/> ROGER OS <span style={{marginLeft:"auto"}}>PRIVATE WORKSTATION</span></div>
  {folder&&<div style={{position:"absolute",zIndex:2,top:"15%",left:"min(12%,95px)",width:"min(690px,83%)",height:"min(420px,67%)",background:"#121820",border:"1px solid #4b514f",borderRadius:12,boxShadow:"0 24px 70px #000b",overflow:"auto"}}>
