@@ -841,6 +841,53 @@ export default function BureauExperience() {
         }
       }
 
+      // Live data stays on the small portrait monitor; the large display is a personal desktop.
+      if (scene && !document.getElementById("bureau-crypto-live")) {
+        const market = document.createElement("div");
+        market.id = "bureau-crypto-live";
+        market.setAttribute("aria-label", "Live top ten cryptocurrency market");
+        market.style.cssText = [
+          "position:absolute","left:66.75%","top:31.15%","width:7.15%","height:25.15%",
+          "box-sizing:border-box","z-index:9","pointer-events:none","overflow:hidden",
+          "background:linear-gradient(145deg,#111920,#060b10)","color:#e2e8de",
+          "padding:0.35% 0.35%","font-family:ui-monospace,monospace",
+          "display:flex","flex-direction:column","gap:1.8%","border-radius:2px"
+        ].join(";");
+        const header = document.createElement("div");
+        header.textContent = "CRYPTO / TOP 10";
+        header.style.cssText = "color:#d8b387;font-size:clamp(3px,.52vw,9px);font-weight:800;letter-spacing:.02em;white-space:nowrap;border-bottom:1px solid #675542;padding-bottom:5%";
+        const status = document.createElement("div");
+        status.textContent = "Loading live market...";
+        status.style.cssText = "font-size:clamp(3px,.39vw,7px);color:#98a7a6";
+        market.append(header,status);
+        scene.appendChild(market);
+        const renderMarket = async () => {
+          try {
+            const response = await window.fetch("/api/crypto/top");
+            if (!response.ok) throw new Error("feed unavailable");
+            const coins: {symbol:string;price:number;change:number}[] = await response.json();
+            if (!Array.isArray(coins) || !coins.length) throw new Error("empty feed");
+            status.replaceChildren();
+            status.style.cssText = "display:flex;flex-direction:column;gap:1.5%;height:92%;justify-content:space-around";
+            coins.slice(0,10).forEach(coin => {
+              const item = document.createElement("div");
+              item.style.cssText = "display:flex;justify-content:space-between;gap:2px;font-size:clamp(3px,.43vw,8px);white-space:nowrap";
+              const symbol = document.createElement("span");
+              symbol.textContent = coin.symbol;
+              const change = document.createElement("span");
+              change.textContent = (coin.change >= 0 ? "+" : "") + coin.change.toFixed(1) + "%";
+              change.style.color = coin.change >= 0 ? "#70d6a2" : "#ec8b84";
+              item.append(symbol,change);
+              status.appendChild(item);
+            });
+          } catch {
+            status.textContent = "MARKET OFFLINE";
+          }
+        };
+        void renderMarket();
+        window.setInterval(() => { if (market.isConnected) void renderMarket(); }, 90000);
+      }
+
       // Twin monitors and a squared-up case sit in exactly the old hardware
       // footprint. The main monitor, books, Rubik, phone, bag and names list
       // retain their original scene coordinates and functionality.
