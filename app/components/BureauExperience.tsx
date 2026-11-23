@@ -176,7 +176,14 @@ export default function BureauExperience() {
       if (!document.documentElement.dataset.bureauBagLinkInstalled) {
         document.addEventListener("click", (event: MouseEvent) => {
           const target = event.target as Element | null;
-          const isCrypto = !!target?.closest?.("#bureau-crypto-trigger");
+          // The main monitor hotspot overlaps the small portrait monitor.
+          // Prioritize the small screen based on its exact scene coordinates.
+          const sceneHit = document.getElementById("scene");
+          const sceneBounds = sceneHit?.getBoundingClientRect();
+          const x = sceneBounds && sceneBounds.width > 0 ? (event.clientX - sceneBounds.left) / sceneBounds.width : -1;
+          const y = sceneBounds && sceneBounds.height > 0 ? (event.clientY - sceneBounds.top) / sceneBounds.height : -1;
+          const insideSmallMonitor = x >= 0.659 && x <= 0.755 && y >= 0.289 && y <= 0.582;
+          const isCrypto = insideSmallMonitor || !!target?.closest?.("#bureau-crypto-trigger");
           const isDiagnostics = !!target?.closest?.('[data-open="pc"], [data-inside="pc"]');
           const isBag = !!target?.closest?.('[data-open="bag"], [data-inside="bag"]');
           const isRubik = !!target?.closest?.('[data-open="rubik"], [data-inside="rubik"]');
@@ -840,8 +847,8 @@ export default function BureauExperience() {
         entry.setAttribute("aria-label", "Open live cryptocurrency top ten on the small monitor");
         entry.title = "LIVE CRYPTO TOP 10 · CLICK TO OPEN";
         entry.style.cssText = [
-          "position:absolute","left:66.65%","top:31.05%","width:7.45%","height:25.75%",
-          "z-index:12","cursor:pointer","box-sizing:border-box",
+          "position:absolute","left:66.63%","top:31.03%","width:7.7%","height:25.8%",
+          "z-index:100","cursor:pointer","box-sizing:border-box","pointer-events:auto!important",
           "background:linear-gradient(145deg,#111920,#060b10)","border:1px solid #4b4d4e",
           "border-radius:2px","padding:0.38% 0.3%","display:flex",
           "flex-direction:column","align-items:center","justify-content:center",
