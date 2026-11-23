@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight, Bird, Box, Dumbbell, FolderClosed, Gamepad2, Loc
 
 type PhoneGame = "sky" | "curve" | "reaction" | "ten";
 const phoneGameDetails: Record<PhoneGame, { title: string; subtitle: string; url: string }> = {
-  sky: { title: "SNUFFY BIRD", subtitle: "THE BUREAU / PHONE / TOP 10", url: "/bureau/sky-hop.html" },
+  sky: { title: "SNUFFY BIRD", subtitle: "THE BUREAU / PHONE / TOP 10", url: "/bureau/sky-hop.html?embed=1" },
   curve: { title: "MANO DIE KURVE", subtitle: "THE BUREAU / PHONE / LOCAL MULTIPLAYER", url: "/bureau/curve-clash.html" },
   reaction: { title: "DR. MONGO’S REACTION GAME", subtitle: "THE BUREAU / PHONE / REFLEX TEST", url: "/arcade/reaction" },
   ten: { title: "KAYA’S BUTTON", subtitle: "THE BUREAU / PHONE / TIMING CHALLENGE", url: "/arcade/ten" },
