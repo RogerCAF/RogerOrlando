@@ -40,11 +40,12 @@ export default function BureauDesktop({onClose}:{onClose:()=>void}){
  };
  const icons=[...(Object.keys(files) as FolderName[]).map(name=>({name,type:"folder" as const})),...tools.map(name=>({name,type:"tool" as const}))];
  return <div role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)onClose();}} style={{position:"fixed",inset:0,zIndex:100000,background:"rgba(3,5,9,.88)",display:"grid",placeItems:"center",padding:15}}>
- <section role="dialog" aria-modal="true" aria-label="Personal desktop" style={{width:"min(1200px,97vw)",height:"min(745px,91vh)",minHeight:420,position:"relative",overflow:"hidden",border:"1px solid #625446",borderRadius:13,boxShadow:"0 35px 110px #000",background:wallpaper?`linear-gradient(#06080b33,#06080b33),url("${wallpaper}") center/cover no-repeat`:"radial-gradient(ellipse at 65% 25%,#283442 0%,#111824 43%,#070a10 90%)",color:"#e7e4e0",fontFamily:"system-ui,sans-serif"}}>
- {!wallpaper&&<div style={{position:"absolute",inset:0,pointerEvents:"none",display:"grid",placeItems:"center",opacity:.08,fontSize:"clamp(120px,24vw,320px)",fontWeight:800}}>R</div>}
+ <section role="dialog" aria-modal="true" aria-label="Personal desktop" style={{width:"min(1200px,97vw)",height:"min(745px,91vh)",minHeight:420,position:"relative",overflow:"hidden",border:"1px solid #625446",borderRadius:13,boxShadow:"0 35px 110px #000",background:wallpaper?`linear-gradient(#06080b33,#06080b33),url("${wallpaper}") center/cover no-repeat`:"linear-gradient(#06080b20,#06080b20),url(/bureau/universum-wallpaper.svg) center/cover no-repeat",color:"#e7e4e0",fontFamily:"system-ui,sans-serif"}}>
+ 
  <div style={{position:"absolute",top:15,right:15,zIndex:4,display:"flex",gap:7,alignItems:"center"}}>
  <input ref={chooser} aria-label="Upload wallpaper" type="file" accept="image/*" style={{display:"none"}} onChange={e=>{void setBackground(e.target.files?.[0]);e.target.value="";}}/>
  <button onClick={()=>chooser.current?.click()} title="Gebruik je eigen achtergrond" style={{...buttonStyle,background:"#121b20da",fontSize:11,border:"1px solid #53645c"}}><ImagePlus size={16}/> Wallpaper wijzigen</button>
+ {wallpaper&&<button onClick={()=>{try{localStorage.removeItem("roger-desktop-wallpaper-v1");}catch{}setWallpaper("");}} title="Herstel je originele Universum-achtergrond" style={{...buttonStyle,background:"#121b20da",fontSize:11,border:"1px solid #53645c"}}>Originele achtergrond</button>}
  <button onClick={onClose} aria-label="Close desktop" style={{...buttonStyle,background:"#20262c",padding:9}}><X size={18}/></button>
  </div>
  {wallpaperError&&<p role="alert" style={{position:"absolute",top:58,right:16,zIndex:5,color:"#ffb0a0",background:"#131516",padding:8,fontSize:11}}>{wallpaperError}</p>}
