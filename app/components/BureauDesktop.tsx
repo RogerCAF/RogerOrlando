@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Folder, FileCode2, Trash2, X, ShieldAlert, Lock, Monitor, ChevronLeft } from "lucide-react";
+import { Folder, FileCode2, X, Monitor } from "lucide-react";
+import BruteForceLab from "./BruteForceLab";
 
 type FolderName = "Classified" | "Scripts" | "Notes" | "Recycle Bin";
 const files: Record<FolderName, { name: string; text: string }[]> = {
@@ -9,6 +10,7 @@ const files: Record<FolderName, { name: string; text: string }[]> = {
     {name:"world_domination.plan",text:"PHASE 1: Buy coffee.\nPHASE 2: Fix the Wi-Fi.\nPHASE 3: Apparently that's enough for today."}
   ],
   Scripts: [
+    {name:"bruteforce_lab.py",text:"Interactive local password audit lab"},
     {name:"hack_nasa.py",text:"$ python hack_nasa.py\n[+] Connecting to NASA...\n[+] Bypassing firewall...\n[!] ERROR: NASA uses Windows 95\n[!] Mission aborted successfully."},
     {name:"free_wifi.sh",text:"$ ./free_wifi.sh\nScanning networks...\nFound: FBI_SURVEILLANCE_VAN\nPassword guess: 12345678\nACCESS DENIED. Buy your own internet."},
     {name:"sudo_coffee.sh",text:"$ sudo make-me-a-sandwich\n[sudo] password: ********\nPermission denied: go make it yourself."}
@@ -33,7 +35,8 @@ export default function BureauDesktop({onClose}:{onClose:()=>void}) {
  <div style={{padding:"12px 16px",background:"#1c252e",display:"flex",alignItems:"center",gap:10,fontSize:14}}><Folder size={17} color="#d6ad71"/>{folder}<button onClick={()=>{setFolder(null);setFile(null);}} aria-label="Close folder" style={{...btn,marginLeft:"auto",padding:2}}><X size={17}/></button></div>
  <div style={{padding:14,display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(145px,1fr))",gap:6}}>{files[folder].map(entry=><button key={entry.name} onClick={()=>setFile(entry)} style={{...btn,fontSize:12,flexDirection:"column",alignItems:"flex-start",overflowWrap:"anywhere"}}><FileCode2 size={24} color="#aeccbf"/>{entry.name}</button>)}</div>
  </div>}
- {file && <div style={{position:"absolute",zIndex:3,top:"24%",left:"min(23%,180px)",width:"min(600px,72%)",minHeight:250,maxHeight:"52%",overflow:"auto",background:"#0b1016",border:"1px solid #64716c",borderRadius:10,boxShadow:"0 25px 80px #000"}}>
+ {file && file.name==="bruteforce_lab.py" && <div style={{position:"absolute",zIndex:5,inset:20,background:"#0b1016",border:"1px solid #48715b",borderRadius:12,overflow:"auto",padding:22}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}><strong style={{fontSize:14}}>bruteforce_lab.py</strong><button style={btn} onClick={()=>setFile(null)} aria-label="Close audit lab"><X size={18}/></button></div><BruteForceLab/></div>}
+ {file && file.name!=="bruteforce_lab.py" && <div style={{position:"absolute",zIndex:3,top:"24%",left:"min(23%,180px)",width:"min(600px,72%)",minHeight:250,maxHeight:"52%",overflow:"auto",background:"#0b1016",border:"1px solid #64716c",borderRadius:10,boxShadow:"0 25px 80px #000"}}>
  <div style={{display:"flex",alignItems:"center",gap:9,padding:"11px 14px",background:"#202a30",fontSize:13}}><FileCode2 size={16}/>{file.name}<button onClick={()=>setFile(null)} style={{...btn,marginLeft:"auto",padding:0}} aria-label="Close file"><X size={17}/></button></div>
  <pre style={{whiteSpace:"pre-wrap",fontFamily:"ui-monospace,monospace",fontSize:13,color:"#97d9ae",lineHeight:1.75,padding:20,margin:0}}>{file.text}</pre>
  </div>}
