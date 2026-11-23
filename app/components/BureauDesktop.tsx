@@ -28,16 +28,15 @@ export default function BureauDesktop({onClose}:{onClose:()=>void}){
   if(!selected)return;
   if(!selected.type.startsWith("image/")){setWallpaperError("Selecteer een afbeelding.");return;}
   try{
-   const url=URL.createObjectURL(selected);
-   const img=new Image();
-   await new Promise<void>((resolve,reject)=>{img.onload=()=>resolve();img.onerror=()=>reject(new Error("Image unavailable"));img.src=url;});
-   const scale=Math.min(1,1920/Math.max(img.width,img.height));
-   const canvas=document.createElement("canvas");canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));
-   const ctx=canvas.getContext("2d");if(!ctx)throw new Error("Canvas unavailable");
-   ctx.drawImage(img,0,0,canvas.width,canvas.height);
-   const optimized=canvas.toDataURL("image/jpeg",.78);URL.revokeObjectURL(url);
-   localStorage.setItem("roger-desktop-wallpaper-v1",optimized);setWallpaper(optimized);setWallpaperError("");
-  }catch{setWallpaperError("Opslaan lukte niet. Probeer een kleinere afbeelding of een andere browser.");}
+   const data=await new Promise<string>((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(String(reader.result));
+    reader.onerror=()=>reject(new Error("Unable to read wallpaper"));
+    reader.readAsDataURL(selected);
+   });
+   localStorage.setItem("roger-desktop-wallpaper-v1",data);
+   setWallpaper(data);setWallpaperError("");
+  }catch{setWallpaperError("Je browser kon de originele afbeelding niet bewaren. Probeer een andere browser.");}
  };
  const icons=[...(Object.keys(files) as FolderName[]).map(name=>({name,type:"folder" as const})),...tools.map(name=>({name,type:"tool" as const}))];
  return <div role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)onClose();}} style={{position:"fixed",inset:0,zIndex:100000,background:"rgba(3,5,9,.88)",display:"grid",placeItems:"center",padding:15}}>
