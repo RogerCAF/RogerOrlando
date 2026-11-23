@@ -171,6 +171,24 @@ export default function BureauExperience() {
       const window = frame.contentWindow;
       if (!document || !window) return;
 
+      // Capture pointer interactions before the embedded scene's original
+      // arcade hotspots. The large monitor hotspot overlaps the narrow
+      // screen, so its own pointer handler must get first priority.
+      if (!document.documentElement.dataset.bureauCryptoPointerInstalled) {
+        document.addEventListener("pointerdown", (event: PointerEvent) => {
+          const area = document.getElementById("scene")?.getBoundingClientRect();
+          if (!area || area.width <= 0 || area.height <= 0) return;
+          const px = (event.clientX - area.left) / area.width;
+          const py = (event.clientY - area.top) / area.height;
+          if (px < .659 || px > .755 || py < .289 || py > .582) return;
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+          setCryptoOpen(true);
+        }, true);
+        document.documentElement.dataset.bureauCryptoPointerInstalled = "1";
+      }
+
       // The approved homepage artwork is an embedded iframe. Full-screen
       // games open in page-level portals so the illustration stays untouched.
       if (!document.documentElement.dataset.bureauBagLinkInstalled) {
