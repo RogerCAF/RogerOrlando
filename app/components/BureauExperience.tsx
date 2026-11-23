@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowLeft, ArrowRight, Bird, Box, Dumbbell, Gamepad2, LockKeyhole, Maximize2, Route, Smartphone, Swords, Timer, Trophy, UsersRound, X, Zap } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bird, Box, Dumbbell, FolderClosed, Gamepad2, LockKeyhole, Maximize2, Route, Smartphone, Swords, Timer, Trophy, UsersRound, X, Zap } from "lucide-react";
 
 type PhoneGame = "sky" | "curve" | "reaction" | "ten";
 const phoneGameDetails: Record<PhoneGame, { title: string; subtitle: string; url: string }> = {
@@ -654,6 +654,21 @@ export default function BureauExperience() {
               icon.tabIndex = -1;
             }
           });
+          // One visible Projects launcher, not repeated projects folders.
+          if (!icons.querySelector("#bureau-projects-os-app")) {
+            const projects = document.createElement("button");
+            projects.type = "button";
+            projects.id = "bureau-projects-os-app";
+            projects.setAttribute("aria-label", "Open Projects — Main Experiences and Pocket Arcade");
+            projects.title = "PROJECTS / ALL EXPERIENCES";
+            projects.innerHTML = "▤<br>Projects";
+            projects.addEventListener("click", event => {
+              event.preventDefault();
+              event.stopPropagation();
+              setArcadeOpen(true);
+            });
+            icons.appendChild(projects);
+          }
           if (icons.querySelector("#bureau-unfinished-os-app")) return;
           const app = document.createElement("button");
           app.type = "button";
@@ -1444,47 +1459,83 @@ export default function BureauExperience() {
       />, document.body)}
     {arcadeOpen && typeof document !== "undefined" && createPortal(
       <div className="bureau-arcade-overlay" role="dialog" aria-modal="true" aria-labelledby="bureau-arcade-heading">
-        <div className="bureau-arcade-shell">
+        <div className="bureau-arcade-shell bureau-projects-shell">
           <header className="bureau-arcade-head">
-            <div className="bureau-arcade-brand"><Gamepad2 size={21} aria-hidden="true"/><span>THE BUREAU <em>/ ARCADE</em></span></div>
-            <button type="button" className="bureau-arcade-close" ref={arcadeCloseRef} onClick={() => setArcadeOpen(false)} aria-label="Sluit de arcade en ga terug naar het bureau"><X size={19}/></button>
+            <div className="bureau-arcade-brand"><FolderClosed size={20} aria-hidden="true"/><span>ROGER.OS <em>/ PROJECTS</em></span></div>
+            <button type="button" className="bureau-arcade-close" ref={arcadeCloseRef} onClick={() => setArcadeOpen(false)} aria-label="Sluit Projects"><X size={19}/></button>
           </header>
           <div className="bureau-arcade-intro">
-            <span>INTERACTIVE EXPERIENCES / 04</span>
-            <h2 id="bureau-arcade-heading">Pick a challenge<span>.</span></h2>
-            <p>Vier korte ervaringen. Kies er één of ontdek ze via de objecten op het bureau.</p>
+            <span>THE BUREAU / PROJECT DIRECTORY / 08 FILES</span>
+            <h2 id="bureau-arcade-heading">Everything worth clicking<span>.</span></h2>
+            <p>Big experiments, tiny distractions. All in one place. Pick your poison.</p>
           </div>
-          <div className="bureau-arcade-grid">
-            <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setBagOpen(true);}}>
-              <span className="bureau-arcade-card-index">01 / HAYSTACK HUNT</span>
-              <Dumbbell className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
-              <strong>HAYWIRE</strong>
-              <span>Scheur de bokszak open, bouw machines en vind de naald.</span>
-              <em>START SEARCHING <ArrowRight size={15} aria-hidden="true"/></em>
-            </button>
-            <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setRubikOpen(true);}}>
-              <span className="bureau-arcade-card-index">02 / 90-SECOND RUN</span>
-              <Box className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
-              <strong>CUBE SURVIVOR</strong>
-              <span>Ontwijk, verzamel XP en bouw zes wapens tegelijk op.</span>
-              <em>PLAY SURVIVOR <ArrowRight size={15} aria-hidden="true"/></em>
-            </button>
-            <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setGameOpen(true);}}>
-              <span className="bureau-arcade-card-index">03 / SECRET FILE 030</span>
-              <LockKeyhole className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
-              <strong>UNFINISHED PROJECT</strong>
-              <span>Ontgrendel het verhaal achter de verborgen systeemproeven.</span>
-              <em>OPEN SECRET FILE <ArrowRight size={15} aria-hidden="true"/></em>
-            </button>
-            <button className="bureau-arcade-card" type="button" onClick={openFightCamp}>
-              <span className="bureau-arcade-card-index">04 / STRENGTH TRIAL</span>
-              <Swords className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
-              <strong>TEST YOUR MIGHT</strong>
-              <span>Bouw kracht op, voer de perfecte slag uit en breek vijf steeds sterkere materialen.</span>
-              <em>TAKE THE TEST <ArrowRight size={15} aria-hidden="true"/></em>
-            </button>
-          </div>
-          <footer className="bureau-arcade-foot">TIP / De bokszak, Rubik's Cube en de poster werken ook direct vanaf het bureau.</footer>
+          <section className="bureau-projects-section" aria-label="Main Experiences">
+            <div className="bureau-projects-section-head"><h3>MAIN EXPERIENCES</h3><span>01 — 04 / DESKTOP</span></div>
+            <div className="bureau-arcade-grid">
+              <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setBagOpen(true);}}>
+                <span className="bureau-arcade-card-index">01 / HAYSTACK HUNT</span>
+                <Dumbbell className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
+                <strong>HAYWIRE</strong>
+                <span>Rip open the bag. Build a hay empire. Find one stupid needle.</span>
+                <em>START SEARCHING <ArrowRight size={15} aria-hidden="true"/></em>
+              </button>
+              <button className="bureau-arcade-card" type="button" onClick={() => {setArcadeOpen(false);setRubikOpen(true);}}>
+                <span className="bureau-arcade-card-index">02 / 90-SECOND RUN</span>
+                <Box className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
+                <strong>CUBE SURVIVOR</strong>
+                <span>One cube. Too many enemies. Survive the chaos.</span>
+                <em>PLAY SURVIVOR <ArrowRight size={15} aria-hidden="true"/></em>
+              </button>
+              <button className="bureau-arcade-card bureau-projects-classified" type="button" onClick={() => {setArcadeOpen(false);setGameOpen(true);}}>
+                <span className="bureau-arcade-card-index">03 / CLASSIFIED FILE 030</span>
+                <LockKeyhole className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
+                <strong>THE UNFINISHED PROJECT</strong>
+                <span>Access restricted. Sign the notebook or hit exactly 10.00 to get in.</span>
+                <em>VIEW LOCKED FILE <ArrowRight size={15} aria-hidden="true"/></em>
+              </button>
+              <button className="bureau-arcade-card" type="button" onClick={openFightCamp}>
+                <span className="bureau-arcade-card-index">04 / STRENGTH TRIAL</span>
+                <Swords className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
+                <strong>TEST YOUR MIGHT</strong>
+                <span>Build your power. Time the strike. Break the impossible.</span>
+                <em>TAKE THE TEST <ArrowRight size={15} aria-hidden="true"/></em>
+              </button>
+            </div>
+          </section>
+          <section className="bureau-projects-section bureau-projects-pocket" aria-label="Pocket Arcade">
+            <div className="bureau-projects-section-head"><h3>POCKET ARCADE</h3><span>05 — 08 / PHONE GAMES</span></div>
+            <div className="bureau-arcade-grid">
+              <button className="bureau-arcade-card bureau-projects-phone-card" type="button" onClick={() => {setArcadeOpen(false);setPhoneMode("sky");}}>
+                <span className="bureau-arcade-card-index">05 / HIGH SCORE</span>
+                <Bird className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
+                <strong>SNUFFY BIRD</strong>
+                <span>Fly, dodge, crash. Pretend it was on purpose.</span>
+                <em>PLAY NOW <ArrowRight size={15} aria-hidden="true"/></em>
+              </button>
+              <button className="bureau-arcade-card bureau-projects-phone-card" type="button" onClick={() => {setArcadeOpen(false);setPhoneMode("curve");}}>
+                <span className="bureau-arcade-card-index">06 / MULTIPLAYER</span>
+                <Route className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
+                <strong>ACHTUNG DIE KURVE</strong>
+                <span>One turn too late. Five people blaming each other.</span>
+                <em>PLAY TOGETHER <ArrowRight size={15} aria-hidden="true"/></em>
+              </button>
+              <button className="bureau-arcade-card bureau-projects-phone-card" type="button" onClick={() => {setArcadeOpen(false);setPhoneMode("reaction");}}>
+                <span className="bureau-arcade-card-index">07 / REACTION TEST</span>
+                <Zap className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
+                <strong>DR. MONGO'S REACTION GAME</strong>
+                <span>Wait for green. Find out how slow you really are.</span>
+                <em>TEST YOUR REFLEXES <ArrowRight size={15} aria-hidden="true"/></em>
+              </button>
+              <button className="bureau-arcade-card bureau-projects-phone-card" type="button" onClick={() => {setArcadeOpen(false);setPhoneMode("ten");}}>
+                <span className="bureau-arcade-card-index">08 / PRECISION CHALLENGE</span>
+                <Timer className="bureau-arcade-card-icon" size={34} strokeWidth={1.5} aria-hidden="true"/>
+                <strong>THE BUTTON 10:00</strong>
+                <span>One red button. Ten seconds. Zero excuses.</span>
+                <em>STOP AT 10.00 <ArrowRight size={15} aria-hidden="true"/></em>
+              </button>
+            </div>
+          </section>
+          <footer className="bureau-arcade-foot">8 EXPERIENCES / 1 DIRECTORY · ALL FOUR POCKET GAMES STILL LIVE ON THE DESK PHONE</footer>
         </div>
       </div>, document.body)}
     {posterOpen && typeof document !== "undefined" && createPortal(
