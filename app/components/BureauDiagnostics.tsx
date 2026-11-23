@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Activity, ArrowLeft, CheckCircle2, Cpu, Gauge, HardDrive, Lightbulb, Monitor, RefreshCw, ShieldCheck, Wifi, WifiOff, X } from "lucide-react";
+import { Activity, CheckCircle2, Cpu, Gauge, HardDrive, Lightbulb, Monitor, RefreshCw, ShieldCheck, Wifi, X } from "lucide-react";
 import "./bureau-diagnostics.css";
 
 type Snapshot = {
