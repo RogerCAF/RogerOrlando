@@ -64,6 +64,11 @@ export default function TenSecondChallenge() {
     attemptsRef.current = next;
     setAttempts(next);
     try { localStorage.setItem(STORE, JSON.stringify(next)); } catch { /* Still playable without localStorage. */ }
+    // A genuine stopped result which displays 10.00 unlocks Secret File 030.
+    if (Math.round(actual / 10) === 1000) {
+      try { localStorage.setItem("bureau-perfect-ten", "yes"); } catch { /* No persistence in restricted browsers. */ }
+      window.dispatchEvent(new Event("bureau:unlock-changed"));
+    }
   }, []);
 
   useEffect(() => {
