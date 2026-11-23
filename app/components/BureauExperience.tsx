@@ -658,9 +658,9 @@ export default function BureauExperience() {
           const app = document.createElement("button");
           app.type = "button";
           app.id = "bureau-unfinished-os-app";
-          app.setAttribute("aria-label", "Speel The Unfinished Project");
-          app.title = "THE UNFINISHED PROJECT / GAME";
-          app.innerHTML = "▣<br>Unfinished.exe";
+          app.setAttribute("aria-label", "The Unfinished Project — locked until you sign the guestbook or hit 10.00");
+          app.title = "THE UNFINISHED PROJECT / CLASSIFIED";
+          app.innerHTML = "🔒<br>Unfinished.exe";
           app.addEventListener("click", event => {
             event.preventDefault();
             event.stopPropagation();
