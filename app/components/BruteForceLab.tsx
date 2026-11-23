@@ -25,7 +25,7 @@ export default function BruteForceLab(){
  const cursor=useRef(0n),runId=useRef(0),running=useRef(false),target=useRef(""),startTime=useRef(0),previous=useRef(0);
  const config=useRef({mode: "letters" as Charset, length:3, alphabet:alphabets.letters, total:BigInt(26**3)});
  useEffect(()=>()=>{running.current=false;runId.current++;},[]);
- const feasible=mode==="dictionary"?true:mode==="digits"?/^\d{1,5}$/.test(secret):mode==="letters"?/^[a-z]{1,4}$/.test(secret):/^[a-z0-9]{1,4}$/.test(secret);
+ const feasible=mode==="dictionary"?secret.length>0:mode==="digits"?/^\d{1,24}$/.test(secret):mode==="letters"?/^[a-z]{1,24}$/.test(secret):/^[a-z0-9]{1,24}$/.test(secret);
  const maximum=24;
  const numberOfCandidates=mode==="dictionary"?BigInt(dictionaryCandidates.length):feasible?BigInt(alphabets[mode].length)**BigInt(secret.length):0n;
  function reset(){
