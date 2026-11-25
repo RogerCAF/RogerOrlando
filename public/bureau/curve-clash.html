@@ -150,6 +150,11 @@ const CONFIG=[
  {id:4,name:"GREEN",color:"#87e88a",left:"q",right:"e",keys:"Q / E"},
  {id:5,name:"PURPLE",color:"#c1a0ff",left:"v",right:"n",keys:"V / N"}
 ];
+// For two players, keep their hands on opposite sides of the keyboard.
+// Three to five players retain the original key assignments.
+function configForCount(){
+ return count===2?CONFIG.map(cfg=>cfg.id===2?{...cfg,left:"arrowleft",right:"arrowright",keys:"← / →"}:cfg.id===3?{...cfg,left:"j",right:"l",keys:"J / L"}:cfg):CONFIG;
+}
 const CAREER_KEY="bureau-curve-local-career-v1";
 let career={};try{const stored=JSON.parse(localStorage.getItem(CAREER_KEY)||"{}");if(stored&&typeof stored==="object")career=stored}catch{}
 function careerFor(id){const x=career[id]||{};return {rounds:Math.max(0,Number(x.rounds)||0),wins:Math.max(0,Number(x.wins)||0),matches:Math.max(0,Number(x.matches)||0)}}
@@ -169,7 +174,7 @@ function scoreboard(){
 }
 function buildControls(){
  const root=$("controls");root.replaceChildren();
- CONFIG.forEach(cfg=>{
+ configForCount().forEach(cfg=>{
   const el=document.createElement("div");el.className="control";el.style.setProperty("--p",cfg.color);el.hidden=cfg.id>count;
   const label=document.createElement("div");label.className="control-head";const name=document.createElement("strong");name.textContent="P"+cfg.id+" "+cfg.name;
   const keys=document.createElement("small");keys.textContent=cfg.keys;label.append(name,keys);
@@ -188,7 +193,7 @@ function buildControls(){
 function renderKeyboardGuides(){
  for(const id of ["keyboardGuide","dialogKeyboard"]){
   const root=$(id);if(!root)continue;root.replaceChildren();
-  for(const cfg of CONFIG.slice(0,count)){
+  for(const cfg of configForCount().slice(0,count)){
    const player=document.createElement("div");player.className="pc-key-player";player.style.setProperty("--p",cfg.color);
    const name=document.createElement("span");name.className="pc-key-player-name";name.textContent="P"+cfg.id+" "+cfg.name;
    const pair=document.createElement("div");pair.className="pc-key-pair";
@@ -201,7 +206,7 @@ function renderKeyboardGuides(){
   }
  }
 }
-function chooseCount(){count=Number($("count").value)||2;buildControls();renderKeyboardGuides();players=CONFIG.slice(0,count).map(cfg=>({...cfg,points:0,alive:true,x:0,y:0,a:0,gapDelay:4,gapLeft:0}));scoreboard()}
+function chooseCount(){count=Number($("count").value)||2;buildControls();renderKeyboardGuides();players=configForCount().slice(0,count).map(cfg=>({...cfg,points:0,alive:true,x:0,y:0,a:0,gapDelay:4,gapLeft:0}));scoreboard()}
 function spawnPositions(){
  const out=[];
  for(const p of players){
