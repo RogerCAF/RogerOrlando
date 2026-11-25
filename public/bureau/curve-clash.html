@@ -91,18 +91,53 @@ button:focus-visible,select:focus-visible{outline:2px solid #f6d098;outline-offs
 .curve-career #careerScores{display:flex;flex-wrap:wrap;gap:7px 15px;margin:10px 0}
 .curve-career #careerScores span{font:700 10px ui-monospace,monospace}
 .curve-career small{color:#91a0b1;font-weight:500}
+
+/* Keep the 960x620 logical arena intact; fit its display to both axes. */
+.curve-layout-aside,.curve-arena-stage{display:contents}
+main{display:flex;flex-direction:column}
+main>header{order:0}.mode-select{order:1}.pc-keyboard-guide{order:2}.topbar{order:3}.curve-career{order:4}
+.game-wrap{order:5}.controls-head{order:6}.controls{order:7}.footer-note{order:8}
+@media(min-width:760px) and (min-height:360px){
+ html,body{height:100%;overflow:hidden}
+ main{height:100vh;height:100dvh;max-width:none;width:100%;padding:clamp(8px,1.3vw,18px);display:grid;grid-template-columns:minmax(0,1fr) clamp(248px,25vw,340px);grid-template-rows:auto auto auto minmax(0,1fr);gap:8px 14px}
+ main>header,.mode-select,.topbar{grid-column:1/-1;margin:0;min-width:0}
+ main>header{grid-row:1}h1{font-size:clamp(22px,2.2vw,32px);margin-top:3px}
+ .mode-select{grid-row:2;flex-wrap:nowrap}.mode-link{min-height:34px;padding:7px 12px}
+ .topbar{grid-row:3}.scoreboards{min-width:0}.player-stat{padding:5px 9px}.player-stat b{font-size:20px}
+ .curve-arena-stage{grid-row:4;grid-column:1;display:flex;align-items:center;justify-content:center;min-width:0;min-height:0;container-type:size}
+ .game-wrap{flex:none;width:min(100%,calc((100cqh - 2px) * 960 / 620 + 2px));max-width:100%;margin:0;box-shadow:none}
+ .curve-layout-aside{grid-row:4;grid-column:2;display:flex;flex-direction:column;min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;gap:8px;padding-right:3px;scrollbar-width:thin}
+ .curve-layout-aside>*{flex-shrink:0;margin:0}
+ .pc-keyboard-guide{padding:9px}.pc-guide-head{flex-wrap:wrap;gap:3px;margin-bottom:6px}.pc-guide-head span{font-size:9px}
+ .curve-layout-aside .pc-guide-grid{grid-template-columns:1fr;gap:4px}
+ .curve-layout-aside .pc-key-player{padding:4px 6px;flex-direction:row;align-items:center;justify-content:space-between;gap:4px}
+ .curve-layout-aside .pc-key-pair{gap:5px;flex-wrap:nowrap}
+ .curve-layout-aside .pc-key-action{font-size:8px}
+ .curve-layout-aside .pc-key-action kbd{min-width:22px;height:21px;font-size:10px}
+ .pc-keyboard-footer{margin-top:5px;font-size:9px}
+ .curve-career{padding:9px}.curve-career #careerScores{display:grid;gap:3px;margin:6px 0}.curve-career #careerScores span{font-size:9px}
+ .controls-head{gap:5px;margin:0}.controls-head span{font-size:9px}
+ .controls{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.control{padding:5px;gap:4px}.control-head{font-size:9px}.control-head small{font-size:8px}
+ .turn{height:32px;font-size:15px;gap:3px}.turn kbd{min-width:19px;padding:2px;font-size:10px}
+ .footer-note{font-size:9px;line-height:1.4}
+ .overlay{padding:8px}.dialog{padding:12px;overscroll-behavior:contain}.dialog h2{font-size:clamp(21px,2.2vw,30px);margin:6px 0}.dialog p{margin:5px auto 8px}.dialog .select-row{margin:8px 0}.dialog-keyboard{margin:8px 0}.dialog-lan{margin:8px 0 0;padding:7px}.primary{min-height:38px}
+}
 </style></head>
 <body><main>
 <header><div class="brand"><small>THE BUREAU / PHONE ARCADE / LOCAL MULTIPLAYER</small><h1>MANO DIE KURVE<span>.</span></h1></div><span class="tag">UP TO 5 PLAYERS<br>FIRST TO 5 POINTS</span></header>
 <nav class="mode-select" aria-label="Kies multiplayer modus"><span class="mode-link selected">✓ 1 TOETSENBORD · 2–5 SPELERS</span><a class="mode-link lan" href="/bureau/curve-lan.html">⌨ IEDEREEN EIGEN PC · LAN / KAMERCODE →</a></nav>
-<section class="pc-keyboard-guide" aria-label="PC toetsen per speler"><div class="pc-guide-head"><strong>⌨ PC KEYBOARD / WHO CONTROLS WHAT?</strong><span>Houd links of rechts ingedrukt om te sturen</span></div><div class="pc-guide-grid" id="keyboardGuide"></div><div class="pc-keyboard-footer"><kbd>SPACE</kbd> start / volgende ronde &nbsp;·&nbsp; <kbd>P</kbd> pauze &nbsp;·&nbsp; loslaten = rechtdoor</div></section>
-<div class="topbar"><div class="scoreboards" id="scores"></div></div><section class="curve-career" aria-label="Persistent local results"><strong>ALL-TIME LOCAL STATS</strong><div id="careerScores"></div><small>Saved on this device · separate from the current match</small></section>
-<section class="game-wrap" aria-label="Mano die Kurve shared arena"><canvas id="arena" width="960" height="620" aria-label="Mano die Kurve arena. Hold your player's left or right keys to steer and avoid walls and trails."></canvas><div class="arena-meta"><span>ROUND <strong id="round">1</strong></span><span id="status">WAITING FOR PLAYERS</span></div>
+
+<div class="topbar"><div class="scoreboards" id="scores"></div></div>
+<div class="curve-arena-stage"><section class="game-wrap" aria-label="Mano die Kurve shared arena"><canvas id="arena" width="960" height="620" aria-label="Mano die Kurve arena. Hold your player's left or right keys to steer and avoid walls and trails."></canvas><div class="arena-meta"><span>ROUND <strong id="round">1</strong></span><span id="status">WAITING FOR PLAYERS</span></div>
 <div class="overlay" id="overlay"><div class="dialog"><span class="kicker" id="kicker">ONE SCREEN / FIVE RIVALS</span><h2 id="title">Don't hit the curve.</h2><p id="description">All players move automatically and leave a trail. Hold LEFT or RIGHT to steer. Touch a wall or a trail and you're out. Last survivor scores a point.</p><div class="select-row" id="selectRow"><label for="count">PLAYERS</label><select id="count" aria-label="Number of local players"><option selected value="2">2 PLAYERS</option><option value="3">3 PLAYERS</option><option value="4">4 PLAYERS</option><option value="5">5 PLAYERS</option></select></div><div class="dialog-keyboard" aria-label="Toetsen van de spelers"><div class="dialog-keyboard-head">⌨ ONE COMPUTER / ONE KEYBOARD / NO ACCOUNTS</div><div class="pc-guide-grid" id="dialogKeyboard"></div><div class="dialog-keyboard-footer"><kbd>SPACE</kbd> starten / volgende ronde &nbsp;·&nbsp; <kbd>P</kbd> pauze</div></div><button id="action" class="primary" type="button">START LOCAL MATCH →</button><a class="dialog-lan" href="/bureau/curve-lan.html">LIEVER IEDEREEN ACHTER EEN EIGEN PC? MAAK EEN KAMER →</a><p class="legend">Speel samen op één PC. Kies 2–5 spelers en start direct zonder accounts. Houd je toetsen ingedrukt om te sturen.</p></div></div>
-</section>
+</section></div>
+<aside class="curve-layout-aside" aria-label="Player controls and statistics">
+<section class="pc-keyboard-guide" aria-label="PC toetsen per speler"><div class="pc-guide-head"><strong>⌨ PC KEYBOARD / WHO CONTROLS WHAT?</strong><span>Houd links of rechts ingedrukt om te sturen</span></div><div class="pc-guide-grid" id="keyboardGuide"></div><div class="pc-keyboard-footer"><kbd>SPACE</kbd> start / volgende ronde &nbsp;·&nbsp; <kbd>P</kbd> pauze &nbsp;·&nbsp; loslaten = rechtdoor</div></section>
+<section class="curve-career" aria-label="Persistent local results"><strong>ALL-TIME LOCAL STATS</strong><div id="careerScores"></div><small>Saved on this device · separate from the current match</small></section>
 <div class="controls-head"><strong>PLAYER CONTROLS</strong><span>Hold to turn · release to go straight</span></div>
 <div class="controls" id="controls"></div>
 <p class="footer-note">LOCAL MULTIPLAYER / SHARE ONE SCREEN & KEYBOARD · Use a large display for the best 5-player experience</p>
+</aside>
 </main><script>
 (()=>{
 "use strict";

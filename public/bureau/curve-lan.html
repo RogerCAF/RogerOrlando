@@ -74,6 +74,31 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:960/620;touch-action:no
 @media(max-width:710px){.setup-grid{grid-template-columns:1fr}.setup-card p{min-height:0}.members{grid-template-columns:repeat(3,minmax(0,1fr))}.member{padding:8px 6px}.controls-panel{gap:8px}.status{font-size:10px}}
 @media(max-width:480px){main{width:calc(100% - 20px);padding-top:9px}.topbar{padding:8px 0 12px}.brandline,.back{font-size:9px;letter-spacing:.03em}h1{margin:16px 0 8px}.lede{font-size:12px}.panel{padding:10px}.panel-head strong{font-size:10px}.members{grid-template-columns:repeat(2,minmax(0,1fr))}.join-row button{min-width:100px}.score{min-width:90px;padding:7px 8px}.score span{font-size:9px}.score strong{font-size:17px}.arena-meta{font-size:8px;top:7px;left:7px}.action-card{padding:13px}.action-shade{padding:8px}.touch-controls button{min-height:47px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+
+/* Connected desktop rooms use a height-constrained arena and side panel. */
+.lan-arena-stage,.lan-layout-aside{display:contents}
+#gameShell:not([hidden]){display:flex;flex-direction:column}
+#lobby{order:0}.controls-panel{order:1}.scores{order:2}.canvas-shell{order:3}.touch-controls{order:4}.note{order:5}
+@media(min-width:760px) and (min-height:360px){
+ html:has(#gameShell:not([hidden])),body:has(#gameShell:not([hidden])){height:100%;overflow:hidden}
+ main:has(#gameShell:not([hidden])){height:100vh;height:100dvh;width:100%;max-width:none;padding:10px 14px;display:flex;flex-direction:column;gap:8px}
+ main:has(#gameShell:not([hidden]))>.topbar{padding:5px 0 8px;flex-shrink:0}
+ main:has(#gameShell:not([hidden]))>h1{font-size:clamp(21px,2.2vw,30px);margin:0;flex-shrink:0}
+ main:has(#gameShell:not([hidden]))>.lede{display:none}
+ main:has(#gameShell:not([hidden]))>.status{margin:0;padding:5px 9px;flex-shrink:0}
+ #gameShell:not([hidden]){flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) clamp(260px,27vw,370px);grid-template-rows:auto minmax(0,1fr);gap:8px 12px}
+ .scores{grid-row:1;grid-column:1/-1;margin:0;gap:6px}.score{min-width:85px;padding:4px 9px;gap:9px}.score strong{font-size:18px}
+ .lan-arena-stage{grid-row:2;grid-column:1;display:flex;align-items:center;justify-content:center;min-height:0;min-width:0;container-type:size}
+ .canvas-shell{flex:none;width:min(100%,calc((100cqh - 2px) * 960 / 620 + 2px));max-width:100%}
+ .lan-layout-aside{grid-row:2;grid-column:2;display:flex;flex-direction:column;gap:8px;min-height:0;min-width:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;padding-right:3px}
+ .lan-layout-aside>*{flex-shrink:0;margin:0}
+ .panel{padding:10px}.panel-head{gap:6px;margin-bottom:7px}.code{font-size:25px}
+ .info-row{gap:5px}.info-row input{min-width:0;flex-basis:100%}.secondary{min-height:33px;padding:6px 9px}.helper{margin:6px 0 0}
+ .members{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin:8px 0}.member{padding:5px}.play-row{gap:7px;margin:0}.primary{min-height:36px;padding:7px 12px}
+ .controls-panel{padding:8px;gap:7px}.controls-panel strong{width:100%}.controls-panel kbd{min-width:24px;height:23px;padding:0 4px}
+ .touch-controls{gap:5px}.touch-controls button{min-height:38px;font-size:12px}.note{font-size:10px}
+ .action-shade{padding:8px}.action-card{padding:12px}
+}
 </style></head><body>
 <main>
  <header class="topbar"><span class="brandline">THE BUREAU / MANO DIE KURVE</span><a id="back" class="back" href="/bureau/curve-clash.html">← TERUG NAAR 1 TOETSENBORD</a></header>
@@ -96,6 +121,13 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:960/620;touch-action:no
  </section>
  <p class="status" id="statusMessage" role="status">Maak een kamer en deel de link. Iedereen gebruikt zijn eigen toetsenbord.</p>
  <section id="gameShell" hidden>
+  <div class="scores" id="scoreList"></div>
+  <div class="lan-arena-stage"><section class="canvas-shell" aria-label="Gedeelde Mano die Kurve-arena">
+   <canvas id="arena" width="960" height="620" tabindex="0" aria-label="Arena, gebruik A en D of pijltjes links en rechts om je lijn te sturen"></canvas>
+   <div class="arena-meta"><span>RONDE <strong id="roundText">1</strong></span><span id="arenaStatus">WAITING FOR PLAYERS</span></div>
+   <div class="action-shade" id="actionPanel" hidden><div class="action-card"><h2 id="resultTitle">RONDE VOORBIJ</h2><p id="resultSubtitle"></p><p id="resultHint"></p><button type="button" id="hostNext" class="primary">VOLGENDE RONDE →</button></div></div>
+  </section></div>
+  <aside class="lan-layout-aside" aria-label="Kamer en bediening">
   <div class="panel" id="lobby">
    <div class="panel-head"><strong>JULLIE KAMER · <span id="memberCount">1</span> / 5 SPELERS</strong><span id="roomBadge" class="room-badge"></span><span class="code" id="roomCode">------</span></div>
    <div id="roomDetails" hidden>
@@ -110,14 +142,9 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:960/620;touch-action:no
    </div>
   </div>
   <div class="controls-panel"><strong>⌨ EIGEN PC / KEYBOARD</strong><span><kbd>A</kbd> / <kbd>←</kbd> LINKS</span><span><kbd>D</kbd> / <kbd>→</kbd> RECHTS</span><span><kbd>SPACE</kbd> HOST: START / VOLGENDE RONDE</span><span><kbd>P</kbd> HOST: PAUZE</span></div>
-  <div class="scores" id="scoreList"></div>
-  <section class="canvas-shell" aria-label="Gedeelde Mano die Kurve-arena">
-   <canvas id="arena" width="960" height="620" tabindex="0" aria-label="Arena, gebruik A en D of pijltjes links en rechts om je lijn te sturen"></canvas>
-   <div class="arena-meta"><span>RONDE <strong id="roundText">1</strong></span><span id="arenaStatus">WAITING FOR PLAYERS</span></div>
-   <div class="action-shade" id="actionPanel" hidden><div class="action-card"><h2 id="resultTitle">RONDE VOORBIJ</h2><p id="resultSubtitle"></p><p id="resultHint"></p><button type="button" id="hostNext" class="primary">VOLGENDE RONDE →</button></div></div>
-  </section>
   <div class="touch-controls"><button type="button" data-turn="left">↶ LINKS / A</button><button type="button" data-turn="right">RECHTS / D ↷</button></div>
   <p class="note">De host bepaalt de wedstrijd; iedere andere computer bestuurt alleen zijn eigen speler. De kamercode is tijdelijk. Bij een geblokkeerde peer-to-peer-verbinding: controleer of beide apparaten op hetzelfde netwerk zitten.</p>
+  </aside>
  </section>
 </main>
 <script defer src="/bureau/curve-lan.js"></script>
