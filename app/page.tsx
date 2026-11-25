@@ -184,9 +184,10 @@ export default function Home() {
       </section>
 
       <section className="bureau-home-section" id="lab" aria-labelledby="bureau-home-heading">
-        <div style={{ textAlign: "center", padding: "clamp(22px, 3vw, 36px) 20px 8px" }}>
-          <h2 id="bureau-home-heading" style={{ margin: 0, fontFamily: '"Manrope", sans-serif', fontSize: "clamp(24px, 2.6vw, 34px)", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.035em", color: "var(--ink)" }}>The Bureau<span style={{ color: "var(--gold)" }}>.</span></h2>
-          <p style={{ margin: "8px 0 0", fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", lineHeight: 1.5, textTransform: "uppercase", color: "var(--gold)" }}>An interactive playground</p>
+        <div className="container" style={{ paddingTop: "clamp(22px, 3vw, 36px)" }}>
+          <div className="eyebrow" style={{ marginBottom: 8 }}><span>04 /</span> THE PLAYGROUND</div>
+          <h2 id="bureau-home-heading" style={{ margin: 0, fontFamily: '"Manrope", sans-serif', fontSize: "clamp(23px, 2.3vw, 32px)", fontWeight: 700, lineHeight: 1.25, letterSpacing: "-0.035em", color: "var(--ink)" }}>The Bureau.</h2>
+          <div aria-hidden="true" style={{ borderBottom: "1px solid rgba(255,255,255,.09)", marginTop: 12 }} />
         </div>
         <div className="bureau-home-experience">
           <BureauExperience />
