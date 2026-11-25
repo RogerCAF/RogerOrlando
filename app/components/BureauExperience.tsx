@@ -1300,10 +1300,10 @@ export default function BureauExperience() {
           display: none !important;
         }
         .bureau-embed .spot[data-open="muay"] {
-          left: 17.87% !important;
-          top: 6.82% !important;
-          width: 16.84% !important;
-          height: 27.88% !important;
+          left: 17.1% !important;
+          top: 7.1% !important;
+          width: 18.3% !important;
+          height: 30.3% !important;
           z-index: 10 !important;
         }
         /* The original print stays untouched; a small hover/focus hint
@@ -1469,10 +1469,10 @@ export default function BureauExperience() {
       style.textContent += `
         .bureau-embed #scene > .bureau-kinetic-poster {
           position: absolute !important;
-          left: 18.39% !important;
-          top: 7.33% !important;
-          width: 16.78% !important;
-          height: 25.25% !important;
+          left: 17.66% !important;
+          top: 7.65% !important;
+          width: 18.24% !important;
+          height: 27.45% !important;
           z-index: 9 !important;
           display: block !important;
           overflow: hidden !important;
@@ -1540,7 +1540,7 @@ export default function BureauExperience() {
         const approved = document.createElement("img");
         approved.id = "bureau-approved-photo";
         approved.className = "bureau-approved-photo";
-        approved.src = "/bureau/bureau-approved-photorealistic-cutout.svg?v=rear-depth-1";
+        approved.src = "/bureau/bureau-approved-photorealistic-cutout.svg?v=poster-restored-1";
         approved.alt = "The Bureau: werkplek met twee bergschermen, pc, telefoon, bokszak en notitieboek";
         approved.draggable = false;
         approved.decoding = "async";
