@@ -183,8 +183,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bureau-home-section" id="lab" aria-label="The Bureau — interactieve wereld">
-        <h2 className="bureau-home-sr-only">The Bureau — interactieve wereld</h2>
+      <section className="bureau-home-section" id="lab" aria-labelledby="bureau-home-heading">
+        <div style={{ textAlign: "center", padding: "clamp(22px, 3vw, 36px) 20px 8px" }}>
+          <h2 id="bureau-home-heading" style={{ margin: 0, fontFamily: '"Manrope", sans-serif', fontSize: "clamp(24px, 2.6vw, 34px)", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.035em", color: "var(--ink)" }}>The Bureau<span style={{ color: "var(--gold)" }}>.</span></h2>
+          <p style={{ margin: "8px 0 0", fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", lineHeight: 1.5, textTransform: "uppercase", color: "var(--gold)" }}>An interactive playground</p>
+        </div>
         <div className="bureau-home-experience">
           <BureauExperience />
         </div>
