@@ -1716,7 +1716,24 @@ export default function BureauExperience() {
             </button>
           </div>
         </header>
-        <iframe className="bureau-game-viewport" src={phoneGameDetails[phoneMode].url} title={phoneGameDetails[phoneMode].title} allow="fullscreen"/>
+        <iframe key={phoneMode} className="bureau-game-viewport" src={phoneGameDetails[phoneMode].url} title={phoneGameDetails[phoneMode].title} allow="fullscreen"
+          onLoad={event => {
+            if (phoneMode !== "ten") return;
+            const frame = event.currentTarget;
+            const gameDocument = frame.contentDocument;
+            if (!gameDocument) return;
+            // Keyboard events stay inside their browsing context. Give the
+            // timing game focus instead of leaving it on the phone back button.
+            frame.focus({ preventScroll: true });
+            frame.contentWindow?.focus();
+            // Escape must still return to the phone while the game has focus.
+            gameDocument.addEventListener("keydown", event => {
+              if (event.key === "Escape") {
+                event.preventDefault();
+                setPhoneMode("menu");
+              }
+            });
+          }}/>
       </div>, document.body)}
     {terminalOpen && typeof document !== "undefined" && createPortal(
       <BureauTerminal
